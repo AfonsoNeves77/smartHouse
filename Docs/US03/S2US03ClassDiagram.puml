@@ -1,0 +1,54 @@
+@startuml
+       title <size: 30> US03 Class Diagram
+       note "<b>Only methods related to\n<b>US03 are represented" as N1
+
+       class CommonListOfRooms{
+           - house : House
+
+           + getListOfRooms() : ArrayList<Room>
+       }
+
+       class RoomDTOMapper{
+           + getRoomDTOList() : ArrayList<RoomDTO>
+           + dtoToDomain() : Room
+       }
+
+       class House {
+           - houseName: String
+           - gps : GPS
+           - address : Address
+           - listOfRooms : ListOfRooms
+           - sensorTypeList : sensorTypeList
+           + getListOfRooms() : ListOfRooms
+       }
+
+       class ListOfRooms{
+           - roomList : ArrayList<Room>
+
+           - createRoom (roomName : String, houseFloor : int) : Room
+           + addRoomToList (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double) : int
+           + getRoomList () : ArrayList<Room>
+           - isRoomInList (roomName : String) : boolean
+       }
+
+       class GetListOfRoomsCTRL{
+            - house : House
+
+            +getListOfRooms() : ArrayList<RoomDTO>
+        }
+
+       class RoomDTO{
+            - roomName :String
+            - houseFloor : int
+            - roomWidth : double
+            - roomLength : double
+            - roomHeight : double
+               }
+
+       GetListOfRoomsCTRL ..> CommonListOfRooms
+       GetListOfRoomsCTRL ..> RoomDTOMapper
+       RoomDTOMapper ..> RoomDTO
+       CommonListOfRooms ..> House
+       House "1" *-- "1" ListOfRooms
+
+       @enduml

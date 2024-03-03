@@ -1,0 +1,64 @@
+@startuml
+
+title <size: 30> US02 Class Diagram
+note "<b>Only methods related to\n<b>US02 are represented" as N1
+
+class AddRoomCTRL {
+    - house : House
+
+    + addRoom(roomDTO : RoomDTO) : int
+}
+
+class RoomDTO {
+    - roomName : String
+    - houseFloor : int
+    - roomWidth : double
+    - roomLength : double
+    - roomHeight : double
+}
+
+class House {
+    - houseName: String
+    - gps : GPS
+    - address : Address
+    - listOfRooms : ListOfRooms
+    - sensorTypeList : sensorTypeList
+}
+
+class Room {
+    - roomName: String
+    - houseFloor : int
+    - dimensions : RoomDimensions
+    - deviceList : ListOfDevices
+
+    + createRoomDimensions(roomWidth : double, roomLength : double, \nroomHeight : double) : void
+}
+
+class RoomDimensions{
+     - roomWidth : double
+     - roomLength : double
+     - roomHeight : double
+
+    - areDimensionsValid (roomWidth : double, roomLength : double, \nroomHeight : double) : boolean
+}
+
+class ListOfRooms{
+    - roomList : ArrayList<Room>
+
+    + addRoomToList (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double) : int
+    - createRoom (roomName : String, houseFloor : int) : Room
+    - isRoomInList (roomName : String) : boolean
+}
+
+AddRoomCTRL ..> House
+
+AddRoomCTRL ..> RoomDTO
+
+House "1" *-- "1" ListOfRooms
+
+ListOfRooms "1" o-- "*" Room
+
+Room "1" *-- "1" RoomDimensions
+
+
+@enduml

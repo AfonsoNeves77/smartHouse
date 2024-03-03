@@ -1,0 +1,42 @@
+@startuml
+!theme cerulean
+autonumber
+title User Story 2 - Main Success Scenario
+participant ":AddRoomCTRL" as C
+participant ":RoomDTO" as dto
+participant ":House" as H
+participant ":ListOfRooms" as LOR
+participant ":FactoryRoom" as FR
+participant "room : Room" as R
+participant "dimensions : RoomDimensions" as RD
+skinparam ParticipantPadding 50
+
+[o-> C : addRoom(roomDTO)
+activate C
+C -> dto : roomName = roomDTO.getRoomName()
+activate dto
+C -> dto : houseFloor = roomDTO.getHouseFloor()
+C -> dto : width = roomDTO.getRoomWidth()
+C -> dto : length = roomDTO.getRoomLength()
+C -> dto : height = roomDTO.getRoomHeight()
+deactivate dto
+C -> H : addRoom(roomName, houseFloor, \nwidth, length,height, factoryRoom)
+activate H
+H -> LOR : addRoomToList(roomName, houseFloor, \nwidth, length, height,factoryRoom)
+activate LOR
+LOR -> FR : room = createRoom(roomName, houseFloor, \nroomWidth, roomLength, roomHeight)
+activate FR
+FR -> R** : <create>
+deactivate FR
+activate R
+R -> R : roomDimensions = createRoomDimensions(roomWidth,\nroomLength, roomHeight)
+R -> RD** : <create>
+deactivate R
+LOR -> LOR : add(room)
+LOR --> H : return true
+deactivate LOR
+H --> C : return true
+deactivate H
+[o<-- C : return true
+deactivate C
+@enduml

@@ -1,0 +1,85 @@
+@startuml
+
+title <size: 30> US05v2 Class Diagram
+
+note "<b>Only methods related to\n<b>US05v2 are represented" as N1
+
+skinparam linetype ortho
+
+class AddDeviceToRoomCTRL{
+    - myHouse : House
+    - factoryDevice : FactoryDevice
+    - commonListOfRooms : CommonListOfRooms
+    + getListOfRooms() : List<RoomDTO>
+    + addDeviceToRoom(deviceName : String, \n deviceModel : String,\n roomName : String) : boolean
+}
+
+class CommonListOfRooms{
+    - house : House
+    - roomDTOAndRoomMap : LinkedHashMap<RoomDTO, Room>
+    + getListOfRooms() : List<RoomDTO>
+    - truncateList(roomDTOAndRoomMap : Map<RoomDTO, Room>) : List<RoomDTO>
+    + getRoomByName(roomName : String) : Room
+    - refreshMap()
+}
+
+
+class RoomDTO{
+    - roomName : String
+    + getRoomName() : String
+}
+
+class RoomDTOMapper{
+    + getRoomDTOList(listOfRooms : List<Room>)\n : LinkedHashMap<RoomDTO, Room>\n
+}
+
+class House {
+    - listOfRooms : ListOfRooms
+    + getListOfRooms() : List<Room>
+}
+
+class ListOfRooms{
+    - roomList : ArrayList<Room>
+    + getRoomList() : List<Room>
+}
+
+class Room {
+    - deviceList : ListOfDevices
+    + addDevice(deviceName : String,\n deviceModel : String,\n factoryDevice FactoryDevice) : boolean
+}
+
+class ListOfDevices{
+    - deviceList : ArrayList<Device>
+    + addDeviceToList(deviceName : String, deviceModel : String, \nlocation : String, factoryDevice : FactoryDevice) : boolean
+    - isDeviceDuplicated(deviceName : String) : boolean
+}
+
+interface FactoryDevice {
+    + createDevice(deviceName : String, deviceModel : String, \nlocation : String) : Device
+}
+
+class ImplFactoryDevice {
+    + createDevice(deviceName : String, deviceModel : String, \nlocation : String) : Device
+}
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - deviceLocation : String
+    - status : boolean
+    - areDeviceParametersValid(deviceName : String, deviceModel : String, \nlocation : String) : boolean
+}
+
+AddDeviceToRoomCTRL -down.> CommonListOfRooms
+CommonListOfRooms ..> RoomDTOMapper
+RoomDTOMapper ..> RoomDTO
+CommonListOfRooms ..> House
+House "1" *-- "1" ListOfRooms
+ListOfRooms "*" o-- "1" Room
+Room "*" *-- "1" ListOfDevices
+ListOfDevices "*" o-- "1" Device
+ListOfDevices ..> FactoryDevice : <uses>
+FactoryDevice <|.. ImplFactoryDevice
+ImplFactoryDevice ..> Device : <create>
+
+@enduml

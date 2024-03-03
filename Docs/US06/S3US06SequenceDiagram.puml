@@ -1,0 +1,95 @@
+@startuml
+!theme cerulean
+
+skinparam ParticipantPadding 50
+autonumber
+
+participant ":getListOfDevicesCTRL" as CTRL
+participant ":CommonListOfRooms" as CU
+participant ":House" as h
+participant ":ListOfRooms" as LR
+participant ":RoomDTOMapper" as RDTM
+participant ":CommonListOfDevices" as CD
+participant ":Room" as r
+participant ":ListOfDevices" as LD
+participant ":DeviceDTOMapper" as DDTM
+participant "dev : Device" as dev
+
+
+[o-> CTRL : getListOfRooms()
+activate CTRL
+CTRL -> CU : getListOfRooms()
+activate CU
+CU -> h : getListOfRooms()
+activate h
+h -> LR : getListOfRooms()
+activate LR
+LR -> LR : listOfRooms = cloneList()
+activate LR
+deactivate LR
+LR --> h : listOfRooms
+deactivate LR
+h --> CU : listOfRooms
+
+deactivate h
+CU -> RDTM : getRoomDTOList(listOfRooms)
+activate RDTM
+loop for each room in room list
+RDTM -> RDTM : RoomDTO = domainToDTO(room)
+activate RDTM
+deactivate RDTM
+RDTM -> RDTM : put(RoomDTO)
+activate RDTM
+deactivate RDTM
+end loop
+RDTM --> CU : roomAndRoomDtoList
+deactivate RDTM
+CU -> CU : roomDtoList = truncateList(roomAndRoomDtoList)
+activate CU
+deactivate CU
+CU --> CTRL : roomDtoList
+deactivate CU
+[o<-- CTRL : roomDtoList
+deactivate CTRL
+
+
+[o-> CTRL : getListOfDevices(roomName)
+activate CTRL
+CTRL -> CU: getRoomByName(roomName)
+activate CU
+CU --> CTRL : room
+deactivate CU
+CTRL -> CD : getListOfDevices(room)
+activate CD
+CD -> r : getListOfDevices()
+activate r
+r -> LD : getDevices()
+activate LD
+LD -> LD : listOfDevices = cloneList()
+activate LD
+deactivate LD
+LD --> r : listOfDevices
+deactivate LD
+r --> CD : listOfDevices
+deactivate r
+CD -> DDTM : domainToDeviceDTOList(deviceList)
+activate DDTM
+loop for each device in device list
+DDTM -> DDTM : DeviceDTO = domainToDTO(device)
+activate DDTM
+deactivate DDTM
+DDTM -> DDTM : put(DeviceDTO)
+activate DDTM
+deactivate DDTM
+end loop
+DDTM --> CD : deviceAndDeviceDtoList
+deactivate DDTM
+CD -> CD : dtoDeviceList = truncateList(deviceAndDeviceDtoList)
+activate CD
+deactivate CD
+CD --> CTRL : dtoDeviceList
+deactivate CD
+[o<-- CTRL : dtoDeviceList
+deactivate CTRL
+
+@enduml

@@ -1,0 +1,78 @@
+@startuml
+!theme cerulean
+skinparam ParticipantPadding 50
+autonumber
+title User Story 5v2 - Main Success Scenario
+
+participant ":addDeviceToRoomController" as CTRL
+participant ":CommonListOfRooms" as CU
+participant ":House" as h
+participant ":ListOfRooms" as LR
+participant ":RoomDTOMapper" as RDTM
+participant ":Room" as r
+participant ":ListOfDevices" as LD
+participant ":ImplFactoryDevice" as FD
+participant "dev : Device" as dev
+
+[o-> CTRL : getListOfRooms()
+activate CTRL
+CTRL -> CU : getListOfRooms()
+activate CU
+CU -> h : getListOfRooms()
+activate h
+h -> LR : getListOfRooms()
+activate LR
+LR -> LR : listOfRooms = cloneList()
+activate LR
+deactivate LR
+LR --> h : listOfRooms
+deactivate LR
+h --> CU : listOfRooms
+
+deactivate h
+CU -> RDTM : getRoomDTOList(listOfRooms)
+activate RDTM
+loop for each room in room list
+RDTM -> RDTM : RoomDTO = domainToDTO(room)
+activate RDTM
+deactivate RDTM
+RDTM -> RDTM : put(RoomDTO)
+activate RDTM
+deactivate RDTM
+end loop
+RDTM --> CU : roomAndRoomDtoList
+deactivate RDTM
+CU -> CU : roomDtoList = truncateList(roomAndRoomDtoList)
+activate CU
+deactivate CU
+CU --> CTRL : roomDtoList
+deactivate CU
+[o<-- CTRL : roomDtoList
+deactivate CTRL
+
+
+[o-> CTRL : addDeviceToRoom(deviceName,deviceModel,roomName)
+activate CTRL
+CTRL -> CU: getRoomByName(roomName)
+activate CU
+CU --> CTRL : room
+deactivate CU
+CTRL -> r : addDevice(deviceName,deviceModel,factoryDevice)
+activate r
+r -> r : deviceLocation = this.roomName
+r -> LD : addDevice(deviceName,deviceModel,deviceLocation,factoryDevice)
+activate LD
+LD -> FD : addDeviceToList(deviceName,deviceModel,deviceLocation)
+activate FD
+FD -> dev **: <create>
+FD --> LD : newDevice
+deactivate FD
+LD -> LD : add(newDevice)
+LD --> r : return true
+deactivate LD
+r --> CTRL : return true
+deactivate r
+[o<-- CTRL : return true
+deactivate CTRL
+
+@enduml

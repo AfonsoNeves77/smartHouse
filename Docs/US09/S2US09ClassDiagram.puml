@@ -1,0 +1,86 @@
+@startuml
+title <size: 30> US09 Class Diagram
+note "<b>Only methods related to\n<b>US09 are represented" as N1
+
+class GetDevicesByFunctionalityCTRL {
+    - <b>house : House
+
+    + getDevicesByFunctionality() : HashMap<String, ArrayList<DeviceDTO>>
+    - convertHashMap(devicesMap : HashMap<String,ArrayList<Device>>) : HashMap<String, ArrayList<DeviceDTO>>
+}
+
+class CommonListOfRooms {
+    - <b>house : House
+
+    + getListOfRooms() : ArrayList<Room>
+}
+
+class GroupDevicesByFunctionality{
+    - <b>devicesMap : HashMap<String, ArrayList<Device>>
+
+    + getDevicesMap(listRooms : ArrayList<Room>) : HashMap<String, ArrayList<Device>>
+    - addDeviceToMap(sensorList : ArrayList<Sensor>, device : Device) : void
+}
+
+class House {
+    - houseName: String
+        - gps : GPS
+        - address : Address
+        - <b>listOfRooms : ListOfRooms
+        - sensorTypeList : sensorTypeList
+}
+
+class ListOfRooms {
+    - <b>listOfRooms : ArrayList<Room>
+}
+
+class Room {
+    - roomName: String
+    - houseFloor : int
+    - dimensions : RoomDimensions
+    - <b>listOfDevices : ListOfDevices
+}
+
+class ListOfDevices {
+    - <b>listOfDevices : ArrayList<Device>
+}
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - deviceLocation : String
+    - status : boolean
+    - <b>listOfSensors : ListOfSensors
+}
+
+class ListOfSensors {
+    - <b>listOfSensors : ArrayList<Sensor>
+}
+
+interface Sensor{
+    + getType() : SensorTypeOptions
+}
+
+
+class DeviceDTOMapper {
+    + domainToDTO(device : Device) : DeviceDTO
+    + domainToDTO(list : ArrayList<Device>) : ArrayList<DeviceDTO>
+}
+
+GetDevicesByFunctionalityCTRL -up.> CommonListOfRooms
+CommonListOfRooms .> House
+House "1" *- "1" ListOfRooms
+ListOfRooms "1" o-- "*" Room
+Room "1" *-- "1" ListOfDevices
+ListOfDevices "1" o-left- "*" Device
+Device "1" *-- "1" ListOfSensors
+ListOfSensors "1" o--right "*" Sensor
+
+GetDevicesByFunctionalityCTRL -right.> GroupDevicesByFunctionality
+GroupDevicesByFunctionality -right..> ListOfRooms
+GetDevicesByFunctionalityCTRL -down.> DeviceDTOMapper
+
+DeviceDTOMapper ..> Device
+
+
+@enduml

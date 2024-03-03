@@ -1,0 +1,52 @@
+@startuml
+
+skinparam actorStyle awesome
+left to right direction
+
+actor "Administrator" as A
+actor "Power User" as PU
+actor "Room Owner" as RO
+
+package "Smart Home" {
+  usecase "<b>US01:</b> To configure house location" as UC1
+  usecase "<b>US02:</b> To add room to house" as UC2
+  usecase "<b>US03:</b> To get list of rooms" as UC3
+  usecase "<b>US04:</b> To define sensor type" as UC4
+  usecase "<b>US05v2:</b> To add device to room" as UC5v2
+  usecase "<b>US06:</b> To get list of devices" as UC6
+  usecase "<b>US07:</b> To add sensor to device" as UC7
+  usecase "<b>US08:</b> To deactivate device" as UC8
+  usecase "<b>US09:</b> To get list of devices by functionality" as UC9
+  usecase "To get list of sensors" as LS
+
+
+  UC3 ..> UC6: <includes>
+  UC5v2 ..> UC3: <includes>
+  UC7 ..> UC3: <includes>
+ 
+  UC8 ..> UC3: <includes>
+  UC9 ..> UC3: <includes>
+  UC9 ..> LS: <includes>
+}
+
+A --> UC1
+A --> UC2
+A --> UC3
+A --> UC4
+A --> UC5v2
+A --> UC6
+A --> UC7
+A --> UC8
+A --> UC9
+
+PU --> UC3
+PU --> UC5v2
+PU --> UC6
+PU --> UC7
+PU --> UC8
+PU --> UC9
+
+RO --> UC3
+RO --> UC6
+
+@enduml

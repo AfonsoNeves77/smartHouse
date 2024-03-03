@@ -1,0 +1,60 @@
+@startuml
+!theme cerulean
+autonumber
+
+title User Story 1 - Main Success Scenario
+
+participant ":ConfigureLocationCTRL" as C
+participant ":House" as H
+participant "implFactoryLocation:FactoryLocation" as F
+participant "address:Address" as A
+participant "gps:GPS" as G
+
+
+skinparam ParticipantPadding 50
+
+
+
+
+[o-> C : configureLocation(doorReference,buildingNumber \n,streetName,city,country \n,zipCode,latitude,longitude)
+activate C
+
+C -> H : configureLocation(doorReference,buildingNumber \n,streetName,city,country \n,zipCode,latitude,longitude, factoryLocation)
+activate H
+
+H -> F : address = createAddress(doorReference,buildingNumber \n,streetName,city,country \n,zipCode)
+activate F
+
+
+
+
+F -> A** : <create>
+
+A -> A : areAddressParamsValid(buildingNumber,streetName,city,country,zipCode)
+activate A
+deactivate A
+F --> H : address
+
+
+
+deactivate F
+
+H -> F : gps = createGPS(latitude,longitude)
+
+activate F
+F -> G** : <create>
+
+G -> G : areGPSParamsValid(latitude,longitude)
+activate G
+deactivate G
+F --> H : GPS
+deactivate F
+
+H --> C : return true
+deactivate H
+
+[o<-- C : return true
+deactivate C
+
+|||
+@endumll

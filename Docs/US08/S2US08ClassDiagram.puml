@@ -1,0 +1,60 @@
+@startuml
+title <size: 30> US08 Class Diagram
+
+note "<b>Only methods related to\n<b>US08 are represented" as N1
+class ToggleDeviceCTRL {
+    - house : House
+    + getListOfRooms() : ArrayList<Room>
+    + getListOfDevices(roomDTO : RoomDTO) : ArrayList<Device>
+    + toggleDevice(roomDTO : RoomDTO, deviceDTO : DeviceDTO) : boolean
+}
+
+class CommonListOfRooms {
+    - house : House
+    + getListOfRooms() : ArrayList<Room>
+}
+
+class CommonListOfDevices {
+    -house : House
+    + getListOfDevices() : ListOfDevices
+}
+
+class House {
+    - listOfRooms : ListOfRooms
+}
+
+class Room {
+    - listOfDevices : ListOfDevices
+}
+
+class ListOfRooms {
+    - listOfRooms : ArrayList<Room>
+}
+
+class RoomDTOMapper {
+    + dtoToDomain (roomDTO : RoomDTO) : Room
+}
+
+class DeviceDTOMapper {
+    + domainToDTO(list : ArrayList<Device>) : ArrayList<DeviceDTO>
+}
+
+class ListOfDevices {
+    - listOfDevices : ArrayList<Device>
+}
+
+class Device {
+    - status : boolean
+    + toggleDeviceStatus() : boolean
+}
+
+ToggleDeviceCTRL  -up.>  CommonListOfRooms
+CommonListOfRooms  .>  House
+House "1" *- "1" ListOfRooms
+ToggleDeviceCTRL  -up.>  RoomDTOMapper
+ToggleDeviceCTRL  .>  CommonListOfDevices
+CommonListOfDevices  .>  Room
+Room "1" *- "1" ListOfDevices
+ToggleDeviceCTRL  -down.>  DeviceDTOMapper
+ToggleDeviceCTRL  -down.>  Device
+@enduml

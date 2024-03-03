@@ -1,0 +1,76 @@
+@startuml
+
+title <size: 30> US02 Class Diagram
+note "<b>Only methods related to\n<b>US02 are represented" as N1
+
+class AddRoomCTRL {
+    - house : House
+    - factoryRoom : FactoryRoom
+
+    + addRoom(roomDTO : RoomDTO) : boolean
+}
+
+class RoomDTO {
+    - roomName : String
+    - houseFloor : int
+    - roomWidth : double
+    - roomLength : double
+    - roomHeight : double
+}
+
+class House {
+    - houseName: String
+    - gps : GPS
+    - address : Address
+    - listOfRooms : ListOfRooms
+
+    + addRoom (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double, factoryRoom : FactoryRoom) : boolean
+}
+
+class Room {
+    - roomName: String
+    - houseFloor : int
+    - dimensions : RoomDimensions
+
+    - createRoomDimensions(roomWidth : double, roomLength : double, \nroomHeight : double) : RoomDimensions
+}
+
+class RoomDimensions{
+     - roomWidth : double
+     - roomLength : double
+     - roomHeight : double
+}
+
+class ListOfRooms{
+    - roomList : ArrayList<Room>
+
+    + addRoomToList (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double, factoryRoom : FactoryRoom) : boolean
+    - isRoomInList (roomName : String) : boolean
+
+
+}
+
+interface FactoryRoom{
+    + createRoom (roomName : String, houseFloor : int, roomWidth : double, \n roomLength : double, roomHeight : double) : Room
+}
+
+class FactoryIndoorRoom{
+    + createRoom (roomName : String, houseFloor : int, roomWidth : double, \n roomLength : double, roomHeight : double) : Room
+}
+
+AddRoomCTRL ..> House
+
+AddRoomCTRL ..> RoomDTO
+
+House "1" *-- "1" ListOfRooms
+
+Room "1" *-- "1" RoomDimensions
+
+FactoryRoom <.. ListOfRooms : <uses>
+
+FactoryIndoorRoom  ..|> FactoryRoom
+
+FactoryIndoorRoom ..> Room : <creates>
+
+
+@enduml
