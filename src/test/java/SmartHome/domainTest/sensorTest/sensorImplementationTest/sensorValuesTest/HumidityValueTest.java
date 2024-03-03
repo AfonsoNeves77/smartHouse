@@ -37,20 +37,20 @@ class HumidityValueTest {
         int intValue = 1;
         HumidityValue value = new HumidityValue(intValue);
         //Act
-        double result = value.getValue();
+        int result = value.getValue();
         //Assert
         assertEquals(intValue,result);
     }
 
     @Test
-    void getValue_SuccessfulyConvertsToString() throws InstantiationException {
+    void getValueAsString_SuccessfulyConvertsToString() throws InstantiationException {
         //Arrange
         int intValue = 1;
         HumidityValue value = new HumidityValue(intValue);
-        String expected = "1.1";
+        String expected = "1";
         //Act
-        double result = value.getValue();
+        String result = value.getValueAsString();
         //Assert
-        assertEquals(intValue,result);
+        assertEquals(expected,result);
     }
 }

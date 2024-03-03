@@ -18,13 +18,14 @@ class TemperatureValueTest {
     }
 
     @Test
-    void getValue_SuccessfulyConvertsToString(){
+    void getValueAsString_SuccessfulyConvertsToString(){
         //Arrange
         double doubleValue = 1.1;
         TemperatureValue value = new TemperatureValue(doubleValue);
+        String expected = "1.1";
         //Act
-        double result = value.getValue();
+        String result = value.getValueAsString();
         //Assert
-        assertEquals(doubleValue,result);
+        assertEquals(expected,result);
     }
 }
