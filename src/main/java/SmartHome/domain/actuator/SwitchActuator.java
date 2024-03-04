@@ -3,17 +3,19 @@ package SmartHome.domain.actuator;
 public class SwitchActuator implements Actuator{
     private String actuatorName;
     private String state;
+    private SimHardwareAct simHardwareAct;
 
-    public SwitchActuator(String actuatorName, String state) {
-        if (!validateName(actuatorName) || !validateName(state)) {
+    public SwitchActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+        if (!validateParams(actuatorName, simHardwareAct)) {
             throw new IllegalArgumentException("Invalid name for Actuator.");
         }
         this.actuatorName = actuatorName;
-        this.state = state;
+        this.simHardwareAct = simHardwareAct;
+        this.state = "Off";
     }
 
-    private boolean validateName(String name) {
-        return name != null && !name.trim().isEmpty();
+    private boolean validateParams(String name, SimHardwareAct simHardwareAct) {
+        return name != null && !name.trim().isEmpty() && simHardwareAct!=null;
     }
 
     @Override
@@ -21,7 +23,7 @@ public class SwitchActuator implements Actuator{
         return this.actuatorName;
     }
 
-    public boolean executeCommand(String commandType, SimHardwareAct simHardwareAct) {
+    public boolean executeCommand(String commandType) {
         if (!validateCommand(commandType)) {
             return false;
         }
