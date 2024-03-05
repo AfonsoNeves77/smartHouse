@@ -63,9 +63,11 @@ class BlindRollerActuatorTest {
     }
 
 
+
     @Test
     void testExecuteCommand_BorderUpperPosition_ReturnsTrue() {
 
+        when(mockSimHardwareAct.executeIntegerCommandSim(100)).thenReturn(true);
         boolean result = blindRollerActuator.executeRollerCommand(100);
 
         assertTrue(result);
@@ -73,6 +75,7 @@ class BlindRollerActuatorTest {
     @Test
     void testExecuteCommand_BorderLowerPosition_ReturnsTrue() {
 
+        when(mockSimHardwareAct.executeIntegerCommandSim(0)).thenReturn(true);
         boolean result = blindRollerActuator.executeRollerCommand(0);
 
         assertTrue(result);
