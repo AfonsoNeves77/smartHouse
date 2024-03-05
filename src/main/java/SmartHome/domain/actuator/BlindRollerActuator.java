@@ -43,7 +43,7 @@ public class BlindRollerActuator {
         if (!validateCommand(position)) {
             return false;
         }
-        return simHardwareAct.executeRollerCommandSim(position);
+        return simHardwareAct.executeIntegerCommandSim(position);
     }
 
     /**
