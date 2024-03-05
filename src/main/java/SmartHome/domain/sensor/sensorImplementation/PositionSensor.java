@@ -17,15 +17,15 @@ public class PositionSensor implements Sensor{
     private final String unit = "%";
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
-    /*
+    /**
     * Constructor for Position Sensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
     * @param sensorName Name of the sensor
     * @param externalServices ExternalServices object that will be used to get the sensor reading.
      */
 
-    public PositionSensor(String sensorName, ExternalServices externalServices) {
+    public PositionSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(sensorName == null || sensorName.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;
