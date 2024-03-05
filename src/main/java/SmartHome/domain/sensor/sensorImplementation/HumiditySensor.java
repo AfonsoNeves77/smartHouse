@@ -71,9 +71,6 @@ public class HumiditySensor implements Sensor {
         return readingValue;
     }
 
-    public HumidityValue defineHumidityValue(int value) throws InstantiationException {
-        return new HumidityValue(value);
-    }
 
     /**
      * Converts the log list from Value to String.
