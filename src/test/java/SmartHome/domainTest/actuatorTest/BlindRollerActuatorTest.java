@@ -1,5 +1,7 @@
-package SmartHome.domain.actuator;
+package SmartHome.domainTest.actuatorTest;
 
+import SmartHome.domain.actuator.BlindRollerActuator;
+import SmartHome.domain.actuator.SimHardwareAct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +64,20 @@ class BlindRollerActuatorTest {
 
 
     @Test
+    void testExecuteCommand_BorderUpperPosition_ReturnsTrue() {
+
+        boolean result = blindRollerActuator.executeRollerCommand(100);
+
+        assertTrue(result);
+    }
+    @Test
+    void testExecuteCommand_BorderLowerPosition_ReturnsTrue() {
+
+        boolean result = blindRollerActuator.executeRollerCommand(0);
+
+        assertTrue(result);
+    }
+    @Test
     void testExecuteCommand_InvalidPositionUpper_ReturnsFalse() {
 
         boolean result = blindRollerActuator.executeRollerCommand(101);
@@ -79,7 +95,7 @@ class BlindRollerActuatorTest {
 
     @Test
     void testExecuteCommand_ValidCommandButExecutionFails_ReturnsFalse() {
-        when(mockSimHardwareAct.executeRollerCommandSim(40)).thenReturn(false);
+        when(mockSimHardwareAct.executeIntegerCommandSim(40)).thenReturn(false);
 
         boolean result = blindRollerActuator.executeRollerCommand(40);
 
@@ -93,7 +109,7 @@ class BlindRollerActuatorTest {
     }
     @Test
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
-        when(mockSimHardwareAct.executeRollerCommandSim(40)).thenReturn(true);
+        when(mockSimHardwareAct.executeIntegerCommandSim(40)).thenReturn(true);
 
         boolean result = blindRollerActuator.executeRollerCommand(40);
 
