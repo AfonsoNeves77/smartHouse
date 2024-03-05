@@ -20,9 +20,9 @@ public class HumiditySensor implements Sensor {
      * Constructor for Humidity Sensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
      * @param sensorName Name of the sensor
      */
-    public HumiditySensor(String sensorName, ExternalServices externalServices) {
+    public HumiditySensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(sensorName == null || sensorName.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;

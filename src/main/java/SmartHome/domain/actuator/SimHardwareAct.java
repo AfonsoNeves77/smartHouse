@@ -5,7 +5,10 @@ public class SimHardwareAct {
         return true;
     }
 
-    public boolean executeRollerCommandSim(int position) {
+    public boolean executeIntegerCommandSim(int position) {
+        return true;
+    }
+    public boolean executeDecimalCommandSim(double newValue){
         return true;
     }
 }
