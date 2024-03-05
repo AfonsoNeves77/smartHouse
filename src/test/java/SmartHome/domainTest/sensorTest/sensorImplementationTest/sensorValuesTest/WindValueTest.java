@@ -7,15 +7,89 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class WindValueTest {
+
     @Test
-    void constructor_throwsExceptionIfWindSpeedNegative(){
+    void constructor_throwsExceptionIfReadingNull(){
         //Arrange
-        int windspeed = -1;
-        String windDirection = "N";
+        String reading = null;
         String expected = "Invalid reading";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () ->
-                new WindValue(windspeed,windDirection));
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void constructor_throwsExceptionIfReadingEmpty(){
+        //Arrange
+        String reading = " ";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+    @Test
+    void constructor_throwsExceptionIfReadingWithoutDelimiter(){
+        //Arrange
+        String reading = "-1N";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+    @Test
+    void constructor_throwsExceptionIfWindSpeedNegative(){
+        //Arrange
+        String reading = "-1-N";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+    @Test
+    void constructor_throwsExceptionIfNoWindSpeed(){
+        //Arrange
+        String reading = "-N";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+    @Test
+    void constructor_throwsExceptionIfNoWindDirection(){
+        //Arrange
+        String reading = "1-";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void constructor_throwsExceptionIfNoWindSpeedOrDirection(){
+        //Arrange
+        String reading = "-";
+        String expected = "Invalid reading";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new WindValue(reading));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
@@ -24,39 +98,36 @@ class WindValueTest {
     @Test
     void constructor_throwsExceptionIfDirectionInvalid(){
         //Arrange
-        int windspeed = 59;
-        String windDirection = "I will fail";
+        String reading = "1-D";
         String expected = "Invalid reading";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () ->
-                new WindValue(windspeed,windDirection));
+                new WindValue(reading));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
     }
 
     @Test
-    void getValue_SuccessfullyReturns() throws InstantiationException {
+    void getValue_SuccessfullyReturnsWindSpeed() throws InstantiationException {
         //Arrange
-        int windspeed = 50;
-        String windDirection = "N";
-        WindValue windValue = new WindValue(windspeed,windDirection);
-        int expected = 50;
+        String reading = "1-N";
+        WindValue value = new WindValue(reading);
+        int expected = 1;
         //Act
-        int result = windValue.getValue();
+        int result = value.getValue();
         //Assert
         assertEquals(expected,result);
     }
 
     @Test
-    void getWindDirection_SuccessfullyReturns() throws InstantiationException {
+    void getWindDirection_SuccessfullyReturnsWindDirection() throws InstantiationException {
         //Arrange
-        int windspeed = 50;
-        String windDirection = "N";
-        WindValue windValue = new WindValue(windspeed,windDirection);
+        String reading = "1-N";
+        WindValue value = new WindValue(reading);
         String expected = "N";
         //Act
-        String result = windValue.getWindDirection();
+        String result = value.getWindDirection();
         //Assert
         assertEquals(expected,result);
     }
@@ -64,13 +135,13 @@ class WindValueTest {
     @Test
     void getValueAsString_SuccessfullyReturns() throws InstantiationException {
         //Arrange
-        int windspeed = 50;
-        String windDirection = "N";
-        WindValue windValue = new WindValue(windspeed,windDirection);
-        String expected = "50-N";
+        String reading = "1-N";
+        WindValue value = new WindValue(reading);
+        String expected = "1-N";
         //Act
-        String result = windValue.getValueAsString();
+        String result = value.getValueAsString();
         //Assert
         assertEquals(expected,result);
     }
+
 }

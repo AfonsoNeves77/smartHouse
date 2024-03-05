@@ -1,5 +1,7 @@
 package SmartHome.domain;
 
+import SmartHome.domain.sensor.externalServices.ExternalServices;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -44,13 +46,13 @@ public class SensorCatalogue {
         return new ArrayList<>(this.listOfInstantiableSensors);
     }
 
-    public Sensor createSensor(String sensorName, String sensorType) {
+    public Sensor createSensor(String sensorName, String sensorType, SimHardware simHardware) {
         Optional<String> optionalSensor = this.listOfInstantiableSensors.stream().filter(s -> s.equalsIgnoreCase(sensorType)).findFirst();
         if(optionalSensor.isPresent()){
             try{
             Class<?> classObj = Class.forName(sensorType);
-            Constructor<?> constructor = classObj.getConstructor(String.class);
-            Sensor sensor = (Sensor) constructor.newInstance(sensorName);
+            Constructor<?> constructor = classObj.getConstructor(String.class, ExternalServices.class);
+            Sensor sensor = (Sensor) constructor.newInstance(sensorName, simHardware);
             return sensor;
             }catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e){
                 return null;

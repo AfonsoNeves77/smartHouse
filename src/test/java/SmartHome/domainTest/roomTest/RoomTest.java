@@ -6,6 +6,7 @@ import SmartHome.domain.device.FactoryDevice;
 import SmartHome.domain.device.ImplFactoryDevice;
 import SmartHome.domain.device.ListOfDevices;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,6 +105,7 @@ class RoomTest {
     @Test
     void getRoomFunctionalities_TwoFunctionalities_IntegrationTest() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String roomName = "Room Test"; int houseFloor = 1; double roomWidth = 4; double roomLength = 5; double roomHeight = 2;
         Room room = new Room(roomName,houseFloor,roomWidth,roomLength,roomHeight);
         FactoryDevice deviceFactory = new ImplFactoryDevice();
@@ -120,13 +122,13 @@ class RoomTest {
         // 3.
         Device device1 = room.getListOfDevices().get(0);
         Device device2 = room.getListOfDevices().get(1);
-        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
-        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
         // 4.
         int expected = 2;
 

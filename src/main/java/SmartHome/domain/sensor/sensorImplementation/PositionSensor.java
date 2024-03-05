@@ -1,8 +1,10 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
+import SmartHome.domain.sensor.externalServices.ExternalServices;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
 
@@ -11,14 +13,16 @@ import static java.lang.Integer.parseInt;
 public class PositionSensor implements Sensor{
 
     private String sensorName;
+    private SimHardware simHardware;
     private final String unit = "%";
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
-    public PositionSensor(String sensorName) {
+    public PositionSensor(String sensorName, ExternalServices externalServices) {
         if(sensorName == null || sensorName.trim().isEmpty()){
             throw new IllegalArgumentException("Invalid parameter");
         }
         this.sensorName = sensorName;
+        this.simHardware = (SimHardware) externalServices;
     }
 
     @Override
@@ -26,13 +30,12 @@ public class PositionSensor implements Sensor{
         return this.sensorName;
     }
 
-    public Value<Integer> getReading(SimHardware simHardware) throws InstantiationException {
-        String simValue = simHardware.getValue();
-        if (simValue == null || simValue.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid reading");
-        }
-        int value = parseInt(simHardware.getValue());
-        PositionValue readingValue = new PositionValue(value);
+    public Value<Integer> getReading() throws InstantiationException {
+
+        String simValue = this.simHardware.getValue();
+
+        PositionValue readingValue = new PositionValue(simValue);
+
         addValueToLog(readingValue);
         return readingValue;
     }

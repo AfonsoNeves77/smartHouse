@@ -99,12 +99,6 @@ class SensorCatalogueTest {
         //Assert
         assertEquals(expected,result);
     }
-
-
-
-
-
-
 }
 
 

@@ -1,9 +1,12 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
+import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
 import SmartHome.domain.sensor.sensorImplementation.WindSensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.WindValue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,27 +20,26 @@ class WindSensorTest {
     @Test
     void constructor_throwsExceptionIfNullName(){
         //Arrange
+        SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new WindSensor(sensorName));
+                new WindSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
     }
 
-    /**
-     * Attempts to create a sensor with a blank sensorName, expecting an IllegalArgumentException.
-     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty(){
         //Arrange
-        String sensorName = "   ";
+        SimHardware simHardwareDouble = mock(SimHardware.class);
+        String sensorName = " ";
         String expected = "Invalid parameter";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new WindSensor(sensorName));
+                new WindSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
@@ -46,8 +48,9 @@ class WindSensorTest {
     @Test
     void getName_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new WindSensor(sensorName);
+        Sensor sensor = new WindSensor(sensorName, simHardware);
         //Act
         String result = sensor.getName();
         //Assert
@@ -57,8 +60,9 @@ class WindSensorTest {
     @Test
     void getUnit_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new WindSensor(sensorName);
+        Sensor sensor = new WindSensor(sensorName, simHardware);
         String expected = "Km/h";
         //Act
         String result = sensor.getUnit();
@@ -69,145 +73,36 @@ class WindSensorTest {
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
-
-        // 1.
-        String sensorName = "Sensor1";
-        Sensor sensor = new WindSensor(sensorName);
-
-        // 2.
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("70-N");
+        when(simHardware.getValue()).thenReturn("40-N");
 
-        String expected = "70-N";
+        String sensorName = "Sensor 1";
+        WindSensor sensor = new WindSensor(sensorName,simHardware);
+
+        String expected = "40-N";
+
         //Act
-
-        // 3.
-        Value<?> value = sensor.getReading(simHardware);
+        WindValue value = (WindValue) sensor.getReading();
         String result = value.getValueAsString();
-        //Assert
-        assertEquals(expected,result);
-    }
-    @Test
-    void getReading_ThrowsExceptionIfInvalidReading_Integration()  {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = " ";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
 
-        Sensor sensor = new WindSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
     }
 
     @Test
-    void getReading_ThrowsExceptionIfInPartialReading_Integration()  {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "40-";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new WindSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getReading_ThrowsExceptionIfNoDelimiter_Integration()  {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "40";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new WindSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getReading_ThrowsExceptionIfNoWindSpeed_Integration()  {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "-N";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new WindSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getReading_ThrowsExceptionIfNullReading_Integration() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = null;
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new WindSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getLog_Successfully_Integration() throws InstantiationException {
+    void getLog_SuccessfullyReturnsEmptyList_Isolation() {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("36-N");
+        when(simHardware.getValue()).thenReturn("40-N");
 
-        Sensor sensor = new WindSensor(sensorName);
+        Sensor sensor = new WindSensor(sensorName, simHardware);
 
-        String expected = "36-N";
-        sensor.getReading(simHardware);
+        ArrayList<String> expected = new ArrayList<>();
+
         //Act
-        ArrayList<String> log = sensor.getLog();
-        String result = log.get(0);
-        //Assert
-        assertEquals(expected,result);
-    }
+        ArrayList<String> result = sensor.getLog();
 
-    @Test
-    void getLog_SuccessfullyReturnsEmptyListIfNoLogs_Integration() {
-        //Arrange
-        String sensorName = "Sensor1";
-        Sensor sensor = new WindSensor(sensorName);
-        //Act
-        ArrayList<String> expected = sensor.getLog();
-        ArrayList<String> result = new ArrayList<>();
         //Assert
         assertEquals(expected,result);
     }

@@ -1,5 +1,7 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
+import static java.lang.Double.parseDouble;
+
 /**
  * Implementation of value for the Temperature Sensor.
  */
@@ -10,8 +12,11 @@ public class TemperatureValue implements Value<Double> {
      * Constructor for Temperature value.
      * @param reading Value received by an external source, in line for conversion.
      */
-    public TemperatureValue(double reading){
-        this.primitiveValue = reading;
+    public TemperatureValue(String reading) throws InstantiationException {
+        if(!isReadingValid(reading)){
+            throw new InstantiationException("Invalid reading");
+        }
+        this.primitiveValue = parseDouble(reading);
     }
 
     /**
@@ -28,5 +33,14 @@ public class TemperatureValue implements Value<Double> {
      */
     public String getValueAsString(){
         return primitiveValue + "";
+    }
+
+    private boolean isReadingValid(String reading){
+        try{
+            parseDouble(reading);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 }
