@@ -98,6 +98,21 @@ public class ActuatorCatalogueTest {
     }
 
     @Test
+    void getListOfActuatorTypes_UsingConfigurationObject() throws InstantiationException {
+        //Arrange
+        Configuration configuration = new PropertyListConfiguration();
+        configuration.addProperty("actuator","SmartHome.domain.actuator.SwitchActuator");
+        ActuatorCatalogue catalogue = new ActuatorCatalogue(configuration);
+        String expected = "SmartHome.domain.actuator.SwitchActuator";
+        //Act
+        List<String> listOfSensorTypes= catalogue.getListOfInstantiableActuators();
+        String result = listOfSensorTypes.get(0);
+        //Assert
+        assertEquals(expected,result);
+    }
+
+
+    @Test
     void createActuatorTest_SuccessfulCreation() throws InstantiationException {
         //Arrange
         ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
