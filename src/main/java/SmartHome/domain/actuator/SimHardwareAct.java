@@ -5,7 +5,7 @@ public class SimHardwareAct {
         return true;
     }
 
-    public boolean executeRollerCommandSim(int position) {
+    public boolean executeIntegerCommandSim(int position) {
         return true;
     }
 }
