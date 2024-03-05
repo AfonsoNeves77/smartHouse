@@ -1,51 +1,42 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
+import SmartHome.domain.sensor.externalServices.ExternalServices;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
-
-import static java.lang.Double.parseDouble;
 
 public class DewPointSensor implements Sensor {
 
     private String sensorName;
-
+    private SimHardware simHardware;
     private final String unit = "C";
-
     private final ArrayList<Value<Double>> log = new ArrayList<>();
 
-    public DewPointSensor(String sensorName){
+    public DewPointSensor(String sensorName, ExternalServices externalServices){
         if(sensorName == null || sensorName.trim().isEmpty()){
             throw new IllegalArgumentException("Invalid parameter");
         }
         this.sensorName = sensorName;
+        this.simHardware = (SimHardware) externalServices;
     }
+
     @Override
     public String getName() {
         return this.sensorName;
     }
-    public Value<Double> getReading(SimHardware simHardware)  {
 
-        String simValue = simHardware.getValue();
-        if (simValue == null || simValue.trim().isEmpty()) {
-            throw new IllegalArgumentException("Invalid reading");
-        }
+    public Value<Double> getReading() throws InstantiationException {
 
-        double value;
-        try {
-            value = parseDouble(simHardware.getValue());
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid reading");
-        }
+        String simValue = this.simHardware.getValue();
 
-        DewPointValue readingValue = new DewPointValue(value);
+        DewPointValue readingValue = new DewPointValue(simValue);
 
-        //4.
         addValueToLog(readingValue);
         return readingValue;
     }
+
     @Override
     public ArrayList<String> getLog() {
         ArrayList<String> dpLog = new ArrayList<>();

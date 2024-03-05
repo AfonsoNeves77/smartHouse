@@ -2,6 +2,7 @@ package SmartHome.domainTest.deviceTest;
 
 import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.device.Device;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
@@ -61,6 +62,7 @@ class DeviceTest {
     @Test
     void addSensorToDeviceSuccessful_IsolationTest(){
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -69,9 +71,9 @@ class DeviceTest {
         String sensorType = "Temperature";
         SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
         Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType)).thenReturn(sensorDouble);
+        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(sensorDouble);
         //Act
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
         //Assert
         assertTrue(result);
     }
@@ -79,6 +81,7 @@ class DeviceTest {
     @Test
     void addSensorToDeviceDuplicatedSensor_IsolationTest(){
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -90,12 +93,12 @@ class DeviceTest {
         SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
 
         Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType)).thenReturn(sensorDouble);
+        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(sensorDouble);
         when(sensorDouble.getName()).thenReturn(nameSensor);
 
         //Act
-        device.addSensor(nameSensor,sensorType,catalogueDouble);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble);
+        device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
         //Assert
         assertFalse(result);
     }
@@ -103,6 +106,7 @@ class DeviceTest {
     @Test
     void addSensorToDeviceInvalidSensorParameters_IsolationTest(){
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "DeviceOne";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -111,11 +115,11 @@ class DeviceTest {
         String sensorType = "Temperature";
         SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
         Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType)).thenReturn(null);
+        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(null);
         when(sensorDouble.getName()).thenReturn(nameSensor);
         //Act
-        device.addSensor(nameSensor,sensorType,catalogueDouble);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble);
+        device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
         //Assert
         assertFalse(result);
     }
@@ -124,6 +128,7 @@ class DeviceTest {
     @Test
     void addTemperatureSensorToDeviceSuccessful() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -136,16 +141,16 @@ class DeviceTest {
 
         //Act
         SensorCatalogue catalogue = new SensorCatalogue(config);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogue);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogue,simHardware);
 
         //Assert
-
         assertTrue(result);
     }
 
     @Test
     void addHumiditySensorToDeviceSuccessful() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -158,7 +163,7 @@ class DeviceTest {
 
         //Act
         SensorCatalogue catalogue = new SensorCatalogue(config);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogue);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogue,simHardware);
 
         //Assert
 
@@ -169,6 +174,7 @@ class DeviceTest {
     @Test
     void addDuplicatedSensorToDevice() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -181,8 +187,8 @@ class DeviceTest {
 
         //Act
         SensorCatalogue catalogue = new SensorCatalogue(config);
-        device.addSensor(nameSensor,sensorType,catalogue);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogue);
+        device.addSensor(nameSensor,sensorType,catalogue,simHardware);
+        boolean result = device.addSensor(nameSensor,sensorType,catalogue,simHardware);
 
         //Assert
         assertFalse(result);
@@ -192,6 +198,7 @@ class DeviceTest {
     @Test
     void addSensorToDevice_DeviceWithTwoSensors() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -206,8 +213,8 @@ class DeviceTest {
 
         //Act
         SensorCatalogue catalogue = new SensorCatalogue(config);
-        device.addSensor(nameSensor,sensorType,catalogue);
-        boolean result = device.addSensor(nameSensorTwo,sensorType,catalogue);
+        device.addSensor(nameSensor,sensorType,catalogue,simHardware);
+        boolean result = device.addSensor(nameSensorTwo,sensorType,catalogue,simHardware);
 
         //Assert
         assertTrue(result);
@@ -303,6 +310,7 @@ class DeviceTest {
     void getDeviceFunctionalities_DeviceWithOneFunctionality() throws InstantiationException {
 
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -310,7 +318,7 @@ class DeviceTest {
         String sensorName = "Sensor 1";
         String sensorType = "SmartHome.domain.sensor.sensorImplementation.HumiditySensor";
         SensorCatalogue catalogue = new SensorCatalogue("config.properties");
-        device.addSensor(sensorName,sensorType,catalogue);
+        device.addSensor(sensorName,sensorType,catalogue,simHardware);
         int expected = 1;
         //Act
         List<String> listOfDeviceFunctionality = device.getDeviceFunctionalities();
@@ -323,6 +331,7 @@ class DeviceTest {
     void getDeviceFunctionalities_DeviceWithTwoFunctionalities() throws InstantiationException {
 
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room";
@@ -332,8 +341,8 @@ class DeviceTest {
         String sensorNameTwo = "Sensor Two";
         String sensorTypeTwo = "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor";
         SensorCatalogue catalogue = new SensorCatalogue("config.properties");
-        device.addSensor(sensorName,sensorType,catalogue);
-        device.addSensor(sensorNameTwo,sensorTypeTwo,catalogue);
+        device.addSensor(sensorName,sensorType,catalogue,simHardware);
+        device.addSensor(sensorNameTwo,sensorTypeTwo,catalogue,simHardware);
         int expected = 2;
         //Act
         List<String> listOfDeviceFunctionality = device.getDeviceFunctionalities();
@@ -363,6 +372,7 @@ class DeviceTest {
     @Test
     void getDeviceFunctionalities_DeviceWithTwoSensorsButOneFunctionality() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
         String deviceModel = "K899";
         String deviceLocation = "Room X";
@@ -370,8 +380,8 @@ class DeviceTest {
         String fileName = "config.properties";
         SensorCatalogue catalogue = new SensorCatalogue(fileName);
         //Same functionality is added
-        device.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device.addSensor("XKT6"," SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
+        device.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device.addSensor("XKT6"," SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
         ArrayList<String> expected = new ArrayList<>();
         expected.add("SmartHome.domain.sensor.sensorImplementation.TemperatureSensor");
         //Act

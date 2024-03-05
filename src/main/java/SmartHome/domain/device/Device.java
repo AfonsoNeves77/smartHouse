@@ -6,7 +6,7 @@ import java.util.List;
 import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.sensor.ListOfSensors;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 
 public class Device {
     private String deviceName;
@@ -45,13 +45,12 @@ public class Device {
         return deviceLocation != null && !deviceLocation.trim().isEmpty();
     }
 
-    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue) {
-        if(listOfSensors.addSensor(sensorName, sensorType, catalogue)){
+    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, SimHardware simHardware) {
+        if(listOfSensors.addSensor(sensorName, sensorType, catalogue, simHardware)){
             updateDeviceFunctionalities(sensorType);
             return true;
         }
         return false;
-
     }
 
     private void updateDeviceFunctionalities(String sensorType){
@@ -88,9 +87,4 @@ public class Device {
     public ArrayList<String> getLog(String sensorName){
         return listOfSensors.getLog(sensorName);
     }
-
-    public Value<?> getReading(String sensorName, SimHardware simHardware) throws InstantiationException {
-        return this.listOfSensors.getReading(sensorName,simHardware);
-    }
-
 }

@@ -1,13 +1,15 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
+import static java.lang.Integer.parseInt;
+
 public class PositionValue implements Value<Integer>{
     private final int primitiveValue;
 
-    public PositionValue(int reading) throws InstantiationException {
-        if(reading < 0 || reading > 100){
+    public PositionValue(String reading) throws InstantiationException {
+        if(!isReadingValid(reading)){
             throw new InstantiationException("Invalid reading");
         }
-        this.primitiveValue = reading;
+        this.primitiveValue = parseInt(reading);
     }
 
     public Integer getValue() {
@@ -16,5 +18,15 @@ public class PositionValue implements Value<Integer>{
 
     public String getValueAsString(){
         return primitiveValue + "";
+    }
+
+    private boolean isReadingValid(String reading) {
+        int valueOfReading;
+        try {
+            valueOfReading = parseInt(reading);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return valueOfReading >= 0 && valueOfReading <= 100;
     }
 }

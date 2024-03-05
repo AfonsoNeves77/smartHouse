@@ -9,6 +9,7 @@ import SmartHome.domain.device.ImplFactoryDevice;
 import SmartHome.domain.room.FactoryIndoorRoom;
 import SmartHome.domain.room.FactoryRoom;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +28,7 @@ class GetDevicesByFunctionalityCTRLTest {
     @Test
     void listDevicesByFunctionality_checksDeviceName_IntegrationTest() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         House house = new House("House Test");
         FactoryRoom roomFactory = new FactoryIndoorRoom();
         FactoryDevice deviceFactory = new ImplFactoryDevice();
@@ -50,13 +52,13 @@ class GetDevicesByFunctionalityCTRLTest {
         // 3.
         Device device1 = house.getListOfRooms().get(0).getListOfDevices().get(0);
         Device device2 = house.getListOfRooms().get(1).getListOfDevices().get(0);
-        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
-        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
         // 4.
         GetDevicesByFunctionalityCTRL finalCTRL = new GetDevicesByFunctionalityCTRL(house);
@@ -81,6 +83,7 @@ class GetDevicesByFunctionalityCTRLTest {
     @Test
     void listDevicesByFunctionality_checksFunctionalityListSize_IntegrationTest() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         House house = new House("House Test");
         FactoryRoom roomFactory = new FactoryIndoorRoom();
         FactoryDevice deviceFactory = new ImplFactoryDevice();
@@ -104,13 +107,13 @@ class GetDevicesByFunctionalityCTRLTest {
         // 3.
         Device device1 = house.getListOfRooms().get(0).getListOfDevices().get(0);
         Device device2 = house.getListOfRooms().get(1).getListOfDevices().get(0);
-        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
-        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
         GetDevicesByFunctionalityCTRL ctrl = new GetDevicesByFunctionalityCTRL(house);
 
@@ -135,6 +138,7 @@ class GetDevicesByFunctionalityCTRLTest {
     @Test
     void listDevicesByFunctionality_GetsLocation_IntegrationTest() throws InstantiationException {
         //Arrange
+        SimHardware simHardware = new SimHardware();
         House house = new House("House Test");
         FactoryRoom roomFactory = new FactoryIndoorRoom();
         FactoryDevice deviceFactory = new ImplFactoryDevice();
@@ -158,13 +162,13 @@ class GetDevicesByFunctionalityCTRLTest {
         // 3.
         Device device1 = house.getListOfRooms().get(0).getListOfDevices().get(0);
         Device device2 = house.getListOfRooms().get(1).getListOfDevices().get(0);
-        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device1.addSensor("XKT2", "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("XKT6","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device1.addSensor("YMCA8", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
-        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue);
-        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue);
+        device2.addSensor("XKT9","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("XVM7","SmartHome.domain.sensor.sensorImplementation.TemperatureSensor", catalogue,simHardware);
+        device2.addSensor("YMCA7", "SmartHome.domain.sensor.sensorImplementation.HumiditySensor", catalogue,simHardware);
 
         GetDevicesByFunctionalityCTRL ctrl = new GetDevicesByFunctionalityCTRL(house);
 

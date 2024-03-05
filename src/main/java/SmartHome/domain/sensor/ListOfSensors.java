@@ -2,7 +2,7 @@ package SmartHome.domain.sensor;
 import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
 
@@ -30,9 +30,9 @@ public class ListOfSensors {
      * @return 0 on successful addition, 1 if instantiation error, 2 if the sensor already exists.
      */
 
-    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue) {
+    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, SimHardware simHardware) {
         if (!isSensorInList(sensorName)) {
-            Sensor newSensor = catalogue.createSensor(sensorName, sensorType);
+            Sensor newSensor = catalogue.createSensor(sensorName, sensorType, simHardware);
             if(newSensor != null){
                 this.listOfSensors.add(newSensor);
                 return true;
@@ -42,15 +42,6 @@ public class ListOfSensors {
         }else{
             return false;
         }
-    }
-
-
-    public Value<?> getReading(String sensorName, SimHardware simHardware) throws InstantiationException {
-        Sensor sensor = findSensor(sensorName);
-        if(sensor!=null){
-            return sensor.getReading(simHardware);
-        }
-        return null;
     }
 
     public ArrayList<String> getLog(String sensorName){

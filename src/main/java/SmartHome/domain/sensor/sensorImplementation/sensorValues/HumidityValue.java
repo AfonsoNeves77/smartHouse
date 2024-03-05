@@ -1,5 +1,7 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * Implementation of value for the Humidity Sensor.
  */
@@ -12,11 +14,11 @@ public class HumidityValue implements Value<Integer> {
      * @param reading Value received by an external source, in line for conversion.
      * @throws InstantiationException If parameters out of bounds.
      */
-    public HumidityValue(int reading) throws InstantiationException {
-        if(reading < 0 || reading > 100){
+    public HumidityValue(String reading) throws InstantiationException {
+        if(!isReadingValid(reading)){
             throw new InstantiationException("Invalid reading");
         }
-        this.primitiveValue = reading;
+        this.primitiveValue = parseInt(reading);
     }
 
     /**
@@ -33,5 +35,15 @@ public class HumidityValue implements Value<Integer> {
      */
     public String getValueAsString(){
         return primitiveValue + "";
+    }
+
+    private boolean isReadingValid(String reading) {
+        int valueOfReading;
+        try {
+            valueOfReading = parseInt(reading);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return valueOfReading >= 0 && valueOfReading <= 100;
     }
 }

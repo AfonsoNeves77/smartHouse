@@ -1,15 +1,16 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
+import SmartHome.domain.sensor.externalServices.ExternalServices;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
 
-import static java.lang.Double.parseDouble;
-
 public class TemperatureSensor implements Sensor {
     private String sensorName;
+    private SimHardware simHardware;
     private final String unit = "C";
     private final ArrayList<Value<Double>> log = new ArrayList<>();
 
@@ -17,11 +18,12 @@ public class TemperatureSensor implements Sensor {
      * Constructor for Temperature Sensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
      * @param sensorName Name of the sensor
      */
-    public TemperatureSensor(String sensorName){
+    public TemperatureSensor(String sensorName, ExternalServices externalServices){
         if(sensorName == null || sensorName.trim().isEmpty()){
             throw new IllegalArgumentException("Invalid parameter");
         }
         this.sensorName = sensorName;
+        this.simHardware = (SimHardware) externalServices;
     }
 
     /**
@@ -32,41 +34,12 @@ public class TemperatureSensor implements Sensor {
         return this.sensorName;
     }
 
+    public Value<Double> getReading() throws InstantiationException {
 
-    /**
-     * This method receives a connection to a physical sensor. Upon receiving its reading, it checks its validity and encapsulates
-     * it into a value object of the type TemperatureValue. It then saves a copy of the value object in the log and returns another copy.
-     * 1. Calls getValue on the simHardware object, receiving a reading as string. If the receiving string is null or empty, it throws an illegal
-     * argument exception.
-     * 2. Converts the string value received above into the specific primitive that is used by this sensor. If it is unable to parse, it will return a
-     * NumberFormatException. E.g. If the receiving string is "This will fail", the parse will not work, thus stopping the process.
-     * 3. After obtaining a primitive value, it then attempts to encapsulate it into the respective SensorValue. If this fails
-     * it will throw an InstantiationException.
-     * 4. After successfully receiving a string reading, converting it into a primitive, and encapsulating it into a value,
-     * it saves a copy in the log, and returning another copy.
-     * @param simHardware Simulates the connection to a piece of hardware/external api that physically measures the reading
-     * @return Returns a temperature value. It uses a generic Value object while specifying the wrapper class of the primitive in scope.
-     */
-    public Value<Double> getReading(SimHardware simHardware) {
+        String simValue = this.simHardware.getValue();
 
-        // 1.
-        String simValue = simHardware.getValue();
-        if (simValue == null || simValue.trim().isEmpty()) {
-            throw new IllegalArgumentException("Invalid reading");
-        }
+        TemperatureValue readingValue = new TemperatureValue(simValue);
 
-        //2.
-        double value;
-        try {
-            value = parseDouble(simHardware.getValue());
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid reading");
-        }
-
-        //3.
-        TemperatureValue readingValue = new TemperatureValue(value);
-
-        //4.
         addValueToLog(readingValue);
         return readingValue;
     }

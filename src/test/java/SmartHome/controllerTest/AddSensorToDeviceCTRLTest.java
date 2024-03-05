@@ -8,6 +8,7 @@ import SmartHome.domain.device.ImplFactoryDevice;
 import SmartHome.domain.room.FactoryIndoorRoom;
 import SmartHome.domain.room.FactoryRoom;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class AddSensorToDeviceCTRLTest {
     void addSensorToDeviceTemperatureSensor_IntegrationTest() throws InstantiationException {
         //Arrange
         House house1 = new House("testHouse");
+        SimHardware simHardware = new SimHardware();
         String roomName = "Room 0";
         int floor = 0;
         double width = 4;
@@ -44,12 +46,12 @@ public class AddSensorToDeviceCTRLTest {
         SensorCatalogue catalogue = new SensorCatalogue("config.properties");
         AddSensorToDeviceCTRL addSensorCtrl = new AddSensorToDeviceCTRL(house1,catalogue);
         String sensorName = "sensorName";
-        String sensorType = "SmartHome.domain.sensor.sensorImplementation.HumiditySensor";
+        String sensorType = "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor";
         addSensorCtrl.getListOfDevices(roomName);
 
 
         //Act
-        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName);
+        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName,simHardware);
         //Assert
         assertTrue(result);
     }
@@ -64,6 +66,7 @@ public class AddSensorToDeviceCTRLTest {
     void addingSensorToDeviceIntegrationTest_shouldNotSucceedForDuplicatedSensor() throws InstantiationException {
         //Arrange
         House house1 = new House("testHouse");
+        SimHardware simHardware = new SimHardware();
         String roomName = "Room 0";
         int floor = 0;
         double width = 4;
@@ -85,10 +88,10 @@ public class AddSensorToDeviceCTRLTest {
         String sensorName = "sensorName";
         String sensorType = "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor";
         addSensorCtrl.getListOfDevices(roomName);
-        addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName);
+        addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName,simHardware);
 
         //Act
-        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName);
+        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName,simHardware);
         //Assert
         assertFalse(result);
     }
@@ -104,6 +107,7 @@ public class AddSensorToDeviceCTRLTest {
     void addingSensorToDeviceIntegrationTest_shouldNotSucceedEmptyName() throws InstantiationException {
         //Arrange
         House house1 = new House("testHouse");
+        SimHardware simHardware = new SimHardware();
         String roomName = "Room 0";
         int floor = 0;
         double width = 4;
@@ -126,7 +130,7 @@ public class AddSensorToDeviceCTRLTest {
 
         //Act
         addSensorCtrl.getListOfDevices(roomName);
-        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName);
+        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName,simHardware);
         //Assert
         assertFalse(result);
     }
@@ -142,6 +146,7 @@ public class AddSensorToDeviceCTRLTest {
     void addingSensorToDeviceIntegrationTest_shouldNotSucceedNullName() throws InstantiationException {
         //Arrange
         House house1 = new House("testHouse");
+        SimHardware simHardware = new SimHardware();
         String roomName = "Room 0";
         int floor = 0;
         double width = 4;
@@ -164,7 +169,7 @@ public class AddSensorToDeviceCTRLTest {
 
         //Act
         addSensorCtrl.getListOfDevices(roomName);
-        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName);
+        boolean result = addSensorCtrl.addSensorToDevice(sensorName,sensorType,deviceName,simHardware);
         //Assert
         assertFalse(result);
     }
@@ -206,5 +211,4 @@ public class AddSensorToDeviceCTRLTest {
         //Assert
         assertEquals(expected,result);
     }
-
 }

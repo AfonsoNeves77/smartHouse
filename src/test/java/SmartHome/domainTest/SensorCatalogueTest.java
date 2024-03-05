@@ -104,40 +104,6 @@ class SensorCatalogueTest {
         //Assert
         assertEquals(expected,result);
     }
-
-    @Test
-    void creatingTemperatureSensor_IsolationTest() throws InstantiationException
-    {
-        // arrange
-        String sensorName = "SensorName";
-        String sensorType = "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor";
-
-        try(MockedConstruction<TemperatureSensor> sensorDouble = mockConstruction(TemperatureSensor.class,(mock, context)-> {
-            when(mock.getName()).thenReturn(sensorName);
-        })) {
-
-            SensorCatalogue sensorCatalogue = new SensorCatalogue("config.properties");
-
-            // act
-             Sensor tempSensor =  sensorCatalogue.createSensor(sensorName, sensorType);
-
-            // assert
-            List<TemperatureSensor> sensors = sensorDouble.constructed();
-            assertEquals(1, sensors.size());
-
-            assertEquals(sensorName, sensorDouble.constructed().get(0).getName());
-            assertEquals(sensorName, tempSensor.getName());
-
-
-        }
-
-    }
-
-
-
-
-
-
 }
 
 

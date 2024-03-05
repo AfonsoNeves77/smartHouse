@@ -1,5 +1,7 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
+import static java.lang.Integer.parseInt;
+
 public class WindValue implements Value {
     private final int windSpeed;
     private final String windDirection;
@@ -12,12 +14,13 @@ public class WindValue implements Value {
      * @param windDirection Wind Direction.
      * @throws InstantiationException On invalid parameters.
      */
-    public WindValue(int windspeed, String windDirection) throws InstantiationException { // "40-N"
-        if (windspeed < 0 || !isDirectionValid(windDirection)){
+    public WindValue(String reading) throws InstantiationException { // "40-N"
+        if(!isReadingValid(reading)){
             throw new InstantiationException("Invalid reading");
         }
-        this.windSpeed = windspeed;
-        this.windDirection = windDirection;
+        String[] words = reading.split("-");
+        this.windSpeed = parseInt(words[0]);
+        this.windDirection = words[1];
     }
 
     /**
@@ -64,5 +67,18 @@ public class WindValue implements Value {
             }
         }
         return false;
+    }
+
+    private boolean isReadingValid(String reading){
+        int windSpeed;
+        String windDirection;
+        try {
+            String[] words = reading.split("-");
+            windSpeed = parseInt(words[0]);
+            windDirection = words[1];
+        } catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e){
+            return false;
+        }
+        return isDirectionValid(windDirection) && windSpeed > 0;
     }
 }

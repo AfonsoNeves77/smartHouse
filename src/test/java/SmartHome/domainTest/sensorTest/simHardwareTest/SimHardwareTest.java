@@ -1,6 +1,6 @@
 package SmartHome.domainTest.sensorTest.simHardwareTest;
 
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

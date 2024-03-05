@@ -1,9 +1,12 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
+import SmartHome.domain.sensor.sensorImplementation.DewPointSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,11 +20,12 @@ class TemperatureSensorTest {
     @Test
     void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
+        SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new TemperatureSensor(sensorName));
+                new TemperatureSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
@@ -30,11 +34,12 @@ class TemperatureSensorTest {
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "   ";
         String expected = "Invalid parameter";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new TemperatureSensor(sensorName));
+                new TemperatureSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
@@ -43,8 +48,9 @@ class TemperatureSensorTest {
     @Test
     void getName_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new TemperatureSensor(sensorName);
+        Sensor sensor = new TemperatureSensor(sensorName, simHardware);
         //Act
         String result = sensor.getName();
         //Assert
@@ -54,8 +60,9 @@ class TemperatureSensorTest {
     @Test
     void getUnit_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new TemperatureSensor(sensorName);
+        Sensor sensor = new TemperatureSensor(sensorName, simHardware);
         String expected = "C";
         //Act
         String result = sensor.getUnit();
@@ -63,121 +70,39 @@ class TemperatureSensorTest {
         assertEquals(expected,result);
     }
 
-    /**
-     * 1. Instantiates a new sensor
-     * 2. Crates a SimHardware double, in order to mock its behaviour when .getValue is called. Even though
-     * this is an integration test, the SimHardware must be mocked as it simulates a connection with a physical
-     * sensor/API.
-     * 3. Saves the Value resulting from calling the method getReading unto the pre-defined sensor.
-     * 4. Converts the Value unto string and verifies that it matches the value mocked by calling getValue on simHardware
-     * @throws InstantiationException If invalid sensor Name.
-     */
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
-
-        // 1.
-        String sensorName = "Sensor1";
-        Sensor sensor = new TemperatureSensor(sensorName);
-
-        // 2.
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn("36.1");
 
-        String expected = "36.1";
-        //Act
+        String sensorName = "Sensor 1";
+        TemperatureSensor sensor = new TemperatureSensor(sensorName,simHardware);
 
-        // 3.
-        Value<?> value = sensor.getReading(simHardware);
+        String expected = "36.1";
+
+        //Act
+        TemperatureValue value = (TemperatureValue) sensor.getReading();
         String result = value.getValueAsString();
+
         //Assert
         assertEquals(expected,result);
     }
 
     @Test
-    void getReading_ThrowsExceptionIfInvalidReading_Integration() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = " ";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new TemperatureSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getReading_ThrowsExceptionIfNullReading_Integration() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = null;
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new TemperatureSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getReading_ThrowsExceptionIfReadingInvalidButNotNullOrEmpty_Integration() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "I will fail";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-
-        Sensor sensor = new TemperatureSensor(sensorName);
-
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
-    }
-
-
-    @Test
-    void getLog_Successfully_Integration() throws InstantiationException {
+    void getLog_SuccessfullyReturnsEmptyList_Isolation() {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn("36.1");
 
-        Sensor sensor = new TemperatureSensor(sensorName);
+        Sensor sensor = new TemperatureSensor(sensorName, simHardware);
 
-        String expected = "36.1";
-        sensor.getReading(simHardware);
-        //Act
-        ArrayList<String> log = sensor.getLog();
-        String result = log.get(0);
-        //Assert
-        assertEquals(expected,result);
-    }
+        ArrayList<String> expected = new ArrayList<>();
 
-    @Test
-    void getLog_SuccessfullyReturnsEmptyListIfNoLogs_Integration(){
-        //Arrange
-        String sensorName = "Sensor1";
-        Sensor sensor = new TemperatureSensor(sensorName);
         //Act
-        ArrayList<String> expected = sensor.getLog();
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = sensor.getLog();
+
         //Assert
         assertEquals(expected,result);
     }

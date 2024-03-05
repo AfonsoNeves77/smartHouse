@@ -1,5 +1,6 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest.sensorValuesTest;
 
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
 import org.junit.jupiter.api.Test;
 
@@ -8,82 +9,90 @@ import static org.junit.jupiter.api.Assertions.*;
 class PositionValueTest {
 
     @Test
-    void constructorThrowsExceptionIfValueAboveRange() {
-        // Arrange
-        int intValue = 101;
+    void constructor_throwsInstantiationExceptionIfReadingNull() throws InstantiationException {
+        //Arrange
+        String reading = null;
         String expected = "Invalid reading";
-        // Act
-        Exception exception = assertThrows(InstantiationException.class, () ->
-                new PositionValue(intValue));
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> new PositionValue(reading));
         String result = exception.getMessage();
-        // Assert
-        assertEquals(expected, result);
+        //Assert
+        assertEquals(expected,result);
     }
 
     @Test
-    void constructorThrowsExceptionIfValueBelowRange() {
-        // Arrange
-        int intValue = -1;
+    void constructor_throwsInstantiationExceptionIfReadingEmpty() throws InstantiationException {
+        //Arrange
+        String reading = " ";
         String expected = "Invalid reading";
-        // Act
-        Exception exception = assertThrows(InstantiationException.class, () ->
-                new PositionValue(intValue));
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> new PositionValue(reading));
         String result = exception.getMessage();
-        // Assert
-        assertEquals(expected, result);
+        //Assert
+        assertEquals(expected,result);
     }
 
     @Test
-    void constructorSuccess() throws InstantiationException {
-        // Arrange
-        int intValue = 1;
-        // Act
-        PositionValue value = new PositionValue(intValue);
-        // Assert
-        assertEquals(intValue, value.getValue());
+    void constructor_throwsInstantiationExceptionIfReadingUnableToParse() throws InstantiationException {
+        //Arrange
+        String reading = "this will fail";
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> new PositionValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
     }
 
     @Test
-    void constructorSuccessLowerLimitEqualsZero() throws InstantiationException {
-        // Arrange
-        int intValue = 0;
-        // Act
-        PositionValue value = new PositionValue(intValue);
-        // Assert
-        assertEquals(intValue, value.getValue());
+    void constructor_throwsInstantiationExceptionIfReadingAboveBounds() throws InstantiationException {
+        //Arrange
+        String reading = "101";
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> new PositionValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
     }
 
     @Test
-    void constructorSuccessUpperLimitEqualsHundred() throws InstantiationException {
-        // Arrange
-        int intValue = 100;
-        // Act
-        PositionValue value = new PositionValue(intValue);
-        // Assert
-        assertEquals(intValue, value.getValue());
+    void constructor_throwsInstantiationExceptionIfReadingBelowBounds() throws InstantiationException {
+        //Arrange
+        String reading = "-1";
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> new PositionValue(reading));
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
     }
 
     @Test
-    void getValueReturnsSuccessfuly() throws InstantiationException {
-        // Arrange
-        int intValue = 1;
-        PositionValue value = new PositionValue(intValue);
-        // Act
-        int result = value.getValue();
-        // Assert
-        assertEquals(intValue, result);
+    void getValue_returnsSuccessfully() throws InstantiationException {
+        //Arrange
+        String doubleValue = "3";
+        int expected = 3;
+        //Act
+        PositionValue value = new PositionValue(doubleValue);
+        //Assert
+        assertEquals(expected,value.getValue());
     }
 
     @Test
-    void getValueSuccessfullyConvertsToString() throws InstantiationException {
-        // Arrange
-        int intValue = 1;
-        PositionValue value = new PositionValue(intValue);
-        String expected = "1";
-        // Act
+    void getValue_SuccessfullyConvertsToString() throws InstantiationException {
+        //Arrange
+        String doubleValue = "1";
+        //Act
+        PositionValue value = new PositionValue(doubleValue);
         String result = value.getValueAsString();
-        // Assert
-        assertEquals(expected, result);
+        String expected = "1";
+        //Assert
+        assertEquals(expected,result);
     }
-
 }

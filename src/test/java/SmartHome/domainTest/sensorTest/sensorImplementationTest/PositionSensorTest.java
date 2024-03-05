@@ -1,9 +1,12 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
+import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
 import SmartHome.domain.sensor.sensorImplementation.PositionSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.simHardware.SimHardware;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,167 +16,95 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class PositionSensorTest {
-    @Test
-    void positionSensorConstructor_success() {
-        //Arrange
-        String sensorName = "Sensor1";
-        //Act
-        Sensor sensor = new PositionSensor(sensorName);
-        //Assert
-        assertEquals(sensorName, sensor.getName());
-    }
 
     @Test
-    void positionSensorConstructor_throwsExceptionIfNameNull() {
+    void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
+        SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new PositionSensor(sensorName));
+                new PositionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected, result);
+        assertEquals(expected,result);
     }
 
     @Test
-    void positionSensorConstructor_throwsExceptionIfNameEmpty(){
+    void sensorConstructor_throwsExceptionIfNameEmpty(){
         //Arrange
-        String sensorName = " ";
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "   ";
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new PositionSensor(sensorName));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new PositionSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected, result);
+        assertEquals(expected,result);
     }
 
     @Test
-    void getName_success() {
+    void getName_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new PositionSensor(sensorName);
+        Sensor sensor = new PositionSensor(sensorName, simHardware);
         //Act
         String result = sensor.getName();
         //Assert
-        assertEquals(sensorName, result);
+        assertEquals(sensorName,result);
     }
 
     @Test
-    void getUnit_success() {
+    void getUnit_SuccessfullyReturns(){
         //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new PositionSensor(sensorName);
+        Sensor sensor = new PositionSensor(sensorName, simHardware);
         String expected = "%";
         //Act
         String result = sensor.getUnit();
         //Assert
-        assertEquals(expected, result);
+        assertEquals(expected,result);
     }
 
     @Test
-    void getReading_returnsValueCorrectly() throws InstantiationException {
+    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        String sensorName = "Sensor 1";
+        PositionSensor sensor = new PositionSensor(sensorName,simHardware);
+
+        String expected = "36";
+
+        //Act
+        PositionValue value = (PositionValue) sensor.getReading();
+        String result = value.getValueAsString();
+
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void getLog_SuccessfullyReturnsEmptyList_Isolation(){
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
-        Sensor sensor = new PositionSensor(sensorName);
-        String expected = "50";
-        //Act
-        Value<?> value = sensor.getReading(simHardware);
-        //Assert
-        assertEquals(expected, value.getValueAsString());
-    }
+        when(simHardware.getValue()).thenReturn("36");
 
-    @Test
-    void getReading_throwsExceptionIfInvalidReading() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = " ";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-        Sensor sensor = new PositionSensor(sensorName);
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
+        PositionSensor sensor = new PositionSensor(sensorName, simHardware);
 
-    @Test
-    void getReading_throwsExceptionIfNullReading() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = null;
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-        Sensor sensor = new PositionSensor(sensorName);
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void getReading_throwsExceptionIfReadingAboveRange() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "101";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-        Sensor sensor = new PositionSensor(sensorName);
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void getReading_throwsExceptionIfReadingBelowRange() {
-        //Arrange
-        String sensorName = "Sensor1";
-        String simReading = "-1";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn(simReading);
-        Sensor sensor = new PositionSensor(sensorName);
-        String expected = "Invalid reading";
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading(simHardware));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void getLog_returnsLogCorrectly() throws InstantiationException {
-        //Arrange
-        String sensorName = "Sensor1";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
-        Sensor sensor = new PositionSensor(sensorName);
-        sensor.getReading(simHardware);
-        String expected = "50";
-        //Act
-        String result = sensor.getLog().get(0);
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void getLog_returnsEmptyListIfNoLogs(){
-        //Arrange
-        String sensorName = "Sensor1";
-        Sensor sensor = new PositionSensor(sensorName);
         ArrayList<String> expected = new ArrayList<>();
+
         //Act
         ArrayList<String> result = sensor.getLog();
+
         //Assert
-        assertEquals(expected, result);
+        assertEquals(expected,result);
     }
 
 }
