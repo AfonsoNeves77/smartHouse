@@ -8,4 +8,7 @@ public class SimHardwareAct {
     public boolean executeIntegerCommandSim(int position) {
         return true;
     }
+    public boolean executeDecimalCommandSim(double newValue){
+        return true;
+    }
 }

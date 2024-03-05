@@ -32,4 +32,16 @@ class SimHardwareActTest {
         //assert
         assertTrue(result);
     }
+    @Test
+    void testSimHardwareAct_DecimalSetCommand() {
+
+        //arrange
+        SimHardwareAct simHardwareAct = new SimHardwareAct();
+
+        //act
+        boolean result = simHardwareAct.executeDecimalCommandSim(15);
+
+        //assert
+        assertTrue(result);
+    }
 }
