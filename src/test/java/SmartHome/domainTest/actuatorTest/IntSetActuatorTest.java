@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 public class IntSetActuatorTest {
 
     @Test
-    void testIntSetActuator_Constructor() {
+    void testIntSetActuator_Constructor() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -28,7 +28,7 @@ public class IntSetActuatorTest {
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
         String expected = "Invalid parameters for Integer Range Actuator.";
 //        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new IntSetActuator(actuatorName, simHardwareActMock);
         });
         String result = exception.getMessage();
@@ -43,7 +43,7 @@ public class IntSetActuatorTest {
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
         String expected = "Invalid parameters for Integer Range Actuator.";
 //        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new IntSetActuator(actuatorName, simHardwareActMock);
         });
         String result = exception.getMessage();
@@ -52,7 +52,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_setLimitsInverted() {
+    void testIntSetActuator_setLimitsInverted() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -70,7 +70,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_setLimitsToEqualValues() {
+    void testIntSetActuator_setLimitsToEqualValues() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -88,7 +88,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_testExecuteCommand_ReturnFalseIfValueNotUpdated() {
+    void testIntSetActuator_testExecuteCommand_ReturnFalseIfValueNotUpdated() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -107,7 +107,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_testExecuteCommand_SetInvalidValue() {
+    void testIntSetActuator_testExecuteCommand_SetInvalidValue() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -124,7 +124,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_SetValueEqualToLowerLimit() {
+    void testIntSetActuator_SetValueEqualToLowerLimit() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -141,7 +141,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_SetValueEqualToUpperLimit() {
+    void testIntSetActuator_SetValueEqualToUpperLimit() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -158,7 +158,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_testExecuteCommand_Success() {
+    void testIntSetActuator_testExecuteCommand_Success() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -175,7 +175,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_testExecuteCommand_ReturnFalse() {
+    void testIntSetActuator_testExecuteCommand_ReturnFalse() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -192,7 +192,7 @@ public class IntSetActuatorTest {
     }
 
     @Test
-    void testIntSetActuator_testExecuteCommand_InvertedLimits() {
+    void testIntSetActuator_testExecuteCommand_InvertedLimits() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);

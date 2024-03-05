@@ -14,7 +14,7 @@ class BlindRollerActuatorTest {
     private SimHardwareAct mockSimHardwareAct;
 
     @BeforeEach
-    void setup() {
+    void setup() throws InstantiationException {
         mockSimHardwareAct = mock(SimHardwareAct.class);
         blindRollerActuator = new BlindRollerActuator("Blind Roller", mockSimHardwareAct);
     }
@@ -37,7 +37,7 @@ class BlindRollerActuatorTest {
         String expected = "Invalid name for Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new BlindRollerActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();
@@ -53,7 +53,7 @@ class BlindRollerActuatorTest {
         String expected = "Invalid name for Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new BlindRollerActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();

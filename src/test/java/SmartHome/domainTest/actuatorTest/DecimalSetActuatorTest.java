@@ -15,7 +15,7 @@ public class DecimalSetActuatorTest {
     private SimHardwareAct mockSimHardwareAct;
 
     @BeforeEach
-    void setup() {
+    void setup() throws InstantiationException {
         mockSimHardwareAct = mock(SimHardwareAct.class);
         decimalSetActuator = new DecimalSetActuator("Decimal", mockSimHardwareAct);
     }
@@ -46,7 +46,7 @@ public class DecimalSetActuatorTest {
         String expected = "Invalid parameters for Decimal Range Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new DecimalSetActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();
@@ -62,7 +62,7 @@ public class DecimalSetActuatorTest {
         String expected = "Invalid parameters for Decimal Range Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new DecimalSetActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();

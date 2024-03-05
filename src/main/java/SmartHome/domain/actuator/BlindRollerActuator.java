@@ -9,9 +9,9 @@ public class BlindRollerActuator implements Actuator {
      * @param actuatorName Name of the actuator
      * @param simHardwareAct
      */
-    public BlindRollerActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+    public BlindRollerActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
-            throw new IllegalArgumentException("Invalid name for Actuator.");
+            throw new InstantiationException("Invalid name for Actuator.");
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;

@@ -9,9 +9,9 @@ public class DecimalSetActuator implements Actuator{
     private double lowerLimit;
     private final int precision = 3;
 
-    public DecimalSetActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+    public DecimalSetActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
-            throw new IllegalArgumentException("Invalid parameters for Decimal Range Actuator.");
+            throw new InstantiationException("Invalid parameters for Decimal Range Actuator.");
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;

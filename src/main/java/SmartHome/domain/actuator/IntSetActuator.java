@@ -8,9 +8,9 @@ public class IntSetActuator implements Actuator {
     private int upperLimit;
     private int lowerLimit;
 
-    public IntSetActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+    public IntSetActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
-            throw new IllegalArgumentException("Invalid parameters for Integer Range Actuator.");
+            throw new InstantiationException("Invalid parameters for Integer Range Actuator.");
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;

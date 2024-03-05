@@ -44,4 +44,17 @@ class SimHardwareActTest {
         //assert
         assertTrue(result);
     }
+
+    @Test
+    void testSimHardwareAct_IntegerCommand() {
+
+        //arrange
+        SimHardwareAct simHardwareAct = new SimHardwareAct();
+
+        //act
+        boolean result = simHardwareAct.executeIntegerCommandSim(50);
+
+        //assert
+        assertTrue(result);
+    }
 }
