@@ -16,51 +16,40 @@ public class SwitchActuatorTest {
     private SimHardwareAct mockSimHardwareAct;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         mockSimHardwareAct = mock(SimHardwareAct.class);
-        switchActuator = new SwitchActuator("Switch", "Off");
+        switchActuator = new SwitchActuator("Switch", mockSimHardwareAct);
     }
 
     @Test
-    void testSwitchActuator() {
+    void testSwitchActuator_Constructor() {
         //arrange
-        String actuatorName = "Random Actuator";
-        String state = "On";
+        String actuatorName = "Switch";
 
-        //act
-        SwitchActuator switchActuator = new SwitchActuator(actuatorName, state);
+        //act done in BeforeEach
 
         //assert
         assertEquals(actuatorName, switchActuator.getName());
+    }
+    @Test
+    void testSwitchActuator_GetState() {
+        //arrange
+        String state = "Off";
+
+        //act done in BeforeEach
+        //assert
+        assertEquals(state, switchActuator.getState());
     }
 
     @Test
     void testSwitchActuator_nullActuatorName() {
         //arrange
         String actuatorName = null;
-        String state = "On";
         String expected = "Invalid name for Actuator.";
 
         //act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new SwitchActuator(actuatorName, state);
-        });
-        String result = exception.getMessage();
-
-        //assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void testSwitchActuator_nullState() {
-        //arrange
-        String actuatorName = "Random Actuator";
-        String state = null;
-        String expected = "Invalid name for Actuator.";
-
-        //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new SwitchActuator(actuatorName, state);
+            new SwitchActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();
 
@@ -72,29 +61,11 @@ public class SwitchActuatorTest {
     void testSwitchActuator_emptyName() {
         //arrange
         String actuatorName = " ";
-        String state = "Off";
         String expected = "Invalid name for Actuator.";
 
         //act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new SwitchActuator(actuatorName, state);
-        });
-        String result = exception.getMessage();
-
-        //assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void testSwitchActuator_emptyState() {
-        //arrange
-        String actuatorName = "Random Actuator";
-        String state = " ";
-        String expected = "Invalid name for Actuator.";
-
-        //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new SwitchActuator(actuatorName, state);
+            new SwitchActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();
 
@@ -104,41 +75,53 @@ public class SwitchActuatorTest {
 
 
     @Test
-    public void testExecuteCommand_InvalidCommand_ReturnsFalse() {
-        boolean result = switchActuator.executeCommand("Invalid", mockSimHardwareAct);
+    void testExecuteCommand_InvalidCommand_ReturnsFalse() {
+
+        boolean result = switchActuator.executeCommand("Invalid");
 
         assertFalse(result);
     }
 
     @Test
-    public void testExecuteCommand_ValidCommandButExecutionFails_ReturnsFalse() {
+    void testExecuteCommand_ValidCommandButExecutionFails_ReturnsFalse() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(false);
 
-        boolean result = switchActuator.executeCommand("On", mockSimHardwareAct);
+        boolean result = switchActuator.executeCommand("On");
 
         assertFalse(result);
     }
     @Test
-    public void testGetName() {
+    void test_GetName() {
         String expected = "Switch";
         String result = switchActuator.getName();
         assertEquals(expected, result);
     }
     @Test
-    public void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
+    void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(true);
 
-        boolean result = switchActuator.executeCommand("On", mockSimHardwareAct);
+        boolean result = switchActuator.executeCommand("On");
 
         assertTrue(result);
     }
     @Test
-    public void testExecuteCommand_ValidCommandAndExecutionSucceeds_StateIsUpdated() {
+    void testExecuteCommand_ValidCommandAndExecutionSucceeds_StateIsUpdated() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(true);
 
-        switchActuator.executeCommand("On", mockSimHardwareAct);
+        switchActuator.executeCommand("On");
 
         String expected = "On";
+        String result = switchActuator.getState();
+
+        assertEquals(expected, result);
+    }
+    @Test
+    void test_ValidCommandAndExecutionFails_StateIsNotUpdated() {
+
+        when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(false);
+        switchActuator.executeCommand("On");
+
+        String expected = "Off";
         String result = switchActuator.getState();
 
         assertEquals(expected, result);

@@ -46,6 +46,7 @@ public class HumiditySensor implements Sensor {
         return readingValue;
     }
 
+
     /**
      * Converts the log list from Value to String.
      * 1. Creates an empty ArrayList of strings.

@@ -1,12 +1,17 @@
 package SmartHome.domainTest;
+import SmartHome.domain.House;
 import SmartHome.domain.SensorCatalogue;
+import SmartHome.domain.sensor.sensorImplementation.Sensor;
+import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.MockedConstruction;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.when;
 
 
 class SensorCatalogueTest {
