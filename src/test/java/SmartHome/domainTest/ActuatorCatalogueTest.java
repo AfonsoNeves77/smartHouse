@@ -5,15 +5,17 @@ import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.actuator.Actuator;
 import SmartHome.domain.actuator.SimHardwareAct;
 import SmartHome.domain.actuator.SwitchActuator;
+import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class ActuatorCatalogueTest {
 
@@ -29,17 +31,6 @@ public class ActuatorCatalogueTest {
         //Assert
         assertEquals(expected,result);
     }
-
-//    @Test
-//    void validCreationCatalogueUsingConfigurationObject() throws InstantiationException {
-//
-//        //Arrange
-//        Configuration configuration = new PropertyListConfiguration();
-//        //Act
-//        ActuatorCatalogue catalogue = new ActuatorCatalogue(configuration);
-//        //Assert
-//        assertNotNull(catalogue);
-//    }
 
 
     @Test
@@ -116,9 +107,7 @@ public class ActuatorCatalogueTest {
         //Act
         Actuator actuatorNew = catalogue.createActuator(actuatorName, actuatorType, simHardwareActDouble);
         //Assert
-        assertEquals(SwitchActuator.class, actuatorNew.getClass());
-        // Assertion method awaits validation. We are not sure we are actually creating a Switch Actuator.
-//        assertNotNull(actuatorNew);
+        assertNotNull(actuatorNew);
     }
     @Test
     void createActuatorTest_UnsuccessfulCreation_InvalidActuatorType() throws InstantiationException {
@@ -144,5 +133,32 @@ public class ActuatorCatalogueTest {
         //Assert
         assertNull(actuatorNew);
     }
+
+    @Test
+    void creatingSwitchActuator_IsolationTest() throws InstantiationException
+    {
+        // arrange
+        String actuatorName = "actuator";
+        String actuatorType = "SmartHome.domain.actuator.SwitchActuator";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+
+        try(MockedConstruction<SwitchActuator> actuatorDouble = mockConstruction(SwitchActuator.class,(mock, context)-> {
+            when(mock.getName()).thenReturn(actuatorName);
+        })) {
+
+            ActuatorCatalogue actuatorCatalogue = new ActuatorCatalogue("config.properties");
+
+            // act
+            Actuator newActuator = actuatorCatalogue.createActuator(actuatorName, actuatorType,simHardwareActDouble);
+
+            // assert
+            List<SwitchActuator> actuators = actuatorDouble.constructed();
+            assertEquals(1, actuators.size());
+            assertEquals(actuatorName, actuatorDouble.constructed().get(0).getName());
+            assertEquals(actuatorName, newActuator.getName());
+        }
+
+    }
+
 
 }
