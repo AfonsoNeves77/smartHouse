@@ -79,7 +79,7 @@ public class InstantPowerConsumptionValueTest {
     }
 
     @Test
-    void constructor_Success() throws InstantiationException {
+    void getValue_returnsSuccessfully() throws InstantiationException {
         //Arrange
         String reading = "2323351.123412";
         double expected = 2323351.123412;
@@ -88,6 +88,18 @@ public class InstantPowerConsumptionValueTest {
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
         double result = value.getValue();
 
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void getValueAsString_returnsSuccessfully() throws InstantiationException {
+        //Arrange
+        String reading = "1.0";
+        InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
+        String expected = "1.0";
+        //Act
+        String result = value.getValueAsString();
         //Assert
         assertEquals(expected,result);
     }
