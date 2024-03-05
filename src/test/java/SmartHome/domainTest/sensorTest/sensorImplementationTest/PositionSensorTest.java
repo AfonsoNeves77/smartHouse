@@ -8,12 +8,13 @@ import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PositionSensorTest {
 
@@ -87,6 +88,32 @@ class PositionSensorTest {
 
         //Assert
         assertEquals(expected,result);
+    }
+
+    @Test
+    void getReading_ReturnsValueCorrectly_Isolation() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        String sensorName = "Sensor 1";
+        String expected = "36";
+        PositionSensor sensor = new PositionSensor(sensorName,simHardware);
+        try(MockedConstruction<PositionValue> positionValueDouble = mockConstruction(PositionValue.class, (mock, context)
+        -> {when(mock.getValueAsString()).thenReturn("36");})){
+            //Act
+            PositionValue value = (PositionValue) sensor.getReading();
+
+            //Assert
+            List<PositionValue> values = positionValueDouble.constructed();
+            assertEquals(1, values.size());
+
+            String result = values.get(0).getValueAsString();
+            assertEquals(expected,result);
+
+            String mockedPositionValue = value.getValueAsString();
+            assertEquals(expected,mockedPositionValue);
+        }
     }
 
     @Test
