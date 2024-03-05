@@ -3,7 +3,10 @@ package SmartHome.domain.device;
 import java.util.ArrayList;
 import java.util.List;
 
+import SmartHome.domain.ActuatorCatalogue;
 import SmartHome.domain.SensorCatalogue;
+import SmartHome.domain.actuator.ListOfActuators;
+import SmartHome.domain.actuator.SimHardwareAct;
 import SmartHome.domain.sensor.ListOfSensors;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
@@ -14,6 +17,8 @@ public class Device {
     private String deviceLocation;
     private boolean status;
     private ListOfSensors listOfSensors;
+
+    private ListOfActuators listOfActuators;
     private List<String> deviceFunctionalities = new ArrayList<>();
 
     /**
@@ -32,6 +37,7 @@ public class Device {
             this.deviceLocation = deviceLocation;
             this.status = true;
             this.listOfSensors = new ListOfSensors();
+            this.listOfActuators = new ListOfActuators();
 
     }
 
@@ -51,6 +57,9 @@ public class Device {
             return true;
         }
         return false;
+    }
+    public boolean addActuator(String actuatorName, String actuatorType, ActuatorCatalogue catalogue, SimHardwareAct simHardwareAct){
+        return listOfActuators.addActuator(actuatorName,actuatorType,catalogue, simHardwareAct);
     }
 
     private void updateDeviceFunctionalities(String sensorType){

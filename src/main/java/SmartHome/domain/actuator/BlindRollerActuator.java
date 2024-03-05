@@ -1,6 +1,6 @@
 package SmartHome.domain.actuator;
 
-public class BlindRollerActuator {
+public class BlindRollerActuator implements Actuator {
     private String actuatorName;
     private SimHardwareAct simHardwareAct;
 
