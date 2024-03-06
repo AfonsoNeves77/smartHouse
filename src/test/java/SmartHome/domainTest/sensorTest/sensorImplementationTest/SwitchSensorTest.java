@@ -1,6 +1,7 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.domain.sensor.sensorImplementation.AveragePowerConsumptionSensor;
 import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.SwitchSensor;
@@ -71,6 +72,18 @@ public class SwitchSensorTest {
         //Assert
         assertEquals(expected,result);
     }
+    @Test
+    void getType_SuccessfullyReturns() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
+        String expected = "Switch";
+        //Act
+        String result = sensor.getType();
+        //Assert
+        assertEquals(expected,result);
+    }
 
     @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
@@ -88,6 +101,24 @@ public class SwitchSensorTest {
 
         //Assert
         assertEquals(expected,result);
+    }
+    @Test
+    void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("On");
+        String sensorName = "Sensor1";
+        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
+        String expected = "On";
+
+        //Act
+        sensor.getReading();
+        when(simHardware.getValue("On", "On")).thenReturn("On");
+        sensor.getReading();
+        String result = sensor.getLog().get(1);
+
+        //Assert
+        assertEquals(expected, result);
     }
 
     @Test

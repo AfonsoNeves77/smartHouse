@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class SwitchSensor implements Sensor{
     private String sensorName;
     private SimHardware simHardware;
+    private final String type = "Switch";
     private final String unit = "State";
     private final ArrayList<Value<String>> log = new ArrayList<>();
 
@@ -31,6 +32,10 @@ public class SwitchSensor implements Sensor{
     @Override
     public String getName(){
         return this.sensorName;
+    }
+
+    public String getType(){
+        return this.type;
     }
 
     public Value<String> getReading() throws InstantiationException {
