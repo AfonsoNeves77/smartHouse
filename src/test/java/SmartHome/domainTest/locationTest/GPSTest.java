@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class GPSTest {
 
     /**
-     * Test 01
      * Unit test to create a GPS location with an invalid longitude.
      * Arrange a factory, a latitude and a longitude.
      * Act to create a GPS location with an invalid longitude.
@@ -21,7 +20,7 @@ class GPSTest {
         double latitude = 0;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new GPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -45,7 +44,7 @@ class GPSTest {
         double latitude = 0;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new GPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -68,7 +67,7 @@ class GPSTest {
         double latitude = -91;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new GPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -91,7 +90,7 @@ class GPSTest {
         double latitude = 91;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new GPS (latitude, longitude);
         });
         String result = exception.getMessage();
@@ -100,7 +99,7 @@ class GPSTest {
     }
 
     @Test
-    void constructor_belowLimitsValuesDoNotThrowException() {
+    void constructor_belowLimitsValuesDoNotThrowException() throws InstantiationException {
         //Arrange
         double longitude = -180;
         double latitude = -90;
@@ -113,7 +112,7 @@ class GPSTest {
     }
 
     @Test
-    void constructor_upperLimitsValuesDoNotThrowException() {
+    void constructor_upperLimitsValuesDoNotThrowException() throws InstantiationException {
         //Arrange
         double longitude = 180;
         double latitude = 90;
