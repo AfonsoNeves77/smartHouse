@@ -1,13 +1,13 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest.sensorValuesTest;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.AveragePowerConsumptionValue;
+import SmartHome.domain.sensor.sensorImplementation.EnergyConsumptionSensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.EnergyConsumptionValue;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-class AveragePowerConsumptionValueTest {
-
+public class EnergyConsumptionValueTest {
     @Test
     void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNotANumber(){
         //Arrange
@@ -15,7 +15,7 @@ class AveragePowerConsumptionValueTest {
         String expected = "Invalid reading";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> new AveragePowerConsumptionValue(value));
+        Exception exception = assertThrows(InstantiationException.class, () -> new EnergyConsumptionValue(value));
         String result = exception.getMessage();
 
         //Assert
@@ -24,11 +24,11 @@ class AveragePowerConsumptionValueTest {
     @Test
     void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNegative(){
         //Arrange
-        String value = "-1";
+        String value = "-1.57";
         String expected = "Invalid reading";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> new AveragePowerConsumptionValue(value));
+        Exception exception = assertThrows(InstantiationException.class, () -> new EnergyConsumptionValue(value));
         String result = exception.getMessage();
 
         //Assert
@@ -39,11 +39,11 @@ class AveragePowerConsumptionValueTest {
     void averagePowerConsumptionValueConstructor_returnsSuccessfully() throws InstantiationException {
         //Arrange
         String value = "50";
-        AveragePowerConsumptionValue averagePowerConsumptionValue = new AveragePowerConsumptionValue(value);
-        int expected = 50;
+        EnergyConsumptionValue energyPowerConsumptionValue = new EnergyConsumptionValue(value);
+        double expected = 50;
 
         //Act
-        int result = averagePowerConsumptionValue.getValue();
+        double result = energyPowerConsumptionValue.getValue();
 
         //Assert
         assertEquals(expected,result);
@@ -53,7 +53,7 @@ class AveragePowerConsumptionValueTest {
     void getValueAsString_SuccessfullyConvertsToString() throws InstantiationException {
         //Arrange
         String value = "50";
-        AveragePowerConsumptionValue averagePowerConsumptionValue = new AveragePowerConsumptionValue(value);
+        EnergyConsumptionValue averagePowerConsumptionValue = new EnergyConsumptionValue(value);
         String expected = "50";
 
         //Act

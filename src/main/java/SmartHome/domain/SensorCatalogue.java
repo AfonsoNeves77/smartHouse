@@ -46,7 +46,7 @@ public class SensorCatalogue {
         return new ArrayList<>(this.listOfInstantiableSensors);
     }
 
-    public Sensor createSensor(String sensorName, String sensorType, SimHardware simHardware) {
+    public Sensor createSensor(String sensorName, String sensorType, ExternalServices simHardware) {
         Optional<String> optionalSensor = this.listOfInstantiableSensors.stream().filter(s -> s.equalsIgnoreCase(sensorType)).findFirst();
         if(optionalSensor.isPresent()){
             try{

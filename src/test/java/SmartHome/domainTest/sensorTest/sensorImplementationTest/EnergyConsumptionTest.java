@@ -1,10 +1,9 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.SimHardware;
-import SmartHome.domain.sensor.sensorImplementation.AveragePowerConsumptionSensor;
+import SmartHome.domain.sensor.sensorImplementation.EnergyConsumptionSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,17 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class AveragePowerConsumptionSensorTest {
+public class EnergyConsumptionTest {
     @Test
     void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
-        SimHardware simHardwareInteger = mock(SimHardware.class);
+        SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
         String expected = "Invalid parameter";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new AveragePowerConsumptionSensor(sensorName, simHardwareInteger));
+                new EnergyConsumptionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
 
         //Assert
@@ -32,13 +31,13 @@ class AveragePowerConsumptionSensorTest {
     @Test
     void sensorConstructor_throwsExceptionIfNameIsEmpty(){
         //Arrange
-        SimHardware simHardwareInteger = mock(SimHardware.class);
+        SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = " ";
         String expected = "Invalid parameter";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new AveragePowerConsumptionSensor(sensorName, simHardwareInteger));
+                new EnergyConsumptionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
 
         //Assert
@@ -50,7 +49,7 @@ class AveragePowerConsumptionSensorTest {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        Sensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
 
         //Act
         String result = sensor.getName();
@@ -64,8 +63,8 @@ class AveragePowerConsumptionSensorTest {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        Sensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "W";
+        Sensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Wh";
 
         //Act
         String result = sensor.getUnit();
@@ -78,8 +77,9 @@ class AveragePowerConsumptionSensorTest {
     void getReading_ReturnsValueCorrectly() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");        String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "50";
 
         //Act
@@ -96,7 +96,7 @@ class AveragePowerConsumptionSensorTest {
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn(" ");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid reading";
 
         //Act
@@ -113,7 +113,7 @@ class AveragePowerConsumptionSensorTest {
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn("abc");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid reading";
 
         //Act
@@ -128,9 +128,9 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfReadingIsNegative(){
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("-50");
+        when(simHardware.getValue()).thenReturn("-50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid reading";
 
         //Act
@@ -147,7 +147,7 @@ class AveragePowerConsumptionSensorTest {
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "50";
 
         //Act
@@ -164,7 +164,7 @@ class AveragePowerConsumptionSensorTest {
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         String expected = "60";
 
         //Act
@@ -182,7 +182,7 @@ class AveragePowerConsumptionSensorTest {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
         int expected = 0;
 
         //Act
@@ -195,10 +195,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2020 14:15:45", "15-12-2020 14:15:45"));
@@ -212,10 +212,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2021 14:15:45", "16-12-2020 14:15:45"));
@@ -229,10 +229,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2050 14:15:45"));
@@ -246,10 +246,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateFormatIsInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45"));
@@ -263,10 +263,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfFinalDateFormatIsInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45:00"));
@@ -280,10 +280,10 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue()).thenReturn("50.5");
         String sensorName = "Sensor1";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45:00"));

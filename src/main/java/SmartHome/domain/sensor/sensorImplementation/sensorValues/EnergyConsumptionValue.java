@@ -1,13 +1,11 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
-import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
-
-public class AveragePowerConsumptionValue implements Value<Integer> {
+public class EnergyConsumptionValue implements Value<Integer> {
     private final int primitiveValue;
 
-    public AveragePowerConsumptionValue(String reading) throws InstantiationException {
+    public EnergyConsumptionValue(String reading) throws InstantiationException {
         if(!validateReading(reading)){
             throw new InstantiationException("Invalid reading");
         }

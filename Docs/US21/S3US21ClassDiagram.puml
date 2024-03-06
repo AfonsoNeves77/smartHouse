@@ -1,0 +1,56 @@
+@startuml
+title <size: 30> US21 Class Diagram
+
+'...........REQUIRES VALIDATION !!!!!!!!!!!!'
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class SunsetSensor{
+    - sensorName : String
+    - sunTimeCalculator : SunTimeCalculator
+    - UNIT : String
+    - log : ArrayList<Value<ZonedDateTime>>
+
+    + getSunsetTime(date : String, gpsLocation : String) : Value<ZonedDateTime>
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+    - validSensorName(sensorName : String) : boolean
+    - validSunTimeCalculator(sunTimeCalculator : ExternalServices) : boolean
+    - addValueToLog(value : Value<ZonedDateTime>) : void
+}
+
+class SunTimeValue {
+    - sunTimeValue : ZonedDateTime
+    + getValue() : ZonedDateTime
+    + getValueAsString() : String
+}
+
+class SunTimeCalculator {
+    + computeSunsetTime(date : String, gpsCoordinates : String) : ZonedDateTime
+    - getSunTimes(date : String, gpsCoordinates : String) : SunTimes
+    - convertCoordinates(gpsCoordinates : String) : double[]
+    - parseLocalDate(dateAsString : String) : LocalDate
+    - convertToDate(localDate : LocalDate) : Date
+}
+
+Value <|.. SunTimeValue
+Sensor <|.. SunsetSensor
+ExternalServices <|.. SunTimeCalculator
+SunsetSensor .left.> SunTimeCalculator
+SunsetSensor .right.> SunTimeValue
+
+@enduml

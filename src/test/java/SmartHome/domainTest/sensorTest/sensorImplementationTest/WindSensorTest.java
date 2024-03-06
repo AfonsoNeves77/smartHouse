@@ -1,20 +1,18 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
-import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
 import SmartHome.domain.sensor.sensorImplementation.WindSensor;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.WindValue;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class WindSensorTest {
     @Test
@@ -70,6 +68,53 @@ class WindSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Successfully returns getReading value.
+     * 1. Instantiates a simHardware double, placing a stub for the method getValue. Also instantiates the sensor.
+     * 2. Utilizes a mocked construction to create a double of a WindSensorValue, and placing a stub on the method getValueAsString.
+     * 3. The first test involves using the .constructed() method to save all instances of created WindValue doubles,
+     * into a list of WindSensorValue. It then checks the size of that list using .size(), and compares it against the expected size of 1.
+     * #Important# It is imperative that we call getReading on sensor before this operation.
+     * 4. The second test involves accessing the first value saved on the list created above using get(0) and calling getValueAsString,
+     * matching it against the expected string.
+     * 5. The third test utilizes the WindValueDouble that is created by calling getReading unto the sensor created at the top
+     * and ensuring that when we call getValueAsString unto that value, it returns the expected string.
+     * @throws InstantiationException If sensor parameters invalid.
+     */
+    @Test
+    void getReading_ReturnsValueCorrectly_Isolation() throws InstantiationException {
+        //Arrange
+        // 1.
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("40-N");
+        String sensorName = "Sensor 1";
+        WindSensor sensor = new WindSensor(sensorName, simHardware);
+
+        // 2.
+        try (MockedConstruction<WindValue> windValueDouble = mockConstruction(WindValue.class, (mock, context)
+                -> {
+            when(mock.getValueAsString()).thenReturn("40-N");
+        })) {
+
+            //Act & Assert
+
+            WindValue value = (WindValue) sensor.getReading();
+
+            // 3.
+            List<WindValue> values = windValueDouble.constructed();
+            int listOfDoublesSize = values.size();
+            assertEquals(1, listOfDoublesSize);
+
+            // 4.
+            String expected = "40-N";
+            String result = values.get(0).getValueAsString();
+            assertEquals(expected,result);
+
+            // 5.
+            String mockedWindValue = value.getValueAsString();
+            assertEquals(expected, mockedWindValue);
+        }
+    }
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
