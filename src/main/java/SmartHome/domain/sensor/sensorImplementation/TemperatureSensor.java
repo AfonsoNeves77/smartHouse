@@ -18,9 +18,9 @@ public class TemperatureSensor implements Sensor {
      * Constructor for Temperature Sensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
      * @param sensorName Name of the sensor
      */
-    public TemperatureSensor(String sensorName, ExternalServices externalServices){
+    public TemperatureSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(sensorName == null || sensorName.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;

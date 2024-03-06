@@ -14,9 +14,9 @@ public class DewPointSensor implements Sensor {
     private final String unit = "C";
     private final ArrayList<Value<Double>> log = new ArrayList<>();
 
-    public DewPointSensor(String sensorName, ExternalServices externalServices){
+    public DewPointSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(sensorName == null || sensorName.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;

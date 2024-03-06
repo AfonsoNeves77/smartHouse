@@ -8,12 +8,13 @@ import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PositionSensorTest {
 
@@ -24,7 +25,7 @@ class PositionSensorTest {
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new PositionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
@@ -38,7 +39,7 @@ class PositionSensorTest {
         String sensorName = "   ";
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new PositionSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
@@ -46,7 +47,7 @@ class PositionSensorTest {
     }
 
     @Test
-    void getName_SuccessfullyReturns(){
+    void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -58,7 +59,7 @@ class PositionSensorTest {
     }
 
     @Test
-    void getUnit_SuccessfullyReturns(){
+    void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -90,7 +91,33 @@ class PositionSensorTest {
     }
 
     @Test
-    void getLog_SuccessfullyReturnsEmptyList_Isolation(){
+    void getReading_ReturnsValueCorrectly_Isolation() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        String sensorName = "Sensor 1";
+        String expected = "36";
+        PositionSensor sensor = new PositionSensor(sensorName,simHardware);
+        try(MockedConstruction<PositionValue> positionValueDouble = mockConstruction(PositionValue.class, (mock, context)
+        -> {when(mock.getValueAsString()).thenReturn("36");})){
+            //Act
+            PositionValue value = (PositionValue) sensor.getReading();
+
+            //Assert
+            List<PositionValue> values = positionValueDouble.constructed();
+            assertEquals(1, values.size());
+
+            String result = values.get(0).getValueAsString();
+            assertEquals(expected,result);
+
+            String mockedPositionValue = value.getValueAsString();
+            assertEquals(expected,mockedPositionValue);
+        }
+    }
+
+    @Test
+    void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
