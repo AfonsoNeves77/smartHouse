@@ -39,7 +39,7 @@ public class InstantPowerConsumptionValueTest {
     @Test
     void constructor_throwsInstantiationExceptionIfReadingBelowBound(){
         //Arrange
-        String reading = "-1.1";
+        String reading = "-1";
         String expected = "Invalid reading";
 
         //Act
@@ -51,14 +51,14 @@ public class InstantPowerConsumptionValueTest {
     }
 
     @Test
-    void constructor_SuccessfulParseIfStringInt() throws InstantiationException {
+    void constructor_Successful() throws InstantiationException {
         //Arrange
         String reading = "1";
-        double expected = 1.0;
+        int expected = 1;
 
         //Act
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
-        double result = value.getValue();
+        int result = value.getValue();
 
         //Assert
         assertEquals(expected,result);
@@ -67,12 +67,12 @@ public class InstantPowerConsumptionValueTest {
     @Test
     void constructor_SuccessIfReadingLowerBound() throws InstantiationException {
         //Arrange
-        String reading = "0.0";
-        double expected = 0.0;
+        String reading = "0";
+        int expected = 0;
 
         //Act
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
-        double result = value.getValue();
+        int result = value.getValue();
 
         //Assert
         assertEquals(expected,result);
@@ -81,12 +81,12 @@ public class InstantPowerConsumptionValueTest {
     @Test
     void getValue_returnsSuccessfully() throws InstantiationException {
         //Arrange
-        String reading = "2323351.123412";
-        double expected = 2323351.123412;
+        String reading = "2323351";
+        int expected = 2323351;
 
         //Act
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
-        double result = value.getValue();
+        int result = value.getValue();
 
         //Assert
         assertEquals(expected,result);
@@ -95,9 +95,9 @@ public class InstantPowerConsumptionValueTest {
     @Test
     void getValueAsString_returnsSuccessfully() throws InstantiationException {
         //Arrange
-        String reading = "1.0";
+        String reading = "1";
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
-        String expected = "1.0";
+        String expected = "1";
         //Act
         String result = value.getValueAsString();
         //Assert

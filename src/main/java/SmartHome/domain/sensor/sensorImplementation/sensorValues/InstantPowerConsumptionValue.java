@@ -3,21 +3,22 @@ package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 import org.apache.commons.lang3.ObjectUtils;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
-public class InstantPowerConsumptionValue implements Value<Double>{
-    private final double primitiveValue;
+public class InstantPowerConsumptionValue implements Value<Integer>{
+    private final int primitiveValue;
 
     public InstantPowerConsumptionValue(String reading) throws InstantiationException {
         if(!isReadingValid(reading)){
             throw new InstantiationException("Invalid reading");
         }
-        this.primitiveValue = parseDouble(reading);
+        this.primitiveValue = parseInt(reading);
     }
 
     private boolean isReadingValid(String reading){
         double valueOfReading;
         try{
-            valueOfReading = parseDouble(reading);
+            valueOfReading = parseInt(reading);
         } catch (NumberFormatException | NullPointerException e){
             return false;
         }
@@ -25,7 +26,7 @@ public class InstantPowerConsumptionValue implements Value<Double>{
     }
 
     @Override
-    public Double getValue() {
+    public Integer getValue() {
         return this.primitiveValue;
     }
 

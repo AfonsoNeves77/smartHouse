@@ -1,9 +1,9 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.SimHardware;
-import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
 import SmartHome.domain.sensor.sensorImplementation.InstantPowerConsumptionSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.InstantPowerConsumptionValue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -69,11 +69,30 @@ public class InstantPowerConsumptionSensorTest {
     }
 
     @Test
+    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        String sensorName = "Sensor 1";
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName,simHardware);
+
+        String expected = "36";
+
+        //Act
+        InstantPowerConsumptionValue value = (InstantPowerConsumptionValue) sensor.getReading();
+        String result = value.getValueAsString();
+
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("36.12");
+        when(simHardware.getValue()).thenReturn("36");
 
         InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName, simHardware);
 
