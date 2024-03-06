@@ -21,6 +21,16 @@ public class SunTimeCalculator implements ExternalServices {
         }
     }
 
+    public ZonedDateTime computeSunrise(String date, String gpsCoordinates){
+        SunTimes sunriseTime;
+        try{
+            sunriseTime = compute(date,gpsCoordinates);
+            return sunriseTime.getRise();
+        } catch (IllegalArgumentException e){
+            return null;
+        }
+    }
+
     private SunTimes compute(String date, String gpsCoordinates){
         double[] coordinatesArray = convertCoordinates(gpsCoordinates);
         if(coordinatesArray.length == 0){
