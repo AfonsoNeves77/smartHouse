@@ -50,7 +50,7 @@ deactivate DDM
 [o<--C : deviceDTOList
 deactivate C
 
-[o->C : addActuatorToDevice(House, ActuatorCatalogue)
+[o->C : addActuatorToDevice(actuatorName,actuatorType, deviceName, simHardware)
 activate C
 C -> C : room = getRoomFromDTO(RoomDTO)
 C -> C : device = getDeviceFromDTO(DeviceDTO)
