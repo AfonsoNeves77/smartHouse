@@ -27,7 +27,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -54,7 +54,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -81,7 +81,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -107,7 +107,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -133,7 +133,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -159,7 +159,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -185,7 +185,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -211,7 +211,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -237,7 +237,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -265,7 +265,7 @@ class AddressTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -292,7 +292,7 @@ class AddressTest {
         String zipCode = " ";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -320,7 +320,7 @@ class AddressTest {
         String zipCode = null;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new Address(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
