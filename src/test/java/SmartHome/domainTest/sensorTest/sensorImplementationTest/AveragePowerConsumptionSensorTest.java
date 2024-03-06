@@ -111,7 +111,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInvalidReadingNumber() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("abc");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("abc");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid reading";
@@ -128,7 +128,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfReadingIsNegative(){
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("-50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("-50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid reading";
@@ -210,7 +210,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
@@ -227,7 +227,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
@@ -244,7 +244,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
@@ -261,7 +261,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateFormatIsInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
@@ -278,7 +278,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfFinalDateFormatIsInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
@@ -295,7 +295,7 @@ class AveragePowerConsumptionSensorTest {
     void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50");
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
         String sensorName = "Sensor1";
         AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
         String expected = "Invalid date";
