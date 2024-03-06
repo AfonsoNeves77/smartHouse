@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 public class AveragePowerConsumptionSensor implements Sensor{
     private String sensorName;
-    private final String unit = "W";
+    private final String UNIT = "W";
+    private final String TYPE = "Average Power Consumption Sensor";
     private SimHardware simHardware;
 
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
@@ -72,7 +73,7 @@ public class AveragePowerConsumptionSensor implements Sensor{
 
     @Override
     public String getUnit() {
-        return this.unit;
+        return this.UNIT;
     }
 
     @Override
@@ -86,6 +87,9 @@ public class AveragePowerConsumptionSensor implements Sensor{
         return tmpLog;
     }
 
+    public String getType() {
+        return this.TYPE;
+    }
 
     private void addValueToLog(Value<Integer> value){
         this.log.add(value);
