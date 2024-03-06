@@ -23,21 +23,52 @@ public class House {
     private ListOfRooms listOfRooms = new ListOfRooms();
     private Map<String, ArrayList<Device>> houseFunctionalities = new HashMap<>();
 
+    /**
+     * Creates a house object, considering the name is valid.
+     * @param houseName Name of the house
+     * @throws InstantiationException If invalid name.
+     */
     public House(String houseName) throws InstantiationException {
         if (houseName == null || houseName.trim().isEmpty())
             throw new InstantiationException ("Please insert a valid house name.");
     }
 
+    /**
+     * Receives all the necessary parameters in order to create a gps and address objects. All parameter validations are
+     * performed on object instantiation. If the objects are creates successfully then they get saved on the house's own
+     * attributes returning true. If any validations fail, the method will return false.
+     * @param doorReference Door reference.
+     * @param buildingNumber Building number.
+     * @param streetName Stress name.
+     * @param city City
+     * @param country Country
+     * @param zipCode ZipCode
+     * @param latitude Latitude
+     * @param longitude Longitude
+     * @param factoryLocation Factory location
+     * @return True or False
+     */
     public boolean configureLocation(String doorReference, String buildingNumber, String streetName, String city, String country, String zipCode, double latitude, double longitude, FactoryLocation factoryLocation) {
         try{
             this.address = factoryLocation.createAddress(doorReference, buildingNumber, streetName, city, country,zipCode);
             this.gps = factoryLocation.createGPS(latitude,longitude);
-        } catch (IllegalArgumentException e) {
+        } catch (InstantiationException e) {
             return false;
         }
         return true;
     }
 
+    /**
+     * Propagates the room instantiation parameters to own attribute listOfRooms. It then receives a boolean answer from listOfRooms
+     * propagating the same boolean answer.
+     * @param roomName Room name
+     * @param houseFloor House floor
+     * @param roomWidth Room width
+     * @param roomLength Room length
+     * @param roomHeight Room height
+     * @param factoryRoom Room factory
+     * @return True or false
+     */
     public boolean addRoom(String roomName, int houseFloor, double roomWidth, double roomLength, double roomHeight, FactoryRoom factoryRoom) {
         return listOfRooms.addRoomToList(roomName, houseFloor, roomWidth, roomLength, roomHeight, factoryRoom);
     }
@@ -60,6 +91,10 @@ public class House {
         }
     }
 
+    /**
+     * Requests a list of room objects from own attribute listOfRooms.
+      * @return List of room objects.
+     */
     public List<Room> getListOfRooms() {
         return listOfRooms.getRoomList();
     }
