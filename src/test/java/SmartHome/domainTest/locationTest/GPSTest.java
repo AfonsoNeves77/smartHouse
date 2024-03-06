@@ -2,9 +2,7 @@ package SmartHome.domainTest.locationTest;
 import SmartHome.domain.location.GPS;
 import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GPSTest {
 
@@ -99,5 +97,31 @@ class GPSTest {
         String result = exception.getMessage();
         //Assert
         assertEquals(expectedMessage, result);
+    }
+
+    @Test
+    void constructor_belowLimitsValuesDoNotThrowException() {
+        //Arrange
+        double longitude = -180;
+        double latitude = -90;
+
+        //Act
+        GPS gps = new GPS(latitude, longitude);
+
+        //Assert
+        assertDoesNotThrow(() -> new GPS(latitude, longitude));
+    }
+
+    @Test
+    void constructor_upperLimitsValuesDoNotThrowException() {
+        //Arrange
+        double longitude = 180;
+        double latitude = 90;
+
+        //Act
+        GPS gps = new GPS(latitude, longitude);
+
+        //Assert
+        assertDoesNotThrow(() -> new GPS(latitude, longitude));
     }
 }
