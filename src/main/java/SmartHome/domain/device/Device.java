@@ -52,6 +52,9 @@ public class Device {
     }
 
     public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, SimHardware simHardware) {
+        if(!this.status){
+            return false;
+        }
         if(listOfSensors.addSensor(sensorName, sensorType, catalogue, simHardware)){
             updateDeviceFunctionalities(sensorType);
             return true;
@@ -59,6 +62,9 @@ public class Device {
         return false;
     }
     public boolean addActuator(String actuatorName, String actuatorType, ActuatorCatalogue catalogue, SimHardwareAct simHardwareAct){
+        if(!this.status){
+            return false;
+        }
         return listOfActuators.addActuator(actuatorName,actuatorType,catalogue, simHardwareAct);
     }
 
