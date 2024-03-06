@@ -14,6 +14,7 @@ public class PositionSensor implements Sensor{
 
     private String sensorName;
     private SimHardware simHardware;
+    private final String Type = "Position";
     private final String unit = "%";
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
@@ -90,6 +91,10 @@ public class PositionSensor implements Sensor{
 
     public String getUnit(){
         return this.unit;
+    }
+
+    public String getType(){
+        return Type;
     }
 
 
