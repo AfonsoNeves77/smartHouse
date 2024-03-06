@@ -24,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AddSensorToDeviceCTRLTest {
+
+
+    //.............................................................................INTEGRATION TESTS..............................................................................
     /**
      * Test01
      * Integration Test to add a sensor to a device.
@@ -220,10 +223,23 @@ public class AddSensorToDeviceCTRLTest {
         assertEquals(expected,result);
     }
 
+    //.............................................................................ISOLATION TESTS..............................................................................
+
+    /**
+     * Unit test for verifying the behavior of the getListOfRooms method
+     * in the AddSensorToDeviceCTRL class, ensuring that it returns the
+     * correct list of rooms by isolating the behavior of CommonListOfRooms
+     * and CommonListOfDevices using mock objects.
+
+     * The test sets up mock objects for House, SensorCatalogue, and RoomDTO.
+     * It then constructs an instance of AddSensorToDeviceCTRL with the mock objects,
+     * isolates the behavior of CommonListOfRooms and CommonListOfDevices using
+     * MockedConstruction, and verifies that calling getListOfRooms returns the
+     * expected list of rooms.
+     */
     @Test
     void getListOfRooms_isolationTest() {
-
-        //Arrange
+        // Arrange
         House houseDouble = mock(House.class);
         SensorCatalogue sensorCatalogueDouble = mock(SensorCatalogue.class);
 
@@ -233,11 +249,11 @@ public class AddSensorToDeviceCTRLTest {
 
         int expected = 1;
 
-        //Act + Assert
+        // Act + Assert
         try (MockedConstruction<CommonListOfRooms> commonListOfRoomsMockedConstruction = mockConstruction(CommonListOfRooms.class);
              MockedConstruction<CommonListOfDevices> commonListOfDevicesMockedConstruction = mockConstruction(CommonListOfDevices.class)) {
 
-            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble,sensorCatalogueDouble);
+            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble, sensorCatalogueDouble);
 
             List<CommonListOfRooms> mockedRoomsList = commonListOfRoomsMockedConstruction.constructed();
             CommonListOfRooms commonListOfRoomsMocked = mockedRoomsList.get(0);
@@ -246,18 +262,30 @@ public class AddSensorToDeviceCTRLTest {
             List<RoomDTO> roomList = addSensorToDeviceCTRL.getListOfRooms();
             int result = roomList.size();
 
-            assertEquals(expected,result);
+            assertEquals(expected, result);
         }
     }
 
+    /**
+     * Unit test for verifying the behavior of the getListOfDevices method
+     * in the AddSensorToDeviceCTRL class, ensuring that it returns the
+     * correct list of devices in a room by isolating the behavior of
+     * CommonListOfRooms and CommonListOfDevices using mock objects.
+
+     * The test sets up mock objects for House, SensorCatalogue, Room, and DeviceDTO.
+     * It then constructs an instance of AddSensorToDeviceCTRL with the mock objects,
+     * isolates the behavior of CommonListOfRooms and CommonListOfDevices using
+     * MockedConstruction, and verifies that calling getListOfDevices returns the
+     * expected list of devices in a specified room.
+     */
     @Test
     void getListOfDevicesInARoom_IsolationTest() {
-
-        //Arrange
+        // Arrange
         House houseDouble = mock(House.class);
         SensorCatalogue sensorCatalogueDouble = mock(SensorCatalogue.class);
 
         Room roomDouble = mock(Room.class);
+
         DeviceDTO deviceDtoDouble = mock(DeviceDTO.class);
 
         ArrayList<DeviceDTO> arrayListDevice = new ArrayList<>();
@@ -266,12 +294,11 @@ public class AddSensorToDeviceCTRLTest {
         String roomName = "Bathroom";
         int expected = 1;
 
-        //Act + Assert
-
+        // Act + Assert
         try (MockedConstruction<CommonListOfRooms> commonListOfRoomsMockedConstruction = mockConstruction(CommonListOfRooms.class);
              MockedConstruction<CommonListOfDevices> commonListOfDevicesMockedConstruction = mockConstruction(CommonListOfDevices.class)) {
 
-            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble,sensorCatalogueDouble);
+            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble, sensorCatalogueDouble);
 
             List<CommonListOfRooms> mockedRoomsList = commonListOfRoomsMockedConstruction.constructed();
             CommonListOfRooms commonListOfRoomsMocked = mockedRoomsList.get(0);
@@ -281,11 +308,11 @@ public class AddSensorToDeviceCTRLTest {
             CommonListOfDevices commonListOfDevicesMocked = mockedDeviceList.get(0);
             when(commonListOfDevicesMocked.getListOfDevices(roomDouble)).thenReturn(arrayListDevice);
 
-
             List<DeviceDTO> deviceList = addSensorToDeviceCTRL.getListOfDevices(roomName);
             int result = deviceList.size();
 
-            assertEquals(expected,result);
+            assertEquals(expected, result);
         }
     }
+
 }

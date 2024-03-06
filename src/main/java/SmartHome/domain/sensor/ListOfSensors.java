@@ -1,5 +1,6 @@
 package SmartHome.domain.sensor;
 import SmartHome.domain.SensorCatalogue;
+import SmartHome.domain.sensor.externalServices.ExternalServices;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
@@ -30,9 +31,9 @@ public class ListOfSensors {
      * @return 0 on successful addition, 1 if instantiation error, 2 if the sensor already exists.
      */
 
-    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, SimHardware simHardware) {
+    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, ExternalServices externalServices) {
         if (!isSensorInList(sensorName)) {
-            Sensor newSensor = catalogue.createSensor(sensorName, sensorType, simHardware);
+            Sensor newSensor = catalogue.createSensor(sensorName, sensorType, externalServices);
             if(newSensor != null){
                 this.listOfSensors.add(newSensor);
                 return true;

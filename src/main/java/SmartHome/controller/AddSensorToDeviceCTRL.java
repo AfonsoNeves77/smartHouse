@@ -5,6 +5,7 @@ import SmartHome.domain.House;
 import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.device.Device;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.sensor.externalServices.ExternalServices;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.dto.DeviceDTO;
 import SmartHome.dto.RoomDTO;
@@ -36,8 +37,8 @@ public class AddSensorToDeviceCTRL {
         return commonListOfDevices.getListOfDevices(room);
     }
 
-    public boolean addSensorToDevice(String sensorName, String sensorType, String deviceName, SimHardware simHardware){
+    public boolean addSensorToDevice(String sensorName, String sensorType, String deviceName, ExternalServices externalServices){
         Device device = commonListOfDevices.getDeviceByName(deviceName,room);
-        return device.addSensor(sensorName, sensorType, catalogue, simHardware);
+        return device.addSensor(sensorName, sensorType, catalogue, externalServices);
     }
 }

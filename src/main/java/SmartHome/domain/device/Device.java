@@ -8,6 +8,7 @@ import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.actuator.ListOfActuators;
 import SmartHome.domain.actuator.SimHardwareAct;
 import SmartHome.domain.sensor.ListOfSensors;
+import SmartHome.domain.sensor.externalServices.ExternalServices;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 
@@ -51,8 +52,8 @@ public class Device {
         return deviceLocation != null && !deviceLocation.trim().isEmpty();
     }
 
-    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, SimHardware simHardware) {
-        if(listOfSensors.addSensor(sensorName, sensorType, catalogue, simHardware)){
+    public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, ExternalServices externalServices) {
+        if(listOfSensors.addSensor(sensorName, sensorType, catalogue, externalServices)){
             updateDeviceFunctionalities(sensorType);
             return true;
         }
