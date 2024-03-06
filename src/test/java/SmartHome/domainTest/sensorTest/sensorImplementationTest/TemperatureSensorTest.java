@@ -24,7 +24,7 @@ class TemperatureSensorTest {
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new TemperatureSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
@@ -38,7 +38,7 @@ class TemperatureSensorTest {
         String sensorName = "   ";
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new TemperatureSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
@@ -46,7 +46,7 @@ class TemperatureSensorTest {
     }
 
     @Test
-    void getName_SuccessfullyReturns(){
+    void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -58,7 +58,7 @@ class TemperatureSensorTest {
     }
 
     @Test
-    void getUnit_SuccessfullyReturns(){
+    void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -90,7 +90,7 @@ class TemperatureSensorTest {
     }
 
     @Test
-    void getLog_SuccessfullyReturnsEmptyList_Isolation() {
+    void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);

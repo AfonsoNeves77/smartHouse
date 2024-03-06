@@ -1,6 +1,6 @@
 package SmartHome.domain.actuator;
 
-public class BlindRollerActuator {
+public class BlindRollerActuator implements Actuator {
     private String actuatorName;
     private SimHardwareAct simHardwareAct;
 
@@ -9,9 +9,9 @@ public class BlindRollerActuator {
      * @param actuatorName Name of the actuator
      * @param simHardwareAct
      */
-    public BlindRollerActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+    public BlindRollerActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
-            throw new IllegalArgumentException("Invalid name for Actuator.");
+            throw new InstantiationException("Invalid name for Actuator.");
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;
@@ -43,7 +43,7 @@ public class BlindRollerActuator {
         if (!validateCommand(position)) {
             return false;
         }
-        return simHardwareAct.executeRollerCommandSim(position);
+        return simHardwareAct.executeIntegerCommandSim(position);
     }
 
     /**

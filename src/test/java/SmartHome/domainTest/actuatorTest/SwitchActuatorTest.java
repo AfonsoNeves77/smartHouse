@@ -16,7 +16,7 @@ public class SwitchActuatorTest {
     private SimHardwareAct mockSimHardwareAct;
 
     @BeforeEach
-    void setup() {
+    void setup() throws InstantiationException {
         mockSimHardwareAct = mock(SimHardwareAct.class);
         switchActuator = new SwitchActuator("Switch", mockSimHardwareAct);
     }
@@ -48,7 +48,7 @@ public class SwitchActuatorTest {
         String expected = "Invalid name for Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new SwitchActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();
@@ -64,7 +64,7 @@ public class SwitchActuatorTest {
         String expected = "Invalid name for Actuator.";
 
         //act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new SwitchActuator(actuatorName, mockSimHardwareAct);
         });
         String result = exception.getMessage();

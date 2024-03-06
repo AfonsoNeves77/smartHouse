@@ -5,9 +5,9 @@ public class SwitchActuator implements Actuator{
     private String state;
     private SimHardwareAct simHardwareAct;
 
-    public SwitchActuator(String actuatorName, SimHardwareAct simHardwareAct) {
+    public SwitchActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
-            throw new IllegalArgumentException("Invalid name for Actuator.");
+            throw new InstantiationException("Invalid name for Actuator.");
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;
