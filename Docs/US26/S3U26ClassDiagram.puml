@@ -1,0 +1,50 @@
+@startuml
+title <size: 30> US22 Class Diagram
+
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+
+
+class EnergyConsumptionSensor{
+    - sensorName : String
+    - unit : String
+    -type : String
+    - simHardware : SimHardware
+    - log : ArrayList<Value<Integer>>
+
+    -validateSensorName(sensorName : String) : boolean
+    +getReading() : Value<Integer>
+    -getInitialDateTime(initialDate : String) : LocalDateTime
+    -getFinalDateTime(finalDate : String) : LocalDateTime
+    -validateDate(initialDate : LocalDateTime, finalDateTime : LocalDateTime) : boolean
+    +getName() : String
+    +getUnit() : String
+    +getLog() : ArrayList<String>
+    +getType() : String
+    -addLog(value : Value<Integer>) : void
+
+}
+
+class EnergyConsumptionValue {
+    - primitiveValue : Integer
+
+    - validateReading(reading : String) : boolean
+    + getValue() : Integer
+    + getValueAsString() : String
+}
+
+Value <|.. EnergyConsumptionValue
+Sensor <|.. EnergyConsumptionSensor
+EnergyConsumptionSensor .right.> EnergyConsumptionValue
+
+@enduml

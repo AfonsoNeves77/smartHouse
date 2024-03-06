@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class EnergyConsumptionSensor implements Sensor{
     private String sensorName;
     private final String unit = "Wh";
-    private final String Type = "EnergyConsumption";
+    private final String Type = "Energy Consumption";
     private SimHardware simHardware;
 
     private final ArrayList<Value<Integer>> log = new ArrayList<>();

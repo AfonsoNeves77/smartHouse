@@ -353,7 +353,7 @@ public class EnergyConsumptionTest {
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
         EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "EnergyConsumption";
+        String expected = "Energy Consumption";
 
         //Act
         String result = sensor.getType();
