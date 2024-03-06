@@ -83,7 +83,7 @@ class HouseTest {
         double latitude = 0;
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
         GPS gpsDouble = mock(GPS.class);
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenThrow(IllegalArgumentException.class);
+        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenThrow(InstantiationException.class);
         when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gpsDouble);
         //Act
         boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode,latitude, longitude,factoryLocationDouble);
@@ -105,7 +105,7 @@ class HouseTest {
         double latitude = 200;
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
         Address addressDouble = mock(Address.class);
-        when(factoryLocationDouble.createGPS(latitude, longitude)).thenThrow(IllegalArgumentException.class);
+        when(factoryLocationDouble.createGPS(latitude, longitude)).thenThrow(InstantiationException.class);
         when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
         //Act
         boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode,latitude, longitude,factoryLocationDouble);

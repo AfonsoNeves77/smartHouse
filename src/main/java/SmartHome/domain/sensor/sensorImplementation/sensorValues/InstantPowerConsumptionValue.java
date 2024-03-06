@@ -1,8 +1,5 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
-import org.apache.commons.lang3.ObjectUtils;
-
-import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class InstantPowerConsumptionValue implements Value<Integer>{

@@ -19,12 +19,14 @@ interface Value<T> {
 class DewPointSensor{
     - sensorName : String
     - unit : String
+    - TYPE : String
     - simHardware : SimHardware
     - log : ArrayList<Value<Double>>
 
     + getReading() : Value<Double>
     + getName() : String
     + getUnit() : String
+    + getTYPE() : String
     + getLog() : ArrayList<String>
     - addValueToLog(value : Value<Double>) : void
 }

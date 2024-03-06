@@ -1,0 +1,54 @@
+@startuml
+title <size: 30> US19 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class WindSensor{
+    - sensorName : String
+    - simHardware : SimHardware
+    - type : String
+    - unit : String
+    - log : ArrayList<Value<Integer>>
+
+    + getName() : String
+    + getReading() : Value<?>
+    + getUnit() : String
+    + getType() : String
+    + getLog() : ArrayList<String>
+    - addValueToLog(value : Value<Integer>) : void
+}
+
+class WindValue{
+    - primitiveValue : int
+
+    + getValue() : Integer
+    + getWindDirection() : String
+    + getValueAsString() : String
+    - isDirectionValid() : boolean
+    - isReadingValid() : boolean
+}
+
+class SimHardware{
+    + getValue : String
+}
+
+Value <|.. WindValue
+Sensor <|.. WindSensor
+ExternalServices <|.. SimHardware
+WindSensor .right.> WindValue
+WindSensor .left.> SimHardware
+
+@enduml

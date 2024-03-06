@@ -1,0 +1,52 @@
+@startuml
+title <size: 30> US24 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUNIT() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+}
+
+class InstantPowerConsumptionSensor{
+    - sensorName : String
+    - simHardware : SimHardware
+    - UNIT : String
+    - TYPE : String
+    - log : ArrayList<Value<Integer>>
+
+    + getName() : String
+    + getUNIT() : String
+    + getTYPE() : String
+    + getReading() : Value<Integer>
+    + getLog() : ArrayList<String>
+    - addValueToLog(value : Value<Integer>) : void
+}
+
+class InstantPowerConsumptionValue{
+    - primitiveValue : int
+
+    + getValue() : Integer
+    + getValueAsString() : String
+    - isReadingValid(reading : String) : boolean
+}
+
+class SimHardware{
+    + getValue : String
+    + getValue : String /'Tiago tem que ver isto. Overload de método pode causar problemas'/
+}
+
+Value <|-- InstantPowerConsumptionValue
+Sensor <|-- InstantPowerConsumptionSensor
+ExternalServices <|-- SimHardware
+InstantPowerConsumptionSensor .right.> InstantPowerConsumptionValue
+InstantPowerConsumptionSensor .left.> SimHardware
+
+@enduml
