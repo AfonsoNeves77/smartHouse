@@ -1,19 +1,27 @@
 package SmartHome.controllerTest;
 
 import SmartHome.controller.AddSensorToDeviceCTRL;
+import SmartHome.controller.CommonListOfDevices;
+import SmartHome.controller.CommonListOfRooms;
 import SmartHome.domain.House;
 import SmartHome.domain.SensorCatalogue;
+import SmartHome.domain.device.Device;
 import SmartHome.domain.device.FactoryDevice;
 import SmartHome.domain.device.ImplFactoryDevice;
 import SmartHome.domain.room.FactoryIndoorRoom;
 import SmartHome.domain.room.FactoryRoom;
 import SmartHome.domain.room.Room;
 import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.dto.DeviceDTO;
+import SmartHome.dto.RoomDTO;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class AddSensorToDeviceCTRLTest {
     /**
@@ -210,5 +218,74 @@ public class AddSensorToDeviceCTRLTest {
 
         //Assert
         assertEquals(expected,result);
+    }
+
+    @Test
+    void getListOfRooms_isolationTest() {
+
+        //Arrange
+        House houseDouble = mock(House.class);
+        SensorCatalogue sensorCatalogueDouble = mock(SensorCatalogue.class);
+
+        RoomDTO roomDTODouble = mock(RoomDTO.class);
+        ArrayList<RoomDTO> arrayListRooms = new ArrayList<>();
+        arrayListRooms.add(roomDTODouble);
+
+        int expected = 1;
+
+        //Act + Assert
+        try (MockedConstruction<CommonListOfRooms> commonListOfRoomsMockedConstruction = mockConstruction(CommonListOfRooms.class);
+             MockedConstruction<CommonListOfDevices> commonListOfDevicesMockedConstruction = mockConstruction(CommonListOfDevices.class)) {
+
+            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble,sensorCatalogueDouble);
+
+            List<CommonListOfRooms> mockedRoomsList = commonListOfRoomsMockedConstruction.constructed();
+            CommonListOfRooms commonListOfRoomsMocked = mockedRoomsList.get(0);
+            when(commonListOfRoomsMocked.getListOfRooms()).thenReturn(arrayListRooms);
+
+            List<RoomDTO> roomList = addSensorToDeviceCTRL.getListOfRooms();
+            int result = roomList.size();
+
+            assertEquals(expected,result);
+        }
+    }
+
+    @Test
+    void getListOfDevicesInARoom_IsolationTest() {
+
+        //Arrange
+        House houseDouble = mock(House.class);
+        SensorCatalogue sensorCatalogueDouble = mock(SensorCatalogue.class);
+
+        Room roomDouble = mock(Room.class);
+        DeviceDTO deviceDtoDouble = mock(DeviceDTO.class);
+
+        ArrayList<DeviceDTO> arrayListDevice = new ArrayList<>();
+        arrayListDevice.add(deviceDtoDouble);
+
+        String roomName = "Bathroom";
+        int expected = 1;
+
+        //Act + Assert
+
+        try (MockedConstruction<CommonListOfRooms> commonListOfRoomsMockedConstruction = mockConstruction(CommonListOfRooms.class);
+             MockedConstruction<CommonListOfDevices> commonListOfDevicesMockedConstruction = mockConstruction(CommonListOfDevices.class)) {
+
+            AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(houseDouble,sensorCatalogueDouble);
+
+            List<CommonListOfRooms> mockedRoomsList = commonListOfRoomsMockedConstruction.constructed();
+            CommonListOfRooms commonListOfRoomsMocked = mockedRoomsList.get(0);
+            when(commonListOfRoomsMocked.getRoomByName(roomName)).thenReturn(roomDouble);
+
+            List<CommonListOfDevices> mockedDeviceList = commonListOfDevicesMockedConstruction.constructed();
+            CommonListOfDevices commonListOfDevicesMocked = mockedDeviceList.get(0);
+            when(commonListOfDevicesMocked.getListOfDevices(roomDouble)).thenReturn(arrayListDevice);
+
+
+            List<DeviceDTO> deviceList = addSensorToDeviceCTRL.getListOfDevices(roomName);
+            int result = deviceList.size();
+
+            assertEquals(expected,result);
+        }
     }
 }
