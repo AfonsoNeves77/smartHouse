@@ -14,7 +14,12 @@ interface Value<T> {
     + getValueAsString() : String
 }
 
+interface ExternalServices{
+}
 
+class SimHardware {
+     + getValue : String
+     }
 
 class DewPointSensor{
     - sensorName : String
@@ -40,5 +45,7 @@ class DewPointValue {
 Value <|.. DewPointValue
 Sensor <|.. DewPointSensor
 DewPointSensor .right.> DewPointValue
+SimHardware <. DewPointSensor
+ExternalServices <|.. SimHardware
 
 @enduml
