@@ -11,6 +11,7 @@ import org.apache.commons.configuration2.plist.PropertyListConfiguration;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -171,6 +172,33 @@ public class ActuatorCatalogueTest {
             assertEquals(1, actuators.size());
             assertEquals(actuatorName, actuatorDouble.constructed().get(0).getName());
             assertEquals(actuatorName, newActuator.getName());
+        }
+
+    }
+
+    @Test
+    void creatingSensorThatThrowsInstantiationException_IsolationTest() throws InstantiationException {
+
+        // arrange
+        String actuatorName = "actuator";
+        String actuatorType = "SmartHome.domain.actuator.SwitchActuator";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+
+        try (MockedConstruction<SwitchActuator> actuatorDouble = mockConstruction(SwitchActuator.class, (mock, context) -> {
+            throw new InstantiationException("Simulated InstantiationException");
+        })) {
+
+            ActuatorCatalogue actuatorCatalogue = new ActuatorCatalogue("config.properties");
+
+            // act
+
+            Actuator actuator = actuatorCatalogue.createActuator(actuatorName, actuatorType, simHardwareActDouble);
+
+
+            //Assert
+            assertNull(actuator);
+            List<SwitchActuator> actuators = actuatorDouble.constructed();
+            assertEquals(0, actuators.size());
         }
 
     }
