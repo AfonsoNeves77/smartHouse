@@ -159,6 +159,21 @@ class AveragePowerConsumptionSensorTest {
     }
 
     @Test
+    void getType_ReturnsCorrectType() {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, simHardware);
+        String expected = "Average Power Consumption Sensor";
+
+        //Act
+        String result = sensor.getType();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
     void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
