@@ -26,6 +26,7 @@ class PositionSensor{
     + getReading() : Value<Integer>
     + getUnit() : String
     + getLog() : ArrayList<String>
+    + getType() : String
     - addValueToLog(value : Value<Integer>) : void
 }
 
@@ -34,15 +35,16 @@ class PositionValue{
 
     + getValue() : Integer
     + getValueAsString() : String
+    - isReadingValid(reading : String) : boolean
 }
 
 class SimHardware{
     + getValue : String
 }
 
-Value <|-- PositionValue
-Sensor <|-- PositionSensor
-ExternalServices <|-- SimHardware
+Value <|.. PositionValue
+Sensor <|.. PositionSensor
+ExternalServices <|.. SimHardware
 PositionSensor .right.> PositionValue
 PositionSensor .left.> SimHardware
 
