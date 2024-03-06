@@ -152,4 +152,21 @@ public class DewPointSensorTest {
         //Assert
         assertEquals(expected, result);
     }
+    @Test
+    void getTYPE_Successfully() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+
+        DewPointSensor sensor = new DewPointSensor(sensorName, simHardware);
+
+        String expected = "DewPointSensor";
+
+        //Act
+
+        String result= sensor.getTYPE();
+
+        //Assert
+        assertEquals(expected, result);
+    }
 }
