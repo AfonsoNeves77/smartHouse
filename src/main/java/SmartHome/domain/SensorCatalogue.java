@@ -46,13 +46,13 @@ public class SensorCatalogue {
         return new ArrayList<>(this.listOfInstantiableSensors);
     }
 
-    public Sensor createSensor(String sensorName, String sensorType, ExternalServices simHardware) {
+    public Sensor createSensor(String sensorName, String sensorType, ExternalServices externalServices) {
         Optional<String> optionalSensor = this.listOfInstantiableSensors.stream().filter(s -> s.equalsIgnoreCase(sensorType)).findFirst();
         if(optionalSensor.isPresent()){
             try{
             Class<?> classObj = Class.forName(sensorType);
             Constructor<?> constructor = classObj.getConstructor(String.class, ExternalServices.class);
-            Sensor sensor = (Sensor) constructor.newInstance(sensorName, simHardware);
+            Sensor sensor = (Sensor) constructor.newInstance(sensorName, externalServices);
             return sensor;
             }catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e){
                 return null;
