@@ -14,14 +14,14 @@ public class SunTimeCalculator implements ExternalServices {
     public ZonedDateTime computeSunsetTime(String date, String gpsCoordinates){
         SunTimes sunsetTime;
         try{
-            sunsetTime = compute(date,gpsCoordinates);
+            sunsetTime = getSunTimes(date,gpsCoordinates);
             return sunsetTime.getSet();
         } catch (IllegalArgumentException e){
             return null;
         }
     }
 
-    private SunTimes compute(String date, String gpsCoordinates){
+    private SunTimes getSunTimes(String date, String gpsCoordinates){
         double[] coordinatesArray = convertCoordinates(gpsCoordinates);
         if(coordinatesArray.length == 0){
             throw new IllegalArgumentException("Invalid Coordinates");
@@ -55,8 +55,8 @@ public class SunTimeCalculator implements ExternalServices {
         return new double[] {latitude,longitude};
     }
 
-    private  LocalDate parseLocalDate(String dateString) {
-        return LocalDate.parse(dateString);
+    private  LocalDate parseLocalDate(String dateAsString) {
+        return LocalDate.parse(dateAsString);
     }
 
     private Date convertToDate(LocalDate localDate) {
