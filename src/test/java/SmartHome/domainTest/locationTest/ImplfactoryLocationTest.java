@@ -21,7 +21,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress (doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -42,7 +42,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -63,7 +63,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -84,7 +84,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -105,7 +105,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -126,7 +126,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -147,7 +147,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -168,7 +168,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -189,7 +189,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -210,7 +210,7 @@ class ImplfactoryLocationTest {
         String zipCode = "4570-222";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -231,7 +231,7 @@ class ImplfactoryLocationTest {
         String zipCode = " ";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -252,7 +252,7 @@ class ImplfactoryLocationTest {
         String zipCode = null;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode);
         });
         String result = exception.getMessage();
@@ -269,7 +269,7 @@ class ImplfactoryLocationTest {
         double latitude = 0;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createGPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -286,7 +286,7 @@ class ImplfactoryLocationTest {
         double latitude = 0;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createGPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -303,7 +303,7 @@ class ImplfactoryLocationTest {
         double latitude = -91;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createGPS(latitude, longitude);
         });
         String result = exception.getMessage();
@@ -320,7 +320,7 @@ class ImplfactoryLocationTest {
         double latitude = 91;
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             factory.createGPS (latitude, longitude);
         });
         String result = exception.getMessage();

@@ -8,7 +8,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * This class is used to test the IntSetActuator class.
+ */
+
 public class IntSetActuatorTest {
+
+    /**
+     * This method is used to test the IntSetActuator constructor.
+     * @throws InstantiationException if the actuator name is null or empty or the simHardwareAct object is null
+     */
 
     @Test
     void testIntSetActuator_Constructor() throws InstantiationException {
@@ -20,6 +29,11 @@ public class IntSetActuatorTest {
 //        Assert
         assertEquals(actuatorName, intSetActuator.getName());
     }
+
+    /**
+     * This method is used to test the IntSetActuator constructor with a null name.
+     * @throws InstantiationException if the actuator name is null or empty or the simHardwareAct object is null
+     */
 
     @Test
     void testIntSetActuator_nullName() {
@@ -36,6 +50,11 @@ public class IntSetActuatorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * This method is used to test the IntSetActuator constructor with an empty name.
+     * @throws InstantiationException if the actuator name is null or empty or the simHardwareAct object is null
+     */
+
     @Test
     void testIntSetActuator_emptyName() {
 //        Arrange
@@ -50,6 +69,11 @@ public class IntSetActuatorTest {
 //        Assert
         assertEquals(expected, result);
     }
+
+    /**
+     * This method is used to test the setLimits method when the limits are inverted, meaning the upper limit is less than the lower limit.
+     * @throws IllegalArgumentException if the upper limit is less than or equal to the lower limit
+     */
 
     @Test
     void testIntSetActuator_setLimitsInverted() throws InstantiationException {
@@ -69,6 +93,11 @@ public class IntSetActuatorTest {
         assertEquals(expectedMessage, resultMessage);
     }
 
+    /**
+     * This method is used to test the setLimits method when the limits are equal.
+     * @throws IllegalArgumentException if the upper limit is less than or equal to the lower limit
+     */
+
     @Test
     void testIntSetActuator_setLimitsToEqualValues() throws InstantiationException {
 //        Arrange
@@ -87,8 +116,12 @@ public class IntSetActuatorTest {
         assertEquals(expectedMessage, resultMessage);
     }
 
+    /**
+     * This test is used to check if the value is updated when the executeCommand method is called.
+     */
+
     @Test
-    void testIntSetActuator_testExecuteCommand_ReturnFalseIfValueNotUpdated() throws InstantiationException {
+    void testIntSetActuator_ReturnFalseIfValueNotUpdated() throws InstantiationException {
 //        Arrange
         String actuatorName = "IntSetActuator";
         SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
@@ -105,6 +138,10 @@ public class IntSetActuatorTest {
 //        Assert
         assertEquals(expected, result);
     }
+
+    /**
+     * This test is used to test the executeCommand method when the value is invalid.
+     */
 
     @Test
     void testIntSetActuator_testExecuteCommand_SetInvalidValue() throws InstantiationException {
@@ -123,6 +160,10 @@ public class IntSetActuatorTest {
         assertFalse(result);
     }
 
+    /**
+     * This test is used to test the executeCommand method when the value is equal to the lower limit.
+     */
+
     @Test
     void testIntSetActuator_SetValueEqualToLowerLimit() throws InstantiationException {
 //        Arrange
@@ -139,6 +180,10 @@ public class IntSetActuatorTest {
 //        Assert
         assertTrue(result);
     }
+
+    /**
+     * This test is used to test the executeCommand method when the value is equal to the upper limit.
+     */
 
     @Test
     void testIntSetActuator_SetValueEqualToUpperLimit() throws InstantiationException {
@@ -157,6 +202,10 @@ public class IntSetActuatorTest {
         assertTrue(result);
     }
 
+    /**
+     * This test is used to test the executeCommand method when the value is within the limits.
+     */
+
     @Test
     void testIntSetActuator_testExecuteCommand_Success() throws InstantiationException {
 //        Arrange
@@ -173,6 +222,10 @@ public class IntSetActuatorTest {
 //        Assert
         assertTrue(result);
     }
+
+    /**
+     * This test is used to test the executeCommand method when the value is not set.
+     */
 
     @Test
     void testIntSetActuator_testExecuteCommand_ReturnFalse() throws InstantiationException {
@@ -191,20 +244,9 @@ public class IntSetActuatorTest {
         assertFalse(result);
     }
 
-    @Test
-    void testIntSetActuator_testExecuteCommand_InvertedLimits() throws InstantiationException {
-//        Arrange
-        String actuatorName = "IntSetActuator";
-        SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
-        IntSetActuator intSetActuator = new IntSetActuator(actuatorName, simHardwareActMock);
-        int value = 4;
-        when(simHardwareActMock.executeIntegerCommandSim(value)).thenReturn(false);
-        int lowerLimit = 5;
-        int upperLimit = 30;
-        intSetActuator.setLimits(lowerLimit, upperLimit);
-//        Act
-        boolean result = intSetActuator.executeCommand(value);
-//        Assert
-        assertFalse(result);
-    }
+    /**
+     * This test is used to test the executeCommand method when the value is not set.
+     */
+
+
 }

@@ -1,7 +1,8 @@
 @startuml
        title <size: 30> US06 Class Diagram
 
-note "<b>Only methods related to\n<b>US06 are represented" as N1
+note "<b>Only methods related to\n<b>US06 are represented" as N1
+skinparam linetype ortho
 
        class CommonListOfRooms{
            - house : House
@@ -45,12 +46,12 @@ note "<b>Only methods related to\n<b>US06 are represented" as N1
            - houseFloor : int
            - dimensions : RoomDimensions
            - deviceList : ListOfDevices
-           + getListOfDevices() : ListOfDevices
+           + getListOfDevices() : List<Device>
        }
 
        class ListOfDevices{
            - deviceList : ArrayList<Device>
-           + getDeviceList() : ArrayList<Device>
+           + getDeviceList() : List<Device>
        }
 
        class CommonListOfDevices{
@@ -88,12 +89,12 @@ note "<b>Only methods related to\n<b>US06 are represented" as N1
 
 
        GetListOfDevicesFromRoomCTRL ..> CommonListOfRooms
-       GetListOfDevicesFromRoomCTRL ..> RoomDTOMapper
+       CommonListOfRooms ..> RoomDTOMapper
        RoomDTOMapper ..> RoomDTO
-       CommonListOfRooms -left..> House
+       CommonListOfRooms -down.> House
        House "1" *-- "1" ListOfRooms
        CommonListOfDevices "1" o-- "*" Room
-       Room "1" *--up "1" ListOfDevices
+       Room "1" *-- "1" ListOfDevices
        GetListOfDevicesFromRoomCTRL ..> CommonListOfDevices
        CommonListOfDevices ..> DeviceDTOMapper
        DeviceDTOMapper ..> DeviceDTO
