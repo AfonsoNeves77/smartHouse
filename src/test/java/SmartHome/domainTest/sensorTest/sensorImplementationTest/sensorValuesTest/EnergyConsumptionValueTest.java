@@ -8,8 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EnergyConsumptionValueTest {
+    /**
+     * Test for the constructor of the EnergyConsumptionValue with an invalid value
+     */
     @Test
-    void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNotANumber(){
+    void energyConsumptionValueConstructor_throwsExceptionIfValueIsNotANumber(){
         //Arrange
         String value = "Not a number";
         String expected = "Invalid reading";
@@ -21,10 +24,14 @@ public class EnergyConsumptionValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Test for the constructor of the EnergyConsumptionValue with a negative value
+     */
     @Test
-    void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNegative(){
+    void energyPowerConsumptionValueConstructor_throwsExceptionIfValueIsNegative(){
         //Arrange
-        String value = "-1.57";
+        String value = "-1";
         String expected = "Invalid reading";
 
         //Act
@@ -35,8 +42,29 @@ public class EnergyConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the constructor of the EnergyConsumptionValue with a border value
+     */
     @Test
-    void averagePowerConsumptionValueConstructor_returnsSuccessfully() throws InstantiationException {
+    void energyPowerConsumptionValueConstructor_BorderValue() throws InstantiationException {
+        //Arrange
+        String value = "0";
+        EnergyConsumptionValue energyPowerConsumptionValue = new EnergyConsumptionValue(value);
+        double expected = 0;
+
+        //Act
+        double result = energyPowerConsumptionValue.getValue();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the constructor of the EnergyConsumptionValue with a valid value
+     * @throws InstantiationException
+     */
+    @Test
+    void energyPowerConsumptionValueConstructor_returnsSuccessfully() throws InstantiationException {
         //Arrange
         String value = "50";
         EnergyConsumptionValue energyPowerConsumptionValue = new EnergyConsumptionValue(value);
@@ -49,6 +77,10 @@ public class EnergyConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the getValueAsString method of the EnergyConsumptionValue
+     * @throws InstantiationException
+     */
     @Test
     void getValueAsString_SuccessfullyConvertsToString() throws InstantiationException {
         //Arrange

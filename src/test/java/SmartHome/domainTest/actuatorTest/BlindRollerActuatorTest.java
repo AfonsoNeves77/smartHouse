@@ -13,14 +13,22 @@ class BlindRollerActuatorTest {
     private BlindRollerActuator blindRollerActuator;
     private SimHardwareAct mockSimHardwareAct;
 
+    /**
+     * Setup for the tests
+     * @throws InstantiationException if the actuator name is invalid
+     */
     @BeforeEach
     void setup() throws InstantiationException {
         mockSimHardwareAct = mock(SimHardwareAct.class);
         blindRollerActuator = new BlindRollerActuator("Blind Roller", mockSimHardwareAct);
     }
 
+    /**
+     * Test for the constructor of the actuator
+     *
+     */
     @Test
-    void testSwitchActuator_Constructor() {
+    void testBlindRollerActuator_Constructor() {
         //arrange
         String actuatorName = "Blind Roller";
 
@@ -30,8 +38,11 @@ class BlindRollerActuatorTest {
         assertEquals(actuatorName, blindRollerActuator.getName());
     }
 
+    /**
+     * Test for the constructor of the actuator with null name
+     */
     @Test
-    void testSwitchActuator_nullActuatorName() {
+    void testBlindRollerActuator_nullActuatorName() {
         //arrange
         String actuatorName = null;
         String expected = "Invalid name for Actuator.";
@@ -46,8 +57,11 @@ class BlindRollerActuatorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the constructor of the actuator with empty name
+     */
     @Test
-    void testSwitchActuator_emptyName() {
+    void testBlindRollerActuator_emptyName() {
         //arrange
         String actuatorName = " ";
         String expected = "Invalid name for Actuator.";
@@ -63,7 +77,9 @@ class BlindRollerActuatorTest {
     }
 
 
-
+    /**
+     * Test for the executeCommand method of the actuator with an upper border position
+     */
     @Test
     void testExecuteCommand_BorderUpperPosition_ReturnsTrue() {
 
@@ -72,6 +88,10 @@ class BlindRollerActuatorTest {
 
         assertTrue(result);
     }
+
+    /**
+     * Test for the executeCommand method of the actuator with a lower border position
+     */
     @Test
     void testExecuteCommand_BorderLowerPosition_ReturnsTrue() {
 
@@ -80,6 +100,10 @@ class BlindRollerActuatorTest {
 
         assertTrue(result);
     }
+
+    /**
+     * Test for the executeCommand method of the actuator with an invalid upper position
+     */
     @Test
     void testExecuteCommand_InvalidPositionUpper_ReturnsFalse() {
 
@@ -88,6 +112,9 @@ class BlindRollerActuatorTest {
         assertFalse(result);
     }
 
+    /**
+     * Test for the executeCommand method of the actuator with an invalid lower position
+     */
     @Test
     void testExecuteCommand_InvalidPositionLower_ReturnsFalse() {
 
@@ -96,6 +123,9 @@ class BlindRollerActuatorTest {
         assertFalse(result);
     }
 
+    /**
+     * Test for the executeCommand method of the actuator with a valid position but returning false
+     */
     @Test
     void testExecuteCommand_ValidCommandButExecutionFails_ReturnsFalse() {
         when(mockSimHardwareAct.executeIntegerCommandSim(40)).thenReturn(false);
@@ -104,12 +134,20 @@ class BlindRollerActuatorTest {
 
         assertFalse(result);
     }
+
+    /**
+     * Test for the getName method of the actuator
+     */
     @Test
     void test_GetName() {
         String expected = "Blind Roller";
         String result = blindRollerActuator.getName();
         assertEquals(expected, result);
     }
+
+    /**
+     * Test for the executeCommand method of the actuator with a valid position and returning true
+     */
     @Test
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
         when(mockSimHardwareAct.executeIntegerCommandSim(40)).thenReturn(true);

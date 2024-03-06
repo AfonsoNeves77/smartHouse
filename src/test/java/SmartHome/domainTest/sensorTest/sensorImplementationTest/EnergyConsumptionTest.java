@@ -12,6 +12,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class EnergyConsumptionTest {
+    /**
+     * Test for the constructor of the EnergyConsumptionSensor with a null name
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
@@ -28,6 +31,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the constructor of the EnergyConsumptionSensor with an empty name
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameIsEmpty(){
         //Arrange
@@ -44,6 +50,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the getName method of the EnergyConsumptionSensor
+     */
     @Test
     void getName_SuccessfullyReturns(){
         //Arrange
@@ -58,6 +67,9 @@ public class EnergyConsumptionTest {
         assertEquals(sensorName, result);
     }
 
+    /**
+     * Test for the getUnit method of the EnergyConsumptionSensor
+     */
     @Test
     void getUnit_SuccessfullyReturns(){
         //Arrange
@@ -73,6 +85,10 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor
+     * @throws InstantiationException
+     */
     @Test
     void getReading_ReturnsValueCorrectly() throws InstantiationException {
         //Arrange
@@ -90,6 +106,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an empty reading
+     */
     @Test
     void getReading_throwsExceptionIfEmptyReading() {
         //Arrange
@@ -107,6 +126,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid reading
+     */
     @Test
     void getReading_throwsExceptionIfInvalidReadingNumber() {
         //Arrange
@@ -124,6 +146,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with a negative reading
+     */
     @Test
     void getReading_throwsExceptionIfReadingIsNegative(){
         //Arrange
@@ -141,6 +166,10 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the EnergyConsumptionSensor
+     * @throws InstantiationException
+     */
     @Test
     void getLog_ReturnsCorrectLog() throws InstantiationException {
         //Arrange
@@ -158,6 +187,10 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the EnergyConsumptionSensor with multiple readings
+     * @throws InstantiationException
+     */
     @Test
     void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
         //Arrange
@@ -177,6 +210,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the EnergyConsumptionSensor with an empty log
+     */
     @Test
     void getLog_ReturnsEmptyLogIfNoReadings() {
         //Arrange
@@ -191,6 +227,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the final date
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() {
         //Arrange
@@ -208,6 +247,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the current date
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() {
         //Arrange
@@ -225,6 +267,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with a final date after the current date
+     */
     @Test
     void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() {
         //Arrange
@@ -242,6 +287,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial date format
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateFormatIsInvalid() {
         //Arrange
@@ -259,6 +307,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid final date format
+     */
     @Test
     void getReading_throwsExceptionIfFinalDateFormatIsInvalid() {
         //Arrange
@@ -276,6 +327,9 @@ public class EnergyConsumptionTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial and final date format
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() {
         //Arrange
@@ -288,6 +342,21 @@ public class EnergyConsumptionTest {
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45:00"));
         String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getType_ReturnsCorrectType() {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "EnergyConsumption";
+
+        //Act
+        String result = sensor.getType();
 
         //Assert
         assertEquals(expected, result);
