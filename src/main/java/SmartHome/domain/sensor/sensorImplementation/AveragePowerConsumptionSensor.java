@@ -16,7 +16,7 @@ public class AveragePowerConsumptionSensor implements Sensor{
     private final String unit = "W";
     private SimHardware simHardware;
 
-    private final ArrayList<Value<Double>> log = new ArrayList<>();
+    private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
     public AveragePowerConsumptionSensor(String sensorName, ExternalServices externalServices) {
         if(!validateSensorName(sensorName)){
@@ -30,23 +30,15 @@ public class AveragePowerConsumptionSensor implements Sensor{
         return sensorName != null && !sensorName.trim().isEmpty();
     }
 
-    public Value<Double> getReading(String initialDate, String finalDate) throws InstantiationException {
-        try {
-            LocalDateTime initialDateTime = getInitialDateTime(initialDate);
-            LocalDateTime finalDateTime = getFinalDateTime(finalDate);
-            if (!validateDate(initialDateTime, finalDateTime)) {
-                throw new IllegalArgumentException("Invalid date: initial date must be before final date and final date must be before current date");
-            }
-
-            String simValue = this.simHardware.getValue(initialDate,finalDate);
+    public Value<Integer> getReading(String initialDate, String finalDate) throws InstantiationException {
+        if(!validateDate(initialDate, finalDate)){
+            throw new IllegalArgumentException("Invalid date");
+        }
+        String simValue = this.simHardware.getValue(initialDate,finalDate);
             AveragePowerConsumptionValue readingValue = new AveragePowerConsumptionValue(simValue);
             addValueToLog(readingValue);
             return readingValue;
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'");
-
         }
-    }
 
 
     private LocalDateTime getInitialDateTime(String initialDate) {
@@ -61,8 +53,16 @@ public class AveragePowerConsumptionSensor implements Sensor{
         return finalDateTime;
     }
 
-    private boolean validateDate(LocalDateTime initialDate, LocalDateTime finalDateTime) {
-        return initialDate != null && finalDateTime != null && initialDate.isBefore(finalDateTime) && finalDateTime.isBefore(LocalDateTime.now());
+    private boolean validateDate(String initialDate, String finalDate) {
+        LocalDateTime initialDateTime;
+        LocalDateTime finalDateTime;
+        try{
+            initialDateTime = getInitialDateTime(initialDate);
+            finalDateTime = getFinalDateTime(finalDate);
+        } catch(DateTimeParseException e) {
+            return false;
+        }
+        return initialDate != null && finalDateTime != null && initialDateTime.isBefore(finalDateTime) && finalDateTime.isBefore(LocalDateTime.now());
     }
 
     @Override
@@ -80,14 +80,14 @@ public class AveragePowerConsumptionSensor implements Sensor{
         // 1.
         ArrayList<String> tmpLog = new ArrayList<>();
         // 2.
-        for (Value<Double> value : this.log){
+        for (Value<Integer> value : this.log){
             tmpLog.add(value.getValueAsString());
         }
         return tmpLog;
     }
 
 
-    private void addValueToLog(Value<Double> value){
+    private void addValueToLog(Value<Integer> value){
         this.log.add(value);
     }
 }

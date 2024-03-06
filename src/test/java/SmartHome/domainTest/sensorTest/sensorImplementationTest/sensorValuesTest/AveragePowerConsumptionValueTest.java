@@ -24,7 +24,7 @@ class AveragePowerConsumptionValueTest {
     @Test
     void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNegative(){
         //Arrange
-        String value = "-1.57";
+        String value = "-1";
         String expected = "Invalid reading";
 
         //Act
@@ -38,12 +38,12 @@ class AveragePowerConsumptionValueTest {
     @Test
     void averagePowerConsumptionValueConstructor_returnsSuccessfully() throws InstantiationException {
         //Arrange
-        String value = "50.5";
+        String value = "50";
         AveragePowerConsumptionValue averagePowerConsumptionValue = new AveragePowerConsumptionValue(value);
-        double expected = 50.5;
+        int expected = 50;
 
         //Act
-        double result = averagePowerConsumptionValue.getValue();
+        int result = averagePowerConsumptionValue.getValue();
 
         //Assert
         assertEquals(expected,result);
@@ -52,9 +52,9 @@ class AveragePowerConsumptionValueTest {
     @Test
     void getValueAsString_SuccessfullyConvertsToString() throws InstantiationException {
         //Arrange
-        String value = "50.5";
+        String value = "50";
         AveragePowerConsumptionValue averagePowerConsumptionValue = new AveragePowerConsumptionValue(value);
-        String expected = "50.5";
+        String expected = "50";
 
         //Act
         String result = averagePowerConsumptionValue.getValueAsString();

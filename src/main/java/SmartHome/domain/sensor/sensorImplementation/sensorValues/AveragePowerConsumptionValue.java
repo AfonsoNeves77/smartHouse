@@ -1,22 +1,23 @@
 package SmartHome.domain.sensor.sensorImplementation.sensorValues;
 
 import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 
-public class AveragePowerConsumptionValue implements Value<Double> {
-    private final double primitiveValue;
+public class AveragePowerConsumptionValue implements Value<Integer> {
+    private final int primitiveValue;
 
     public AveragePowerConsumptionValue(String reading) throws InstantiationException {
         if(!validateReading(reading)){
             throw new InstantiationException("Invalid reading");
         }
-        this.primitiveValue = parseDouble(reading);
+        this.primitiveValue = parseInt(reading);
     }
 
     private boolean validateReading(String reading) {
         double valueOfReading;
         try {
-            valueOfReading = parseDouble(reading);
+            valueOfReading = parseInt(reading);
         } catch (NumberFormatException | NullPointerException e) {
             return false;
         }
@@ -24,7 +25,7 @@ public class AveragePowerConsumptionValue implements Value<Double> {
     }
 
     @Override
-    public Double getValue() {
+    public Integer getValue() {
         return this.primitiveValue;
     }
 
