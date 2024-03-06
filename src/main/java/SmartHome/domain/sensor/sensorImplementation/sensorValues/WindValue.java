@@ -8,10 +8,10 @@ public class WindValue implements Value {
     String[] permittedDirections = {"N", "S", "E", "W", "NW", "NE", "SW", "SE"};
 
     /**
-     * Constructor for Wind value. The windspeed will be the primary value to be stored, however,
-     * as a windDirection is required, the Wind Value will also hold a char for windDirection.
-     * @param windspeed Wind speed value.
-     * @param windDirection Wind Direction.
+     * Constructor for Wind value. It receives a reading in string form, performs a split and checks for
+     * validation. The windspeed will be the primary value to be stored, however,as a windDirection is
+     * required, the Wind Value will also hold a String for windDirection.
+     * @param reading Reading received. It should follow the format "X-Y".
      * @throws InstantiationException On invalid parameters.
      */
     public WindValue(String reading) throws InstantiationException { // "40-N"
@@ -69,6 +69,12 @@ public class WindValue implements Value {
         return false;
     }
 
+    /**
+     * Validates the reading. Ensures the reading is not null or empty, that it is parseable, and when
+     * parsed, the windspeed is above 0.
+     * @param reading Reading to validate
+     * @return True or False
+     */
     private boolean isReadingValid(String reading){
         int windSpeed;
         String windDirection;
