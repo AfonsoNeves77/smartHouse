@@ -44,7 +44,7 @@ public class InstantPowerConsumptionSensorTest {
     }
 
     @Test
-    void getName_SuccessfullyReturns(){
+    void getName_ReturnsName(){
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -56,7 +56,7 @@ public class InstantPowerConsumptionSensorTest {
     }
 
     @Test
-    void getUnit_SuccessfullyReturns(){
+    void getUnit_ReturnsUnit(){
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -69,7 +69,7 @@ public class InstantPowerConsumptionSensorTest {
     }
 
     @Test
-    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+    void getReading_ReturnsValueCorrectly() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn("36");
@@ -88,7 +88,41 @@ public class InstantPowerConsumptionSensorTest {
     }
 
     @Test
-    void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
+    void getReading_throwsExceptionIfEmptyReading() {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn(" ");
+        String sensorName = "Sensor1";
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading());
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getReading_throwsExceptionIfInvalidReadingNumber() {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("abc");
+        String sensorName = "Sensor1";
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading());
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getLog_ReturnsEmptyList() {
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
@@ -103,5 +137,61 @@ public class InstantPowerConsumptionSensorTest {
 
         //Assert
         assertEquals(expected,result);
+    }
+
+    @Test
+    void getType_ReturnsType(){
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName,simHardware);
+
+        String expected = "InstantPowerConsumptionSensor";
+        //Act
+        String result = sensor.getTYPE();
+
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void getLog_ReturnsLog() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName, simHardware);
+
+        InstantPowerConsumptionValue value = (InstantPowerConsumptionValue) sensor.getReading();
+
+        String expected = "36";
+
+
+        //Act
+        String result = sensor.getLog().get(0);
+
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("30");
+        String sensorName = "Sensor1";
+        InstantPowerConsumptionSensor sensor = new InstantPowerConsumptionSensor(sensorName, simHardware);
+        String expected = "50";
+
+        //Act
+        sensor.getReading();
+        when(simHardware.getValue()).thenReturn("50");
+        sensor.getReading();
+        String result = sensor.getLog().get(1);
+
+        //Assert
+        assertEquals(expected, result);
     }
 }

@@ -14,6 +14,7 @@ public class InstantPowerConsumptionSensor implements Sensor {
     private String sensorName;
     private SimHardware simHardware;
     private final String unit = "W";
+    private final String type = "InstantPowerConsumptionSensor";
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
     public InstantPowerConsumptionSensor(String sensorName, ExternalServices externalServices){
@@ -29,12 +30,13 @@ public class InstantPowerConsumptionSensor implements Sensor {
         return this.sensorName;
     }
 
-
     @Override
     public String getUnit() {
         return this.unit;
     }
-
+    public String getTYPE() {
+        return type;
+    }
 
     public Value<Integer> getReading() throws InstantiationException {
         String simValue = this.simHardware.getValue();
