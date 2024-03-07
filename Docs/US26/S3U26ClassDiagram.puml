@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US22 Class Diagram
+title <size: 30> US26 Class Diagram
 
 
 interface Sensor {
@@ -13,12 +13,16 @@ interface Value<T> {
     + getValueAsString() : String
 }
 
+class SimHardware {
++ getvalue(initialDate : String, finalDate : String) : boolean
+}
 
+interface ExternalServices{}
 
 class EnergyConsumptionSensor{
     - sensorName : String
     - unit : String
-    -type : String
+    -Type : String
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
@@ -45,6 +49,9 @@ class EnergyConsumptionValue {
 
 Value <|.. EnergyConsumptionValue
 Sensor <|.. EnergyConsumptionSensor
+ExternalServices <|.. SimHardware
+EnergyConsumptionSensor <|.. SimHardware
 EnergyConsumptionSensor .right.> EnergyConsumptionValue
+
 
 @enduml
