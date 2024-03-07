@@ -8,6 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DewPointValueTest {
 
+    /**
+     * Test of the constructor of the class DewPointSensor. It should throw an exception if the value is null.
+     */
+
     @Test
     void constructor_throwsInstantiationExceptionIfReadingNull(){
         //Arrange
@@ -20,7 +24,9 @@ public class DewPointValueTest {
         //Assert
         assertEquals(expected,result);
     }
-
+    /**
+     * Test of the constructor of the class DewPointSensor. It should throw an exception if the value is empty.
+     */
     @Test
     void constructor_throwsInstantiationExceptionIfReadingEmpty(){
         //Arrange
@@ -33,7 +39,9 @@ public class DewPointValueTest {
         //Assert
         assertEquals(expected,result);
     }
-
+    /**
+     * Test of the constructor of the class DewPointSensor. It should throw an exception if the value is not a number.
+     */
     @Test
     void constructor_throwsInstantiationExceptionIfReadingUnableToParse(){
         //Arrange
@@ -47,6 +55,10 @@ public class DewPointValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test of the getValue of the class DewPointValue. It should return successfully if the value is valid.
+     */
+
     @Test
     void getValue_returnsSuccessfully() throws InstantiationException {
         //Arrange
@@ -57,7 +69,9 @@ public class DewPointValueTest {
         //Assert
         assertEquals(expected,value.getValue());
     }
-
+    /**
+     * Test of the method getValueAsString of the class DewPointValue. It should return the value as a string.
+     */
     @Test
     void getValue_SuccessfullyConvertsToString() throws InstantiationException {
         //Arrange
