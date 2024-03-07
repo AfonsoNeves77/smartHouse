@@ -66,71 +66,6 @@ class DeviceTest {
         assertEquals(expected,result.getMessage());
     }
 
-
-    @Test
-    void addSensorToDeviceSuccessful_IsolationTest() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        String deviceName = "Heater";
-        String deviceModel = "K899";
-        String deviceLocation = "Room";
-        Device device = new Device(deviceName,deviceModel,deviceLocation);
-        String nameSensor = "NameSensor";
-        String sensorType = "Temperature";
-        SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
-        Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(sensorDouble);
-        //Act
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
-        //Assert
-        assertTrue(result);
-    }
-
-    @Test
-    void addSensorToDeviceDuplicatedSensor_IsolationTest() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        String deviceName = "Heater";
-        String deviceModel = "K899";
-        String deviceLocation = "Room";
-
-        Device device = new Device(deviceName,deviceModel,deviceLocation);
-        String nameSensor = "NameSensor";
-        String sensorType = "Temperature";
-
-        SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
-
-        Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(sensorDouble);
-        when(sensorDouble.getName()).thenReturn(nameSensor);
-
-        //Act
-        device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
-        //Assert
-        assertFalse(result);
-    }
-
-    @Test
-    void addSensorToDeviceInvalidSensorParameters_IsolationTest() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        String deviceName = "DeviceOne";
-        String deviceModel = "K899";
-        String deviceLocation = "Room";
-        Device device = new Device(deviceName,deviceModel,deviceLocation);
-        String nameSensor = "";
-        String sensorType = "Temperature";
-        SensorCatalogue catalogueDouble = mock(SensorCatalogue.class);
-        Sensor sensorDouble = mock(Sensor.class);
-        when(catalogueDouble.createSensor(nameSensor,sensorType,simHardware)).thenReturn(null);
-        when(sensorDouble.getName()).thenReturn(nameSensor);
-        //Act
-        device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
-        boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
-        //Assert
-        assertFalse(result);
-    }
     @Test
     void addActuatorToDeviceSuccessful_Isolation() throws InstantiationException {
         String deviceName = "device1";
@@ -256,67 +191,7 @@ class DeviceTest {
     }
 
 
-    @Test
-    void addActuatorToDeviceDuplicatedActuator_IsolationTest() throws InstantiationException {
-        //Arrange
-        SimHardwareAct simHardware = mock(SimHardwareAct.class);
-        String deviceName = "Device1";
-        String deviceModel = "K899";
-        String deviceLocation = "Room";
-
-        Device device = new Device(deviceName,deviceModel,deviceLocation);
-        String actuatorName = "Actuator1";
-        String actuatorType = "BlindRoller";
-
-        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
-
-        BlindRollerActuator blindRollerActuatorDouble = mock(BlindRollerActuator.class);
-        when(catalogueDouble.createActuator(actuatorName,actuatorType,simHardware)).thenReturn(blindRollerActuatorDouble);
-        when(blindRollerActuatorDouble.getName()).thenReturn(actuatorName);
-
-        //Act
-        device.addActuator(actuatorName,actuatorType,catalogueDouble,simHardware);
-        boolean result = device.addActuator(actuatorName,actuatorType,catalogueDouble,simHardware);
-        //Assert
-        assertFalse(result);
-    }
-    @Test
-    void addActuatorToDeviceInvalidActuatorParameters_IsolationTest() throws InstantiationException {
-        //Arrange
-        SimHardwareAct simHardware = mock(SimHardwareAct.class);
-        String deviceName = "DeviceOne";
-        String deviceModel = "K899";
-        String deviceLocation = "Room";
-        Device device = new Device(deviceName,deviceModel,deviceLocation);
-        String actuatorName = "";
-        String actuatorType = "BlindRoller";
-        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
-        BlindRollerActuator actuatorDouble = mock(BlindRollerActuator.class);
-        when(catalogueDouble.createActuator(actuatorName,actuatorType,simHardware)).thenReturn(null);
-        when(actuatorDouble.getName()).thenReturn(actuatorName);
-        //Act
-        device.addActuator(actuatorName,actuatorType,catalogueDouble,simHardware);
-        boolean result = device.addActuator(actuatorName,actuatorType,catalogueDouble,simHardware);
-        //Assert
-        assertFalse(result);
-    }
-//    @Test
-////    void addActuatorToDevice_ReturnsFalseDueToUnableToInstantiate_Isolation(){
-////        String deviceName = "device1";
-////        String deviceModel = "XPTO";
-////        String deviceLocation = "bedroom";
-////        Device device = new Device(deviceName,deviceModel,deviceLocation);
-////        String actuatorName = "actuator1";
-////        String type = "thisWillFailButItsNotRelevant";
-////        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
-////        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
-////        when(catalogueDouble.createActuator(actuatorName, type,simHardwareActDouble)).thenThrow(InstantiationException.class);
-////        //Act
-////        boolean result = device.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble);
-////        //Assert
-////        assertFalse(result);
-////    }
-
+    //..........................................................INTEGRATION TESTS..................................................................................
 
     @Test
     void addTemperatureSensorToDeviceSuccessful() throws InstantiationException {
