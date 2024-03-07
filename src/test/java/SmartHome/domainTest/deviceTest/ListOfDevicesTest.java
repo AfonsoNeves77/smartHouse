@@ -14,14 +14,13 @@ class
 ListOfDevicesTest {
 
     /**
-     * Test 01
      * Unit test to add a device to a list.
      * Arrange a list, a device name, device model and device location.
      * Act to add a device to the list.
      * Assert that the device is successfully added to the list.
      */
     @Test
-    void addDeviceToList_ReturnTrueWhenSuccessful() {
+    void addDeviceToList_ReturnTrueWhenSuccessful() throws InstantiationException {
         //Arrange
         String name = "Device 1";
         String deviceModel = "Heater";
@@ -39,14 +38,13 @@ ListOfDevicesTest {
     }
 
     /**
-     * Test 02
      * Isolation test to add a device with invalid parameters to a list.
      * Arrange a list, a device name, device model and device location.
      * Act to add a device to the list with invalid parameters.
      * Assert that the device is not added to the list.
      */
     @Test
-    void addDeviceToList_ReturnFalseWhenDeviceParamsInvalid() {
+    void shouldNotAddDevice_WhenFactoryThrowsInstantiationException() throws InstantiationException {
         //Arrange
         String name = "Device 1";
         String deviceModel = "Heater";
@@ -54,7 +52,7 @@ ListOfDevicesTest {
         ListOfDevices list = new ListOfDevices();
         FactoryDevice factoryDeviceDouble = mock(ImplFactoryDevice.class);
         Device deviceDouble = mock(Device.class);
-        when(factoryDeviceDouble.createDevice(name, deviceModel, location)).thenThrow(IllegalArgumentException.class);
+        when(factoryDeviceDouble.createDevice(name, deviceModel, location)).thenThrow(InstantiationException.class);
 
         //Act
         boolean result = list.addDeviceToList(name, deviceModel, location, factoryDeviceDouble);
@@ -64,14 +62,13 @@ ListOfDevicesTest {
     }
 
     /**
-     * Test 03
      * Isolation test to add an already existing device to a list.
      * Arrange a list, a device name, device model and device location.
      * Act to add a device to the list, then add the same device again.
      * Assert that the device is not added to the list.
      */
     @Test
-    void addDeviceToList_ReturnFalseDueToDuplicatedDevice() {
+    void addDeviceToList_ReturnFalseDueToDuplicatedDevice() throws InstantiationException {
         //Arrange
         ListOfDevices list = new ListOfDevices();
 

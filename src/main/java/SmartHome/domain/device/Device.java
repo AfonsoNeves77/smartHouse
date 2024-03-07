@@ -29,17 +29,16 @@ public class Device {
      * @param deviceLocation Room where the device is located
      */
 
-    public Device(String deviceName, String deviceModel, String deviceLocation) {
+    public Device(String deviceName, String deviceModel, String deviceLocation) throws InstantiationException {
         if (!areDeviceParametersValid(deviceName,deviceModel,deviceLocation)) {
-            throw new IllegalArgumentException("Invalid parameter.");
+            throw new InstantiationException("Invalid parameter.");
         }
-            this.deviceName = deviceName;
-            this.deviceModel = deviceModel;
-            this.deviceLocation = deviceLocation;
-            this.status = true;
-            this.listOfSensors = new ListOfSensors();
-            this.listOfActuators = new ListOfActuators();
-
+        this.deviceName = deviceName;
+        this.deviceModel = deviceModel;
+        this.deviceLocation = deviceLocation;
+        this.status = true;
+        this.listOfSensors = new ListOfSensors();
+        this.listOfActuators = new ListOfActuators();
     }
 
     private boolean areDeviceParametersValid(String deviceName, String deviceModel, String deviceLocation) {
