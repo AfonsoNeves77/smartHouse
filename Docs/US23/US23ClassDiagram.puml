@@ -1,0 +1,48 @@
+@startuml
+title <size: 30> US23 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+class SimHardware {
+     + getValue() : String
+     + getValue(initialDate : String, finalDate : String) : String
+}
+
+class SolarIrradianceSensor {
+    - sensorName : String
+    - TYPE : String
+    - simHardware : SimHardware
+    - UNIT : String
+    - List<Value<Integer>> : log
+
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+    - addValueToLog(value : Value<Integer>) : void
+    + getReading() : Value<Integer>
+    + getType() : String
+}
+
+class SolarIrradianceValue {
+    - primitiveValue : int
+
+    - isReadingValid(reading : String) : boolean
+    + getValue() : Integer
+    + getValueAsString() : String
+}
+
+Value <|.. SolarIrradianceValue
+Sensor <|.. SolarIrradianceSensor
+SolarIrradianceSensor .right.> SolarIrradianceValue
+SolarIrradianceSensor .left.> SimHardware
+
+@enduml
