@@ -1,6 +1,7 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.ExternalServices;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.externalServices.SunTimeCalculator;
 import SmartHome.domain.sensor.sensorImplementation.SunsetSensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.SunTimeValue;
@@ -59,10 +60,10 @@ class SunsetSensorTest {
     }
 
     /**
+     * Test that partially isolates SunsetSensor Class from its collaborators (SunTimeValue Class is not mocked).
      * Operation fails: Instantiation exception is thrown when result is not valid, i.e., it cannot be converted
      * to a SunTimeValue. It happens when computeSunTime() method returns null. Although an instantiation exception is
      * thrown, Mockito changes it for another exception, making it not possible to fully isolate this test case.
-     * Test that partially isolates SunsetSensor Class from its collaborators (SunTimeValue Class is not mocked).
      * @throws InstantiationException If parameters for Sensor creation are invalid.
      */
     @Test
@@ -145,7 +146,7 @@ class SunsetSensorTest {
         //Arrange
         String sensorName = "";
         ExternalServices serviceDouble = mock(SunTimeCalculator.class);
-        String expected = "Invalid parameters.";
+        String expected = "Invalid parameters";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () -> {
            new SunsetSensor(sensorName, serviceDouble);
@@ -163,7 +164,7 @@ class SunsetSensorTest {
         //Arrange
         String sensorName = null;
         ExternalServices serviceDouble = mock(SunTimeCalculator.class);
-        String expected = "Invalid parameters.";
+        String expected = "Invalid parameters";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () -> {
             new SunsetSensor(sensorName, serviceDouble);
@@ -181,10 +182,28 @@ class SunsetSensorTest {
         //Arrange
         String sensorName = "Sensor Test";
         ExternalServices service = null;
-        String expected = "Invalid parameters.";
+        String expected = "Invalid parameters";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () -> {
             new SunsetSensor(sensorName, service);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * Tests that sensor cannot be created with an incompatible service (e.g. not a SunTimeCalculator service).
+     */
+    @Test
+    void createSensorWithIncompatibleService_IsolationTest() {
+        //Arrange
+        String sensorName = "KTP Sensor";
+        ExternalServices serviceDouble = mock(SimHardware.class);
+        String expected = "Incompatible Service";
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> {
+            new SunsetSensor(sensorName, serviceDouble);
         });
         String result = exception.getMessage();
         //Assert

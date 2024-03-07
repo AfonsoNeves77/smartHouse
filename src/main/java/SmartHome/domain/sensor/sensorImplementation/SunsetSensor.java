@@ -18,14 +18,18 @@ public class SunsetSensor implements Sensor {
      * Constructor for SunsetSensor Objects.
      * @param sensorName Sensor name
      * @param sunTimeCalculator External Service in use
-     * @throws InstantiationException If sensor name is null or empty, or External Service is null.
+     * @throws InstantiationException If sensor name is null or empty, or External Service is null or incompatible.
      */
     public SunsetSensor(String sensorName, ExternalServices sunTimeCalculator) throws InstantiationException {
-        if(!validSensorName(sensorName) || !validSunTimeCalculator(sunTimeCalculator)){
-            throw new InstantiationException("Invalid parameters.");
+        try{
+            if(!validSensorName(sensorName) || !validSunTimeCalculator(sunTimeCalculator)) {
+                throw new InstantiationException("Invalid parameters");
+            }
+            this.sensorName = sensorName;
+            this.sunTimeCalculator = (SunTimeCalculator) sunTimeCalculator;
+        } catch (ClassCastException e){
+            throw new InstantiationException("Incompatible Service");
         }
-        this.sensorName = sensorName;
-        this.sunTimeCalculator = (SunTimeCalculator) sunTimeCalculator;
     }
 
     /**

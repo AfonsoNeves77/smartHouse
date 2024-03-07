@@ -8,6 +8,8 @@ import java.time.ZonedDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SunTimeCalculatorTest {
+
+//....................................................INTEGRATION TESTS.................................................
     /**
      * This test verifies that the computeSunsetTime() method returns the expected sunset time,
      * for a given date and coordinates.
