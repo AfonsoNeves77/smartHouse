@@ -5,9 +5,9 @@ public class DecimalSetActuator implements Actuator{
     private String actuatorName;
     private double value;
     private SimHardwareAct simHardwareAct;
-    private double upperLimit;
-    private double lowerLimit;
-    private final int precision = 3;
+    private Double upperLimit;
+    private Double lowerLimit;
+    private Integer decimalPrecision;
 
     public DecimalSetActuator(String actuatorName, SimHardwareAct simHardwareAct) throws InstantiationException {
         if (!validateParams(actuatorName, simHardwareAct)) {
@@ -15,7 +15,6 @@ public class DecimalSetActuator implements Actuator{
         }
         this.actuatorName = actuatorName;
         this.simHardwareAct = simHardwareAct;
-        this.value=0;
     }
 
     private boolean validateParams(String name, SimHardwareAct simHardwareAct) {
@@ -23,22 +22,30 @@ public class DecimalSetActuator implements Actuator{
     }
 
     public boolean executeCommand(double newValue) {
-        if (!validateValue(newValue)){
+        if(upperLimit == null && lowerLimit == null && decimalPrecision == null){
+            return false;
+        }
+        if (!isValueWithinLimits(newValue) || !hasOneDecimalPlaceOrNone(newValue)){
             return false;
         }
         boolean executionResult = simHardwareAct.executeDecimalCommandSim(newValue);
         if (executionResult) {
-            // Adjusts the value to the predefined precision
-            this.value = Math.round(newValue * Math.pow(10, precision)) / Math.pow(10, precision);
+            this.value = newValue;
         }
         return executionResult;
     }
 
-    private boolean validateValue(double value) {
+    private boolean isValueWithinLimits(double value) {
         if (value < lowerLimit || value > upperLimit){
             return false;
         }
         return true;
+    }
+
+    private boolean hasOneDecimalPlaceOrNone(double newValue) {
+        double decimalPart = newValue - Math.floor(newValue);
+        double decimalPartMultiplied = decimalPart * this.decimalPrecision;
+        return decimalPartMultiplied == Math.floor(decimalPartMultiplied);
     }
 
     @Override
@@ -50,12 +57,13 @@ public class DecimalSetActuator implements Actuator{
         return this.value;
     }
 
-    public void setLimits(double lowerLimit, double upperLimit){
+    public void setLimits(Double lowerLimit, Double upperLimit,Integer decimalPrecision){
         if (upperLimit<lowerLimit){
             throw new IllegalArgumentException("Upper Limit has to be Higher or Equal than Lower Limit");
         }
         this.upperLimit=upperLimit;
         this.lowerLimit=lowerLimit;
+        this.decimalPrecision=decimalPrecision;
         this.value=lowerLimit;
     }
 }
