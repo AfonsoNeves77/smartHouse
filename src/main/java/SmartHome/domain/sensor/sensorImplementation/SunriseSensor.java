@@ -38,11 +38,17 @@ public class SunriseSensor implements Sensor {
      * @throws InstantiationException if the sensorName or sunTimeCalculator is invalid
      */
     public SunriseSensor(String sensorName, ExternalServices sunTimeCalculator) throws InstantiationException {
-        if (!validSensorName(sensorName) || !validSunTimeCalculator(sunTimeCalculator)) {
-            throw new InstantiationException("Invalid parameters");
+        try{
+
+            if (!validSensorName(sensorName) || !validSunTimeCalculator(sunTimeCalculator)) {
+                throw new InstantiationException("Invalid parameters");
+            }
+            this.sensorName = sensorName;
+            this.sunTimeCalculator = (SunTimeCalculator) sunTimeCalculator;
+
+        }catch (ClassCastException exception){
+            throw new InstantiationException("Invalid External Services");
         }
-        this.sensorName = sensorName;
-        this.sunTimeCalculator = (SunTimeCalculator) sunTimeCalculator;
     }
 
     private boolean validSensorName(String sensorName) {
