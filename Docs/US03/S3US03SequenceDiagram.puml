@@ -2,47 +2,45 @@
 !theme cerulean
 skinparam ParticipantPadding 50
 autonumber
+title User Story 3 - Main Success Scenario
 
-participant ":GetListOfRoomsCTRL" as CTRL
+participant ":deactivateDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
-participant ":House" as h
+participant ":House" as H
 participant ":ListOfRooms" as LR
-participant ":RoomDTOMapper" as RDTM
+participant ":RoomDTOMapper" as RM
+participant ":Room" as R
 
-
-[o-> CTRL : getListOfRooms()
-activate CTRL
-CTRL -> CU : getListOfRooms()
+[o-> C : getListOfRooms()
+activate C
+C -> CU : getListOfRooms()
 activate CU
-CU -> h : getListOfRooms()
-activate h
-h -> LR : getListOfRooms()
+CU -> H : getListOfRooms()
+activate H
+H -> LR : getRoomList()
 activate LR
-LR -> LR : listOfRooms = cloneList()
-activate LR
+LR --> H : roomList
 deactivate LR
-LR --> h : listOfRooms
-deactivate LR
-h --> CU : listOfRooms
-
-deactivate h
-CU -> RDTM : getRoomDTOList(listOfRooms)
-activate RDTM
+H --> CU : roomList
+deactivate H
+CU -> RM : getRoomDTOList(roomList)
+activate RM
 loop for each room in room list
-RDTM -> RDTM : RoomDTO = domainToDTO(room)
-activate RDTM
-deactivate RDTM
-RDTM -> RDTM : put(RoomDTO)
-activate RDTM
-deactivate RDTM
+RM -> RM : RoomDTO = domainToDTO(room)
+activate RM
+deactivate RM
+RM -> RM : put(RoomDTO, room)
+activate RM
+deactivate RM
 end loop
-RDTM --> CU : roomAndRoomDtoList
-deactivate RDTM
-CU -> CU : roomDtoList = truncateList(roomAndRoomDtoList)
+RM --> CU : roomDTOAndRoomMap
+deactivate RM
+CU -> CU : truncateList(roomDTOAndRoomMap)
 activate CU
 deactivate CU
-CU --> CTRL : roomDtoList
+CU --> C : roomDtoList
 deactivate CU
-[o<-- CTRL : roomDtoList
-deactivate CTRL
+[o<-- C : roomDtoList
+deactivate C
+
 @enduml
