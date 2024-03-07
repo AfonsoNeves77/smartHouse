@@ -1,15 +1,15 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
 import SmartHome.domain.sensor.externalServices.ExternalServices;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
 
 public class TemperatureSensor implements Sensor {
     private String sensorName;
+    private final String TYPE = "Temperature";
     private SimHardware simHardware;
     private final String unit = "C";
     private final ArrayList<Value<Double>> log = new ArrayList<>();
@@ -76,5 +76,9 @@ public class TemperatureSensor implements Sensor {
      */
     public String getUnit(){
         return this.unit;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 }
