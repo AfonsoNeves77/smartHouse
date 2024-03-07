@@ -1,0 +1,24 @@
+@startuml
+title <size: 30> US14 Class Diagram
+
+interface Actuator {
+    + getName() : String
+}
+
+class BlindRollerActuator{
+    - actuatorName : String
+    - simHardwareAct : SimHardwareAct
+
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + getName() : String
+    + executeRollerCommand(position : Integer) : boolean
+    - validateCommand(position : Integer) : boolean
+}
+
+class SimHardwareAct {
+    + executeIntegerCommandSim(position : Integer) : boolean
+}
+
+Actuator <|.. BlindRollerActuator
+BlindRollerActuator .right.> SimHardwareAct
+@enduml

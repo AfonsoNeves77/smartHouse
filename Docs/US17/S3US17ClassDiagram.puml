@@ -1,0 +1,49 @@
+@startuml
+title <size: 30> US17 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class SwitchSensor{
+    - sensorName : String
+    - unit : String
+    - type : String
+    - simHardware : SimHardware
+    - log : ArrayList<Value<Integer>>
+
+    + getReading() : Value<String>
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+    + getType() : String
+    - addValueToLog(value : Value<String>) : void
+}
+
+class SwitchValue {
+    + getValue() : String
+    + getValueAsString() : String
+    - isreadingValid(reading : String) : boolean
+}
+
+class SimHardware{
+    + getValue : String
+}
+
+Value <|.. SwitchValue
+Sensor <|.. SwitchSensor
+ExternalServices <|.. SimHardware
+SwitchSensor .right.> SwitchValue
+SwitchSensor .left.> SimHardware
+@enduml

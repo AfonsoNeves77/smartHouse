@@ -33,7 +33,7 @@ class DeviceTest {
      * Assert that the device is deactivated.
      */
     @Test
-    void deactivateDevice_returnsFalseEvenIfDeviceIsAlreadyFalseAsStatus() {
+    void deactivateDevice_returnsFalseEvenIfDeviceIsAlreadyFalseAsStatus() throws InstantiationException {
         //Arrange
         String deviceName = "Heater";
         String deviceModel = "XPTO3000";
@@ -60,7 +60,7 @@ class DeviceTest {
         String deviceLocation = "Room";
         String expected = "Invalid parameter.";
         //Act
-        Exception result = assertThrows(IllegalArgumentException.class, () ->
+        Exception result = assertThrows(InstantiationException.class, () ->
                new Device(deviceName, deviceModel, deviceLocation));
         //Assert
         assertEquals(expected,result.getMessage());
@@ -68,7 +68,7 @@ class DeviceTest {
 
 
     @Test
-    void addSensorToDeviceSuccessful_IsolationTest(){
+    void addSensorToDeviceSuccessful_IsolationTest() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String deviceName = "Heater";
@@ -87,7 +87,7 @@ class DeviceTest {
     }
 
     @Test
-    void addSensorToDeviceDuplicatedSensor_IsolationTest(){
+    void addSensorToDeviceDuplicatedSensor_IsolationTest() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String deviceName = "Heater";
@@ -112,7 +112,7 @@ class DeviceTest {
     }
 
     @Test
-    void addSensorToDeviceInvalidSensorParameters_IsolationTest(){
+    void addSensorToDeviceInvalidSensorParameters_IsolationTest() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String deviceName = "DeviceOne";
@@ -130,6 +130,50 @@ class DeviceTest {
         boolean result = device.addSensor(nameSensor,sensorType,catalogueDouble,simHardware);
         //Assert
         assertFalse(result);
+    }
+    @Test
+    void addActuatorToDeviceSuccessful_Isolation() throws InstantiationException {
+        String deviceName = "device1";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        String actuatorName = "actuator1";
+        String type = "thisWillFailButItsNotRelevant";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
+            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
+            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(true);
+
+            //Act
+            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+            //Assert
+            assertTrue(result);
+        }
+    }
+    @Test
+    void addActuatorToDevice_False_Isolation() throws InstantiationException {
+        String deviceName = "device1";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        String actuatorName = "actuator1";
+        String type = "thisWillFailButItsNotRelevant";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
+            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
+            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(false);
+
+            //Act
+            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+            //Assert
+            assertFalse(result);
+        }
     }
 
     @Test
@@ -212,7 +256,7 @@ class DeviceTest {
 
 
     @Test
-    void addActuatorToDeviceDuplicatedActuator_IsolationTest(){
+    void addActuatorToDeviceDuplicatedActuator_IsolationTest() throws InstantiationException {
         //Arrange
         SimHardwareAct simHardware = mock(SimHardwareAct.class);
         String deviceName = "Device1";
@@ -236,7 +280,7 @@ class DeviceTest {
         assertFalse(result);
     }
     @Test
-    void addActuatorToDeviceInvalidActuatorParameters_IsolationTest(){
+    void addActuatorToDeviceInvalidActuatorParameters_IsolationTest() throws InstantiationException {
         //Arrange
         SimHardwareAct simHardware = mock(SimHardwareAct.class);
         String deviceName = "DeviceOne";
@@ -354,7 +398,7 @@ class DeviceTest {
     }
 
     @Test
-    void deactivateDevice(){
+    void deactivateDevice() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";
@@ -368,7 +412,7 @@ class DeviceTest {
     }
 
     @Test
-    void getDeviceName(){
+    void getDeviceName() throws InstantiationException {
 
         //Arrange
         String expected = "Heater";
@@ -383,7 +427,7 @@ class DeviceTest {
     }
 
     @Test
-    void getDeviceModel(){
+    void getDeviceModel() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";
@@ -397,7 +441,7 @@ class DeviceTest {
     }
 
     @Test
-    void getDeviceLocation(){
+    void getDeviceLocation() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";
@@ -411,7 +455,7 @@ class DeviceTest {
     }
 
     @Test
-    void getDeviceStatus(){
+    void getDeviceStatus() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";
@@ -425,7 +469,7 @@ class DeviceTest {
     }
 
     @Test
-    void getDeviceFunctionalities_DeviceWithNoFunctionality(){
+    void getDeviceFunctionalities_DeviceWithNoFunctionality() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";
@@ -485,7 +529,7 @@ class DeviceTest {
 
 
     @Test
-    void getDeviceSensorLog_DeviceWithNoSensors()  {
+    void getDeviceSensorLog_DeviceWithNoSensors() throws InstantiationException {
 
         //Arrange
         String deviceName = "Heater";

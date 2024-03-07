@@ -1,60 +1,68 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.domain.sensor.sensorImplementation.AveragePowerConsumptionSensor;
 import SmartHome.domain.sensor.sensorImplementation.EnergyConsumptionSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.AveragePowerConsumptionValue;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.EnergyConsumptionValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class EnergyConsumptionTest {
+
+//     ### ISOLATION TESTS ###
+
     /**
      * Test for the constructor of the EnergyConsumptionSensor with a null name
      */
     @Test
-    void sensorConstructor_throwsExceptionIfNameNull(){
+    void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
         SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
         String expected = "Invalid parameter";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new EnergyConsumptionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
      * Test for the constructor of the EnergyConsumptionSensor with an empty name
      */
     @Test
-    void sensorConstructor_throwsExceptionIfNameIsEmpty(){
+    void sensorConstructor_throwsExceptionIfNameIsEmpty() {
         //Arrange
         SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = " ";
         String expected = "Invalid parameter";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new EnergyConsumptionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
      * Test for the getName method of the EnergyConsumptionSensor
      */
     @Test
-    void getName_SuccessfullyReturns(){
+    void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -71,7 +79,7 @@ public class EnergyConsumptionTest {
      * Test for the getUnit method of the EnergyConsumptionSensor
      */
     @Test
-    void getUnit_SuccessfullyReturns(){
+    void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -86,7 +94,277 @@ public class EnergyConsumptionTest {
     }
 
     /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an empty reading
+     */
+    @Test
+    void getReading_throwsExceptionIfEmptyReading() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn(" ");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid reading
+     */
+    @Test
+    void getReading_throwsExceptionIfInvalidReadingNumber() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("abc");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with a negative reading
+     */
+    @Test
+    void getReading_throwsExceptionIfReadingIsNegative() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("-50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid reading";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+
+    /**
+     * Test for the getLog method of the EnergyConsumptionSensor with an empty log
+     */
+    @Test
+    void getLog_ReturnsEmptyLogIfNoReadings() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        int expected = 0;
+
+        //Act
+        int result = sensor.getLog().size();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the final date
+     */
+    @Test
+    void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2020 14:15:45", "15-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the current date
+     */
+    @Test
+    void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2021 14:15:45", "16-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with a final date after the current date
+     */
+    @Test
+    void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2050 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial date format
+     */
+    @Test
+    void getReading_throwsExceptionIfInitialDateFormatIsInvalid() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid final date format
+     */
+    @Test
+    void getReading_throwsExceptionIfFinalDateFormatIsInvalid() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45:00"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial and final date format
+     */
+    @Test
+    void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("50.5");
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45:00"));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test for the getType method of the EnergyConsumptionSensor.
+     *
+     * @throws InstantiationException
+     */
+    @Test
+    void getType_ReturnsCorrectType() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+        String expected = "Energy Consumption";
+
+        //Act
+        String result = sensor.getType();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Successfully returns getReading value.
+     * 1. Instantiates a simHardware double, placing a stub for the method getValue. Also instantiates the sensor.
+     * 2. Utilizes a mocked construction to create a double of a EnergyConsumptionValue, and placing a stub on the method getValueAsString.
+     * 3. The first test involves using the .constructed() method to save all instances of created EnergyConsumptionValue doubles,
+     * into a list of EnergyConsumptionValues. It then checks the size of that list using .size(), and compares it against the expected size of 1.
+     * #Important# It is imperative that we call getReading on sensor before this operation.
+     * 4. The second test involves accessing the first value saved on the list created above using get(0) and calling getValueAsString,
+     * matching it against the expected string.
+     * 5. The third test utilizes the energyConsumptionValueDouble that is created by calling getReading unto the sensor created at the top
+     * and ensuring that when we call getValueAsString unto that value, it returns the expected string.
+     *
+     * @throws InstantiationException If sensor parameters invalid.
+     */
+    @Test
+    void getReading_ReturnsValueCorrectly_Isolation() throws InstantiationException {
+        //Arrange
+        // 1.
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("50");
+        String sensorName = "Sensor 1";
+        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
+
+        // 2.
+        try (MockedConstruction<EnergyConsumptionValue> energyConsumptionValueDouble = mockConstruction(EnergyConsumptionValue.class, (mock, context)
+                -> {
+            when(mock.getValueAsString()).thenReturn("50");
+        })) {
+
+            //Act & Assert
+
+            EnergyConsumptionValue value = (EnergyConsumptionValue) sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45");
+
+            // 3.
+            List<EnergyConsumptionValue> values = energyConsumptionValueDouble.constructed();
+            int listOfDoublesSize = values.size();
+            assertEquals(1, listOfDoublesSize);
+
+            // 4.
+            String expected = "50";
+            String result = values.get(0).getValueAsString();
+            assertEquals(expected, result);
+
+            // 5.
+            String mockedEnergyConsumptionValue = value.getValueAsString();
+            assertEquals(expected, mockedEnergyConsumptionValue);
+        }
+    }
+
+//     ### INTEGRATION TESTS ###
+
+    /**
      * Test for the getReading method of the EnergyConsumptionSensor
+     *
      * @throws InstantiationException
      */
     @Test
@@ -107,67 +385,8 @@ public class EnergyConsumptionTest {
     }
 
     /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an empty reading
-     */
-    @Test
-    void getReading_throwsExceptionIfEmptyReading() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn(" ");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid reading";
-
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an invalid reading
-     */
-    @Test
-    void getReading_throwsExceptionIfInvalidReadingNumber() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("abc");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid reading";
-
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with a negative reading
-     */
-    @Test
-    void getReading_throwsExceptionIfReadingIsNegative(){
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("-50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid reading";
-
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
      * Test for the getLog method of the EnergyConsumptionSensor
+     *
      * @throws InstantiationException
      */
     @Test
@@ -189,6 +408,7 @@ public class EnergyConsumptionTest {
 
     /**
      * Test for the getLog method of the EnergyConsumptionSensor with multiple readings
+     *
      * @throws InstantiationException
      */
     @Test
@@ -205,158 +425,6 @@ public class EnergyConsumptionTest {
         when(simHardware.getValue("15-12-2020 14:15:45", "16-12-2020 14:15:45")).thenReturn("60");
         sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45");
         String result = sensor.getLog().get(1);
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getLog method of the EnergyConsumptionSensor with an empty log
-     */
-    @Test
-    void getLog_ReturnsEmptyLogIfNoReadings() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        int expected = 0;
-
-        //Act
-        int result = sensor.getLog().size();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the final date
-     */
-    @Test
-    void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2020 14:15:45", "15-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an initial date after the current date
-     */
-    @Test
-    void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("16-12-2021 14:15:45", "16-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with a final date after the current date
-     */
-    @Test
-    void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date: initial date must be before final date and final date must be before current date";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2050 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial date format
-     */
-    @Test
-    void getReading_throwsExceptionIfInitialDateFormatIsInvalid() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an invalid final date format
-     */
-    @Test
-    void getReading_throwsExceptionIfFinalDateFormatIsInvalid() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45", "16-12-2020 14:15:45:00"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the getReading method of the EnergyConsumptionSensor with an invalid initial and final date format
-     */
-    @Test
-    void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("50.5");
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Invalid date format: expected 'dd-MM-yyyy HH:mm:ss'";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> sensor.getReading("15-12-2020 14:15:45:00", "16-12-2020 14:15:45:00"));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    @Test
-    void getType_ReturnsCorrectType() {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        String sensorName = "Sensor1";
-        EnergyConsumptionSensor sensor = new EnergyConsumptionSensor(sensorName, simHardware);
-        String expected = "Energy Consumption";
-
-        //Act
-        String result = sensor.getType();
 
         //Assert
         assertEquals(expected, result);

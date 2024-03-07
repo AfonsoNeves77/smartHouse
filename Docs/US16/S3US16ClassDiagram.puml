@@ -1,0 +1,31 @@
+@startuml
+title <size: 30> US16 Class Diagram
+
+interface Actuator {
+    + getName() : String
+}
+
+class DecimalSetActuator{
+    - actuatorName : String
+    - value : double
+    - simHardwareAct : SimHardwareAct
+    - upperLimit : Double
+    - lowerLimit : Double
+    - decimalPrecision : Integer
+
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    - isValueWithinLimits (value : Double) : boolean
+    + getName() : String
+    + executeCommand(newValue : double) : boolean
+    - hasOneDecimalPlaceOrNone(newValue : double) : boolean
+    + getValue() : double
+    + setLimits(lowerLimit : Double, upperLimit : Double, decimalPrecision : Integer) : boolean
+}
+
+class SimHardwareAct {
+    + executeDecimalCommandSim(newValue : double) : boolean
+}
+
+Actuator <|.. DecimalSetActuator
+DecimalSetActuator .right.> SimHardwareAct
+@enduml

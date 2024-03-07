@@ -30,7 +30,7 @@ public class ListOfDevices {
                 Device newDevice = factoryDevice.createDevice(deviceName, deviceModel, location);
                 this.deviceList.add(newDevice);
                 return true;
-            } catch (IllegalArgumentException e) {
+            } catch (InstantiationException e) {
                 return false;
             }
         } else {

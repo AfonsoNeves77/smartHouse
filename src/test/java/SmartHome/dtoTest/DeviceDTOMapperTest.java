@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DeviceDTOMapperTest {
 
     @Test
-    void domainToDTO() {
+    void domainToDTO() throws InstantiationException {
         String deviceName = "device1";
         String deviceModel = "model1";
         String deviceLocation = "location1";
@@ -27,7 +27,7 @@ class DeviceDTOMapperTest {
     }
 
     @Test
-    void testDeviceAndDeviceDTOInHashMap() {
+    void testDeviceAndDeviceDTOInHashMap() throws InstantiationException {
         // Arrange
         String deviceName = "device1";
         String deviceModel = "model1";

@@ -15,12 +15,19 @@ public class SwitchActuatorTest {
     private SwitchActuator switchActuator;
     private SimHardwareAct mockSimHardwareAct;
 
+    /**
+     * This method is used to setup the test environment before each test.
+     * @throws InstantiationException if an invalid name is provided for the actuator
+     */
     @BeforeEach
     void setup() throws InstantiationException {
         mockSimHardwareAct = mock(SimHardwareAct.class);
         switchActuator = new SwitchActuator("Switch", mockSimHardwareAct);
     }
 
+    /**
+     * This method is used to test the constructor of the SwitchActuator.
+     */
     @Test
     void testSwitchActuator_Constructor() {
         //arrange
@@ -31,6 +38,10 @@ public class SwitchActuatorTest {
         //assert
         assertEquals(actuatorName, switchActuator.getName());
     }
+
+    /**
+     * This method is used to test the getState method of the SwitchActuator.
+     */
     @Test
     void testSwitchActuator_GetState() {
         //arrange
@@ -41,6 +52,9 @@ public class SwitchActuatorTest {
         assertEquals(state, switchActuator.getState());
     }
 
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should throw an exception if the actuatorName is null.
+     */
     @Test
     void testSwitchActuator_nullActuatorName() {
         //arrange
@@ -57,6 +71,9 @@ public class SwitchActuatorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should throw an exception if the actuatorName is empty.
+     */
     @Test
     void testSwitchActuator_emptyName() {
         //arrange
@@ -73,7 +90,9 @@ public class SwitchActuatorTest {
         assertEquals(expected, result);
     }
 
-
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should return false if the command.
+     */
     @Test
     void testExecuteCommand_InvalidCommand_ReturnsFalse() {
 
@@ -82,6 +101,9 @@ public class SwitchActuatorTest {
         assertFalse(result);
     }
 
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should return false if the execution fails.
+     */
     @Test
     void testExecuteCommand_ValidCommandButExecutionFails_ReturnsFalse() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(false);
@@ -90,12 +112,19 @@ public class SwitchActuatorTest {
 
         assertFalse(result);
     }
+
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should return true if the execution succeeds.
+     */
     @Test
     void test_GetName() {
         String expected = "Switch";
         String result = switchActuator.getName();
         assertEquals(expected, result);
     }
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should return true if the execution succeeds.
+     */
     @Test
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(true);
@@ -104,6 +133,10 @@ public class SwitchActuatorTest {
 
         assertTrue(result);
     }
+
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should update the state if the execution succeeds.
+     */
     @Test
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_StateIsUpdated() {
         when(mockSimHardwareAct.executeCommandSim("On")).thenReturn(true);
@@ -115,6 +148,10 @@ public class SwitchActuatorTest {
 
         assertEquals(expected, result);
     }
+
+    /**
+     * This method is used to test the executeCommand method of the SwitchActuator. It should not update the state if the execution fails.
+     */
     @Test
     void test_ValidCommandAndExecutionFails_StateIsNotUpdated() {
 

@@ -15,6 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class DewPointSensorTest {
+
+    /**
+     * Test for the constructor of the DewPointSensor with a null name
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
@@ -28,7 +32,9 @@ public class DewPointSensorTest {
         //Assert
         assertEquals(expected, result);
     }
-
+    /**
+     * Test for the constructor of the DewPointSensor with a empty name
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty() {
         //Arrange
@@ -43,6 +49,9 @@ public class DewPointSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getName method of the DewPointSensor class. It should return the name of the sensor.
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -54,7 +63,9 @@ public class DewPointSensorTest {
         //Assert
         assertEquals(sensorName, result);
     }
-
+    /**
+     * Test for the getUnit method of the DewPointSensor class. It should return the unit of the sensor.
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -116,6 +127,9 @@ public class DewPointSensorTest {
         }
     }
 
+    /**
+     * Test for the getReading method of the DewPointSensor class. It should return the value of the sensor.
+     */
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
@@ -135,6 +149,9 @@ public class DewPointSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the DewPointSensor class. It should return the log of the sensor.
+     */
     @Test
     void getLog_SuccessfullyStoresAndAccesses() throws InstantiationException {
         //Arrange
@@ -152,6 +169,10 @@ public class DewPointSensorTest {
         //Assert
         assertEquals(expected, result);
     }
+
+    /**
+     * Test for the GetType method of the DewPointSensor class. It should return the type of the sensor.
+     */
     @Test
     void getTYPE_Successfully() throws InstantiationException {
         //Arrange

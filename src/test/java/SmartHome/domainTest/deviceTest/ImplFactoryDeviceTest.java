@@ -17,7 +17,7 @@ public class ImplFactoryDeviceTest {
      * Assert that the device is created.
      */
     @Test
-    void createDevice_success(){
+    void createDevice_success() throws InstantiationException {
         //Arrange
         ImplFactoryDevice factory = new ImplFactoryDevice();
         String deviceName = "OTPX";
@@ -46,7 +46,7 @@ public class ImplFactoryDeviceTest {
         String deviceLocation = "Sala1";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
             factory.createDevice(deviceName,deviceModel,deviceLocation));
         String result = exception.getMessage();
         //Assert
@@ -69,7 +69,7 @@ public class ImplFactoryDeviceTest {
         String deviceLocation = "Sala1";
         String expectedMessage = "Invalid parameter.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
             factory.createDevice(deviceName,deviceModel,deviceLocation));
         String result = exception.getMessage();
         //Assert

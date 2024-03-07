@@ -23,9 +23,9 @@ public class AveragePowerConsumptionSensor implements Sensor{
      * Constructor for AveragePowerConsumptionSensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
      * @param sensorName Name of the sensor
      */
-    public AveragePowerConsumptionSensor(String sensorName, ExternalServices externalServices) {
+    public AveragePowerConsumptionSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(!validateSensorName(sensorName)){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;

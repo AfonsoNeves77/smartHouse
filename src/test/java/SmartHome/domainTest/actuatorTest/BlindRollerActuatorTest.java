@@ -23,6 +23,8 @@ class BlindRollerActuatorTest {
         blindRollerActuator = new BlindRollerActuator("Blind Roller", mockSimHardwareAct);
     }
 
+//    ### ISOLATION TESTS ###
+
     /**
      * Test for the constructor of the actuator
      *
