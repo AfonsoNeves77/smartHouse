@@ -20,8 +20,13 @@ import static org.mockito.Mockito.*;
 
 public class SwitchSensorTest {
 
+// ### ISOLATION TESTS ###
+
+    /**
+     * Tests the constructor of the SwitchSensor class with a null name.
+     */
     @Test
-    void sensorConstructor_throwsExceptionIfNameNull(){
+    void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
         SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
@@ -31,11 +36,14 @@ public class SwitchSensorTest {
                 new SwitchSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
+    /**
+     * Tests the constructor of the SwitchSensor class with an empty name.
+     */
     @Test
-    void sensorConstructor_throwsExceptionIfNameEmpty(){
+    void sensorConstructor_throwsExceptionIfNameEmpty() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "   ";
@@ -45,9 +53,14 @@ public class SwitchSensorTest {
                 new SwitchSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
+    /**
+     * Tests the getName method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -57,9 +70,14 @@ public class SwitchSensorTest {
         //Act
         String result = sensor.getName();
         //Assert
-        assertEquals(sensorName,result);
+        assertEquals(sensorName, result);
     }
 
+    /**
+     * Tests the getUnit method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -70,8 +88,14 @@ public class SwitchSensorTest {
         //Act
         String result = sensor.getUnit();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
+
+    /**
+     * Tests the getType method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getType_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -82,9 +106,14 @@ public class SwitchSensorTest {
         //Act
         String result = sensor.getType();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
+    /**
+     * Tests the getLog method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
@@ -100,43 +129,7 @@ public class SwitchSensorTest {
         ArrayList<String> result = sensor.getLog();
 
         //Assert
-        assertEquals(expected,result);
-    }
-    @Test
-    void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("On");
-        String sensorName = "Sensor1";
-        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
-        String expected = "On";
-
-        //Act
-        sensor.getReading();
-        when(simHardware.getValue("On", "On")).thenReturn("On");
-        sensor.getReading();
-        String result = sensor.getLog().get(1);
-
-        //Assert
         assertEquals(expected, result);
-    }
-
-    @Test
-    void getReading_SuccessTest_Isolation() throws InstantiationException {
-        //Arrange
-        String sensorName = "Sensor1";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("On");
-
-        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
-
-        String reading = "On";
-
-        //Act
-        Value<String> result = sensor.getReading();
-
-        //Assert
-        assertEquals(reading,result.getValue());
     }
 
     /**
@@ -150,6 +143,7 @@ public class SwitchSensorTest {
      * matching it against the expected string.
      * 5. The third test utilizes the humidityValueDouble that is created by calling getReading unto the sensor created at the top
      * and ensuring that when we call getValueAsString unto that value, it returns the expected string.
+     *
      * @throws InstantiationException If sensor parameters invalid.
      */
     @Test
@@ -179,7 +173,7 @@ public class SwitchSensorTest {
             // 4.
             String expected = "On";
             String result = values.get(0).getValueAsString();
-            assertEquals(expected,result);
+            assertEquals(expected, result);
 
             // 5.
             String mockedSwitchValue = value.getValueAsString();
@@ -187,4 +181,52 @@ public class SwitchSensorTest {
         }
     }
 
+    // ### INTEGRATION TESTS ###
+
+    /**
+     * Tests the getLog method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
+    @Test
+    void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("On");
+        String sensorName = "Sensor1";
+        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
+        String expected = "On";
+
+        //Act
+        sensor.getReading();
+        when(simHardware.getValue("On", "On")).thenReturn("On");
+        sensor.getReading();
+        String result = sensor.getLog().get(1);
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Tests the getReading method of the SwitchSensor class.
+     *
+     * @throws InstantiationException
+     */
+    @Test
+    void getReading_SuccessTest_Integration() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("On");
+
+        SwitchSensor sensor = new SwitchSensor(sensorName, simHardware);
+
+        String reading = "On";
+
+        //Act
+        Value<String> result = sensor.getReading();
+
+        //Assert
+        assertEquals(reading, result.getValue());
+    }
 }

@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SimHardwareTest {
+    /**
+     * This test ensures the getValue method returns the sample value successfully.
+     */
     @Test
     void successfullyReturnsSample(){
         //Arrange

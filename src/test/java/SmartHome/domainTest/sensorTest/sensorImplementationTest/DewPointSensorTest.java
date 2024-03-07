@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class DewPointSensorTest {
+    /**
+     * Test for the constructor of the DewPointSensor class. It should throw an InstantiationException if the name is null.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
@@ -29,6 +32,9 @@ public class DewPointSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the constructor of the DewPointSensor class. It should throw an InstantiationException if the name is empty.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty() {
         //Arrange
@@ -43,6 +49,11 @@ public class DewPointSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getName method of the DewPointSensor class. It should return the name of the sensor.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -55,6 +66,11 @@ public class DewPointSensorTest {
         assertEquals(sensorName, result);
     }
 
+    /**
+     * Test for the getUnit method of the DewPointSensor class. It should return the unit of the sensor.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -79,6 +95,7 @@ public class DewPointSensorTest {
      * matching it against the expected string.
      * 5. The third test utilizes the dewPointValueDouble that is created by calling getReading unto the sensor created at the top
      * and ensuring that when we call getValueAsString unto that value, it returns the expected string.
+     *
      * @throws InstantiationException If sensor parameters invalid.
      */
     @Test
@@ -96,26 +113,56 @@ public class DewPointSensorTest {
             when(mock.getValueAsString()).thenReturn("36.1");
         })) {
 
-        //Act & Assert
+            //Act & Assert
 
-        DewPointValue value = (DewPointValue) sensor.getReading();
+            DewPointValue value = (DewPointValue) sensor.getReading();
 
-        // 3.
-        List<DewPointValue> values = dewPointValueDouble.constructed();
-        int listOfDoublesSize = values.size();
-        assertEquals(1, listOfDoublesSize);
+            // 3.
+            List<DewPointValue> values = dewPointValueDouble.constructed();
+            int listOfDoublesSize = values.size();
+            assertEquals(1, listOfDoublesSize);
 
-        // 4.
-        String expected = "36.1";
-        String result = values.get(0).getValueAsString();
-        assertEquals(expected,result);
+            // 4.
+            String expected = "36.1";
+            String result = values.get(0).getValueAsString();
+            assertEquals(expected, result);
 
-        // 5.
-        String mockedDewPointValue = value.getValueAsString();
-        assertEquals(expected, mockedDewPointValue);
+            // 5.
+            String mockedDewPointValue = value.getValueAsString();
+            assertEquals(expected, mockedDewPointValue);
         }
     }
 
+    /**
+     * Test for the getTYPE method of the DewPointSensor class. It should return the type of the sensor.
+     *
+     * @throws InstantiationException
+     */
+    @Test
+    void getTYPE_Successfully() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+
+        DewPointSensor sensor = new DewPointSensor(sensorName, simHardware);
+
+        String expected = "DewPointSensor";
+
+        //Act
+
+        String result = sensor.getTYPE();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+//     ### INTEGRATION TESTS ###
+
+    /**
+     * Test for the getReading method of the DewPointSensor class. It should return the value of the sensor.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
@@ -135,6 +182,11 @@ public class DewPointSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the DewPointSensor class. It should return the log of the sensor.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getLog_SuccessfullyStoresAndAccesses() throws InstantiationException {
         //Arrange
@@ -148,23 +200,6 @@ public class DewPointSensorTest {
 
         //Act
         ArrayList<String> result = sensor.getLog();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-    @Test
-    void getTYPE_Successfully() throws InstantiationException {
-        //Arrange
-        String sensorName = "Sensor1";
-        SimHardware simHardware = mock(SimHardware.class);
-
-        DewPointSensor sensor = new DewPointSensor(sensorName, simHardware);
-
-        String expected = "DewPointSensor";
-
-        //Act
-
-        String result= sensor.getTYPE();
 
         //Assert
         assertEquals(expected, result);
