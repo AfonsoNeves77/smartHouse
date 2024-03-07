@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US25 Class Diagram
+title <size: 30> US13 Class Diagram
 
 interface Actuator {
     + getName() : String
