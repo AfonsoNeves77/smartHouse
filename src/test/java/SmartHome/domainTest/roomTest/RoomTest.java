@@ -4,40 +4,131 @@ import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.device.Device;
 import SmartHome.domain.device.FactoryDevice;
 import SmartHome.domain.device.ImplFactoryDevice;
-import SmartHome.domain.device.ListOfDevices;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.room.RoomDimensions;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
+
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class RoomTest {
 
-    //Isolation testing can be attained with mockedConstruction
-
-
-
     /**
-     * Test01 case to (...)
+     * This isolation tests attempts to create a room object without a valid name. Regardless of the object Room Dimensions
+     * being a collaborator, this object will not be mocked as the tests is supposed to fail before reaching the object instantiation.
      */
-
     @Test
-    void getDimensions_UnitTest() throws InstantiationException {
-        //Arrange
-        String name = "Kitchen";
+    void constructor_throwsInstantiationExceptionIfNameEmpty() {
+        // Arrange
+        String name = " ";
         int floor = 0;
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name,floor,roomWidth,roomLength,roomHeight);
-        double[] expected = {4.5, 8.5, 2};
-        //Act
-        double[] result = room.getDimensions();
-        //Assert
-        assertArrayEquals(expected,result);
+        String expected = "Please insert valid room name.";
+
+        // act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+                new Room(name, floor, roomWidth, roomLength, roomHeight));
+        String result = exception.getMessage();
+
+        // assert
+        assertEquals(expected, result);
     }
+
+    /**
+     * This isolation tests attempts to create a room object without a valid name. Regardless of the object Room Dimensions
+     * being a collaborator, this object will not be mocked as the tests is supposed to fail before reaching the object instantiation.
+     */
+    @Test
+    void constructor_throwsInstantiationExceptionIfNameNull() {
+        // Arrange
+        String name = null;
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        String expected = "Please insert valid room name.";
+
+        // act
+        Exception exception = assertThrows(InstantiationException.class, () ->
+            new Room(name, floor, roomWidth, roomLength, roomHeight));
+        String result = exception.getMessage();
+
+        // assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * This test ensures the method getDimensions.
+     * @throws InstantiationException Room dimensions.
+     */
+    @Test
+    void getDimensions_SuccessfullyReturnsDimensions() throws InstantiationException {
+        //Arrange
+        String name = "Name1";
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        try (MockedConstruction<RoomDimensions> RoomDimensionsDouble = mockConstruction(RoomDimensions.class, (mock, context)
+             -> {
+                    when(mock.getRoomHeight()).thenReturn(roomHeight);
+                    when(mock.getRoomLength()).thenReturn(roomLength);
+                    when(mock.getRoomWidth()).thenReturn(roomWidth);
+                }
+        )) {
+            Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+            // Act
+            double[] dimensionsResult = room.getDimensions();
+            double result = dimensionsResult[0]; // width
+
+            // Assert
+            assertEquals(roomWidth, result);
+        }
+    }
+
+    @Test
+    void getRoomName() throws InstantiationException {
+        // arrange
+        String name = "Name1";
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+
+        // act
+        String result = room.getRoomName();
+
+        // assert
+        assertEquals(name, result);
+    }
+
+    @Test
+    void getHouseFloor() throws InstantiationException {
+        // arrange
+        String name = "Name1";
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+
+        // act
+        int result = room.getHouseFloor();
+
+        // assert
+        assertEquals(floor, result);
+    }
+
+
+    // UNABLE TO FORCE EXCEPTION TO BE THROWN DUE TO DIMENSION FAILURE
 
     /**
      * Test02
@@ -100,6 +191,24 @@ class RoomTest {
         String result = room.getListOfDevices().get(0).getDeviceName();
         //Assert
         assertEquals(deviceName,result);
+    }
+
+
+    /////////////////////////////////////////ISOLATION///////////////////////////////////////////////////////
+    @Test
+    void getDimensions_UnitTest() throws InstantiationException {
+        //Arrange
+        String name = "Kitchen";
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        Room room = new Room(name,floor,roomWidth,roomLength,roomHeight);
+        double[] expected = {4.5, 8.5, 2};
+        //Act
+        double[] result = room.getDimensions();
+        //Assert
+        assertArrayEquals(expected,result);
     }
 
     @Test
