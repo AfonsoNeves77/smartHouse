@@ -13,6 +13,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class AveragePowerConsumptionSensorTest {
+    /**
+     * Test for the constructor of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the name is null.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
@@ -29,6 +32,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the constructor of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the name is empty.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameIsEmpty(){
         //Arrange
@@ -45,6 +51,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test for the getName method of the AveragePowerConsumptionSensor class. It should return the name of the sensor.
+     */
     @Test
     void getName_SuccessfullyReturns(){
         //Arrange
@@ -59,6 +68,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(sensorName, result);
     }
 
+    /**
+     * Test for the getUnit method of the AveragePowerConsumptionSensor class. It should return the unit of the sensor.
+     */
     @Test
     void getUnit_SuccessfullyReturns(){
         //Arrange
@@ -74,6 +86,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should return the value of the sensor.
+     */
     @Test
     void getReading_ReturnsValueCorrectly() throws InstantiationException {
         //Arrange
@@ -90,6 +105,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an InstantiationException if the reading is empty.
+     */
     @Test
     void getReading_throwsExceptionIfEmptyReading() {
         //Arrange
@@ -107,6 +125,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an InstantiationException if the reading is not a number.
+     */
     @Test
     void getReading_throwsExceptionIfInvalidReadingNumber() {
         //Arrange
@@ -124,6 +145,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an InstantiationException if the reading is negative.
+     */
     @Test
     void getReading_throwsExceptionIfReadingIsNegative(){
         //Arrange
@@ -141,6 +165,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the AveragePowerConsumptionSensor class. It should return the log of the sensor.
+     */
     @Test
     void getLog_ReturnsCorrectLog() throws InstantiationException {
         //Arrange
@@ -158,6 +185,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getType method of the AveragePowerConsumptionSensor class. It should return the type of the sensor.
+     */
     @Test
     void getType_ReturnsCorrectType() {
         //Arrange
@@ -173,6 +203,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the AveragePowerConsumptionSensor class. It should return the log of the sensor after multiple readings with different values.
+     */
     @Test
     void getLog_ReturnsCorrectLogAfterMultipleReadingsDifferentValues() throws InstantiationException {
         //Arrange
@@ -192,6 +225,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getLog method of the AveragePowerConsumptionSensor class. It should return the log of the sensor after multiple readings with the same value.
+     */
     @Test
     void getLog_ReturnsEmptyLogIfNoReadings() {
         //Arrange
@@ -206,6 +242,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the initial date is after the final date.
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateIsAfterFinalDate() {
         //Arrange
@@ -223,6 +262,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the initial date is after the current date.
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateIsAfterCurrentDate() {
         //Arrange
@@ -240,6 +282,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the final date is after the current date.
+     */
     @Test
     void getReading_throwsExceptionIfFinalDateIsAfterCurrentDate() {
         //Arrange
@@ -257,6 +302,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the initial date format is invalid.
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateFormatIsInvalid() {
         //Arrange
@@ -274,6 +322,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the final date format is invalid.
+     */
     @Test
     void getReading_throwsExceptionIfFinalDateFormatIsInvalid() {
         //Arrange
@@ -291,6 +342,9 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getReading method of the AveragePowerConsumptionSensor class. It should throw an IllegalArgumentException if the initial date and final date formats are invalid.
+     */
     @Test
     void getReading_throwsExceptionIfInitialDateAndFinalDateFormatsAreInvalid() {
         //Arrange
