@@ -13,10 +13,10 @@ import SmartHome.domain.room.FactoryRoom;
 import SmartHome.domain.room.ListOfRooms;
 import SmartHome.domain.room.Room;
 import SmartHome.domain.sensor.externalServices.SimHardware;
-import SmartHome.dto.DeviceDTO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,8 +24,14 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mockConstruction;
 
 class HouseTest {
+
+    //////////////////////////////////////ISOLATION///////////////////////////////////////////////////////////
+
+    /**
+     * Test to ensure House cannot be instantiated with an empty name
+     */
     @Test
-    void houseConstructor_throwsIllegalArgumentExceptionIfNameEmpty(){
+    void houseConstructor_throwsInstantiationExceptionIfNameEmpty(){
         //Arrange
         String houseName = " ";
         String expected = "Please insert a valid house name.";
@@ -37,8 +43,11 @@ class HouseTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test to ensure House cannot be instantiated with a null name
+     */
     @Test
-    void houseConstructor_throwsIllegalArgumentExceptionIfNameNull(){
+    void houseConstructor_throwsInstantiationExceptionIfNameNull(){
         //Arrange
         String houseName = null;
         String expected = "Please insert a valid house name.";
@@ -51,6 +60,11 @@ class HouseTest {
     }
 
 
+    /**
+     * Test to configure House Location by mocking all of its collaborators and dependencies involved.
+     * Successful configuration.
+     * @throws InstantiationException If invalid House name
+     */
     @Test
     void configureLocation_Success( ) throws InstantiationException{
         //Arrange
@@ -74,6 +88,12 @@ class HouseTest {
         //Assert
         assertTrue(result);
     }
+
+    /**
+     * Test to configure House Location by mocking all of its collaborators and dependencies involved.
+     * Address instantiation is not possible, so configuration is unsuccessful.
+     * @throws InstantiationException If invalid House name
+     */
     @Test
     void configureLocation_FalseDueToFailAddress() throws InstantiationException {
         //Arrange
@@ -96,6 +116,12 @@ class HouseTest {
         //Assert
         assertFalse(result);
     }
+
+    /**
+     * Test to configure House Location by mocking all of its collaborators and dependencies involved.
+     * GPS instantiation is not possible, so configuration is unsuccessful.
+     * @throws InstantiationException If invalid House name
+     */
     @Test
     void configureLocation_FalseDueToFailGPS() throws InstantiationException {
         //Arrange
@@ -135,6 +161,8 @@ class HouseTest {
      * test we want that method to return true.
      * 4. Finally, considering the house is instantiated and has a double ListOfRooms object. We finally call addRoom,
      * resulting into success.
+     * 5. Asserts that the ListOfRooms constructor was called exactly once upon House construction. Then asserts that
+     * Room is successfully added.
      * @throws InstantiationException If House/Room parameters invalid.
      */
     @Test
@@ -149,26 +177,69 @@ class HouseTest {
         FactoryRoom factoryRoomDouble = mock(FactoryRoom.class);
 
         // 2.
-        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
-            House house = new House("House1");
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class,(mock,context) -> {
+            when(mock.addRoomToList(roomName, floor, roomWidth, roomLength, roomHeight, factoryRoomDouble)).thenReturn(true);
+        })) {
 
         // 3.
+            House house = new House("House1");
             List<ListOfRooms> mockedListOfRoomsList = listOfRoomsMockedConstruction.constructed();
-            ListOfRooms listOfRoomsMocked = mockedListOfRoomsList.get(0);
-            when(listOfRoomsMocked.addRoomToList(roomName, floor, roomWidth, roomLength, roomHeight, factoryRoomDouble)).thenReturn(true);
 
         // 4
             // Act
             boolean result = house.addRoom(roomName, floor, roomWidth, roomLength, roomHeight, factoryRoomDouble);
-
+        // 5
             // Assert
+            // 5.1
+            assertEquals(1,mockedListOfRoomsList.size());
+            // 5.2
             assertTrue(result);
         }
     }
 
-    //////////////////////////////////////INTEGRATION///////////////////////////////////////////////////////////7
+    /**
+     * This test ensures that when a House is instantiated without any rooms, its functionalities are empty,
+     * and the ListOfRooms object is correctly accessed during its construction.
+     * A MockedConstruction of ListOfRooms is made and then its behaviour is set once getRoomList() method is called.
+     * Two scenarios are present:
+     * 1. Asserts that the ListOfRooms constructor was called exactly once during the construction of the House.
+     * 2. The house functionalities' map should have size 0, verifying that the house functionalities are empty when
+     * there are no rooms.
+     * @throws InstantiationException If house name is invalid.
+     */
+    @Test
+    void getHouseFunctionalities_HouseWithoutRooms_IsolationTest() throws InstantiationException {
+        //Arrange
+        String houseName = "House Test";
+        List<Room> roomList = new ArrayList<>();
+        int expected = 0;
+
+        try(MockedConstruction<ListOfRooms> listOfRoomsDouble = mockConstruction(ListOfRooms.class,(mock, context)-> {
+            when(mock.getRoomList()).thenReturn(roomList);
+            })) {
+
+            List<ListOfRooms> roomLists = listOfRoomsDouble.constructed();
+
+            House house = new House(houseName);
+
+            //Act
+            int result = house.getHouseFunctionalities().size();
+
+            //Assert
+            // 1.
+            assertEquals(1,roomLists.size());
+            // 2.
+            assertEquals(expected,result);
+        }
+    }
+
+    //////////////////////////////////////INTEGRATION///////////////////////////////////////////////////////////
 
 
+    /**
+     * Successfully adds a Room to the House.
+     * @throws InstantiationException If House name is invalid.
+     */
     @Test
     void addRoom_Success() throws InstantiationException {
         //Arrange
@@ -186,6 +257,10 @@ class HouseTest {
         assertTrue(result);
     }
 
+    /**
+     * Test that aims to check that it is not possible to add a second Room with the same name (Room identifier).
+     * @throws InstantiationException If House name is invalid.
+     */
     @Test
     void addRoom_RoomAlreadyExists() throws InstantiationException {
         //Arrange
@@ -204,6 +279,10 @@ class HouseTest {
         assertFalse(result);
     }
 
+    /**
+     * Test that aims to check that it is not possible to add a Room with invalid dimensions (in this case, room width).
+     * @throws InstantiationException If House name is invalid.
+     */
     @Test
     void addRoom_InvalidRoomWidth() throws InstantiationException {
         //Arrange
@@ -221,6 +300,11 @@ class HouseTest {
         assertFalse(result);
     }
 
+    /**
+     * Tests that aims to assert that House has 2 types of functionalities, even tough that 2 or more sensors of the
+     * same type were added.
+     * @throws InstantiationException If House name is invalid.
+     */
     @Test
     void getHouseFunctionalities_HouseWithSeveralFunctionalities() throws InstantiationException {
         //Arrange
@@ -265,6 +349,10 @@ class HouseTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Tests that aims to assert that House has no functionalities, since it has no sensors.
+     * @throws InstantiationException If House name is invalid.
+     */
     @Test
     void getHouseFunctionalities_HouseWithNoFunctionalities() throws InstantiationException {
         //Arrange
@@ -295,6 +383,4 @@ class HouseTest {
         //Assert
         assertEquals(expected,result);
     }
-
-
 }
