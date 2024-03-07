@@ -1,132 +1,82 @@
 @startuml
 
-skinparam ParticipantPadding 50
+title User Story 07 - Main Success Scenario
 autonumber
+!theme cerulean
 
-participant ":addSensorToDeviceController" as CTRL
+participant ":AddSensorToDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
-participant ":House" as h
-participant ":ListOfRooms" as LR
-participant ":RoomDTOMapper" as RDTM
 participant ":CommonListOfDevices" as CD
-participant ":Room" as r
-participant ":ListOfDevices" as LD
-participant ":DeviceDTOMapper" as DDTM
-participant "dev : Device" as dev
-participant ":SensorTypeOptions" as STO
-participant "ListOfSensors" as LS
-participant ":FactorySensor" as FS
-participant "sensor : Sensor" as sen
+participant "device:Device" as D
+participant ":listOfSensors" as LS
+participant "sensorCatalogue" as SC
+participant "sensor:Sensor" as S
 
-[o-> CTRL : getRooms()
-activate CTRL
-CTRL -> CU : getRooms()
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> CU : getListOfRooms()
 activate CU
-CU -> h : getListOfRooms()
-activate h
-h -> LR : getListOfRooms()
-activate LR
-LR -> LR : listOfRooms = cloneList()
-activate LR
-deactivate LR
-LR --> h : listOfRooms
-deactivate LR
-h --> CU : listOfRooms
-deactivate h
-CU -> RDTM : domainToRoomDTOList(listOfRooms)
-activate RDTM
-loop for each room in room list
-RDTM -> RDTM : RoomDTO = domainToDTO(room)
-activate RDTM
-deactivate RDTM
-RDTM -> RDTM : put(RoomDTO)
-activate RDTM
-deactivate RDTM
-end loop
-RDTM --> CU : roomAndRoomDtoList
-deactivate RDTM
-CU -> CU : roomDtoList = truncateList(roomAndRoomDtoList)
+CU -> CU : refreshMap()
 activate CU
 deactivate CU
-CU --> CTRL : roomDtoList
-deactivate CU
-[o<-- CTRL : roomDtoList
-deactivate CTRL
-
-
-[o-> CTRL : getListOfDevices(roomDTO)
-activate CTRL
-CTRL -> CU: getRoom(roomDTO)
+CU -> CU : truncateList(roomDTOAndRoomMap)
 activate CU
-CU --> CTRL : room
 deactivate CU
-CTRL -> CD : getDevices()
+CU --> C : roomDtoList
+deactivate CU
+[o<-- C : roomDtoList
+deactivate C
+[o-> C : getListOfDevices(roomName)
+activate C
+C -> CU: getRoomByName(roomName)
+activate CU
+CU -> CU : refreshMap()
+activate CU
+deactivate CU
+CU --> C : room
+deactivate CU
+C -> CD : getListOfDevices(room)
 activate CD
-CD -> r : getListOfDevices()
-activate r
-r -> LD : getDevices()
-activate LD
-LD -> LD : listOfDevices = cloneList()
-activate LD
-deactivate LD
-LD --> r : listOfDevices
-deactivate LD
-r --> CD : listOfDevices
-deactivate r
-CD -> DDTM : domainToDeviceDTOList(deviceList)
-activate DDTM
-loop for each device in device list
-DDTM -> DDTM : DeviceDTO = domainToDTO(device)
-activate DDTM
-deactivate DDTM
-DDTM -> DDTM : put(DeviceDTO)
-activate DDTM
-deactivate DDTM
-end loop
-DDTM --> CD : deviceAndDeviceDtoList
-deactivate DDTM
-CD -> CD : dtoDeviceList = truncateList(deviceAndDeviceDtoList)
+CD -> CD : refreshMap(room)
 activate CD
 deactivate CD
-CD --> CTRL : dtoDeviceList
-deactivate CD
-[o<-- CTRL : dtoDeviceList
-deactivate CTRL
-
-[o--> CTRL: getAvailableSensorTypes()
-activate CTRL
-CTRL -> STO : getSensorTypeList()
-activate STO
-STO --> CTRL : sensorTypeList
-deactivate STO
-[o<--CTRL : sensorTypeList
-
-deactivate CTRL
-
-
-[o-> CTRL : addSensor(deviceDto, sensorName,sensorType)
-activate CTRL
-CTRL -> CD : getDevice(deviceDTO)
+CD -> CD : truncateList(deviceDTOAndDeviceMap)
 activate CD
-CD -> CTRL : device
 deactivate CD
-CTRL -> dev : addSensor(sensorName,sensorType,factorySensor)
-activate dev
-dev -> LS : addSensor(sensorName,sensorType,factorySensor)
+CD --> C : dtoDeviceList
+deactivate CD
+[o<-- C : dtoDeviceList
+deactivate C
+
+[o->C : addSensorToDevice(sensorName,sensorType, deviceName, externalServices)
+activate C
+C -> C : refreshMap(room)
+activate C
+deactivate C
+C -> D : addSensor(sensorName, sensorType, catalogue,externalServices)
+activate D
+D -> LS : addSensor(sensorName,sensorType, catalogue, externalServices)
 activate LS
-LS -> FS :addSensor(sensorName,sensorType)
-activate FS
-FS -> sen ** : <create>
-FS --> LS : newSensor
-deactivate FS
+LS -> LS : isSensorInList(sensorName)
+activate LS
+deactivate LS
+LS -> LS : findSensor(sensorName)
+activate LS
+deactivate LS
+LS -> SC : createSensor(sensorName, sensorType, externalServices)
+activate SC
+SC -> S** : <create Sensor>
+SC --> LS : newSensor
+deactivate SC
 LS -> LS : add(newSensor)
 activate LS
 deactivate LS
-LS --> dev : operationResult
+LS --> D : return true
 deactivate LS
-dev --> CTRL : operationResult
-deactivate dev
-[o<-- CTRL : operationResult
-deactivate CTRL
-
+D --> C : return true
+deactivate D
+[o<-- C : return true
+deactivate C
 @enduml
