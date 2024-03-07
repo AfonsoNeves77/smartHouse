@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimHardwareActTest {
+    /**
+     * This method is used to test the executeCommandSim method of the SimHardwareAct class. It should return true if the command was executed successfully.
+     */
+
     @Test
     void testSimHardwareAct_onCommand() {
 
@@ -19,6 +23,9 @@ class SimHardwareActTest {
         assertTrue(result);
     }
 
+    /**
+     * This method is used to test the executeCommandSim method of the SimHardwareAct class. It should return true if the command was executed successfully.
+     */
     @Test
     void testSimHardwareAct_offCommand() {
 
@@ -31,6 +38,10 @@ class SimHardwareActTest {
         //assert
         assertTrue(result);
     }
+
+    /**
+     * This method is used to test the executeDecimalCommandSim method of the SimHardwareAct class. It should return true if the command was executed successfully.
+     */
     @Test
     void testSimHardwareAct_DecimalSetCommand() {
 
@@ -44,6 +55,9 @@ class SimHardwareActTest {
         assertTrue(result);
     }
 
+    /**
+     * This method is used to test the executeIntegerCommandSim method of the SimHardwareAct class. It should return true if the command was executed successfully.
+     */
     @Test
     void testSimHardwareAct_IntegerCommand() {
 
