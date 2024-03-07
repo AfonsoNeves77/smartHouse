@@ -5,45 +5,20 @@ autonumber
 
 participant ":deactivateDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
-participant ":House" as H
-participant ":ListOfRooms" as LR
-participant ":RoomDTOMapper" as RM
 participant ":CommonListOfDevices" as CD
-participant ":Room" as R
-participant ":ListOfDevices" as LD
-participant ":DeviceDTOMapper" as DM
 participant "device:Device" as D
 
 
 
-[o-> C : getRooms()
+[o-> C : getListOfRooms()
 activate C
-C -> CU : getRooms()
+C -> CU : getListOfRooms()
 activate CU
-CU -> H : getListOfRooms()
-activate H
-H -> LR : getListOfRooms()
-activate LR
-LR -> LR : listOfRooms = cloneList()
-activate LR
-deactivate LR
-LR --> H : listOfRooms
-deactivate LR
-H --> CU : listOfRooms
-deactivate H
-CU -> RM : domainToRoomDTOList(listOfRooms)
-activate RM
-loop for each room in room list
-RM -> RM : RoomDTO = domainToDTO(room)
-activate RM
-deactivate RM
-RM -> RM : put(RoomDTO)
-activate RM
-deactivate RM
-end loop
-RM --> CU : roomAndRoomDtoList
-deactivate RM
-CU -> CU : roomDtoList = truncateList(roomAndRoomDtoList)
+CU -> CU : refreshMap()
+activate CU
+deactivate CU
+
+CU -> CU : truncateList(roomDTOAndRoomMap)
 activate CU
 deactivate CU
 CU --> C : roomDtoList
@@ -51,38 +26,22 @@ deactivate CU
 [o<-- C : roomDtoList
 deactivate C
 
-[o-> C : getListOfDevices(roomDTO)
+[o-> C : getListOfDevices(roomName)
 activate C
-C -> CU: getRoom(roomDTO)
+C -> CU: getRoomByName(roomName)
 activate CU
+CU -> CU : refreshMap()
+activate CU
+deactivate CU
 CU --> C : room
 deactivate CU
-C -> CD : getDevices()
+C -> CD : getListOfDevices(room)
 activate CD
-CD -> R : getListOfDevices()
-activate R
-R -> LD : getDevices()
-activate LD
-LD -> LD : listOfDevices = cloneList()
-activate LD
-deactivate LD
-LD --> R : listOfDevices
-deactivate LD
-R --> CD : listOfDevices
-deactivate R
-CD -> DM : domainToDeviceDTOList(deviceList)
-activate DM
-loop for each device in device list
-DM -> DM : DeviceDTO = domainToDTO(device)
-activate DM
-deactivate DM
-DM -> DM : put(DeviceDTO)
-activate DM
-deactivate DM
-end loop
-DM --> CD : deviceAndDeviceDtoList
-deactivate DM
-CD -> CD : dtoDeviceList = truncateList(deviceAndDeviceDtoList)
+CD -> CD : refreshMap(room)
+activate CD
+deactivate CD
+
+CD -> CD : truncateList(deviceDTOAndDeviceMap)
 activate CD
 deactivate CD
 CD --> C : dtoDeviceList
@@ -90,9 +49,14 @@ deactivate CD
 [o<-- C : dtoDeviceList
 deactivate C
 
-[o-> C : deactivateDevice(deviceDTO)
+[o-> C : deactivateDevice(deviceName)
 activate C
-C -> CU : device = getDevice(deviceDTO)
+C -> CD : getDeviceByName(deviceName, room)
+activate CD
+CD -> CD : refreshMap(room)
+activate CD
+deactivate CD
+CD --> C : device
 C -> D : deactivateDevice()
 activate D
 D -> C : false

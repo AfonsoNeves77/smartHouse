@@ -11,30 +11,39 @@ class AddDeviceToRoomCTRL{
     - factoryDevice : FactoryDevice
     - commonListOfRooms : CommonListOfRooms
     + getListOfRooms() : List<RoomDTO>
-    + addDeviceToRoom(deviceName : String, \n deviceModel : String,\n roomName : String) : boolean
+    + addDeviceToRoom(deviceName : String, deviceModel : String, roomName : String) : boolean
 }
 
 class CommonListOfRooms{
     - house : House
     - roomDTOAndRoomMap : LinkedHashMap<RoomDTO, Room>
     + getListOfRooms() : List<RoomDTO>
+    - refreshMap()
     - truncateList(roomDTOAndRoomMap : Map<RoomDTO, Room>) : List<RoomDTO>
     + getRoomByName(roomName : String) : Room
-    - refreshMap()
 }
 
 
 class RoomDTO{
     - roomName : String
+    - houseFloor : int
+    - roomWidth : double
+    - roomLength : double
+    - roomHeight : double
     + getRoomName() : String
 }
 
 class RoomDTOMapper{
-    + getRoomDTOList(listOfRooms : List<Room>)\n : LinkedHashMap<RoomDTO, Room>\n
+    + getRoomDTOList(listOfRooms : List<Room>) : LinkedHashMap<RoomDTO, Room>
+    + domainToDTO(room : Room) : RoomDTO
 }
 
 class House {
+    - houseName : String
+    - gps : GPS
+    - address : Address
     - listOfRooms : ListOfRooms
+    - houseFunctionalities : Map<String, ArrayList<Device>>
     + getListOfRooms() : List<Room>
 }
 
@@ -44,13 +53,17 @@ class ListOfRooms{
 }
 
 class Room {
+    - roomName : String
+    - houseFloor : int
+    - dimensions : RoomDimensions
     - deviceList : ListOfDevices
-    + addDevice(deviceName : String,\n deviceModel : String,\n factoryDevice FactoryDevice) : boolean
+    - roomFunctionalities : Map<String, ArrayList<Device>>
+    + addDevice(deviceName : String, deviceModel : String, factoryDevice : FactoryDevice) : boolean
 }
 
 class ListOfDevices{
     - deviceList : ArrayList<Device>
-    + addDeviceToList(deviceName : String, deviceModel : String, \nlocation : String, factoryDevice : FactoryDevice) : boolean
+    + addDeviceToList(deviceName : String, deviceModel : String, location : String, factoryDevice : FactoryDevice) : boolean
     - isDeviceDuplicated(deviceName : String) : boolean
 }
 
@@ -59,7 +72,7 @@ interface FactoryDevice {
 }
 
 class ImplFactoryDevice {
-    + createDevice(deviceName : String, deviceModel : String, \nlocation : String) : Device
+    + createDevice(deviceName : String, deviceModel : String, location : String) : Device
 }
 
 class Device {
@@ -67,7 +80,10 @@ class Device {
     - deviceModel : String
     - deviceLocation : String
     - status : boolean
-    - areDeviceParametersValid(deviceName : String, deviceModel : String, \nlocation : String) : boolean
+    - listOfSensors : ListOfSensors
+    - listOfActuators : ListOfActuators
+    - deviceFunctionalities : List<String>
+    - areDeviceParametersValid(deviceName : String, deviceModel : String, deviceLocation : String) : boolean
 }
 
 AddDeviceToRoomCTRL -down.> CommonListOfRooms
