@@ -31,13 +31,14 @@ public class DecimalSetActuatorTest {
         assertEquals(actuatorName, decimalSetActuator.getName());
     }
     @Test
-    void testDecimalSetActuator_GetState() {
+    void testDecimalSetActuator_GetValue() {
         //arrange
         double value = 0;
         //act done in BeforeEach
         //assert
         assertEquals(value, decimalSetActuator.getValue());
     }
+
 
     @Test
     void testDecimalSetActuator_nullActuatorName() {
@@ -56,7 +57,7 @@ public class DecimalSetActuatorTest {
     }
 
     @Test
-    void testDecimalSetActuator_emptyName() {
+    void testDecimalSetActuator_emptyActuatorName() {
         //arrange
         String actuatorName = " ";
         String expected = "Invalid parameters for Decimal Range Actuator.";
@@ -72,13 +73,13 @@ public class DecimalSetActuatorTest {
     }
 
     @Test
-    void testDecimalSetActuator_SetLimits() {
+    void testDecimalSetActuator_SetLimits_LowerLimitHigherThanUpperLimit_ThrowsExpection() {
         //arrange
         String expected = "Upper Limit has to be Higher or Equal than Lower Limit";
 
         //act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            decimalSetActuator.setLimits(20,10);
+            decimalSetActuator.setLimits(20.0,10.0, 10);
         });
         String result = exception.getMessage();
 
@@ -89,7 +90,7 @@ public class DecimalSetActuatorTest {
 
     @Test
     void testExecuteCommand_InvalidValue_ReturnsFalse() {
-        decimalSetActuator.setLimits(5,10);
+        decimalSetActuator.setLimits(5.0,10.0, 10);
         when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(true);
         boolean result = decimalSetActuator.executeCommand(15);
 
@@ -98,6 +99,7 @@ public class DecimalSetActuatorTest {
 
     @Test
     void testExecuteCommand_ValidValueButExecutionFails_ReturnsFalse() {
+//        decimalSetActuator.setLimits(10.0,20.0,10);
         when(mockSimHardwareAct.executeDecimalCommandSim(10)).thenReturn(false);
 
         boolean result = decimalSetActuator.executeCommand(10);
@@ -105,15 +107,9 @@ public class DecimalSetActuatorTest {
         assertFalse(result);
     }
     @Test
-    void test_GetName() {
-        String expected = "Decimal";
-        String result = decimalSetActuator.getName();
-        assertEquals(expected, result);
-    }
-    @Test
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_ReturnsTrue() {
         when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(true);
-        decimalSetActuator.setLimits(15,15);
+        decimalSetActuator.setLimits(15.0,15.0, 10);
         boolean result = decimalSetActuator.executeCommand(15);
 
         assertTrue(result);
@@ -122,7 +118,7 @@ public class DecimalSetActuatorTest {
     void testExecuteCommand_ValidCommandAndExecutionSucceeds_ValueIsUpdated() {
         when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(true);
 
-        decimalSetActuator.setLimits(10,20);
+        decimalSetActuator.setLimits(10.0,20.0,10);
         decimalSetActuator.executeCommand(15);
 
         double expected = 15;
@@ -133,31 +129,29 @@ public class DecimalSetActuatorTest {
 
     @Test
     void testExecuteCommand_ValidationOfNewValueUnsuccessful() {
-        when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(true);
+        decimalSetActuator.setLimits(10.0,20.0,10);
+        when(mockSimHardwareAct.executeDecimalCommandSim(15.32)).thenReturn(true);
 
-        boolean result = decimalSetActuator.executeCommand(15);
+        boolean result = decimalSetActuator.executeCommand(15.32);
 
         assertFalse(result);
     }
 
     @Test
-    void testExecuteCommand_ValidCommandAndExecutionSucceeds_ValueIsUpdatedAndRoundedTo3DecimalPoints() {
-        when(mockSimHardwareAct.executeDecimalCommandSim(15.35289)).thenReturn(true);
+    void testExecuteCommand_ValueIsNotWithinThePredefinedDecimalPrecision_Insuccess() {
+        when(mockSimHardwareAct.executeDecimalCommandSim(15.32)).thenReturn(true);
 
-        decimalSetActuator.setLimits(10,20);
-        decimalSetActuator.executeCommand(15.35289);
+        decimalSetActuator.setLimits(10.0,20.0,10);
+        boolean result = decimalSetActuator.executeCommand(15.32);
 
-        double expected = 15.353;
-        double result = decimalSetActuator.getValue();
-
-        assertEquals(expected, result);
+        assertFalse(result);
     }
 
     @Test
     void test_ValidCommandAndExecutionFails_ValueIsNotUpdated() {
 
         when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(false);
-        decimalSetActuator.setLimits(10,20);
+        decimalSetActuator.setLimits(10.0,20.0,10);
         decimalSetActuator.executeCommand(15);
 
         double expected = 10;
@@ -170,7 +164,7 @@ public class DecimalSetActuatorTest {
     void test_ValidCommandAndExecutionFails_ReturnFalse() {
 
         when(mockSimHardwareAct.executeDecimalCommandSim(15)).thenReturn(false);
-        decimalSetActuator.setLimits(10,20);
+        decimalSetActuator.setLimits(10.0,20.0,10);
 
         boolean result = decimalSetActuator.executeCommand(15);
 
