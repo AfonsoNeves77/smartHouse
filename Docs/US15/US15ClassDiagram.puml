@@ -1,0 +1,32 @@
+@startuml
+title <size: 30> US15 Class Diagram
+
+interface Actuator {
+    + getName() : String
+}
+
+class SimHardwareAct {
+     + executeCommandSim(commandType : String) : boolean
+     + executeIntegerCommandSim(position : int) : boolean
+     + executeDecimalCommandSim(newValue : double) : boolean
+}
+
+class IntSetActuator {
+    - actuatorName : String
+    - value : int
+    - simHardwareAct : SimHardwareAct
+    - upperLimit : Integer
+    - lowerLimit : Integer
+
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + executeCommand(newValue : int) : boolean
+    - validateValue(value : int) : boolean
+    + setLimits(lowerLimit : int, upperLimit : int) : void
+    + getValue() : int
+    + getName() : String
+}
+
+Actuator <|.. IntSetActuator
+IntSetActuator .right.> SimHardwareAct
+
+@enduml
