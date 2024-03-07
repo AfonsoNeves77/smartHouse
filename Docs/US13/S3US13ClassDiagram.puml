@@ -1,0 +1,26 @@
+@startuml
+title <size: 30> US25 Class Diagram
+
+interface Actuator {
+    + getName() : String
+}
+
+class SwitchActuator{
+    - actuatorName : String
+    - state : String
+    - simHardwareAct : SimHardwareAct
+
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + getName() : String
+    + executeCommand(commandType : String) : boolean
+    - validateCommand(commandType : String) : boolean
+    + getState() : String
+}
+
+class SimHardwareAct {
+    + executeCommandSim(commandType : String) : boolean
+}
+
+Actuator <|.. SwitchActuator
+SwitchActuator .right.> SimHardwareAct
+@enduml
