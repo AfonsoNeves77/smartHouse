@@ -14,6 +14,8 @@ import static org.mockito.Mockito.when;
 
 public class IntSetActuatorTest {
 
+//    ### INTEGRATION TESTS ###
+
     /**
      * This method is used to test the IntSetActuator constructor.
      * @throws InstantiationException if the actuator name is null or empty or the simHardwareAct object is null
@@ -68,6 +70,23 @@ public class IntSetActuatorTest {
         String result = exception.getMessage();
 //        Assert
         assertEquals(expected, result);
+    }
+
+    /**
+     * This method is used to test the executeCommand method when the limits are not set.
+     * @throws InstantiationException if the actuator name is null or empty or the simHardwareAct object is null
+     */
+    @Test
+    void testIntSetActuator_LimitsNotSet() throws InstantiationException {
+//        Arrange
+        String actuatorName = "IntSetActuator";
+        SimHardwareAct simHardwareActMock = mock(SimHardwareAct.class);
+        IntSetActuator intSetActuator = new IntSetActuator(actuatorName, simHardwareActMock);
+        int value = 5;
+//        Act
+        boolean result = intSetActuator.executeCommand(value);
+//        Assert
+        assertFalse(result);
     }
 
     /**
@@ -243,10 +262,4 @@ public class IntSetActuatorTest {
 //        Assert
         assertFalse(result);
     }
-
-    /**
-     * This test is used to test the executeCommand method when the value is not set.
-     */
-
-
 }

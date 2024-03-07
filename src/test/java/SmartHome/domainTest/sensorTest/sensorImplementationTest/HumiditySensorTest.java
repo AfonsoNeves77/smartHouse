@@ -19,6 +19,11 @@ import static org.mockito.Mockito.*;
 
 class HumiditySensorTest {
 
+//     ### ISOLATION TESTS ###
+
+    /**
+     * Tests the constructor of the HumiditySensor class with a null name.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
@@ -33,6 +38,9 @@ class HumiditySensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Tests the constructor of the HumiditySensor class with an empty name.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty() {
         //Arrange
@@ -47,8 +55,11 @@ class HumiditySensorTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * Test for the getName method in the HumiditySensor class.
+     * @throws InstantiationException
+     */
     @Test
-
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
@@ -60,8 +71,11 @@ class HumiditySensorTest {
         assertEquals(sensorName, result);
     }
 
+    /**
+     * Test for the getUnit method in the HumiditySensor class.
+     * @throws InstantiationException
+     */
     @Test
-
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
@@ -121,25 +135,11 @@ class HumiditySensorTest {
             assertEquals(expected, mockedHumidityValue);
         }
     }
-    @Test
-    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("36");
 
-        String sensorName = "Sensor 1";
-        HumiditySensor sensor = new HumiditySensor(sensorName, simHardware);
-
-        String expected = "36";
-
-        //Act
-        HumidityValue value = (HumidityValue) sensor.getReading();
-        String result = value.getValueAsString();
-
-        //Assert
-        assertEquals(expected, result);
-    }
-
+    /**
+     * Successfully returns getLog value.
+     * @throws InstantiationException
+     */
     @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
@@ -158,8 +158,28 @@ class HumiditySensorTest {
         assertEquals(expected, result);
     }
 
+//     ### INTEGRATION TESTS ###
 
+    /**
+     * Successfully returns getReading value.
+     * @throws InstantiationException
+     */
+    @Test
+    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
 
+        String sensorName = "Sensor 1";
+        HumiditySensor sensor = new HumiditySensor(sensorName, simHardware);
 
+        String expected = "36";
 
+        //Act
+        HumidityValue value = (HumidityValue) sensor.getReading();
+        String result = value.getValueAsString();
+
+        //Assert
+        assertEquals(expected, result);
+    }
 }

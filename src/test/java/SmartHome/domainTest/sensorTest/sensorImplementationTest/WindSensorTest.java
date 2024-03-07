@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class WindSensorTest {
+
+//     ### ISOLATION TESTS ###
     /**
      * This test ensures the constructor throws an exception if the name inserted is null.
      */
@@ -150,7 +152,7 @@ class WindSensorTest {
         assertEquals(expected,result);
     }
 
-    //////////////////////////////////////////// Integration///////////////////////////////////////////////////
+//    ### INTEGRATION TESTS ###
 
     /**
      * This test creates a simhardware double in order to place a stub on getValue, with a controlled and valid return.

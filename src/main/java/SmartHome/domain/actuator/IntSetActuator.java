@@ -18,8 +18,8 @@ public class IntSetActuator implements Actuator {
     private String actuatorName;
     private int value;
     private SimHardwareAct simHardwareAct;
-    private int upperLimit;
-    private int lowerLimit;
+    private Integer upperLimit;
+    private Integer lowerLimit;
 
     /**
      * IntSetActuator constructor
@@ -54,14 +54,18 @@ public class IntSetActuator implements Actuator {
      */
 
     public boolean executeCommand(int newValue) {
-        if (!validateValue(newValue)) {
+        if (lowerLimit == null && upperLimit == null) {
             return false;
+        } else {
+            if (!validateValue(newValue)) {
+                return false;
+            }
+            boolean executionResult = simHardwareAct.executeIntegerCommandSim(newValue);
+            if (executionResult) {
+                this.value = newValue;
+            }
+            return executionResult;
         }
-        boolean executionResult = simHardwareAct.executeIntegerCommandSim(newValue);
-        if (executionResult) {
-            this.value = newValue;
-        }
-        return executionResult;
     }
 
     /**

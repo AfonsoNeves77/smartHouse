@@ -21,9 +21,9 @@ public class InstantPowerConsumptionSensor implements Sensor {
      * @param sensorName Name of the sensor
      * @param externalServices External services to be used by the sensor cast to SimHardware
      */
-    public InstantPowerConsumptionSensor(String sensorName, ExternalServices externalServices){
+    public InstantPowerConsumptionSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(sensorName == null || sensorName.trim().isEmpty()){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;
