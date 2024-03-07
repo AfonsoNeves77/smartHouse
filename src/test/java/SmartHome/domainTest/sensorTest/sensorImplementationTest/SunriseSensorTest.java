@@ -1,6 +1,7 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
 import SmartHome.domain.sensor.externalServices.ExternalServices;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.externalServices.SunTimeCalculator;
 import SmartHome.domain.sensor.sensorImplementation.SunriseSensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.SunTimeValue;
@@ -59,6 +60,22 @@ public class SunriseSensorTest {
         assertEquals(result,expected);
     }
 
+    @Test
+    void inadequateTypeOfExternalService_ShouldThrowInstantiationException_IsolationTest() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sunrise Sensor";
+        ExternalServices service = mock(SimHardware.class);
+        String expected = "Invalid External Services";
+
+        //Act
+        Exception exception = assertThrows(InstantiationException.class,() -> new SunriseSensor(sensorName, service));
+
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected,result);
+
+    }
+
     /**
      * Unit test for verifying the behavior of the getSunriseTime method
      * in the SunriseSensor class under isolated conditions.
@@ -82,7 +99,6 @@ public class SunriseSensorTest {
 
 
         SunTimeCalculator service = mock(SunTimeCalculator.class);
-        when(service.computeSunrise(date, coordinates)).thenReturn(zoneDateTimeParsed);
 
         try (MockedConstruction<SunTimeValue> mockedConstruction = mockConstruction(SunTimeValue.class, (mock, context) -> {
             when(mock.getValueAsString()).thenReturn(expected);
@@ -94,6 +110,7 @@ public class SunriseSensorTest {
 
             Value<ZonedDateTime> resultValue = sunriseSensor.getSunriseTime(date, coordinates);
             String result = resultValue.getValueAsString();
+
             int resultSize = sunTimesConstructed.size();
 
 
@@ -183,11 +200,10 @@ public class SunriseSensorTest {
         String date = "2024-03-20";
         String coordinates = "88.1579 : 3.6291";
         String expected = "2024-03-06T18:31:47Z[Europe/Lisbon]";
-        ZonedDateTime zoneDateTimeParsed = ZonedDateTime.parse(expected);
 
 
         SunTimeCalculator service = mock(SunTimeCalculator.class);
-        when(service.computeSunrise(date, coordinates)).thenReturn(zoneDateTimeParsed);
+
 
         try (MockedConstruction<SunTimeValue> mockedConstruction = mockConstruction(SunTimeValue.class, (mock, context) -> {
             when(mock.getValueAsString()).thenReturn(expected);
@@ -226,27 +242,21 @@ public class SunriseSensorTest {
         String sensorName = "Sunrise Sensor";
         String date = "2024-03-20";
         String coordinates = "88.1579 : 3.6291";
-        String expectedTwo = "2024-03-06T18:31:47Z[Europe/Lisbon]";
         String expected = "2024-03-06T18:39:47Z[Europe/Lisbon]";
-        ZonedDateTime zoneDateTimeParsed = ZonedDateTime.parse(expected);
+
         int expectedLogSize = 2;
 
 
         SunTimeCalculator service = mock(SunTimeCalculator.class);
-        when(service.computeSunrise(date, coordinates)).thenReturn(zoneDateTimeParsed);
 
         try (MockedConstruction<SunTimeValue> mockedConstruction = mockConstruction(SunTimeValue.class, (mock, context) -> {
-            if (context.getCount() == 0) {
-
-                when(mock.getValueAsString()).thenReturn(expectedTwo);
-            } else {
 
                 when(mock.getValueAsString()).thenReturn(expected);
-            }
         })) {
 
             //Act
             SunriseSensor sunriseSensor = new SunriseSensor(sensorName, service);
+            //Forcing log to have two entries
             sunriseSensor.getSunriseTime(date, coordinates);
             sunriseSensor.getSunriseTime(date, coordinates);
 
@@ -300,7 +310,6 @@ public class SunriseSensorTest {
     }
 
     //.............................................................................INTEGRATION TESTS..............................................................................
-
     @Test
     void getSunriseTime_IntegrationTest() throws InstantiationException {
         //Arrange
@@ -316,6 +325,7 @@ public class SunriseSensorTest {
         assertEquals(expected,result);
 
     }
+
 
     @Test
     void getSunriseTime_ErrorResult_IntegrationTest() throws InstantiationException {
