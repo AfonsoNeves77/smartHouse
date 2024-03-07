@@ -1,0 +1,54 @@
+@startuml
+title <size: 30> US20 Class Diagram
+
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class SunriseSensor{
+    - sensorName : String
+    - sunTimeCalculator : SunTimeCalculator
+    - UNIT : String
+    - log : ArrayList<Value<ZonedDateTime>>
+    - TYPE : String
+
+    + getSunriseTime(date : String, gpsLocation : String) : Value<ZonedDateTime>
+    + getType() : String
+    - validSensorName(sensorName : String) : boolean
+    - validSunTimeCalculator(sunTimeCalculator : ExternalServices) : boolean
+    - addValueToLog(value : Value<ZonedDateTime>) : void
+}
+
+class SunTimeValue {
+    - sunTimeValue : ZonedDateTime
+    + getValue() : ZonedDateTime
+    + getValueAsString() : String
+}
+
+class SunTimeCalculator {
+    + computeSunriseTime(date : String, gpsCoordinates : String) : ZonedDateTime
+    - getSunTimes(date : String, gpsCoordinates : String) : SunTimes
+    - convertCoordinates(gpsCoordinates : String) : double[]
+    - parseLocalDate(dateAsString : String) : LocalDate
+    - convertToDate(localDate : LocalDate) : Date
+}
+
+Value <|.. SunTimeValue
+Sensor <|.. SunriseSensor
+ExternalServices <|.. SunTimeCalculator
+SunriseSensor .left.> SunTimeCalculator
+SunriseSensor .right.> SunTimeValue
+
+@enduml
