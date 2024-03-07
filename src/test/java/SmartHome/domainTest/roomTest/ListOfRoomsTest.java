@@ -23,7 +23,7 @@ class ListOfRoomsTest {
      * Assert that the room was successfully created.
      */
     @Test
-    void addRoomToList_IsolationTest() {
+    void addRoomToList_IsolationTest() throws InstantiationException {
         //Arrange
         String roomName = "Bathroom";
         int houseFloor = 1;
@@ -93,7 +93,7 @@ class ListOfRoomsTest {
     }
 
     @Test
-    void addRoomToList_DuplicatedRoomIsolationTest() {
+    void addRoomToList_DuplicatedRoomIsolationTest() throws InstantiationException {
         //Arrange
         String roomName = "Bathroom";
         int houseFloor = 1;

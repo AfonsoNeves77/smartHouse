@@ -119,7 +119,7 @@ public class CommonListOfRoomsTest {
      * Assert the room in the list is the same as the one added.
      */
     @Test
-    void getListOfRoomsListWithOneRoom_IsolationTest(){
+    void getListOfRoomsListWithOneRoom_IsolationTest() throws InstantiationException {
 
         //Arrange
         House houseDouble = mock(House.class);

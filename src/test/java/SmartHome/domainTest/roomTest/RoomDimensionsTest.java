@@ -19,7 +19,7 @@ class RoomDimensionsTest {
         double roomHeight = 2;
         String expectedMessage = "Please insert valid room dimensions.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new RoomDimensions(roomWidth, roomLength, roomHeight);
         });
         String result = exception.getMessage();
@@ -38,7 +38,7 @@ class RoomDimensionsTest {
         double roomHeight = 2;
         String expectedMessage = "Please insert valid room dimensions.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new RoomDimensions(roomWidth, roomLength, roomHeight);
         });
         String result = exception.getMessage();
@@ -57,7 +57,7 @@ class RoomDimensionsTest {
         double roomHeight = 2;
         String expectedMessage = "Please insert valid room dimensions.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new RoomDimensions(roomWidth, roomLength, roomHeight);
         });
         String result = exception.getMessage();
@@ -76,7 +76,7 @@ class RoomDimensionsTest {
         double roomHeight = 2;
         String expectedMessage = "Please insert valid room dimensions.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new RoomDimensions(roomWidth, roomLength, roomHeight);
         });
         String result = exception.getMessage();
@@ -95,7 +95,7 @@ class RoomDimensionsTest {
         double roomHeight = -2;
         String expectedMessage = "Please insert valid room dimensions.";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(InstantiationException.class, () -> {
             new RoomDimensions(roomWidth, roomLength, roomHeight);
         });
         String result = exception.getMessage();
@@ -110,7 +110,7 @@ class RoomDimensionsTest {
      * @throws InstantiationException if there is an issue with instantiating the RoomDimensions.
      */
     @Test
-    void validDimensions_ZeroHeight() {
+    void validDimensions_ZeroHeight() throws InstantiationException {
         //Arrange
         double roomWidth = 3;
         double roomLength = 2;
@@ -130,7 +130,7 @@ class RoomDimensionsTest {
      * @throws InstantiationException if there is an issue with instantiating the RoomDimensions.
      */
     @Test
-    void createDimensions_SuccessByWidth() {
+    void createDimensions_SuccessByWidth() throws InstantiationException {
         //Arrange
         double roomWidth = 3.5;
         double roomLength = 1;
@@ -150,7 +150,7 @@ class RoomDimensionsTest {
      * @throws InstantiationException if there is an issue with instantiating the RoomDimensions.
      */
     @Test
-    void createDimensions_SuccessByLength()  {
+    void createDimensions_SuccessByLength() throws InstantiationException {
         //Arrange
         double roomWidth = 3.5;
         double roomLength = 1;
@@ -170,7 +170,7 @@ class RoomDimensionsTest {
      * @throws InstantiationException if there is an issue with instantiating the RoomDimensions.
      */
     @Test
-    void createDimensions_SuccessByHeight()  {
+    void createDimensions_SuccessByHeight() throws InstantiationException {
         //Arrange
         double roomWidth = 3.5;
         double roomLength = 1;

@@ -24,7 +24,7 @@ class RoomTest {
      */
 
     @Test
-    void getDimensions_UnitTest() {
+    void getDimensions_UnitTest() throws InstantiationException {
         //Arrange
         String name = "Kitchen";
         int floor = 0;
@@ -48,7 +48,7 @@ class RoomTest {
      * Assert that the device was successfully added to the room.
      */
     @Test
-    void addDevice_IsolationTest(){
+    void addDevice_IsolationTest() throws InstantiationException {
         //Arrange
         String name = "Kitchen";
         int floor = 0;
@@ -79,7 +79,7 @@ class RoomTest {
      * Assert that the list of devices was successfully retrieved and that the device in it is the correct one.
      */
     @Test
-    void getListOfDevices_IsolationTest(){
+    void getListOfDevices_IsolationTest() throws InstantiationException {
         //Arrange
         String name = "Kitchen";
         int floor = 0;

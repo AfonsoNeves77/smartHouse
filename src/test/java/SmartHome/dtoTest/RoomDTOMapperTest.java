@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoomDTOMapperTest {
 
     @Test
-    void domainToDTO() {
+    void domainToDTO() throws InstantiationException {
         String roomName = "room1";
         int houseFloor = 1;
         double width = 2.0;
@@ -30,7 +30,7 @@ class RoomDTOMapperTest {
     }
 
     @Test
-    void getRoomDTOList() {
+    void getRoomDTOList() throws InstantiationException {
         // Arrange
         String roomName = "room1";
         int houseFloor = 1;

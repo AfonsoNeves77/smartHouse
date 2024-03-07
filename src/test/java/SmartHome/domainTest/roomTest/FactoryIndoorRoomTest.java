@@ -16,8 +16,7 @@ import static org.mockito.Mockito.when;
 class FactoryIndoorRoomTest {
 
     @Test
-    void whenConstructorInvokedWithInitializer_ThenMockObjectShouldBeCreated()
-    {
+    void whenConstructorInvokedWithInitializer_ThenMockObjectShouldBeCreated() throws InstantiationException {
         //arrange
         String roomName = "BathRoom";
         int houseFloor = 1;
