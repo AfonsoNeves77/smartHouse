@@ -11,7 +11,8 @@ public class DewPointSensor implements Sensor {
 
     private String sensorName;
     private SimHardware simHardware;
-    private final String unit = "C";
+    private final String UNIT = "C";
+    private final String TYPE = "DewPointSensor";
     private final ArrayList<Value<Double>> log = new ArrayList<>();
 
     public DewPointSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
@@ -26,6 +27,8 @@ public class DewPointSensor implements Sensor {
     public String getName() {
         return this.sensorName;
     }
+
+    public String getTYPE() { return this.TYPE; }
 
     public Value<Double> getReading() throws InstantiationException {
 
@@ -52,7 +55,7 @@ public class DewPointSensor implements Sensor {
     }
 
     public String getUnit() {
-        return this.unit;
+        return this.UNIT;
     }
 
 

@@ -1,0 +1,66 @@
+@startuml
+
+title User Story 12 - Main Success Scenario
+autonumber
+
+participant ":AddActuatorToDeviceCTRL" as C
+participant ":CommonListOfRooms" as CU
+participant ":RoomDTOMapper" as RDM
+participant ":CommonListOfDevices" as CLD
+participant ":DeviceDTOMapper" as DDM
+
+
+
+participant "device:Device" as D
+participant ":listOfActuators" as LA
+participant "actuator:Actuator" as A
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> CU** : <create>
+C -> CU :roomList = getListOfRooms()
+C -> RDM** : <create>
+C -> RDM : getRoomDTOList(roomList)
+activate RDM
+loop for each room in room list
+RDM -> RDM : RoomDTO = domainToDTO(room)
+RDM -> RDM : add(RoomDTO)
+end loop
+RDM --> C : roomDTOList
+deactivate RDM
+[o<-- C : roomDTOList
+deactivate C
+
+[o->C : listOfDevicesInARoom(RoomDTO)
+activate C
+C -> C : room = getRoomFromDTO(RoomDTO)
+C -> CLD** : <create>
+C -> CLD : deviceList = getListOfDevices(room)
+C -> DDM** : <create>
+C -> DDM: getDeviceDTOList(deviceList)
+activate DDM
+loop for each device in device list
+
+DDM -> DDM : DeviceDTO = domainToDTO(room)
+DDM -> DDM : add(DeviceDTO)
+end loop
+DDM --> C : deviceDTOList
+deactivate DDM
+[o<--C : deviceDTOList
+deactivate C
+
+[o->C : addActuatorToDevice(actuatorName,actuatorType, deviceName, simHardware)
+activate C
+C -> C : room = getRoomFromDTO(RoomDTO)
+C -> C : device = getDeviceFromDTO(DeviceDTO)
+C -> D : listOfActuators = getListOfActuators()
+C -> LA : addActuator(actuatorName,actuatorType, deviceName, simHardware)
+activate LA
+LA -> A** : <create Actuator>
+LA -> LA : add(actuator)
+LA --> C : return 0
+deactivate LA
+[o<-- C : return 0
+deactivate C
+@enduml

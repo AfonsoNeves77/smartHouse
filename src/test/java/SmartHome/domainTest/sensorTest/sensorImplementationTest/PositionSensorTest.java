@@ -1,11 +1,11 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
-import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
+
 import SmartHome.domain.sensor.sensorImplementation.PositionSensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
+
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
+
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -67,6 +67,19 @@ class PositionSensorTest {
         String expected = "%";
         //Act
         String result = sensor.getUnit();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    @Test
+    void getType_SuccessfullyReturns() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        PositionSensor sensor = new PositionSensor(sensorName, simHardware);
+        String expected = "Position";
+        //Act
+        String result = sensor.getType();
         //Assert
         assertEquals(expected,result);
     }

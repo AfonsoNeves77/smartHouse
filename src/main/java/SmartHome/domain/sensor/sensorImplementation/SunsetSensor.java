@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class SunsetSensor implements Sensor {
     private String sensorName;
     private SunTimeCalculator sunTimeCalculator;
-    private final String unit = "Zone Date Time";
+    private final String UNIT = "Zone Date Time";
     private ArrayList<Value<ZonedDateTime>> log = new ArrayList<>();
 
     public SunsetSensor(String sensorName, ExternalServices sunTimeCalculator) throws InstantiationException {
@@ -51,7 +51,7 @@ public class SunsetSensor implements Sensor {
     //Remove this from the Sensor interface??
     @Override
     public String getUnit() {
-        return this.unit;
+        return this.UNIT;
     }
 
     @Override

@@ -1,0 +1,51 @@
+@startuml
+title <size: 30> US22 Class Diagram
+
+'...........REQUIRES VALIDATION !!!!!!!!!!!!'
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices{
+}
+
+class SimHardware {
+     + getValue : String
+     }
+
+class DewPointSensor{
+    - sensorName : String
+    - unit : String
+    - TYPE : String
+    - simHardware : SimHardware
+    - log : ArrayList<Value<Double>>
+
+    + getReading() : Value<Double>
+    + getName() : String
+    + getUnit() : String
+    + getTYPE() : String
+    + getLog() : ArrayList<String>
+    - addValueToLog(value : Value<Double>) : void
+}
+
+class DewPointValue {
+    - isReadingValid() : boolean
+    + getValue() : Double
+    + getValueAsString() : String
+}
+
+Value <|.. DewPointValue
+Sensor <|.. DewPointSensor
+DewPointSensor .right.> DewPointValue
+SimHardware <. DewPointSensor
+ExternalServices <|.. SimHardware
+
+@enduml

@@ -1,18 +1,16 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
 import SmartHome.domain.sensor.externalServices.ExternalServices;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.WindValue;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 
 import java.util.ArrayList;
 
-import static java.lang.Integer.parseInt;
-
 public class WindSensor implements Sensor {
     private String sensorName;
     private SimHardware simHardware;
+    private final String type = "WindSensor";
     private final String unit = "Km/h";
     private final ArrayList<Value<Double>> log = new ArrayList<>();
 
@@ -36,6 +34,13 @@ public class WindSensor implements Sensor {
         return this.sensorName;
     }
 
+    /**
+     * Communicates with simHardware in order to receive a reading, it then converts it to value,
+     * all the validations are done on value creation. It then adds that value object to the sensor's
+     * log and returns a copy of that value.
+     * @return Returns the reading obtained, validated and converted to Value.
+     * @throws InstantiationException If unable to create value.
+     */
     public Value<?> getReading() throws InstantiationException {
 
         String simValue = this.simHardware.getValue();
@@ -78,5 +83,8 @@ public class WindSensor implements Sensor {
      */
     public String getUnit(){
         return this.unit;
+    }
+    public String getType(){
+        return this.type;
     }
 }

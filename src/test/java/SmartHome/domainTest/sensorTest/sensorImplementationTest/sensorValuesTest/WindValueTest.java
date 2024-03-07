@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class WindValueTest {
 
+    /**
+     * Ensures the constructor throws exception when reading is null
+     */
     @Test
     void constructor_throwsExceptionIfReadingNull(){
         //Arrange
@@ -21,6 +24,9 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures the constructor throws exception when reading is empty
+     */
     @Test
     void constructor_throwsExceptionIfReadingEmpty(){
         //Arrange
@@ -33,10 +39,14 @@ class WindValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Ensures the constructor throws exception when reading does not have a delimiter.
+     */
     @Test
     void constructor_throwsExceptionIfReadingWithoutDelimiter(){
         //Arrange
-        String reading = "-1N";
+        String reading = "1N";
         String expected = "Invalid reading";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () ->
@@ -45,6 +55,10 @@ class WindValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Ensures the constructor throws exception if the windspeed is negative.
+     */
     @Test
     void constructor_throwsExceptionIfWindSpeedNegative(){
         //Arrange
@@ -57,6 +71,10 @@ class WindValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Ensures the constructor throws exception if there is no windspeed (No string at the left side of the delimiter).
+     */
     @Test
     void constructor_throwsExceptionIfNoWindSpeed(){
         //Arrange
@@ -69,6 +87,10 @@ class WindValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Ensures the constructor throws exception if there is no windspeed (No string at the right side of the delimiter).
+     */
     @Test
     void constructor_throwsExceptionIfNoWindDirection(){
         //Arrange
@@ -82,6 +104,10 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures the constructor throws exception if there is no windspeed or wind direction (No string at the right
+     * or left sides of the delimiter).
+     */
     @Test
     void constructor_throwsExceptionIfNoWindSpeedOrDirection(){
         //Arrange
@@ -95,6 +121,9 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures the constructor throws exception if direction is invalid.
+     */
     @Test
     void constructor_throwsExceptionIfDirectionInvalid(){
         //Arrange
@@ -108,6 +137,9 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test ensure getValue successfully returns the integer encapsulated.
+     */
     @Test
     void getValue_SuccessfullyReturnsWindSpeed() throws InstantiationException {
         //Arrange
@@ -120,6 +152,9 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test ensure getWindDirection successfully returns the String encapsulated.
+     */
     @Test
     void getWindDirection_SuccessfullyReturnsWindDirection() throws InstantiationException {
         //Arrange
@@ -132,6 +167,10 @@ class WindValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures get valueAsString successfully returns a concatenation of windSpeed + delimiter + windDirection
+     * @throws InstantiationException If invalid value parameters
+     */
     @Test
     void getValueAsString_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -143,5 +182,4 @@ class WindValueTest {
         //Assert
         assertEquals(expected,result);
     }
-
 }

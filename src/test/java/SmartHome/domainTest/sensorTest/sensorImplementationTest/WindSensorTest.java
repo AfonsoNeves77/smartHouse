@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class WindSensorTest {
+    /**
+     * This test ensures the constructor throws an exception if the name inserted is null.
+     */
     @Test
     void constructor_throwsExceptionIfNullName(){
         //Arrange
@@ -29,6 +32,9 @@ class WindSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * This test ensures the constructor throws an exception if the name inserted is empty.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty(){
         //Arrange
@@ -43,6 +49,9 @@ class WindSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * This test ensures the getName method returns the name successfully.
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -55,6 +64,9 @@ class WindSensorTest {
         assertEquals(sensorName,result);
     }
 
+    /**
+     * This test ensures the getName method returns the unit successfully.
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -115,6 +127,37 @@ class WindSensorTest {
             assertEquals(expected, mockedWindValue);
         }
     }
+
+    /**
+     * This test ensures the new sensor created automatically creates an accessible log, which will be empty by default.
+     * @throws InstantiationException On invalid sensor parameters.
+     */
+    @Test
+    void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sensor1";
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("40-N");
+
+        Sensor sensor = new WindSensor(sensorName, simHardware);
+
+        ArrayList<String> expected = new ArrayList<>();
+
+        //Act
+        ArrayList<String> result = sensor.getLog();
+
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    //////////////////////////////////////////// Integration///////////////////////////////////////////////////
+
+    /**
+     * This test creates a simhardware double in order to place a stub on getValue, with a controlled and valid return.
+     * The expectation is that the process occurs successfully. To validate it, the value that gets returned has its name
+     * extracted using getValueAsString and compared against the expected name.
+     * @throws InstantiationException On invalid parameters
+     */
     @Test
     void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
         //Arrange
@@ -129,24 +172,6 @@ class WindSensorTest {
         //Act
         WindValue value = (WindValue) sensor.getReading();
         String result = value.getValueAsString();
-
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    @Test
-    void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
-        //Arrange
-        String sensorName = "Sensor1";
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("40-N");
-
-        Sensor sensor = new WindSensor(sensorName, simHardware);
-
-        ArrayList<String> expected = new ArrayList<>();
-
-        //Act
-        ArrayList<String> result = sensor.getLog();
 
         //Assert
         assertEquals(expected,result);

@@ -50,6 +50,26 @@ public class ListOfActuatorsTest {
         //Assert
         assertFalse(result);
     }
+    @Test
+    void addActuatorToDevice_FalseDueToDuplicatedActuator_Isolation()  {
+        //Arrange
+        SimHardwareAct simHardware = mock(SimHardwareAct.class);
+        String actuatorName = "Actuator 1";
+        String actuatorType = "XPTO";
+        ListOfActuators listOfActuators = new ListOfActuators();
+        ActuatorCatalogue catalogue = mock(ActuatorCatalogue.class);
+        Actuator actuatorDouble = mock(Actuator.class);
+
+        when(catalogue.createActuator(actuatorName, actuatorType, simHardware)).thenReturn(actuatorDouble);
+        when(actuatorDouble.getName()).thenReturn(actuatorName);
+        listOfActuators.addActuator(actuatorName,actuatorType,catalogue,simHardware);
+        //Act
+        boolean result = listOfActuators.addActuator(actuatorName,actuatorType,catalogue,simHardware);
+        //Assert
+        assertFalse(result);
+    }
+
+    ///////////////////////////////////////////////////INTEGRATION/////////////////////////////////////////////////////////
 
     @Test
     void addActuatorToDevice_UnableToInstantiateSensorDueToBlankName_integration() throws InstantiationException {

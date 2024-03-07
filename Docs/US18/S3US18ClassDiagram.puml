@@ -1,0 +1,51 @@
+@startuml
+title <size: 30> US18 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class PositionSensor{
+    - sensorName : String
+    - simHardware : SimHardware
+    - unit : String
+    - log : ArrayList<Value<Integer>>
+
+    + getName() : String
+    + getReading() : Value<Integer>
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+    + getType() : String
+    - addValueToLog(value : Value<Integer>) : void
+}
+
+class PositionValue{
+    - primitiveValue : int
+
+    + getValue() : Integer
+    + getValueAsString() : String
+    - isReadingValid(reading : String) : boolean
+}
+
+class SimHardware{
+    + getValue : String
+}
+
+Value <|.. PositionValue
+Sensor <|.. PositionSensor
+ExternalServices <|.. SimHardware
+PositionSensor .right.> PositionValue
+PositionSensor .left.> SimHardware
+
+@enduml

@@ -30,10 +30,6 @@ public class AddActuatorToDeviceCtrl {
         return commonListOfRooms.getListOfRooms();
     }
 
-    public List<String> getListOfActuatorTypes(){
-        return this.catalogue.getListOfInstantiableActuators();
-    }
-
     public List<DeviceDTO> getListOfDevices(String roomName){
         this.room = commonListOfRooms.getRoomByName(roomName);
         return commonListOfDevices.getListOfDevices(room);

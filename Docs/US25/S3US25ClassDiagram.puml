@@ -1,0 +1,53 @@
+@startuml
+title <size: 30> US25 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+interface ExternalServices {
+
+}
+
+class AveragePowerConsumptionSensor{
+    - sensorName : String
+    - UNIT : String
+    - TYPE : String
+    - simHardware : SimHardware
+    - log : ArrayList<Value<Integer>>
+
+    - validSensorName(sensorName : String) : boolean
+    + getReading(initialDate : String, finalDate) : Value<Integer>
+    - getInitialDateTime(initialDate : String) : LocalDateTime
+    - getFinalDateTime(finalDate : String) : LocalDateTime
+    - validateDates(initialDate : String, finalDate : String) : boolean
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+    + getType() : String
+    - addValueToLog(value : Value<Integer>) : void
+}
+
+class AveragePowerConsumptionValue {
+    - validateReading(reading : String) : boolean
+    + getValue() : Integer
+    + getValueAsString() : String
+}
+
+class SimHardware{
+    + getValue : String
+}
+
+Value <|.. AveragePowerConsumptionValue
+Sensor <|.. AveragePowerConsumptionSensor
+ExternalServices <|.. SimHardware
+AveragePowerConsumptionSensor .right.> AveragePowerConsumptionValue
+AveragePowerConsumptionSensor .left.> SimHardware
+@enduml
