@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class AveragePowerConsumptionValueTest {
-
+    /**
+     * Test of the constructor of the class AveragePowerConsumptionValue. It should throw an exception if the value is not a number.
+     */
     @Test
     void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNotANumber(){
         //Arrange
@@ -21,6 +23,10 @@ class AveragePowerConsumptionValueTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Test of the constructor of the class AveragePowerConsumptionValue. It should throw an exception if the value is negative.
+     */
     @Test
     void averagePowerConsumptionValueConstructor_throwsExceptionIfValueIsNegative(){
         //Arrange
@@ -35,6 +41,9 @@ class AveragePowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test of the constructor of the class AveragePowerConsumptionValue. It should return successfully if the value is valid.
+     */
     @Test
     void averagePowerConsumptionValueConstructor_returnsSuccessfully() throws InstantiationException {
         //Arrange
@@ -49,6 +58,9 @@ class AveragePowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test of the method getValueAsString of the class AveragePowerConsumptionValue. It should return the value as a string.
+     */
     @Test
     void getValueAsString_SuccessfullyConvertsToString() throws InstantiationException {
         //Arrange
