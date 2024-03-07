@@ -129,6 +129,50 @@ class DeviceTest {
         //Assert
         assertFalse(result);
     }
+    @Test
+    void addActuatorToDeviceSuccessful_Isolation(){
+        String deviceName = "device1";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        String actuatorName = "actuator1";
+        String type = "thisWillFailButItsNotRelevant";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
+            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
+            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(true);
+
+            //Act
+            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+            //Assert
+            assertTrue(result);
+        }
+    }
+    @Test
+    void addActuatorToDevice_False_Isolation(){
+        String deviceName = "device1";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        String actuatorName = "actuator1";
+        String type = "thisWillFailButItsNotRelevant";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
+            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
+            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(false);
+
+            //Act
+            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+            //Assert
+            assertFalse(result);
+        }
+    }
 
 //    @Test
 //    void addActuatorToDeviceSuccessful_Isolation(){

@@ -17,7 +17,7 @@ public class HumiditySensor implements Sensor {
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
 
     /**
-     * Constructor for Humidity Sensor. The instantiation ensures the name is valid, throwing IllegalArgumentException otherwise.
+     * Constructor for Humidity Sensor. The instantiation ensures the name is valid, throwing InstantiationException otherwise.
      * @param sensorName Name of the sensor
      */
     public HumiditySensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
