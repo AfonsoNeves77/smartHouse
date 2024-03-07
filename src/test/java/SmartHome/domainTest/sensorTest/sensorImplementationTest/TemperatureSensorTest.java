@@ -17,8 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class TemperatureSensorTest {
+
+//     ### ISOLATION TESTS ###
+
+    /**
+     * Tests the constructor of the TemperatureSensor class with a null name.
+     */
     @Test
-    void sensorConstructor_throwsExceptionIfNameNull(){
+    void sensorConstructor_throwsExceptionIfNameNull() {
         //Arrange
         SimHardware simHardwareDouble = mock(SimHardware.class);
         String sensorName = null;
@@ -28,11 +34,14 @@ class TemperatureSensorTest {
                 new TemperatureSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
+    /**
+     * Tests the constructor of the TemperatureSensor class with an empty name.
+     */
     @Test
-    void sensorConstructor_throwsExceptionIfNameEmpty(){
+    void sensorConstructor_throwsExceptionIfNameEmpty() {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "   ";
@@ -42,9 +51,14 @@ class TemperatureSensorTest {
                 new TemperatureSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
+    /**
+     * Tests the getName method of the TemperatureSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -54,9 +68,14 @@ class TemperatureSensorTest {
         //Act
         String result = sensor.getName();
         //Assert
-        assertEquals(sensorName,result);
+        assertEquals(sensorName, result);
     }
 
+    /**
+     * Tests the getUnit method of the TemperatureSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -67,7 +86,7 @@ class TemperatureSensorTest {
         //Act
         String result = sensor.getUnit();
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -81,6 +100,7 @@ class TemperatureSensorTest {
      * matching it against the expected string.
      * 5. The third test utilizes the temperatureValueDouble that is created by calling getReading unto the sensor created at the top
      * and ensuring that when we call getValueAsString unto that value, it returns the expected string.
+     *
      * @throws InstantiationException If sensor parameters invalid.
      */
     @Test
@@ -110,32 +130,20 @@ class TemperatureSensorTest {
             // 4.
             String expected = "36.1";
             String result = values.get(0).getValueAsString();
-            assertEquals(expected,result);
+            assertEquals(expected, result);
 
             // 5.
             String mockedTemperatureValue = value.getValueAsString();
             assertEquals(expected, mockedTemperatureValue);
         }
     }
-    @Test
-    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("36.1");
 
-        String sensorName = "Sensor 1";
-        TemperatureSensor sensor = new TemperatureSensor(sensorName,simHardware);
 
-        String expected = "36.1";
-
-        //Act
-        TemperatureValue value = (TemperatureValue) sensor.getReading();
-        String result = value.getValueAsString();
-
-        //Assert
-        assertEquals(expected,result);
-    }
-
+    /**
+     * Tests the getLog method of the TemperatureSensor class.
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
@@ -151,6 +159,32 @@ class TemperatureSensorTest {
         ArrayList<String> result = sensor.getLog();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
+    }
+
+//     ### INTEGRATION TESTS ###
+
+    /**
+     * Tests the getLog method of the TemperatureSensor class.
+     *
+     * @throws InstantiationException
+     */
+    @Test
+    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36.1");
+
+        String sensorName = "Sensor 1";
+        TemperatureSensor sensor = new TemperatureSensor(sensorName, simHardware);
+
+        String expected = "36.1";
+
+        //Act
+        TemperatureValue value = (TemperatureValue) sensor.getReading();
+        String result = value.getValueAsString();
+
+        //Assert
+        assertEquals(expected, result);
     }
 }

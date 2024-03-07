@@ -18,6 +18,11 @@ import static org.mockito.Mockito.*;
 
 class PositionSensorTest {
 
+//        ### ISOLATION TESTS ###
+
+    /**
+     * Tests the constructor of the PositionSensor class with a null name.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameNull(){
         //Arrange
@@ -32,6 +37,9 @@ class PositionSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Tests the constructor of the PositionSensor class with an empty name.
+     */
     @Test
     void sensorConstructor_throwsExceptionIfNameEmpty(){
         //Arrange
@@ -46,6 +54,10 @@ class PositionSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Tests the getName method of the PositionSensor class.
+     * @throws InstantiationException
+     */
     @Test
     void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -58,6 +70,10 @@ class PositionSensorTest {
         assertEquals(sensorName,result);
     }
 
+    /**
+     * Tests the getUnit method of the PositionSensor class.
+     * @throws InstantiationException
+     */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -71,6 +87,10 @@ class PositionSensorTest {
         assertEquals(expected,result);
     }
 
+    /**
+     *
+     * @throws InstantiationException
+     */
     @Test
     void getType_SuccessfullyReturns() throws InstantiationException {
         //Arrange
@@ -84,25 +104,10 @@ class PositionSensorTest {
         assertEquals(expected,result);
     }
 
-    @Test
-    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
-        //Arrange
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue()).thenReturn("36");
-
-        String sensorName = "Sensor 1";
-        PositionSensor sensor = new PositionSensor(sensorName,simHardware);
-
-        String expected = "36";
-
-        //Act
-        PositionValue value = (PositionValue) sensor.getReading();
-        String result = value.getValueAsString();
-
-        //Assert
-        assertEquals(expected,result);
-    }
-
+    /**
+     * Isolation test for the getReading method of the PositionSensor class.
+     * @throws InstantiationException
+     */
     @Test
     void getReading_ReturnsValueCorrectly_Isolation() throws InstantiationException {
         //Arrange
@@ -129,6 +134,10 @@ class PositionSensorTest {
         }
     }
 
+    /**
+     * Tests the getLog method of the PositionSensor class.
+     * @throws InstantiationException
+     */
     @Test
     void getLog_SuccessfullyReturnsEmptyList_Isolation() throws InstantiationException {
         //Arrange
@@ -147,4 +156,28 @@ class PositionSensorTest {
         assertEquals(expected,result);
     }
 
+//     ### INTEGRATION TESTS ###
+
+    /**
+     * Tests the getReading method of the PositionSensor class.
+     * @throws InstantiationException
+     */
+    @Test
+    void getReading_ReturnsValueCorrectly_Integration() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        when(simHardware.getValue()).thenReturn("36");
+
+        String sensorName = "Sensor 1";
+        PositionSensor sensor = new PositionSensor(sensorName,simHardware);
+
+        String expected = "36";
+
+        //Act
+        PositionValue value = (PositionValue) sensor.getReading();
+        String result = value.getValueAsString();
+
+        //Assert
+        assertEquals(expected,result);
+    }
 }

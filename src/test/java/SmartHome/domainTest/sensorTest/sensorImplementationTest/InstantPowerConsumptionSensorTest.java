@@ -18,6 +18,8 @@ import static org.mockito.Mockito.*;
 
 public class InstantPowerConsumptionSensorTest {
 
+//     ### ISOLATION TESTS ###
+
     /**
      * This test ensures the constructor throws an exception if the name inserted is null.
      */
@@ -28,7 +30,7 @@ public class InstantPowerConsumptionSensorTest {
         String sensorName = null;
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new InstantPowerConsumptionSensor(sensorName, simHardwareDouble));
         String result = exception.getMessage();
         //Assert
@@ -45,7 +47,7 @@ public class InstantPowerConsumptionSensorTest {
         String sensorName = "   ";
         String expected = "Invalid parameter";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(InstantiationException.class, () ->
                 new InstantPowerConsumptionSensor(sensorName, simHardware));
         String result = exception.getMessage();
         //Assert
@@ -56,7 +58,7 @@ public class InstantPowerConsumptionSensorTest {
      * This test ensures the getName method returns the name successfully.
      */
     @Test
-    void getName_SuccessfullyReturns(){
+    void getName_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -71,7 +73,7 @@ public class InstantPowerConsumptionSensorTest {
      * This test ensures the getName method returns the unit successfully.
      */
     @Test
-    void getUnit_SuccessfullyReturns(){
+    void getUnit_SuccessfullyReturns()throws InstantiationException{
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         String sensorName = "Sensor1";
@@ -132,7 +134,7 @@ public class InstantPowerConsumptionSensorTest {
     }
 
 
-    //////////////////////////////////////////// Integration///////////////////////////////////////////////////
+//     ### INTEGRATION TESTS ###
 
     /**
      * This test creates a simhardware double in order to place a stub on getValue, with a controlled and valid return.
@@ -168,7 +170,7 @@ public class InstantPowerConsumptionSensorTest {
      *
      */
     @Test
-    void getReading_throwsExceptionIfEmptyReading() {
+    void getReading_throwsExceptionIfEmptyReading()throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn(" ");
@@ -194,7 +196,7 @@ public class InstantPowerConsumptionSensorTest {
      *
      */
     @Test
-    void getReading_throwsExceptionIfInvalidReadingNumber() {
+    void getReading_throwsExceptionIfInvalidReadingNumber()throws InstantiationException {
         //Arrange
         SimHardware simHardware = mock(SimHardware.class);
         when(simHardware.getValue()).thenReturn("abc");
@@ -216,7 +218,7 @@ public class InstantPowerConsumptionSensorTest {
      * validate it, the log is extracted using getLog and compared against the expected empty list.
      */
     @Test
-    void getLog_ReturnsEmptyList() {
+    void getLog_ReturnsEmptyList() throws InstantiationException{
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
@@ -294,7 +296,7 @@ public class InstantPowerConsumptionSensorTest {
      * to getType to extract the result. The expected and result Strings are then compared.
      */
     @Test
-    void getType_ReturnsType(){
+    void getType_ReturnsType()throws InstantiationException{
         //Arrange
         String sensorName = "Sensor1";
         SimHardware simHardware = mock(SimHardware.class);
