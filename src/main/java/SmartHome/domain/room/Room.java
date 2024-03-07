@@ -23,16 +23,19 @@ public class Room {
      * Room Constructor
      * @param roomName Name of the room
      * @param houseFloor Floor number
-     * @throws InstantiationException if room name is not valid
+     * @param roomWidth room width
+     * @param roomLength room length
+     * @param roomHeight room height
+     * @throws InstantiationException If room name or dimensions given are not valid
      */
-    public Room(String roomName, int houseFloor, double roomWidth, double roomLength, double roomHeight) {
+    public Room(String roomName, int houseFloor, double roomWidth, double roomLength, double roomHeight) throws InstantiationException {
         if(roomName == null || roomName.trim().isEmpty()){
-            throw new IllegalArgumentException("Please insert valid room name.");
+            throw new InstantiationException("Please insert valid room name.");
         }
         try {
             this.dimensions = createRoomDimensions(roomWidth,roomLength,roomHeight);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Please insert valid room dimensions.");
+        } catch (InstantiationException e) {
+            throw new InstantiationException("Please insert valid room dimensions.");
         }
         this.roomName = roomName;
         this.houseFloor = houseFloor;
@@ -46,10 +49,13 @@ public class Room {
      * @param roomHeight Room Height
      * @throws InstantiationException In case room dimensions are not valid
      */
-    private RoomDimensions createRoomDimensions(double roomWidth, double roomLength, double roomHeight) {
+    private RoomDimensions createRoomDimensions(double roomWidth, double roomLength, double roomHeight) throws InstantiationException {
         return new RoomDimensions(roomWidth,roomLength,roomHeight);
     }
 
+    /**
+     * @return Room dimensions in a double array
+     */
     public double[] getDimensions() {
         return extractEachDimension();
     }
@@ -66,11 +72,22 @@ public class Room {
         return roomDimensions;
     }
 
+    /**
+     * Adds a device to a Room.
+     * @param deviceName Device name
+     * @param deviceModel Device model
+     * @param factoryDevice Factory to create devices
+     * @return True if device added successfully.
+     */
     public boolean addDevice(String deviceName, String deviceModel, FactoryDevice factoryDevice) {
         String deviceLocation = this.roomName;
         return deviceList.addDeviceToList(deviceName, deviceModel, deviceLocation, factoryDevice);
     }
 
+    /**
+     * Requests each Device in the room for its functionalities.
+     * Each functionality (Key) and corresponding Devices (Values) are stored in a Map named roomFunctionalities.
+     */
     private void updateRoomFunctionalities(){
         List<Device> list = this.deviceList.getDeviceList();
         for(Device device : list){
@@ -110,6 +127,10 @@ public class Room {
         return deviceList.getDeviceList();
     }
 
+    /**
+     * Uses updateRoomFunctionalities() method to get all functionalities in the room.
+     * @return A Map with Keys as functionalities and Values as Lists of Devices.
+     */
     public Map<String, ArrayList<Device>> getRoomFunctionalities(){
         updateRoomFunctionalities();
         return roomFunctionalities;

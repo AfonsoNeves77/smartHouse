@@ -15,6 +15,10 @@ public class CommonListOfRooms {
     private House house;
     private LinkedHashMap<RoomDTO, Room> roomDTOAndRoomMap = new LinkedHashMap<>();
 
+    /**
+     * Constructor for CommonListOfRooms, which takes a House to be initialized
+     * @param house House Object linked to Common Class
+     */
     public CommonListOfRooms(House house) {
         this.house = house;
     }
@@ -29,10 +33,20 @@ public class CommonListOfRooms {
         return truncateList(roomDTOAndRoomMap);
     }
 
+    /**
+     * Gathers all RoomDTOs in a single List
+     * @param roomDTOAndRoomMap
+     * @return
+     */
     private List<RoomDTO> truncateList(Map<RoomDTO, Room> roomDTOAndRoomMap) {
         return roomDTOAndRoomMap.keySet().stream().toList();
     }
 
+    /**
+     * After refreshing this Class roomDTOAndRoomMap, it searches for a Room by its name
+     * @param roomName Room name
+     * @return The Room object in case it is found, null if not present in the map
+     */
     public Room getRoomByName(String roomName) {
         refreshMap();
         for (Map.Entry<RoomDTO, Room> entry : roomDTOAndRoomMap.entrySet()) {
@@ -43,6 +57,10 @@ public class CommonListOfRooms {
         return null;
     }
 
+    /**
+     * Refreshes this Class Map by requesting the house's list of rooms
+     * List of rooms is then sent to RoomDTOMapper to be converted
+     */
     private void refreshMap() {
         List<Room> roomList = house.getListOfRooms();
         roomDTOAndRoomMap = RoomDTOMapper.getRoomDTOList(roomList);

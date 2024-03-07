@@ -31,6 +31,7 @@ public class House {
     public House(String houseName) throws InstantiationException {
         if (houseName == null || houseName.trim().isEmpty())
             throw new InstantiationException ("Please insert a valid house name.");
+        this.houseName = houseName;
     }
 
     /**
@@ -73,6 +74,10 @@ public class House {
         return listOfRooms.addRoomToList(roomName, houseFloor, roomWidth, roomLength, roomHeight, factoryRoom);
     }
 
+    /**
+     * Requests each Room in the house for its device functionalities.
+     * Each functionality (Key) and corresponding Devices (Values) are stored in a Map named houseFunctionalities.
+     */
     private void updateHouseFunctionalities(){
         List<Room> roomList = listOfRooms.getRoomList();
         for(Room room : roomList){
@@ -99,6 +104,10 @@ public class House {
         return listOfRooms.getRoomList();
     }
 
+    /**
+     * Uses updateHouseFunctionalities() method to get all functionalities in the house.
+     * @return A Map with Keys as functionalities and Values as Lists of Devices.
+     */
     public Map<String,ArrayList<Device>> getHouseFunctionalities(){
         updateHouseFunctionalities();
         return houseFunctionalities;

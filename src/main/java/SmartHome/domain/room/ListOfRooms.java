@@ -22,9 +22,7 @@ public class ListOfRooms {
      * @param roomWidth Room width
      * @param roomLength Room length
      * @param roomHeight Room height
-     * @return Code 0: Room successfully added;
-     * Code 1: Impossible to instantiate a new Room;
-     * Code 2: Room already exists in the house (duplication).
+     * @return True if room added successfully
      */
     public boolean addRoomToList(String roomName, int houseFloor, double roomWidth,
                                  double roomLength, double roomHeight, FactoryRoom factoryRoom) {
@@ -35,7 +33,7 @@ public class ListOfRooms {
             Room newRoom = factoryRoom.createRoom(roomName,houseFloor,roomWidth,roomLength,roomHeight);
             roomList.add(newRoom);
             return true;
-        } catch (IllegalArgumentException e) {
+        } catch (InstantiationException e) {
             return false;
         }
     }
@@ -55,8 +53,6 @@ public class ListOfRooms {
         }
         return false;
     }
-
-
 
     /**
      * @return Room list with Room objects

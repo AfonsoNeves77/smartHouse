@@ -12,6 +12,7 @@ public class AddRoomCTRL {
     /**
      * Controller Constructor for Use Case: Add a new room to the house
      * @param house House to be considered
+     * @param factoryRoom Factory Room to be used to create new instances of Room
      */
     public AddRoomCTRL(House house, FactoryRoom factoryRoom) {
         this.house = house;
@@ -19,11 +20,9 @@ public class AddRoomCTRL {
     }
 
     /**
-     * Requests to add a new Room to the house
+     * Requests to add a new Room to the House
      * @param roomDTO DTO with external information to add a new room
-     * @return Code 0: Room successfully added;
-     * Code 1: Impossible to instantiate a new Room;
-     * Code 2: Room already exists in the house (duplication);
+     * @return True if Room is successfully added to the House
      */
     public boolean addRoom(RoomDTO roomDTO){
         String roomName = roomDTO.getRoomName();

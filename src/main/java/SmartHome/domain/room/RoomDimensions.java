@@ -5,21 +5,16 @@ public class RoomDimensions {
     private double roomLength;
     private double roomHeight;
 
-    //Create constructor with only width and length parameters as well??
-
-    public RoomDimensions() {
-    }
-
     /**
      * RoomDimensions Constructor
-     *
      * @param roomWidth  Room width
      * @param roomLength Room Length
      * @param roomHeight Room Height
+     * @throws InstantiationException if any room dimension is invalid.
      */
-    public RoomDimensions(double roomWidth, double roomLength, double roomHeight) {
+    public RoomDimensions(double roomWidth, double roomLength, double roomHeight) throws InstantiationException {
         if (!areDimensionsValid(roomWidth, roomLength, roomHeight)) {
-            throw new IllegalArgumentException("Please insert valid room dimensions.");
+            throw new InstantiationException("Please insert valid room dimensions.");
         }
         this.roomWidth = roomWidth;
         this.roomLength = roomLength;
@@ -48,6 +43,13 @@ public class RoomDimensions {
         return roomHeight;
     }
 
+    /**
+     * Verifies if dimensions are valid.
+     * @param roomWidth room width must be higher than 0
+     * @param roomLength room length must be higher than 0
+     * @param roomHeight room height must be at least 0
+     * @return True if dimensions are valid.
+     */
     private boolean areDimensionsValid(double roomWidth, double roomLength, double roomHeight) {
         if (roomWidth <= 0 || roomLength <= 0 || roomHeight < 0) {
             return false;

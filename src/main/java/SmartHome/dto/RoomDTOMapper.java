@@ -20,10 +20,10 @@ public class RoomDTOMapper {
     }
 
     /**
-     * Converts list of rooms into a list of room dtos.
+     * Converts list of rooms into a list of room DTOs.
      *
-     * @param listOfRooms List of rooms
-     * @return List of Room DTOS
+     * @param listOfRooms List with Room objects
+     * @return List with Room DTOs
      */
     public static LinkedHashMap<RoomDTO, Room> getRoomDTOList(List<Room> listOfRooms) {
         LinkedHashMap<RoomDTO, Room> roomDTOAndRoomMap = new LinkedHashMap<>();
