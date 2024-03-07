@@ -1,15 +1,14 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
+import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
-import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
-
-import SmartHome.domain.sensor.sensorImplementation.HumiditySensor;
 import org.mockito.MockedConstruction;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -153,6 +152,21 @@ class HumiditySensorTest {
 
         //Act
         ArrayList<String> result = sensor.getLog();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getType_ReturnsCorrectType() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        HumiditySensor sensor = new HumiditySensor(sensorName, simHardware);
+        String expected = "Humidity";
+
+        //Act
+        String result = sensor.getType();
 
         //Assert
         assertEquals(expected, result);
