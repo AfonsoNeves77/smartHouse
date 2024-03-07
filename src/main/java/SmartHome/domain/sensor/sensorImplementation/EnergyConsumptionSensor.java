@@ -25,9 +25,9 @@ public class EnergyConsumptionSensor implements Sensor{
      * @param sensorName name of the sensor
      * @param externalServices external services
      */
-    public EnergyConsumptionSensor(String sensorName, ExternalServices externalServices) {
+    public EnergyConsumptionSensor(String sensorName, ExternalServices externalServices) throws InstantiationException {
         if(!validateSensorName(sensorName)){
-            throw new IllegalArgumentException("Invalid parameter");
+            throw new InstantiationException("Invalid parameter");
         }
         this.sensorName = sensorName;
         this.simHardware = (SimHardware) externalServices;
@@ -133,6 +133,10 @@ public class EnergyConsumptionSensor implements Sensor{
         return tmpLog;
     }
 
+    /**
+     * Method to get the type
+     * @return type
+     */
     public String getType() {
         return Type;
     }
