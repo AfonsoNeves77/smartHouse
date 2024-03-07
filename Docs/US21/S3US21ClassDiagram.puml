@@ -7,6 +7,7 @@ interface Sensor {
     + getName() : String
     + getUnit() : String
     + getLog() : ArrayList<String>
+    + getType() : String
 }
 
 interface Value<T> {
@@ -21,13 +22,11 @@ interface ExternalServices {
 class SunsetSensor{
     - sensorName : String
     - sunTimeCalculator : SunTimeCalculator
-    - UNIT : String
+    - unit : String
+    - type : String
     - log : ArrayList<Value<ZonedDateTime>>
 
     + getSunsetTime(date : String, gpsLocation : String) : Value<ZonedDateTime>
-    + getName() : String
-    + getUnit() : String
-    + getLog() : ArrayList<String>
     - validSensorName(sensorName : String) : boolean
     - validSunTimeCalculator(sunTimeCalculator : ExternalServices) : boolean
     - addValueToLog(value : Value<ZonedDateTime>) : void

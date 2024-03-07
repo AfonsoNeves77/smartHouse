@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InstantPowerConsumptionValueTest {
 
+    /**
+     * Ensures the constructor throws exception when reading is null
+     */
     @Test
     void constructor_throwsInstantiationExceptionIfReadingNull(){
         //Arrange
@@ -22,6 +25,9 @@ public class InstantPowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures the constructor throws exception when reading is empty
+     */
     @Test
     void constructor_throwsInstantiationExceptionIfReadingEmpty() {
         //Arrange
@@ -36,6 +42,9 @@ public class InstantPowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures the constructor throws exception if the windspeed is negative.
+     */
     @Test
     void constructor_throwsInstantiationExceptionIfReadingBelowBound(){
         //Arrange
@@ -51,7 +60,7 @@ public class InstantPowerConsumptionValueTest {
     }
 
     @Test
-    void constructor_Successful() throws InstantiationException {
+    void constructor_SuccessfullyInstantiatesValue() throws InstantiationException {
         //Arrange
         String reading = "1";
         int expected = 1;
@@ -78,6 +87,9 @@ public class InstantPowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Test ensure getValue successfully returns the integer encapsulated.
+     */
     @Test
     void getValue_returnsSuccessfully() throws InstantiationException {
         //Arrange
@@ -92,8 +104,12 @@ public class InstantPowerConsumptionValueTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * Ensures get valueAsString successfully returns instant power consumption value as string.
+     * @throws InstantiationException If invalid value parameters
+     */
     @Test
-    void getValueAsString_returnsSuccessfully() throws InstantiationException {
+    void getValueAsString_SuccessfullyReturns() throws InstantiationException {
         //Arrange
         String reading = "1";
         InstantPowerConsumptionValue value = new InstantPowerConsumptionValue(reading);
