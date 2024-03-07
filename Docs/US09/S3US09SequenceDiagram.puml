@@ -1,53 +1,83 @@
 @startuml
-!theme cerulean
-title User Story 9 - Main Success Scenario
+title <size: 30> US09 Class Diagram
+note "<b>Only methods related to\n<b>US09 are represented" as N1
 
-autonumber
+class GetDevicesByFunctionalityCTRL {
+    - <b>house : House
 
-participant ":GetDevicesByFunctionalityCTRL" as C
-participant ":House" as H
-participant ":ListOfRooms" as LOR
-participant ":Room" as R
-participant ":ListOfDevices" as LOD
-participant ":Device" as D
-participant ":DeviceDTOMapper" as DM
-skinparam ParticipantPadding 50
+    + getDevicesByFunctionality() : HashMap<String, ArrayList<DeviceDTO>>
+}
 
-[o-> C : getDevicesByFunctionality()
-activate C
-C -> H : getDevicesByFunctionality()
-activate H
-H -> H : updateHouseFunctionalities()
-activate H
-H -> LOR : roomList = getRoomList
-loop for every room in roomList
-   H -> R : getRoomFunctionalities()
-   activate R
-   R -> R : updateRoomFunctionalities()
-   activate R
-   R -> LOD : deviceList = getDeviceList
-loop for every device in room
-   R -> D : devFunctionalities = getDeviceFunctionalities()
-end
-deactivate R
-R --> H : roomFunctionalities
-deactivate R
-end
-deactivate H
-H --> C : functionalitiesMap
-deactivate H
-C -> DM : domainMapToDTO(functionalitiesMap)
-activate DM
-loop for every deviceList in functionalitiesMap
-DM -> DM : domainToDTO(deviceList)
-activate DM
-loop for every device in deviceList
-DM -> DM : deviceDTO = domainToDTO(device)
-end
-deactivate DM
-DM --> C : dtoFunctionalitiesMap
-deactivate DM
-[o<-- C : dtoFunctionalitiesMap
-deactivate C
+class House {
+    - houseName: String
+    - gps : GPS
+    - address : Address
+    - <b>listOfRooms : ListOfRooms
+    - sensorTypeList : sensorTypeList
+    - <b>houseFunctionalities : Map<String, ArrayList<Device>>
+
+    + getHouseFunctionalities() : Map<String,ArrayList<Device>>
+    - updateHouseFunctionalities() : void
+}
+
+class ListOfRooms {
+    - <b>roomList : ArrayList<Room>
+}
+
+class Room {
+    - roomName: String
+    - houseFloor : int
+    - dimensions : RoomDimensions
+    - <b>deviceList : ListOfDevices
+    - <b>roomFunctionalities : Map<String,ArrayList<Device>>
+
+    + getRoomFunctionalities() : Map<String, ArrayList<Device>>
+    - updateRoomFunctionalities() : void
+
+
+}
+
+class ListOfDevices {
+    - <b>deviceList : ArrayList<Device>
+}
+
+class DeviceDTO {
+    - deviceName : String
+    - deviceModel : String
+    - location : String
+    - status : boolean
+}
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - deviceLocation : String
+    - status : boolean
+    - listOfSensors : ListOfSensors
+    - listOfActuators : ListOfActuators
+    - <b>deviceFunctionalities : List<String>
+
+    - updateDeviceFunctionalities(sensorType : String) : void
+}
+
+class DeviceDTOMapper {
+    + domainToDTO(device : Device) : DeviceDTO
+    + domainToDTO(deviceList : ArrayList<Device>) : ArrayList<DeviceDTO>
+    + domainMapToDTO(map : Map<String,ArrayList<Device>>) : Map<String,ArrayList<DeviceDTO>>
+}
+
+GetDevicesByFunctionalityCTRL -up.> House
+House "1" *- "1" ListOfRooms
+ListOfRooms "1" o-- "*" Room
+Room "1" *-- "1" ListOfDevices
+ListOfDevices "1" o-right- "*" Device
+
+GetDevicesByFunctionalityCTRL -down.> DeviceDTOMapper
+
+DeviceDTOMapper ..> DeviceDTO
+DeviceDTOMapper ..> Device
+
+
+
 @enduml
 
