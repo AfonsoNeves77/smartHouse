@@ -1,4 +1,4 @@
-package SmartHome.domainTest.sensorTest.simHardwareTest;
+package SmartHome.domainTest.sensorTest.externalServicesTest;
 
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
