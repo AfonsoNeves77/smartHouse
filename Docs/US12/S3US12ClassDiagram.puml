@@ -63,6 +63,14 @@ class RoomDTOMapper {
     + domainToDTO(room : Room) : RoomDTO
 }
 
+class RoomDTO{
+           - roomName : String
+           - houseFloor : int
+           - roomWidth : double
+           - roomLength : double
+           - roomHeight : double
+       }
+
 class Device {
     - deviceName : String
     - deviceModel : String
@@ -82,6 +90,13 @@ class DeviceDTOMapper {
 
 }
 
+class DeviceDTO{
+           - deviceName : String
+           - deviceModel : String
+           - location : String
+           - status : boolean
+           }
+
        AddActuatorToDeviceCTRL ..> CommonListOfRooms
        AddActuatorToDeviceCTRL ..> Device
        Device --* ListOfActuators : has
@@ -90,5 +105,7 @@ class DeviceDTOMapper {
        CommonListOfRooms ..> RoomDTOMapper
        AddActuatorToDeviceCTRL..> CommonListOfDevices
        CommonListOfDevices ..> DeviceDTOMapper
+       DeviceDTOMapper ..> DeviceDTO
+       RoomDTOMapper ..> RoomDTO
 
 @enduml

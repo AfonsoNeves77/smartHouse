@@ -6,9 +6,7 @@ autonumber
 
 participant ":AddActuatorToDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
-participant ":RoomDTOMapper" as RDM
 participant ":CommonListOfDevices" as CD
-participant ":DeviceDTOMapper" as DDM
 participant "device:Device" as D
 participant ":listOfActuators" as LA
 participant "actuatorCatalogue" as AC
@@ -58,23 +56,27 @@ C -> C : refreshMap(room)
 activate C
 deactivate C
 C -> D : addActuator(actuatorName, actuatorType, catalogue,simHardwareAct)
+activate D
 D -> LA : addActuator(actuatorName,actuatorType, catalogue, simHardwareAct)
 activate LA
 LA -> LA : isActuatorInList(actuatorName)
 activate LA
 deactivate LA
 LA -> LA : findActuator(actuatorName)
+activate LA
+deactivate LA
 LA -> AC : createActuator(actuatorName, actuatorType, simHardwareAct)
 activate AC
 AC -> A** : <create Actuator>
-activate A
 AC --> LA : newActuator
 deactivate AC
 LA -> LA : add(newActuator)
 activate LA
 deactivate LA
-LA --> C : return true
+LA --> D : return true
 deactivate LA
+D --> C : return true
+deactivate D
 [o<-- C : return true
 deactivate C
 @enduml
