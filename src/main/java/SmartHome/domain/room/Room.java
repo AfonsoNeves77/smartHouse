@@ -129,7 +129,7 @@ public class Room {
 
     /**
      * Uses updateRoomFunctionalities() method to get all functionalities in the room.
-     * @return A Map with Keys as functionalities and Values as Lists of Devices.
+     * @return A Map with functionalities as Keys and Lists of Devices as Values.
      */
     public Map<String, ArrayList<Device>> getRoomFunctionalities(){
         updateRoomFunctionalities();

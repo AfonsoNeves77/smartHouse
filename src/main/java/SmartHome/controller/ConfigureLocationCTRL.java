@@ -6,7 +6,8 @@ public class ConfigureLocationCTRL {
     private final House house;
 
     /**
-     * Constructor for the controller. It takes a house as parameter.
+     * Controller Constructor for Use Case: To configure the location of the house
+     * @param house House in use
      */
     public ConfigureLocationCTRL(House house) {
         this.house = house;

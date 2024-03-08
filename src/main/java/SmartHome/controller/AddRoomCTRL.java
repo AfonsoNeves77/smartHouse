@@ -20,8 +20,8 @@ public class AddRoomCTRL {
     }
 
     /**
-     * Requests to add a new Room to the House
-     * @param roomDTO DTO with external information to add a new room
+     * Requests to add a new Room to the House, retrieving the final operation result
+     * @param roomDTO DTO with external information to add a new Room
      * @return True if Room is successfully added to the House
      */
     public boolean addRoom(RoomDTO roomDTO){

@@ -25,8 +25,7 @@ public class CommonListOfRooms {
 
     /**
      * Retrieves the list of rooms from the associated House.
-     *
-     * @return An ArrayList of Room objects representing the rooms within the associated House.
+     * @return List of RoomDTO objects representing the rooms within the associated House.
      */
     public List<RoomDTO> getListOfRooms() {
         refreshMap();
@@ -35,8 +34,8 @@ public class CommonListOfRooms {
 
     /**
      * Gathers all RoomDTOs in a single List
-     * @param roomDTOAndRoomMap
-     * @return
+     * @param roomDTOAndRoomMap Map with Key-Value pairs of [RoomDTOs - Room]
+     * @return List of RoomDTOs
      */
     private List<RoomDTO> truncateList(Map<RoomDTO, Room> roomDTOAndRoomMap) {
         return roomDTOAndRoomMap.keySet().stream().toList();
@@ -44,7 +43,7 @@ public class CommonListOfRooms {
 
     /**
      * After refreshing this Class roomDTOAndRoomMap, it searches for a Room by its name
-     * @param roomName Room name
+     * @param roomName Room identifier
      * @return The Room object in case it is found, null if not present in the map
      */
     public Room getRoomByName(String roomName) {
@@ -58,8 +57,8 @@ public class CommonListOfRooms {
     }
 
     /**
-     * Refreshes this Class Map by requesting the house's list of rooms
-     * List of rooms is then sent to RoomDTOMapper to be converted
+     * Method to update this Class's Map containing Key-Value pairs of [RoomDTOs - Room], by requesting
+     * the house's list of rooms
      */
     private void refreshMap() {
         List<Room> roomList = house.getListOfRooms();

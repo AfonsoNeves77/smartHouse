@@ -106,7 +106,7 @@ public class House {
 
     /**
      * Uses updateHouseFunctionalities() method to get all functionalities in the house.
-     * @return A Map with Keys as functionalities and Values as Lists of Devices.
+     * @return A Map with functionalities as Keys and device Lists as Values
      */
     public Map<String,ArrayList<Device>> getHouseFunctionalities(){
         updateHouseFunctionalities();
