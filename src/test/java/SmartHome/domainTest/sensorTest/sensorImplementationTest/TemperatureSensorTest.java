@@ -1,11 +1,9 @@
 package SmartHome.domainTest.sensorTest.sensorImplementationTest;
 
-import SmartHome.domain.sensor.sensorImplementation.DewPointSensor;
+import SmartHome.domain.sensor.externalServices.SimHardware;
 import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import SmartHome.domain.sensor.sensorImplementation.TemperatureSensor;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
 import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
-import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
@@ -157,6 +155,21 @@ class TemperatureSensorTest {
 
         //Act
         ArrayList<String> result = sensor.getLog();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void getType_ReturnsCorrectType() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        TemperatureSensor sensor = new TemperatureSensor(sensorName, simHardware);
+        String expected = "Temperature";
+
+        //Act
+        String result = sensor.getType();
 
         //Assert
         assertEquals(expected, result);

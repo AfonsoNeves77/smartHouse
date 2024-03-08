@@ -43,9 +43,9 @@ class SimHardware{
     + getValue : String /'Tiago tem que ver isto. Overload de método pode causar problemas'/
 }
 
-Value <|-- InstantPowerConsumptionValue
-Sensor <|-- InstantPowerConsumptionSensor
-ExternalServices <|-- SimHardware
+Value <|.. InstantPowerConsumptionValue
+Sensor <|.. InstantPowerConsumptionSensor
+ExternalServices <|.. SimHardware
 InstantPowerConsumptionSensor .right.> InstantPowerConsumptionValue
 InstantPowerConsumptionSensor .left.> SimHardware
 

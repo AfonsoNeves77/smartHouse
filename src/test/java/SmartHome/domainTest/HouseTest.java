@@ -2,6 +2,7 @@ package SmartHome.domainTest;
 
 import SmartHome.domain.House;
 import SmartHome.domain.SensorCatalogue;
+import SmartHome.domain.actuator.ListOfActuators;
 import SmartHome.domain.device.FactoryDevice;
 import SmartHome.domain.device.Device;
 import SmartHome.domain.device.ImplFactoryDevice;
@@ -12,6 +13,7 @@ import SmartHome.domain.room.FactoryIndoorRoom;
 import SmartHome.domain.room.FactoryRoom;
 import SmartHome.domain.room.ListOfRooms;
 import SmartHome.domain.room.Room;
+import SmartHome.domain.sensor.ListOfSensors;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -26,7 +28,6 @@ import static org.mockito.Mockito.mockConstruction;
 class HouseTest {
 
     //////////////////////////////////////ISOLATION///////////////////////////////////////////////////////////
-
     /**
      * Test to ensure House cannot be instantiated with an empty name
      */
@@ -35,12 +36,19 @@ class HouseTest {
         //Arrange
         String houseName = " ";
         String expected = "Please insert a valid house name.";
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () ->
-                new House(houseName));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
+
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)){
+            //Act
+            Exception exception = assertThrows(InstantiationException.class, () ->
+                    new House(houseName));
+            String result = exception.getMessage();
+            //Assert
+            assertEquals(expected,result);
+
+            // Just as a curiosity, the mocked construction is created even if the house fails to instantiate.
+            List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
+            assertEquals(1,listOfMockedListOfRooms.size());
+        }
     }
 
     /**
@@ -51,12 +59,18 @@ class HouseTest {
         //Arrange
         String houseName = null;
         String expected = "Please insert a valid house name.";
-        //Act
-        Exception exception = assertThrows(InstantiationException.class, () ->
-                new House (houseName));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected,result);
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)){
+            //Act
+            Exception exception = assertThrows(InstantiationException.class, () ->
+                new House(houseName));
+            String result = exception.getMessage();
+            //Assert
+            assertEquals(expected,result);
+
+            // Just as a curiosity, the mocked construction is created even if the house fails to instantiate.
+            List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
+            assertEquals(1,listOfMockedListOfRooms.size());
+        }
     }
 
 
@@ -69,7 +83,6 @@ class HouseTest {
     void configureLocation_Success( ) throws InstantiationException{
         //Arrange
         String houseName = "House";
-        House myHouse = new House(houseName);
         String doorReference = "2";
         String buildingNumber = "1234";
         String streetName = "Rua da Alegria";
@@ -78,15 +91,25 @@ class HouseTest {
         String zipCode = "4570-222";
         double longitude = 0;
         double latitude = 0;
+
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
-        Address address = new Address(doorReference,buildingNumber,streetName,city,country,zipCode);
-        GPS gps = new GPS(latitude, longitude);
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(address);
-        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gps);
-        //Act
-        boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode,latitude, longitude,factoryLocationDouble);
-        //Assert
-        assertTrue(result);
+        Address addressDouble = mock(Address.class);
+        GPS gpsDouble = mock(GPS.class);
+        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
+        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gpsDouble);
+
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
+
+            House myHouse = new House(houseName);
+            List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
+
+            //Act
+            boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode, latitude, longitude, factoryLocationDouble);
+
+            //Assert
+            assertTrue(result);
+            assertEquals(1,listOfMockedListOfRooms.size());
+        }
     }
 
     /**
@@ -95,11 +118,10 @@ class HouseTest {
      * @throws InstantiationException If invalid House name
      */
     @Test
-    void configureLocation_FalseDueToFailAddress() throws InstantiationException {
+    void configureLocation_FalseDueToInvalidGPS() throws InstantiationException {
         //Arrange
         String houseName = "House";
-        House myHouse = new House(houseName);
-        String doorReference = " ";
+        String doorReference = "2";
         String buildingNumber = "1234";
         String streetName = "Rua da Alegria";
         String city = "Porto";
@@ -107,14 +129,25 @@ class HouseTest {
         String zipCode = "4570-222";
         double longitude = 0;
         double latitude = 0;
+
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
-        GPS gpsDouble = mock(GPS.class);
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenThrow(InstantiationException.class);
-        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gpsDouble);
-        //Act
-        boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode,latitude, longitude,factoryLocationDouble);
-        //Assert
-        assertFalse(result);
+        Address addressDouble = mock(Address.class);
+
+        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
+        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(null);
+
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
+
+            House myHouse = new House(houseName);
+            List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
+
+            //Act
+            boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode, latitude, longitude, factoryLocationDouble);
+
+            //Assert
+            assertTrue(result);
+            assertEquals(1,listOfMockedListOfRooms.size());
+        }
     }
 
     /**
@@ -123,26 +156,35 @@ class HouseTest {
      * @throws InstantiationException If invalid House name
      */
     @Test
-    void configureLocation_FalseDueToFailGPS() throws InstantiationException {
+    void configureLocation_FalseDueToInvalidAddress() throws InstantiationException {
         //Arrange
         String houseName = "House";
-        House myHouse = new House(houseName);
-        String doorReference = " ";
+        String doorReference = "2";
         String buildingNumber = "1234";
         String streetName = "Rua da Alegria";
         String city = "Porto";
         String country = "Portugal";
         String zipCode = "4570-222";
         double longitude = 0;
-        double latitude = 200;
+        double latitude = 0;
+
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
-        Address addressDouble = mock(Address.class);
-        when(factoryLocationDouble.createGPS(latitude, longitude)).thenThrow(InstantiationException.class);
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
-        //Act
-        boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode,latitude, longitude,factoryLocationDouble);
-        //Assert
-        assertFalse(result);
+        GPS gpsDouble = mock(GPS.class);
+        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(null);
+        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gpsDouble);
+
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
+
+            House myHouse = new House(houseName);
+            List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
+
+            //Act
+            boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode, latitude, longitude, factoryLocationDouble);
+
+            //Assert
+            assertTrue(result);
+            assertEquals(1,listOfMockedListOfRooms.size());
+        }
     }
 
     /**
@@ -198,12 +240,44 @@ class HouseTest {
     }
 
     /**
+     * Utilizing the same testing strategy above, it returns false due to being unable to add a room.
+     * @throws InstantiationException If house name invalid
+     */
+    @Test
+    void addRoom_UnableToAddReturningFalse_Isolation() throws InstantiationException {
+        //Arrange
+        String roomName = "Kitchen";
+        int floor = 0;
+        double roomWidth = 4.5;
+        double roomLength = 8.5;
+        double roomHeight = 2;
+        FactoryRoom factoryRoomDouble = mock(FactoryRoom.class);
+
+        try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class, (mock, context)
+                -> {
+            when(mock.addRoomToList(roomName,floor,roomWidth,roomLength,roomHeight,factoryRoomDouble)).thenReturn(false);
+        })) {
+
+            House house = new House("House1");
+            List<ListOfRooms> mockedListOfRoomsList = listOfRoomsMockedConstruction.constructed();
+
+            // Act
+            boolean result = house.addRoom(roomName,floor,roomWidth,roomLength,roomHeight,factoryRoomDouble);
+
+            //Assert
+            assertFalse(result);
+            assertEquals(1,mockedListOfRoomsList.size());
+        }
+    }
+
+
+    /**
      * This test ensures that when a House is instantiated without any rooms, its functionalities are empty,
      * and the ListOfRooms object is correctly accessed during its construction.
      * A MockedConstruction of ListOfRooms is made and then its behaviour is set once getRoomList() method is called.
      * Two scenarios are present:
      * 1. Asserts that the ListOfRooms constructor was called exactly once during the construction of the House.
-     * 2. The house functionalities' map should have size 0, verifying that the House does not have functionalities when
+     * 2. The house functionalities' map should have size 0, verifying that the house functionalities are empty when
      * there are no rooms.
      * @throws InstantiationException If house name is invalid.
      */
@@ -233,31 +307,34 @@ class HouseTest {
         }
     }
 
-//    @Test
-//    void getHouseFunctionalities_HouseHasFunctionalities_IsolationTest() throws InstantiationException {
-//        //Arrange
-//        String houseName = "House Test";
-//        List<Room> roomList = new ArrayList<>();
-//        int expected = 0;
-//
-//        try(MockedConstruction<ListOfRooms> listOfRoomsDouble = mockConstruction(ListOfRooms.class,(mock, context)-> {
-//            when(mock.getRoomList()).thenReturn(roomList);
-//        })) {
-//
-//            List<ListOfRooms> roomLists = listOfRoomsDouble.constructed();
-//
-//            House house = new House(houseName);
-//
-//            //Act
-//            int result = house.getHouseFunctionalities().size();
-//
-//            //Assert
-//            // 1.
-//            assertEquals(1,roomLists.size());
-//            // 2.
-//            assertEquals(expected,result);
-//        }
-//    }
+    /**
+     * This test validates that the method is able to return an empty list. It also checks how many doubles were created.
+     * @throws InstantiationException On invalid house parameters
+     */
+    @Test
+    void getListOfRooms_SuccessfullyDeliversEmptyList() throws InstantiationException{
+        //Arrange
+        String houseName = "House Test";
+        List<Room> roomList = new ArrayList<>();
+
+        try(MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class,(mock, context)-> {
+            when(mock.getRoomList()).thenReturn(roomList);
+        })) {
+
+            List<ListOfRooms> listOfRoomsMockedConstructionList = listOfRoomsMockedConstruction.constructed();
+
+            House house = new House(houseName);
+
+            List<Room> expected = new ArrayList<>();
+            //Act
+            List<Room> result = house.getListOfRooms();
+
+            //Assert
+            // 1.
+            assertEquals(expected,result);
+            assertEquals(1,listOfRoomsMockedConstructionList.size());
+        }
+    }
 
     //////////////////////////////////////INTEGRATION///////////////////////////////////////////////////////////
 

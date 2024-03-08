@@ -1,0 +1,48 @@
+@startuml
+title <size: 30> US11 Class Diagram
+
+interface Sensor {
+    + getName() : String
+    + getUnit() : String
+    + getLog() : ArrayList<String>
+}
+
+interface Value<T> {
+    + getValue() : T
+    + getValueAsString() : String
+}
+
+class SimHardware {
+     + getValue() : String
+     + getValue(initialDate : String, finalDate : String) : String
+}
+
+class HumiditySensor {
+    - sensorName : String
+    - TYPE : String
+    - simHardware : SimHardware
+    - unit : String
+    - ArrayList<Value<Integer>> : log
+
+    + getName() : String
+    + getReading() : Value<Integer>
+    + getLog() : ArrayList<String>
+    - addValueToLog(value : Value<Integer>) : void
+    + getUnit() : String
+    + getType() : String
+}
+
+class HumidityValue {
+    - primitiveValue : int
+
+    + getValue() : Integer
+    + getValueAsString() : String
+    - isReadingValid(reading : String) : boolean
+}
+
+Value <|.. HumidityValue
+Sensor <|.. HumiditySensor
+HumiditySensor .right.> HumidityValue
+HumiditySensor .left.> SimHardware
+
+@enduml
