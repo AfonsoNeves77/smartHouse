@@ -228,7 +228,7 @@ public class SunriseSensorTest {
      * returns a log with two records after performing two sunrise time calculations.
      * This test isolates the behavior of the SunriseSensor class by using a mock
      * for the SunTimeCalculator and MockedConstruction for SunTimeValue instances.
-     *
+
      * The test sets up the SunTimeCalculator mock to return a specific ZonedDateTime,
      * simulating a successful sunrise time calculation. It then creates a SunriseSensor
      * instance and performs two sunrise time calculations. The test verifies that calling
