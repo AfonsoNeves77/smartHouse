@@ -41,6 +41,14 @@ public class Device {
         this.listOfActuators = new ListOfActuators();
     }
 
+    /**
+     * This method confirms if the parameters are null or empty
+     * @param deviceName deviceName
+     * @param deviceModel deviceModel
+     * @param deviceLocation deviceLocation
+     * @return a boolean
+     */
+
     private boolean areDeviceParametersValid(String deviceName, String deviceModel, String deviceLocation) {
         if (deviceName == null || deviceName.trim().isEmpty()) {
             return false;
@@ -50,6 +58,15 @@ public class Device {
         }
         return deviceLocation != null && !deviceLocation.trim().isEmpty();
     }
+
+    /**
+     *  This method adds a sensor to a device. If the sensor is created successfully it also updates the deviceFunctionalitiesList.
+     * @param sensorName sensorName
+     * @param sensorType sensorType
+     * @param catalogue SensorCatalogue
+     * @param externalServices ExternalServices
+     * @return a boolean
+     */
 
     public boolean addSensor(String sensorName, String sensorType, SensorCatalogue catalogue, ExternalServices externalServices) {
             if (!this.status) {
@@ -63,6 +80,15 @@ public class Device {
             return false;
     }
 
+    /**
+     * This methods verifies if the actuator is active, if it is, it calls addActuator method onto the encapsulated listOfActuators
+     * @param actuatorName actuatorName
+     * @param actuatorType actuatorTYpe
+     * @param catalogue ActuatorCatalogue
+     * @param simHardwareAct SimHardwareAct
+     * @return a boolean to confirm the operation
+     */
+
     public boolean addActuator(String actuatorName, String actuatorType, ActuatorCatalogue catalogue, SimHardwareAct simHardwareAct){
         if(!this.status){
             return false;
@@ -70,11 +96,21 @@ public class Device {
         return listOfActuators.addActuator(actuatorName,actuatorType,catalogue, simHardwareAct);
     }
 
+    /**
+     * This method verifies that the specified sensor type exists. If it does not, it adds it to the list of functionalities.
+     * @param sensorType sensorType
+     */
+
     private void updateDeviceFunctionalities(String sensorType){
         if(!deviceFunctionalities.contains(sensorType)){
             deviceFunctionalities.add(sensorType);
         }
     }
+
+    /**
+     * This method changes the deviceStatus to false
+     * @return the resuling status of a device
+     */
 
     public boolean deactivateDevice(){
         this.status = false;
