@@ -40,9 +40,12 @@ class SolarIrradianceValue {
     + getValueAsString() : String
 }
 
+interface ExternalServices{}
+
 Value <|.. SolarIrradianceValue
 Sensor <|.. SolarIrradianceSensor
 SolarIrradianceSensor .right.> SolarIrradianceValue
 SolarIrradianceSensor .left.> SimHardware
+ExternalServices <|.. SimHardware
 
 @enduml
