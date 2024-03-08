@@ -50,6 +50,15 @@ deactivate CD
 [o<-- C : dtoDeviceList
 deactivate C
 
+[o-> C : getListOfActuatorTypes()
+activate C
+C -> AC : getListOfInstantiableActuators()
+activate AC
+C <--AC : listOfInstantiableActuators
+deactivate AC
+[o<-- C : listOfInstantiableActuators
+deactivate C
+
 [o->C : addActuatorToDevice(actuatorName,actuatorType, deviceName, simHardware)
 activate C
 C -> CD : getDeviceByName(deviceName,room)
