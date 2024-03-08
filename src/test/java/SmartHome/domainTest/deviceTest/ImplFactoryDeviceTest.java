@@ -44,7 +44,7 @@ public class ImplFactoryDeviceTest {
         String deviceName = " ";
         String deviceModel = "XPTO";
         String deviceLocation = "Sala1";
-        String expectedMessage = "Invalid parameter.";
+        String expectedMessage = "Invalid parameter";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () ->
             factory.createDevice(deviceName,deviceModel,deviceLocation));
@@ -67,7 +67,7 @@ public class ImplFactoryDeviceTest {
         String deviceName = null;
         String deviceModel = "XPTO";
         String deviceLocation = "Sala1";
-        String expectedMessage = "Invalid parameter.";
+        String expectedMessage = "Invalid parameter";
         //Act
         Exception exception = assertThrows(InstantiationException.class, () ->
             factory.createDevice(deviceName,deviceModel,deviceLocation));
