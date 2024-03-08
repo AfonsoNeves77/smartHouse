@@ -31,7 +31,7 @@ public class Device {
 
     public Device(String deviceName, String deviceModel, String deviceLocation) throws InstantiationException {
         if (!areDeviceParametersValid(deviceName,deviceModel,deviceLocation)) {
-            throw new InstantiationException("Invalid parameter.");
+            throw new InstantiationException("Invalid parameter");
         }
         this.deviceName = deviceName;
         this.deviceModel = deviceModel;

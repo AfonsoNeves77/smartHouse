@@ -15,11 +15,18 @@ class DeviceDTOMapperTest {
 
     @Test
     void domainToDTO() throws InstantiationException {
+
+        //Arrange
         String deviceName = "device1";
         String deviceModel = "model1";
         String deviceLocation = "location1";
         Device device = new Device(deviceName, deviceModel, deviceLocation);
+
+        //Act
         DeviceDTO result = DeviceDTOMapper.domainToDTO(device);
+
+        //Assert
+
         assertEquals(deviceName, result.getName());
         assertEquals(deviceModel, result.getModel());
         assertEquals(deviceLocation, result.getLocation());

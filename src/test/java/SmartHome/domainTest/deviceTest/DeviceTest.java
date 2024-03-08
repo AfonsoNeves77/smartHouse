@@ -2,16 +2,12 @@ package SmartHome.domainTest.deviceTest;
 
 import SmartHome.domain.ActuatorCatalogue;
 import SmartHome.domain.SensorCatalogue;
-import SmartHome.domain.actuator.Actuator;
-import SmartHome.domain.actuator.BlindRollerActuator;
 import SmartHome.domain.actuator.ListOfActuators;
 import SmartHome.domain.actuator.SimHardwareAct;
 import SmartHome.domain.device.Device;
-import SmartHome.domain.device.ListOfDevices;
 import SmartHome.domain.sensor.ListOfSensors;
 import SmartHome.domain.sensor.externalServices.ExternalServices;
 import SmartHome.domain.sensor.externalServices.SimHardware;
-import SmartHome.domain.sensor.sensorImplementation.Sensor;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
 import org.junit.jupiter.api.Test;
@@ -25,49 +21,69 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DeviceTest {
+
     /**
-     * Test 01
-     * Unit test to deactivte a device.
-     * Arrange a device with a name, model and location.
-     * Act to deactivate the device.
-     * Assert that the device is deactivated.
+     * This test case verifies the behavior when attempting to instantiate a Device with a null name.
+
+     * This test checks for the following:
+     * - An InstantiationException is expected to be thrown.
+     * - The mock constructions of ListOfActuators and ListOfSensors are isolated.
+     * - The expected error message is "Invalid parameter."
+     * - The sizes of the constructed lists (ListOfActuators and ListOfSensors) are both expected to be 0.
+
+     * @throws InstantiationException if the instantiation of Device with a null name fails.
      */
+
     @Test
-    void deactivateDevice_returnsFalseEvenIfDeviceIsAlreadyFalseAsStatus() throws InstantiationException {
+    void instantiateDeviceWithNullName_ShouldThrowInstantiationException_IsolationTest() {
+
         //Arrange
-        String deviceName = "Heater";
-        String deviceModel = "XPTO3000";
-        String deviceLocation = "Room";
-        Device newDevice = new Device(deviceName, deviceModel, deviceLocation);
+        String deviceName = null;
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        int expectedSize = 0;
+        String result = "Invalid parameter";
+
         //Act
-        boolean result = newDevice.deactivateDevice();
-        //Assert
-        assertFalse(result);
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Exception exception = assertThrows(InstantiationException.class, () -> new Device(deviceName,deviceModel,deviceLocation));
+            String expected = exception.getMessage();
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+
+            //Assert
+            assertEquals(expected,result);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+
     }
 
     /**
-     * Test 02
-     * Unit test to create a device with an invalid model.
-     * Arrange a device with a name, model and location.
-     * Act to create a device with an invalid model.
-     * Assert that an exception is thrown.
+     * This test case verifies the successful addition of an actuator to a device.
+
+     * This test checks for the following:
+     * - An actuator with the specified name and type is successfully added to the device.
+     * - Mock constructions of ListOfActuators and ListOfSensors are isolated.
+     * - The expected result from addActuator is true.
+     * - The sizes of the constructed lists (ListOfActuators and ListOfSensors) are both expected to be 1.
+
+     * Throws InstantiationException if the instantiation of the Device fails.
      */
-    @Test
-    void createDevice_InvalidDeviceModel() {
-        //Arrange
-        String deviceName = "Heater";
-        String deviceModel = " ";
-        String deviceLocation = "Room";
-        String expected = "Invalid parameter.";
-        //Act
-        Exception result = assertThrows(InstantiationException.class, () ->
-               new Device(deviceName, deviceModel, deviceLocation));
-        //Assert
-        assertEquals(expected,result.getMessage());
-    }
+
 
     @Test
-    void addActuatorToDeviceSuccessful_Isolation() throws InstantiationException {
+    void addActuatorToDeviceSuccessful_Isolation() throws InstantiationException{
+
+        //Arrange
         String deviceName = "device1";
         String deviceModel = "XPTO";
         String deviceLocation = "bedroom";
@@ -75,21 +91,38 @@ class DeviceTest {
         String type = "thisWillFailButItsNotRelevant";
         SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
         ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+        int expected = 1;
 
-        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
-            Device device = new Device(deviceName, deviceModel, deviceLocation);
-            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
-            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
-            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(true);
+        //Act
 
-            //Act
-            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class, (mock, context)
+                -> {
+            when(mock.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble)).thenReturn(true);
+        });
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            boolean result = device.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble);
+
             //Assert
             assertTrue(result);
+            assertEquals(expected,sizeOfActuatorsList);
+            assertEquals(expected,sizeOfSensorsList);
         }
+
     }
+
     @Test
-    void addActuatorToDevice_False_Isolation() throws InstantiationException {
+    void addActuatorToDevice_AdditionToListOfActuatorsFailed_Isolation() throws InstantiationException{
+
+        //Arrange
         String deviceName = "device1";
         String deviceModel = "XPTO";
         String deviceLocation = "bedroom";
@@ -97,18 +130,68 @@ class DeviceTest {
         String type = "thisWillFailButItsNotRelevant";
         SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
         ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+        int expected = 1;
 
-        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
-            Device device = new Device(deviceName, deviceModel, deviceLocation);
-            List<ListOfActuators> listOfActuatorsMockedList = listOfActuatorsMockedConstruction.constructed();
-            ListOfActuators listOfActuatorsDouble = listOfActuatorsMockedList.get(0);
-            when(listOfActuatorsDouble.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble)).thenReturn(false);
+        //Act
 
-            //Act
-            boolean result = device.addActuator(actuatorName, type, catalogueDouble, simHardwareActDouble);
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class, (mock, context)
+                -> {
+            when(mock.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble)).thenReturn(false);
+        });
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            boolean result = device.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble);
+
             //Assert
             assertFalse(result);
+            assertEquals(expected,sizeOfActuatorsList);
+            assertEquals(expected,sizeOfSensorsList);
         }
+    }
+
+    @Test
+    void addActuatorToDevice_ShouldReturnFalseForInactiveDevice_Isolation() throws InstantiationException{
+
+        //Arrange
+        String deviceName = "device1";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        String actuatorName = "actuator1";
+        String type = "thisWillFailButItsNotRelevant";
+        SimHardwareAct simHardwareActDouble = mock(SimHardwareAct.class);
+        ActuatorCatalogue catalogueDouble = mock(ActuatorCatalogue.class);
+        int expected = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+            device.deactivateDevice();
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            boolean result = device.addActuator(actuatorName,type,catalogueDouble,simHardwareActDouble);
+
+            //Assert
+            assertFalse(result);
+            assertEquals(expected,sizeOfActuatorsList);
+            assertEquals(expected,sizeOfSensorsList);
+        }
+
     }
 
 
@@ -152,7 +235,47 @@ class DeviceTest {
     }
 
     @Test
-    void addSensorToDevice_InvalidAddition_Isolation()  throws InstantiationException{
+    void addSensorToDevice_ShouldReturnFalseForInactiveDevice_Isolation()  throws InstantiationException{
+
+        //Arrange
+        String deviceName = "DeviceName";
+        String deviceModel = "Device model";
+        String deviceLocation = "Bathroom";
+        String sensorName = "device1";
+        String sensorType = "Temperature";
+
+        SensorCatalogue sensorCatalogue = mock(SensorCatalogue.class);
+        ExternalServices externalServices = mock(ExternalServices.class);
+        int expected = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class, (mock, context)
+                -> {
+            when(mock.addSensor(sensorName,sensorType,sensorCatalogue,externalServices)).thenReturn(false);
+        });
+             MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+            device.deactivateDevice();
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            boolean result = device.addSensor(sensorName,sensorType,sensorCatalogue,externalServices);
+
+            //Assert
+            assertFalse(result);
+            assertEquals(expected,sizeOfActuatorsList);
+            assertEquals(expected,sizeOfSensorsList);
+        }
+
+    }
+
+    @Test
+    void addSensorToDevice_AdditionToListOfSensorsFailed_Isolation()  throws InstantiationException{
 
         //Arrange
         String deviceName = "DeviceName";
@@ -190,11 +313,346 @@ class DeviceTest {
 
     }
 
+    /**
+     * This test case verifies the behavior of deactivating a device.
+
+     * This test checks for the following:
+     * - A device with the specified name, model, and location is instantiated.
+     * - Mock constructions of ListOfActuators and ListOfSensors are isolated.
+     * - Attempting to deactivate the device returns false.
+     * - The sizes of the constructed lists (ListOfActuators and ListOfSensors) are both expected to be 1.
+
+     * Throws InstantiationException if the instantiation of the device fails.
+     */
+
+    @Test
+    void deactivateDevice_IsolationTest() throws InstantiationException {
+
+        //Arrange
+        String deviceName = "DeviceOne";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        int expectedSize = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            boolean result = device.deactivateDevice();
+
+
+            //Assert
+            assertFalse(result);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceName_IsolationTest() throws InstantiationException {
+
+        //Arrange
+        String deviceName = "DeviceOne";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        int expectedSize = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            String result = device.getDeviceName();
+
+
+            //Assert
+            assertEquals(result,deviceName);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceModel_IsolationTest() throws InstantiationException {
+
+        //Arrange
+        String deviceName = "DeviceOne";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        int expectedSize = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            String result = device.getDeviceName();
+
+
+            //Assert
+            assertEquals(result,deviceName);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceStatus_IsolationTest() throws InstantiationException {
+
+        //Arrange
+        String deviceName = "DeviceOne";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+        int expectedSize = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            String result = device.getDeviceName();
+
+
+            //Assert
+            assertEquals(result,deviceName);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceFunctionalities_DeviceWithNoFunctionality_IsolationTest() throws InstantiationException {
+
+        //Arrange
+        String deviceName = "DeviceOne";
+        String deviceModel = "XPTO";
+        String deviceLocation = "bedroom";
+
+        int expected = 0;
+        int expectedSize = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class);
+             MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            int result = device.getDeviceFunctionalities().size();
+
+
+            //Assert
+            assertEquals(result,expected);
+            assertEquals(expectedSize,sizeOfActuatorsList);
+            assertEquals(expectedSize,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceFunctionalities_DeviceWithOneFunctionality_Isolation() throws InstantiationException{
+
+        //Arrange
+        String deviceName = "DeviceName";
+        String deviceModel = "Device model";
+        String deviceLocation = "Bathroom";
+        String sensorName = "device1";
+        String sensorType = "Temperature";
+
+        SensorCatalogue sensorCatalogue = mock(SensorCatalogue.class);
+        ExternalServices externalServices = mock(ExternalServices.class);
+        int expected = 1;
+
+        //Act
+
+        try (MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class, (mock, context)
+                -> {
+            when(mock.addSensor(sensorName,sensorType,sensorCatalogue,externalServices)).thenReturn(true);
+        });
+             MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+
+            Device device = new Device(deviceName,deviceModel,deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            device.addSensor(sensorName,sensorType,sensorCatalogue,externalServices);
+            int result = device.getDeviceFunctionalities().size();
+
+                    //Assert
+            assertEquals(expected,result);
+            assertEquals(expected,sizeOfActuatorsList);
+            assertEquals(expected,sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceFunctionalities_DeviceTwoFunctionalities_Isolation() throws InstantiationException {
+        // Arrange
+        String deviceName = "DeviceName";
+        String deviceModel = "Device model";
+        String deviceLocation = "Bathroom";
+        String sensorName1 = "device1";
+        String sensorType1 = "Temperature";
+        String sensorName2 = "device2";
+        String sensorType2 = "Pressure";
+
+        SensorCatalogue sensorCatalogue = mock(SensorCatalogue.class);
+        ExternalServices externalServices = mock(ExternalServices.class);
+        int expected = 2;
+        int expectedSize = 1;
+
+        // Act
+        try (MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class,
+                (mock, context) -> {
+                    when(mock.addSensor(sensorName1, sensorType1, sensorCatalogue, externalServices)).thenReturn(true);
+                    when(mock.addSensor(sensorName2, sensorType2, sensorCatalogue, externalServices)).thenReturn(true);
+                });
+             MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+
+            device.addSensor(sensorName1, sensorType1, sensorCatalogue, externalServices);
+            device.addSensor(sensorName2, sensorType2, sensorCatalogue, externalServices);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            int result = device.getDeviceFunctionalities().size();
+
+            // Assert
+            assertEquals(expected, result);
+            assertEquals(expectedSize, sizeOfActuatorsList);
+            assertEquals(expectedSize, sizeOfSensorsList);
+        }
+    }
+
+    @Test
+    void getDeviceFunctionalities_DeviceWithTwoSensorAdditionButOneFunctionality_Isolation() throws InstantiationException {
+        // Arrange
+        String deviceName = "DeviceName";
+        String deviceModel = "Device model";
+        String deviceLocation = "Bathroom";
+        String sensorName1 = "device1";
+        String sensorType1 = "Temperature";
+        String sensorName2 = "device2";
+
+        SensorCatalogue sensorCatalogue = mock(SensorCatalogue.class);
+        ExternalServices externalServices = mock(ExternalServices.class);
+        int expected = 1;
+
+        // Act
+        try (MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class,
+                (mock, context) -> {
+                    when(mock.addSensor(sensorName1, sensorType1, sensorCatalogue, externalServices)).thenReturn(true);
+                    when(mock.addSensor(sensorName2, sensorType1, sensorCatalogue, externalServices)).thenReturn(true);
+                });
+             MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+
+            device.addSensor(sensorName1, sensorType1, sensorCatalogue, externalServices);
+            device.addSensor(sensorName2, sensorType1, sensorCatalogue, externalServices);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            int result = device.getDeviceFunctionalities().size();
+
+            // Assert
+            assertEquals(expected, result);
+            assertEquals(expected, sizeOfActuatorsList);
+            assertEquals(expected, sizeOfSensorsList);
+        }
+    }
+
+
+    @Test
+    void getLog_IsolationTest() throws InstantiationException {
+        // Arrange
+        String deviceName = "DeviceName";
+        String deviceModel = "Device model";
+        String deviceLocation = "Bathroom";
+        String sensorName1 = "device1";
+
+        int expected = 2;
+        int expectedSize = 1;
+
+        ArrayList<String> simulatedLog = new ArrayList<>();
+        simulatedLog.add("LogOne");simulatedLog.add("LogTwo");
+
+        // Act
+        try (MockedConstruction<ListOfSensors> listOfSensorsMockedConstruction = mockConstruction(ListOfSensors.class,
+                (mock, context) -> {
+                    when(mock.getLog(sensorName1)).thenReturn(simulatedLog);
+                });
+             MockedConstruction<ListOfActuators> listOfActuatorsMockedConstruction = mockConstruction(ListOfActuators.class)) {
+
+            Device device = new Device(deviceName, deviceModel, deviceLocation);
+
+            List<ListOfSensors> listOfMockedListOfSensors = listOfSensorsMockedConstruction.constructed();
+            List<ListOfActuators> listOfMockedListOfActuators = listOfActuatorsMockedConstruction.constructed();
+            int sizeOfActuatorsList = listOfMockedListOfActuators.size();
+            int sizeOfSensorsList = listOfMockedListOfSensors.size();
+
+            int result = device.getLog(sensorName1).size();
+
+            // Assert
+            assertEquals(expected, result);
+            assertEquals(expectedSize, sizeOfActuatorsList);
+            assertEquals(expectedSize, sizeOfSensorsList);
+        }
+    }
+
 
     //..........................................................INTEGRATION TESTS..................................................................................
 
     @Test
-    void addTemperatureSensorToDeviceSuccessful() throws InstantiationException {
+    void addTemperatureSensorToDeviceSuccessful_IntegrationTest() throws InstantiationException {
         //Arrange
         SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
@@ -216,7 +674,7 @@ class DeviceTest {
     }
 
     @Test
-    void addHumiditySensorToDeviceSuccessful() throws InstantiationException {
+    void addHumiditySensorToDeviceSuccessful_IntegrationTest() throws InstantiationException {
         //Arrange
         SimHardware simHardware = new SimHardware();
         String deviceName = "Heater";
@@ -457,5 +915,45 @@ class DeviceTest {
         //Assert
         assertEquals(expected, result);
     }
+
+    /**
+     * Test to deactivte a device.
+     * Arrange a device with a name, model and location.
+     * Act to deactivate the device.
+     * Assert that the device is deactivated.
+     */
+    @Test
+    void deactivateDevice_returnsFalseEvenIfDeviceIsAlreadyFalseAsStatus() throws InstantiationException {
+        //Arrange
+        String deviceName = "Heater";
+        String deviceModel = "XPTO3000";
+        String deviceLocation = "Room";
+        Device newDevice = new Device(deviceName, deviceModel, deviceLocation);
+        //Act
+        boolean result = newDevice.deactivateDevice();
+        //Assert
+        assertFalse(result);
+    }
+
+    /**
+     * Test to create a device with an invalid model.
+     * Arrange a device with a name, model and location.
+     * Act to create a device with an invalid model.
+     * Assert that an exception is thrown.
+     */
+    @Test
+    void createDevice_InvalidDeviceModel() {
+        //Arrange
+        String deviceName = "Heater";
+        String deviceModel = " ";
+        String deviceLocation = "Room";
+        String expected = "Invalid parameter";
+        //Act
+        Exception result = assertThrows(InstantiationException.class, () ->
+                new Device(deviceName, deviceModel, deviceLocation));
+        //Assert
+        assertEquals(expected,result.getMessage());
+    }
+
 
 }
