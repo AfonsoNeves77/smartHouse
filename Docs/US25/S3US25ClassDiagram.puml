@@ -23,15 +23,15 @@ class AveragePowerConsumptionSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
-    - validSensorName(sensorName : String) : boolean
     + getReading(initialDate : String, finalDate) : Value<Integer>
-    - getInitialDateTime(initialDate : String) : LocalDateTime
-    - getFinalDateTime(finalDate : String) : LocalDateTime
-    - validateDates(initialDate : String, finalDate : String) : boolean
     + getName() : String
     + getUnit() : String
     + getLog() : ArrayList<String>
     + getType() : String
+    - validSensorName(sensorName : String) : boolean
+    - getInitialDateTime(initialDate : String) : LocalDateTime
+    - getFinalDateTime(finalDate : String) : LocalDateTime
+    - validateDates(initialDate : String, finalDate : String) : boolean
     - addValueToLog(value : Value<Integer>) : void
 }
 

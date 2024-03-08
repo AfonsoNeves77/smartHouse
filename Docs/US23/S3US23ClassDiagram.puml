@@ -27,9 +27,9 @@ class SolarIrradianceSensor {
     + getName() : String
     + getUnit() : String
     + getLog() : ArrayList<String>
-    - addValueToLog(value : Value<Integer>) : void
     + getReading() : Value<Integer>
     + getType() : String
+    - addValueToLog(value : Value<Integer>) : void
 }
 
 class SolarIrradianceValue {

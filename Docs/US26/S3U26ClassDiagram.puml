@@ -26,15 +26,15 @@ class EnergyConsumptionSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
-    -validateSensorName(sensorName : String) : boolean
     +getReading() : Value<Integer>
-    -getInitialDateTime(initialDate : String) : LocalDateTime
-    -getFinalDateTime(finalDate : String) : LocalDateTime
-    -validateDate(initialDate : LocalDateTime, finalDateTime : LocalDateTime) : boolean
     +getName() : String
     +getUnit() : String
     +getLog() : ArrayList<String>
     +getType() : String
+    -validateSensorName(sensorName : String) : boolean
+    -getInitialDateTime(initialDate : String) : LocalDateTime
+    -getFinalDateTime(finalDate : String) : LocalDateTime
+    -validateDate(initialDate : LocalDateTime, finalDateTime : LocalDateTime) : boolean
     -addLog(value : Value<Integer>) : void
 
 }
