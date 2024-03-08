@@ -7,7 +7,7 @@ interface Actuator {
 }
 
 class SimHardwareAct {
-     + executeDecimalCommandSim(newValue : double) : boolean
+     + executeIntegerCommandSim(newValue : double) : boolean
 }
 
 class IntSetActuator {
