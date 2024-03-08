@@ -20,10 +20,11 @@ class RoomDTO {
 }
 
 class House {
-    - houseName: String
+    - houseName : String
     - gps : GPS
     - address : Address
     - listOfRooms : ListOfRooms
+    - houseFunctionalities : Map <String, ArrayList<Device>>
 
     + addRoom (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double, factoryRoom : FactoryRoom) : boolean
 }
@@ -32,6 +33,8 @@ class Room {
     - roomName: String
     - houseFloor : int
     - dimensions : RoomDimensions
+    - deviceList : ListOfDevices
+    - roomFunctionalities : Map <String, ArrayList<Device>>
 
     - createRoomDimensions(roomWidth : double, roomLength : double, \nroomHeight : double) : RoomDimensions
 }
@@ -40,6 +43,8 @@ class RoomDimensions{
      - roomWidth : double
      - roomLength : double
      - roomHeight : double
+
+     - areDimensionsValid(roomWidth : double, roomLength : double, \nroomHeight : double) : boolean
 }
 
 class ListOfRooms{

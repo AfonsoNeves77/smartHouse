@@ -7,7 +7,7 @@ skinparam linetype ortho
 
 class ConfigureLocationCTRL{
     - house : House
-    - factoryLocation : FactoryLocation
+
     + configureLocation (doorReference : String, buildingNumber : String, streetName : String, \n city : String, country : String, zipCode : String, latitude : double, longitude : double, \n factoryLocation : FactoryLocation) : boolean
 }
 
@@ -35,7 +35,7 @@ class ImplFactoryLocation{
     - zipCode : String
     - latitude : double
     - longitude : double
-    + createAddress(doorReference : String,\n buildingNumber : String,\n streetName : String, \ncity : String, country : String, zipCode : String) : Address
+    + createAddress(doorReference : String,\n buildingNumber : String, streetName : String, \ncity : String, country : String, zipCode : String) : Address
     + createGPS(latitude : double, longitude : double) : GPS
 }
 

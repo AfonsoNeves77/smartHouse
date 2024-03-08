@@ -1,6 +1,6 @@
 @startuml
 title <size: 30> US26 Class Diagram
-
+skinparam linetype ortho
 
 interface Sensor {
     + getName() : String
@@ -50,7 +50,7 @@ class EnergyConsumptionValue {
 Value <|.. EnergyConsumptionValue
 Sensor <|.. EnergyConsumptionSensor
 ExternalServices <|.. SimHardware
-EnergyConsumptionSensor <|.. SimHardware
+EnergyConsumptionSensor <|.left. SimHardware
 EnergyConsumptionSensor .right.> EnergyConsumptionValue
 
 
