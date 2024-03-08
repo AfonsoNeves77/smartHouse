@@ -67,7 +67,7 @@ class WindSensorTest {
     }
 
     /**
-     * This test ensures the getName method returns the unit successfully.
+     * This test ensures the getUnit method returns the unit successfully.
      */
     @Test
     void getUnit_SuccessfullyReturns() throws InstantiationException {
@@ -78,6 +78,22 @@ class WindSensorTest {
         String expected = "Km/h";
         //Act
         String result = sensor.getUnit();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * This test ensures the getName method returns the unit successfully.
+     */
+    @Test
+    void getType_SuccessfullyReturns() throws InstantiationException {
+        //Arrange
+        SimHardware simHardware = mock(SimHardware.class);
+        String sensorName = "Sensor1";
+        WindSensor sensor = new WindSensor(sensorName, simHardware);
+        String expected = "WindSensor";
+        //Act
+        String result = sensor.getType();
         //Assert
         assertEquals(expected,result);
     }
