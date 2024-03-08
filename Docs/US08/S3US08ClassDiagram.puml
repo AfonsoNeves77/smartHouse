@@ -91,7 +91,7 @@ CommonListOfRooms -.> House
 House "1" *-- "1" ListOfRooms
 CommonListOfRooms -left..> RoomDTOMapper
 RoomDTOMapper ..> RoomDTO
-CommonListOfDevices "1" o-- "*" Room
+CommonListOfDevices  ..>  Room
 Room "1" *-- "1" ListOfDevices
 ListOfDevices "1" *-- "*" Device
 DeactivateDeviceCTRL ..> CommonListOfDevices
