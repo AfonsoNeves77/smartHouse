@@ -203,7 +203,7 @@ class HouseTest {
      * A MockedConstruction of ListOfRooms is made and then its behaviour is set once getRoomList() method is called.
      * Two scenarios are present:
      * 1. Asserts that the ListOfRooms constructor was called exactly once during the construction of the House.
-     * 2. The house functionalities' map should have size 0, verifying that the house functionalities are empty when
+     * 2. The house functionalities' map should have size 0, verifying that the House does not have functionalities when
      * there are no rooms.
      * @throws InstantiationException If house name is invalid.
      */
@@ -232,6 +232,32 @@ class HouseTest {
             assertEquals(expected,result);
         }
     }
+
+//    @Test
+//    void getHouseFunctionalities_HouseHasFunctionalities_IsolationTest() throws InstantiationException {
+//        //Arrange
+//        String houseName = "House Test";
+//        List<Room> roomList = new ArrayList<>();
+//        int expected = 0;
+//
+//        try(MockedConstruction<ListOfRooms> listOfRoomsDouble = mockConstruction(ListOfRooms.class,(mock, context)-> {
+//            when(mock.getRoomList()).thenReturn(roomList);
+//        })) {
+//
+//            List<ListOfRooms> roomLists = listOfRoomsDouble.constructed();
+//
+//            House house = new House(houseName);
+//
+//            //Act
+//            int result = house.getHouseFunctionalities().size();
+//
+//            //Assert
+//            // 1.
+//            assertEquals(1,roomLists.size());
+//            // 2.
+//            assertEquals(expected,result);
+//        }
+//    }
 
     //////////////////////////////////////INTEGRATION///////////////////////////////////////////////////////////
 
