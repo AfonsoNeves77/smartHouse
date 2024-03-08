@@ -23,6 +23,7 @@ class AveragePowerConsumptionSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
+    +AveragePowerConsumptionSensor(sensorName : String,externalServices : ExternalServices)
     + getReading(initialDate : String, finalDate) : Value<Integer>
     + getName() : String
     + getUnit() : String
@@ -36,7 +37,7 @@ class AveragePowerConsumptionSensor{
 }
 
 class AveragePowerConsumptionValue {
-    + AveragePowerConsumptionValue((reading : String)
+    + AveragePowerConsumptionValue(reading : String)
     - validateReading(reading : String) : boolean
     + getValue() : Integer
     + getValueAsString() : String

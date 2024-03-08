@@ -26,6 +26,7 @@ class EnergyConsumptionSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
+    +EnergyConsumptionSensor(sensorName : String,externalServices : ExternalServices)
     +getReading() : Value<Integer>
     +getName() : String
     +getUnit() : String
@@ -42,7 +43,7 @@ class EnergyConsumptionSensor{
 class EnergyConsumptionValue {
     - primitiveValue : Integer
 
-    + EnergyConsumptionValue((reading : String)
+    + EnergyConsumptionValue(reading : String)
     - validateReading(reading : String) : boolean
     + getValue() : Integer
     + getValueAsString() : String

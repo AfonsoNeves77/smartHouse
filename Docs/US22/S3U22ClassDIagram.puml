@@ -26,6 +26,7 @@ class DewPointSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Double>>
 
+    + DewPointSensor(sensorName : String,externalServices : ExternalServices)
     + getReading() : Value<Double>
     + getName() : String
     + getUnit() : String

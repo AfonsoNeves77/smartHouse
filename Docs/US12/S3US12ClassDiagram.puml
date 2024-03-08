@@ -27,10 +27,10 @@ class ListOfActuators {
 class ActuatorCatalogue {
     - listOfInstantiableActuators : List<String>
 
-    - areConstructorParametersValid(configuration : Configuration) : boolean
-    - areConstructorParametersValid (filePath : String) : boolean
     + getListOfInstantiableActuators() : List<String>
     + createActuator(actuatorName : String, actuatorType : String, simHardwareAct : SimHardwareAct) : Actuator
+    - areConstructorParametersValid(configuration : Configuration) : boolean
+    - areConstructorParametersValid (filePath : String) : boolean
 
 }
 
@@ -44,8 +44,8 @@ class CommonListOfRooms {
     - house : House
     - roomDTOAndRoomMap : LinkedHashMap<RoomDTO, Room>
     + getListOfRooms() : List<RoomDTO>
-    - truncateList(roomDTOAndRoomMap : Map<RoomDTO, Room>) : List<RoomDTO>
     + getRoomByName(roomName : String) : Room
+    - truncateList(roomDTOAndRoomMap : Map<RoomDTO, Room>) : List<RoomDTO>
     - refreshMap() : void
 }
 
@@ -53,9 +53,9 @@ class CommonListOfDevices {
     - house : House
     - deviceDTOAndDeviceMap : LinkedHashMap<DeviceDTO, Device>
     + getListOfDevices(room : Room) : List<DeviceDTO>
+    + getDeviceByName(room : Room, deviceName : String) : Device
     - refreshMap() : void
     - truncateList(deviceDTOAndDeviceMap : Map<DeviceDTO, Device>) : List<DeviceDTO>
-    + getDeviceByName(room : Room, deviceName : String) : Device
 }
 
 class RoomDTOMapper {
@@ -79,8 +79,8 @@ class Device {
     - listOfSensors : ListOfSensors
     - listOfActuators : ListOfActuators
     - deviceFunctionalities : List<String>
-    - areDeviceParametersValid(deviceName : String, deviceModel : String, deviceLocation : String) : boolean
     + addActuator(actuatorName : String, actuatorType : String, catalogue : ActuatorCatalogue , simHardwareAct : SimHardwareAct) : boolean
+    - areDeviceParametersValid(deviceName : String, deviceModel : String, deviceLocation : String) : boolean
 
 }
 

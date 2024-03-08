@@ -22,6 +22,7 @@ class InstantPowerConsumptionSensor{
     - TYPE : String
     - log : ArrayList<Value<Integer>>
 
+    +InstantPowerConsumptionSensor(sensorName : String,externalServices : ExternalServices)
     + getName() : String
     + getUNIT() : String
     + getTYPE() : String

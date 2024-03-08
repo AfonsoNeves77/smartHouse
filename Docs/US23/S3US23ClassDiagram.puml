@@ -24,6 +24,7 @@ class SolarIrradianceSensor {
     - UNIT : String
     - List<Value<Integer>> : log
 
+    +SolarIrradianceSensor(sensorName : String)
     + getName() : String
     + getUnit() : String
     + getLog() : ArrayList<String>
