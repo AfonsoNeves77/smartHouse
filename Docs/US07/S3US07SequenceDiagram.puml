@@ -52,25 +52,25 @@ deactivate C
 
 [o->C : addSensorToDevice(sensorName,sensorType, deviceName, externalServices)
 activate C
-C -> C : refreshMap(room)
-activate C
-deactivate C
+C -> CD : getDeviceByName(deviceName,room)
+activate CD
+CD -> CD : refreshMap(room)
+activate CD
+deactivate CD
+CD --> C : device
+deactivate CD
+
 C -> D : addSensor(sensorName, sensorType, catalogue,externalServices)
 activate D
 D -> LS : addSensor(sensorName,sensorType, catalogue, externalServices)
 activate LS
-LS -> LS : isSensorInList(sensorName)
-activate LS
-deactivate LS
-LS -> LS : findSensor(sensorName)
-activate LS
-deactivate LS
+
 LS -> SC : createSensor(sensorName, sensorType, externalServices)
 activate SC
-SC -> S** : <create Sensor>
-SC --> LS : newSensor
+SC -> S** : <create>
+SC --> LS : sensor
 deactivate SC
-LS -> LS : add(newSensor)
+LS -> LS : add(sensor)
 activate LS
 deactivate LS
 LS --> D : return true

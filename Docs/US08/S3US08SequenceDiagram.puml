@@ -56,10 +56,11 @@ activate CD
 CD -> CD : refreshMap(room)
 activate CD
 deactivate CD
-CD --> C : device
+CD --> C :
+deactivate CD
 C -> D : deactivateDevice()
 activate D
-D -> C : false
+D --> C : false
 deactivate D
 [o<-- C : false
 deactivate C

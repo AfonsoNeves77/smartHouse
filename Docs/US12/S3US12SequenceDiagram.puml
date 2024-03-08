@@ -52,25 +52,25 @@ deactivate C
 
 [o->C : addActuatorToDevice(actuatorName,actuatorType, deviceName, simHardware)
 activate C
-C -> C : refreshMap(room)
-activate C
-deactivate C
+C -> CD : getDeviceByName(deviceName,room)
+activate CD
+CD -> CD : refreshMap(room)
+activate CD
+deactivate CD
+CD --> C : device
+deactivate CD
+
 C -> D : addActuator(actuatorName, actuatorType, catalogue,simHardwareAct)
 activate D
 D -> LA : addActuator(actuatorName,actuatorType, catalogue, simHardwareAct)
 activate LA
-LA -> LA : isActuatorInList(actuatorName)
-activate LA
-deactivate LA
-LA -> LA : findActuator(actuatorName)
-activate LA
-deactivate LA
+
 LA -> AC : createActuator(actuatorName, actuatorType, simHardwareAct)
 activate AC
-AC -> A** : <create Actuator>
-AC --> LA : newActuator
+AC -> A** : <create>
+AC --> LA : actuator
 deactivate AC
-LA -> LA : add(newActuator)
+LA -> LA : add(actuator)
 activate LA
 deactivate LA
 LA --> D : return true
