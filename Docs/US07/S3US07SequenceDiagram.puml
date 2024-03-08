@@ -7,10 +7,10 @@ autonumber
 participant ":AddSensorToDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
 participant ":CommonListOfDevices" as CD
-participant "device:Device" as D
-participant ":listOfSensors" as LS
-participant "sensorCatalogue" as SC
-participant "sensor:Sensor" as S
+participant ":Device" as D
+participant ":ListOfSensors" as LS
+participant ":SensorCatalogue" as SC
+participant "sensor : Sensor" as S
 
 
 
@@ -50,9 +50,18 @@ deactivate CD
 [o<-- C : dtoDeviceList
 deactivate C
 
-[o->C : addSensorToDevice(sensorName,sensorType, deviceName, externalServices)
+[o-> C : getListOfSensorTypes()
 activate C
-C -> CD : getDeviceByName(deviceName,room)
+C -> SC : getListOfInstantiableSensors()
+activate SC
+C <--SC : listOfInstantiableSensors
+deactivate SC
+[o<-- C : listOfInstantiableSensors
+deactivate C
+
+[o->C : addSensorToDevice(sensorName, sensorType, deviceName, externalServices)
+activate C
+C -> CD : getDeviceByName(deviceName, room)
 activate CD
 CD -> CD : refreshMap(room)
 activate CD
@@ -60,14 +69,14 @@ deactivate CD
 CD --> C : device
 deactivate CD
 
-C -> D : addSensor(sensorName, sensorType, catalogue,externalServices)
+C -> D : addSensor(sensorName, sensorType, catalogue, externalServices)
 activate D
-D -> LS : addSensor(sensorName,sensorType, catalogue, externalServices)
+D -> LS : addSensor(sensorName, sensorType, catalogue, externalServices)
 activate LS
 
 LS -> SC : createSensor(sensorName, sensorType, externalServices)
 activate SC
-SC -> S** : <create>
+SC -> S** : create(sensorName, externalServices)
 SC --> LS : sensor
 deactivate SC
 LS -> LS : add(sensor)

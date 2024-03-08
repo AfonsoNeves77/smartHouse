@@ -20,20 +20,20 @@ C -> dto : width = roomDTO.getRoomWidth()
 C -> dto : length = roomDTO.getRoomLength()
 C -> dto : height = roomDTO.getRoomHeight()
 deactivate dto
-C -> H : addRoom(roomName, houseFloor, \nwidth, length,height, factoryRoom)
+C -> H : addRoom(roomName, houseFloor, \nwidth, length, height, factoryRoom)
 activate H
 H -> LOR : addRoomToList(roomName, houseFloor, \nwidth, length, height,factoryRoom)
 activate LOR
 LOR -> FR : createRoom(roomName, houseFloor, \nroomWidth, roomLength, roomHeight)
 activate FR
 Activate FR
-FR -> R** : <create>
+FR -> R** : create(roomName, houseFloor, \nroomWidth, roomLength, roomHeight)
 deactivate FR
 activate R
 R -> R : createRoomDimensions(roomWidth,\nroomLength, roomHeight)
 activate R
 deactivate R
-R -> RD** : <create>
+R -> RD** : create(roomWidth, roomLength, roomHeight)
 deactivate R
 FR --> LOR : room
 deactivate FR
