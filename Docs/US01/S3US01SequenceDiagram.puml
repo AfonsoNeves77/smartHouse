@@ -16,13 +16,13 @@ skinparam ParticipantPadding 50
 
 
 
-[o-> C : configureLocation(doorReference,buildingNumber \n,streetName,city,country \n,zipCode,latitude,longitude)
+[o-> C : configureLocation(doorReference,buildingNumber,\nstreetName,city,country,\nzipCode,latitude,longitude)
 activate C
 
-C -> H : configureLocation(doorReference,buildingNumber \n,streetName,city,country \n,zipCode,latitude,longitude, factoryLocation)
+C -> H : configureLocation(doorReference,buildingNumber,\nstreetName,city,country,\nzipCode,latitude,longitude, factoryLocation)
 activate H
 
-H -> F : address = createAddress(doorReference,buildingNumber \n,streetName,city,country \n,zipCode)
+H -> F : createAddress(doorReference,buildingNumber,\nstreetName,city,country,\nzipCode)
 activate F
 
 
@@ -30,24 +30,19 @@ activate F
 
 F -> A** : <create>
 
-A -> A : areAddressParamsValid(buildingNumber,streetName,city,country,zipCode)
-activate A
-deactivate A
 F --> H : address
 
 
 
 deactivate F
 
-H -> F : gps = createGPS(latitude,longitude)
+H -> F : createGPS(latitude,longitude)
 
 activate F
 F -> G** : <create>
 
-G -> G : areGPSParamsValid(latitude,longitude)
-activate G
-deactivate G
-F --> H : GPS
+
+F --> H : gps
 deactivate F
 
 H --> C : return true

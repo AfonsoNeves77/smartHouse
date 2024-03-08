@@ -91,9 +91,9 @@ CommonListOfRooms ..> RoomDTOMapper
 RoomDTOMapper ..> RoomDTO
 CommonListOfRooms ..> House
 House "1" *-- "1" ListOfRooms
-ListOfRooms "*" o-- "1" Room
+ListOfRooms "1" o-- "*" Room
 Room "*" *-- "1" ListOfDevices
-ListOfDevices "*" o-- "1" Device
+ListOfDevices "1" o-- "*" Device
 ListOfDevices ..> FactoryDevice : <uses>
 FactoryDevice <|.. ImplFactoryDevice
 ImplFactoryDevice ..> Device : <create>

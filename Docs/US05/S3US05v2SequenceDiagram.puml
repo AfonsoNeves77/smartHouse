@@ -45,9 +45,9 @@ activate LD
 LD -> FD : createDevice(deviceName,deviceModel,location)
 activate FD
 FD -> D **: <create>
-FD --> LD : newDevice
+FD --> LD : dev
 deactivate FD
-LD -> LD : add(newDevice)
+LD -> LD : add(dev)
 LD --> R : return true
 deactivate LD
 R --> C : return true
