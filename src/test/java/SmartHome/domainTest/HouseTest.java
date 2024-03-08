@@ -130,13 +130,13 @@ class HouseTest {
         double longitude = 0;
         double latitude = 0;
 
-        FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
-        Address addressDouble = mock(Address.class);
-
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
-        when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(null);
-
         try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
+
+            FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
+            Address addressDouble = mock(Address.class);
+
+            when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(addressDouble);
+            when(factoryLocationDouble.createGPS(latitude, longitude)).thenThrow(InstantiationException.class);
 
             House myHouse = new House(houseName);
             List<ListOfRooms> listOfMockedListOfRooms = listOfRoomsMockedConstruction.constructed();
@@ -145,7 +145,7 @@ class HouseTest {
             boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode, latitude, longitude, factoryLocationDouble);
 
             //Assert
-            assertTrue(result);
+            assertFalse(result);
             assertEquals(1,listOfMockedListOfRooms.size());
         }
     }
@@ -170,7 +170,7 @@ class HouseTest {
 
         FactoryLocation factoryLocationDouble = mock(FactoryLocation.class);
         GPS gpsDouble = mock(GPS.class);
-        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenReturn(null);
+        when(factoryLocationDouble.createAddress(doorReference, buildingNumber, streetName, city, country, zipCode)).thenThrow(InstantiationException.class);
         when(factoryLocationDouble.createGPS(latitude, longitude)).thenReturn(gpsDouble);
 
         try (MockedConstruction<ListOfRooms> listOfRoomsMockedConstruction = mockConstruction(ListOfRooms.class)) {
@@ -182,7 +182,7 @@ class HouseTest {
             boolean result = myHouse.configureLocation(doorReference, buildingNumber, streetName, city, country, zipCode, latitude, longitude, factoryLocationDouble);
 
             //Assert
-            assertTrue(result);
+            assertFalse(result);
             assertEquals(1,listOfMockedListOfRooms.size());
         }
     }

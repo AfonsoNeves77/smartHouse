@@ -53,10 +53,11 @@ public class House {
         try{
             this.address = factoryLocation.createAddress(doorReference, buildingNumber, streetName, city, country,zipCode);
             this.gps = factoryLocation.createGPS(latitude,longitude);
+            return true;
         } catch (InstantiationException e) {
             return false;
         }
-        return true;
+
     }
 
     /**
