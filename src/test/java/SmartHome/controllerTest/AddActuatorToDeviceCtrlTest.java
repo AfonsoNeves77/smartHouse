@@ -29,7 +29,10 @@ public class AddActuatorToDeviceCtrlTest {
     void addActuatorToDeviceBlindRoller_IntegrationTest() throws InstantiationException {
         //Arrange
         House house1 = new House("testHouse");
-        SimHardwareAct simHardware = new SimHardwareAct();
+        ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
+        AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house1,catalogue);
+
+        // first adds a room to the house
         String roomName = "Room 0";
         int floor = 0;
         double width = 4;
@@ -38,15 +41,15 @@ public class AddActuatorToDeviceCtrlTest {
         FactoryRoom factoryRoom = new FactoryIndoorRoom();
         house1.addRoom(roomName,floor,width,length,height,factoryRoom);
 
+        // adds a device to the house
         Room room = house1.getListOfRooms().get(0);
         String deviceName = "DeviceOne";
         String deviceModel = "Model";
         FactoryDevice factoryDevice1 = new ImplFactoryDevice();
-
         room.addDevice(deviceName,deviceModel,factoryDevice1);
 
-        ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
-        AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house1,catalogue);
+        // then we arrange the actuator adding parameters
+        SimHardwareAct simHardware = new SimHardwareAct();
         String actuatorName = "actuatorName";
         String actuatorType = "SmartHome.domain.actuator.BlindRollerActuator";
         addActuatorCtrl.getListOfDevices(roomName);

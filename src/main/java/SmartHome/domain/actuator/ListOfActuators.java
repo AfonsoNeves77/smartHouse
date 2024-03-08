@@ -19,12 +19,16 @@ public class ListOfActuators {
     }
 
     /**
-     * Adds a new actuator to the list.
+     * Adds a new actuator to the list. First it verifies by name if an actuator is already present on the encapsulated list
+     * After that it requests that the catalogue creates an actuator providing name, type and a simulated connection.
+     * The catalogue then verifies if the type inputted is present on the permitted actuator type list. If the catalogue
+     * succeeds in creating the actuator, that new copy is added to the encapsulated list. This method return true
+     * if all these operations are done successfully
      *
      * @param actuatorName The name of the actuator to be added.
      * @param actuatorType The type of the actuator to be added.
      * @param actuatorCatalogue The class where the actuator is created.
-     * @param simHardwareAct  Simulates a conexion to and outside source.
+     * @param simHardwareAct  Simulates a connection to and outside source.
      * @return true on successful addition, false if instantiation error and if the sensor already exists.
      */
 
@@ -42,7 +46,8 @@ public class ListOfActuators {
     }
 
     /**
-     * Checks if an actuator with the given name already exists in the list.
+     * This method iterates through the encapsulated list and checks the name of each actuator. Through this process, if it finds
+     * that one of the actuators has the same name as the inserted one, it returns true.
      *
      * @param actuatorName The name of the actuator to check.
      * @return True if the actuator exists, false otherwise.
@@ -56,7 +61,8 @@ public class ListOfActuators {
     }
 
     /**
-     * Returns an actuator if is present in the listOfActuators.
+     * Iterates through the encapsulated list and checks if any actuator have the same name as the inserted name. If it finds it,
+     * it returns the actuator object, otherwise it returns null.
      *
      * @param actuatorName The name of the actuator to check.
      * @return a singleActuator if successfull, null otherwise.
