@@ -4,7 +4,7 @@ skinparam ParticipantPadding 50
 autonumber
 title User Story 3 - Main Success Scenario
 
-participant ":deactivateDeviceCTRL" as C
+participant ":GetListOfRoomsCTRL" as C
 participant ":CommonListOfRooms" as CU
 participant ":House" as H
 participant ":ListOfRooms" as LR

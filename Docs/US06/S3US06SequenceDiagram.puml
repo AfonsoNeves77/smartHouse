@@ -3,7 +3,7 @@ title User Story 6 - Main Success Scenario
 !theme cerulean
 autonumber
 
-participant ":deactivateDeviceCTRL" as C
+participant ":getListOfDevicesCTRL" as C
 participant ":CommonListOfRooms" as CU
 participant ":CommonListOfDevices" as CD
 participant ":Room" as R
