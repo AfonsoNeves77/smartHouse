@@ -23,6 +23,7 @@ class SwitchSensor{
     - simHardware : SimHardware
     - log : ArrayList<Value<Integer>>
 
+    + SwitchSensor(sensorName : String, externalServices : ExternalServices)
     + getReading() : Value<String>
     + getName() : String
     + getUnit() : String
@@ -32,7 +33,7 @@ class SwitchSensor{
 }
 
 class SwitchValue {
-    + public SwitchValue(reading : String)
+    + SwitchValue(reading : String)
     + getValue() : String
     + getValueAsString() : String
     - isReadingValid(reading : String) : boolean

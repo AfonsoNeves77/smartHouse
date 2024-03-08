@@ -26,7 +26,9 @@ class SunsetSensor{
     - type : String
     - log : ArrayList<Value<ZonedDateTime>>
 
+    + SunsetSensor(sensorName : String, sunTimeCalculator : ExternalServices)
     + getSunsetTime(date : String, gpsLocation : String) : Value<ZonedDateTime>
+    + getType() : String
     - validSensorName(sensorName : String) : boolean
     - validSunTimeCalculator(sunTimeCalculator : ExternalServices) : boolean
     - addValueToLog(value : Value<ZonedDateTime>) : void

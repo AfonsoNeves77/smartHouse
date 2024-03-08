@@ -23,6 +23,7 @@ class WindSensor{
     - unit : String
     - log : ArrayList<Value<Integer>>
 
+    + WindSensor(sensorName : String, externalServices : ExternalServices)
     + getName() : String
     + getReading() : Value<?>
     + getUnit() : String
