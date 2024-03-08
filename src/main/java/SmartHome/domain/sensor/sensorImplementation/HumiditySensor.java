@@ -1,17 +1,15 @@
 package SmartHome.domain.sensor.sensorImplementation;
 
 import SmartHome.domain.sensor.externalServices.ExternalServices;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.PositionValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.HumidityValue;
+import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 
 import java.util.ArrayList;
-import static java.lang.Integer.parseInt;
 
 public class HumiditySensor implements Sensor {
     private String sensorName;
+    private final String TYPE = "Humidity";
     private SimHardware simHardware;
     private final String unit = "%";
     private final ArrayList<Value<Integer>> log = new ArrayList<>();
@@ -80,5 +78,9 @@ public class HumiditySensor implements Sensor {
     // This method is still not being called by any class, but it was created nonetheless as it is likely it will be needed for querying sensors by type
     public String getUnit(){
         return this.unit;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 }

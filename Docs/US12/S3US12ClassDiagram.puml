@@ -1,42 +1,40 @@
 @startuml
-title <size: 30> US07 Class Diagram
+title <size: 30> US12 Class Diagram
 skinparam linetype ortho
 
-note "<b>Only methods related to\n<b>US07 are represented" as 1
-class AddSensorToDeviceCTRL {
+note "<b>Only methods related to\n<b>US12 are represented" as 1
+class AddActuatorToDeviceCTRL {
     - house : House
     - commonListOfRooms : CommonListOfRooms
     - commonListOfDevices : CommonListOfDevices
-    - catalogue : SensorCatalogue
+    - catalogue : ActuatorCatalogue
     - room : Room
 
-    + getListOfRooms() : List<RoomDTO>
-    + getListOfDevices() : List<DeviceDTO>
-    + getListOfSensorTypes() : List<String>
-    + addSensorToDevice(sensorName : String, sensorType : String, deviceName : String, externalServices : ExternalServices) : boolean
+    + getListOfRooms() : List <RoomDTO>
+    + getListOfDevices() : List <DeviceDTO>
+    + addActuatorToDevice(actuatorName : String, actuatorType : String, deviceName : String, simHardware : SimHardwareAct)
 }
 
-class ListOfSensors {
-    - listOfSensors : ArrayList<Sensor>
+class ListOfActuators {
+    - listOfActuators : ArrayList <Actuator>
 
-    + addSensor(sensorName : String, sensorType : String, sensorCatalogue : SensorCatalogue, externalServices : ExternalServices)
-    - isASensorInList(sensorName : String) : boolean
-    - findSensor(sensorName : String) : Sensor
+    + addActuator(actuatorName : String, actuatorType : String, actuatorCatalogue : ActuatorCatalogue, simHardwareAct : SimHardwareAct)
+    - isActuatorInList(actuatorName : String) : boolean
+    - findActuator (actuatorName : String) : Actuator
 
 }
 
-class SensorCatalogue {
-    - listOfInstantiableSensors : List<String>
+class ActuatorCatalogue {
+    - listOfInstantiableActuators : List<String>
 
     - areConstructorParametersValid(configuration : Configuration) : boolean
-    - areConstructorParametersValid(filePath : String) : boolean
-    + getListOfInstantiableSensors() : List<String>
-    + createSensor(sensorName : String, sensorType : String, externalServices : ExternalServices) : Sensor
-
+    - areConstructorParametersValid (filePath : String) : boolean
+    + getListOfInstantiableActuators() : List<String>
+    + createActuator(actuatorName : String, actuatorType : String, simHardwareAct : SimHardwareAct) : Actuator
 
 }
 
-interface Sensor {
+interface Actuator {
 
     + getName() : String
 
@@ -82,7 +80,7 @@ class Device {
     - listOfActuators : ListOfActuators
     - deviceFunctionalities : List<String>
     - areDeviceParametersValid(deviceName : String, deviceModel : String, deviceLocation : String) : boolean
-    + addSensor(sensorName : String, sensorType : String, catalogue : SensorCatalogue , externalServices : ExternalServices) : boolean
+    + addActuator(actuatorName : String, actuatorType : String, catalogue : ActuatorCatalogue , simHardwareAct : SimHardwareAct) : boolean
 
 }
 
@@ -99,13 +97,13 @@ class DeviceDTO{
            - status : boolean
            }
 
-       AddSensorToDeviceCTRL ..> CommonListOfRooms
-       AddSensorToDeviceCTRL ..> Device
-       Device --* ListOfSensors : has
-       ListOfSensors ..> SensorCatalogue
-       SensorCatalogue -- Sensor : creates >
+       AddActuatorToDeviceCTRL ..> CommonListOfRooms
+       AddActuatorToDeviceCTRL ..> Device
+       Device --* ListOfActuators : has
+       ListOfActuators ..> ActuatorCatalogue
+       ActuatorCatalogue -- Actuator : creates >
        CommonListOfRooms ..> RoomDTOMapper
-       AddSensorToDeviceCTRL..> CommonListOfDevices
+       AddActuatorToDeviceCTRL..> CommonListOfDevices
        CommonListOfDevices ..> DeviceDTOMapper
        DeviceDTOMapper ..> DeviceDTO
        RoomDTOMapper ..> RoomDTO
