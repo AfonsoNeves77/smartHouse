@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddActuatorToDeviceCtrlTest {
     /**
-     * Integration Test to add an already existing actuator to a device.
+     * Integration Test to add an actuator to a device.
      * Arrange a house with a room and a device.
-     * Add an actuator to a de
+     * Add an actuator to a device
      * Assert the actuator was successfully added.
      * @throws InstantiationException If House or Catalogue parameters are invalid
      */
@@ -41,7 +41,7 @@ public class AddActuatorToDeviceCtrlTest {
         FactoryRoom factoryRoom = new FactoryIndoorRoom();
         house1.addRoom(roomName,floor,width,length,height,factoryRoom);
 
-        // adds a device to the house
+        // adds a device to the room
         Room room = house1.getListOfRooms().get(0);
         String deviceName = "DeviceOne";
         String deviceModel = "Model";
@@ -52,8 +52,8 @@ public class AddActuatorToDeviceCtrlTest {
         SimHardwareAct simHardware = new SimHardwareAct();
         String actuatorName = "actuatorName";
         String actuatorType = "SmartHome.domain.actuator.BlindRollerActuator";
-        addActuatorCtrl.getListOfDevices(roomName);
-
+        addActuatorCtrl.getListOfDevices(roomName); // this step is necessary to ensure the room object is available (saved
+        // on the ctrl encapsulated parameters.
 
         //Act
         boolean result = addActuatorCtrl.addActuatorToDevice(actuatorName,actuatorType,deviceName,simHardware);
