@@ -33,6 +33,10 @@ public class AddActuatorToDeviceCtrl {
         return commonListOfDevices.getListOfDevices(room);
     }
 
+    public List<String> getListOfActuatorTypes(){
+        return this.catalogue.getListOfInstantiableActuators();
+    }
+
     public boolean addActuatorToDevice(String actuatorName, String actuatorType, String deviceName, SimHardwareAct simHardware) {
         Device device = commonListOfDevices.getDeviceByName(deviceName, room);
         return device.addActuator(actuatorName, actuatorType, catalogue, simHardware);

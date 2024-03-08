@@ -191,20 +191,20 @@ public class AddActuatorToDeviceCtrlTest {
         assertEquals(roomName, result);
     }
 
-//    @Test
-//    void getListOfActuatorTypes() throws InstantiationException {
-//        //Arrange
-//        House house1 = new House("testHouse");
-//        ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
-//
-//        AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house1, catalogue);
-//        String expected = "SmartHome.domain.actuator.SwitchActuator";
-//        //Act
-//        List<String> listOfActuatorTypes= addActuatorCtrl.getListOfDevices();
-//        String result = listOfActuatorTypes.get(0);
-//
-//        //Assert
-//        assertEquals(expected,result);
-//    }
+    @Test
+    void getListOfActuatorTypes() throws InstantiationException {
+        //Arrange
+        House house1 = new House("testHouse");
+        ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
+
+        AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house1, catalogue);
+        String expected = "SmartHome.domain.actuator.SwitchActuator";
+        //Act
+        List<String> listOfActuatorTypes= addActuatorCtrl.getListOfActuatorTypes();
+        String result = listOfActuatorTypes.get(0);
+
+        //Assert
+        assertEquals(expected,result);
+    }
 }
 
