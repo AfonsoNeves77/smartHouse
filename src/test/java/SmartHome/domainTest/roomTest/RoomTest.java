@@ -1,16 +1,18 @@
 package SmartHome.domainTest.roomTest;
 
+
 import SmartHome.domain.SensorCatalogue;
 import SmartHome.domain.device.Device;
 import SmartHome.domain.device.FactoryDevice;
 import SmartHome.domain.device.ImplFactoryDevice;
+import SmartHome.domain.device.ListOfDevices;
 import SmartHome.domain.room.Room;
 import SmartHome.domain.room.RoomDimensions;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 class RoomTest {
 
+    /////////////////////////////////////////ISOLATION///////////////////////////////////////////////////////
     /**
      * This isolation tests attempts to create a room object without a valid name. Regardless of the object Room Dimensions
      * being a collaborator, this object will not be mocked as the tests is supposed to fail before reaching the object instantiation.
@@ -65,7 +68,8 @@ class RoomTest {
     }
 
     /**
-     * This test ensures the method getDimensions.
+     * This test ensures the method getDimensions().
+     * A MockedConstruction of ListOfDevices and RoomDimensions is made. RoomDimensions behaviour is set.
      * @throws InstantiationException Room dimensions.
      */
     @Test
@@ -76,23 +80,36 @@ class RoomTest {
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        try (MockedConstruction<RoomDimensions> RoomDimensionsDouble = mockConstruction(RoomDimensions.class, (mock, context)
-             -> {
-                    when(mock.getRoomHeight()).thenReturn(roomHeight);
-                    when(mock.getRoomLength()).thenReturn(roomLength);
-                    when(mock.getRoomWidth()).thenReturn(roomWidth);
-                }
-        )) {
-            Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
-            // Act
-            double[] dimensionsResult = room.getDimensions();
-            double result = dimensionsResult[0]; // width
+        double[] expected = {4.5, 8.5, 2};
 
+        try (MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class);
+             MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class, (mock, context) -> {
+                 double actualRoomWidth = (double) context.arguments().get(0);
+                 double actualRoomLength = (double) context.arguments().get(1);
+                 double actualRoomHeight = (double) context.arguments().get(2);
+                 when(mock.getRoomWidth()).thenReturn(actualRoomWidth);
+                 when(mock.getRoomLength()).thenReturn(actualRoomLength);
+                 when(mock.getRoomHeight()).thenReturn(actualRoomHeight);
+             })) {
+
+            Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+            // Act
+            double[] result = room.getDimensions();
             // Assert
-            assertEquals(roomWidth, result);
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            assertArrayEquals(expected, result);
         }
     }
 
+    /**
+     * Isolation test to get room name.
+     * A MockedConstruction of ListOfDevices and RoomDimensions is made.
+     * @throws InstantiationException If room parameters are invalid
+     */
     @Test
     void getRoomName() throws InstantiationException {
         // arrange
@@ -101,15 +118,29 @@ class RoomTest {
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+        try (MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class);
+             MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class)) {
 
-        // act
-        String result = room.getRoomName();
+            Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
 
-        // assert
-        assertEquals(name, result);
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+
+            // act
+            String result = room.getRoomName();
+
+            // assert
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            assertEquals(name, result);
+        }
     }
 
+    /**
+     * Isolation test to get room house floor.
+     * A MockedConstruction of ListOfDevices and RoomDimensions is made.
+     * @throws InstantiationException If room parameters are invalid
+     */
     @Test
     void getHouseFloor() throws InstantiationException {
         // arrange
@@ -118,99 +149,162 @@ class RoomTest {
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
 
-        // act
-        int result = room.getHouseFloor();
+        try (MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class);
+             MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class)) {
 
-        // assert
-        assertEquals(floor, result);
+            Room room = new Room(name, floor, roomWidth, roomLength, roomHeight);
+
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+
+            // act
+            int result = room.getHouseFloor();
+
+            // assert
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            assertEquals(floor, result);
+        }
     }
 
-
-    // UNABLE TO FORCE EXCEPTION TO BE THROWN DUE TO DIMENSION FAILURE
-
     /**
-     * Test02
      * Isolation Test to add a device to a room.
      * Arrange a room name, a house floor, a room width, a room length and a room height.
      * Arrange a device name and a device model.
      * Act to add a device to the room.
      * Assert that the device was successfully added to the room.
+     * @throws InstantiationException If room parameters are invalid
      */
     @Test
     void addDevice_IsolationTest() throws InstantiationException {
         //Arrange
-        String name = "Kitchen";
+        String roomName = "Kitchen";
         int floor = 0;
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name,floor,roomWidth,roomLength,roomHeight);
+
         String deviceName = "Heater";
         String deviceModel = "XPTO3000";
 
-        Device deviceDouble = mock(Device.class);
-
         ImplFactoryDevice implFactoryDeviceDouble = mock(ImplFactoryDevice.class);
-        when(implFactoryDeviceDouble.createDevice(deviceName,deviceModel,name)).thenReturn(deviceDouble);
 
-        //Act
-        boolean result = room.addDevice(deviceName,deviceModel,implFactoryDeviceDouble);
-        //Assert
-        assertTrue(result);
+        try(MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class,(mock, context)-> {
+            when(mock.addDeviceToList(deviceName,deviceModel, roomName, implFactoryDeviceDouble)).thenReturn(true);
+        });
+            MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class))
+        {
+
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+
+            Room room = new Room(roomName, floor, roomWidth, roomLength, roomHeight);
+
+            //Act
+            boolean result = room.addDevice(deviceName, deviceModel, implFactoryDeviceDouble);
+            //Assert
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            assertTrue(result);
+        }
     }
 
     /**
-     * Test03
      * Isolation Test to get the list of devices in a room.
      * Arrange a room name, a house floor, a room width, a room length and a room height.
-     * Arrange a device name and a device model.
      * Act to get the list of devices in the room.
-     * Assert that the list of devices was successfully retrieved and that the device in it is the correct one.
+     * Assert that the list of devices was successfully retrieved and that the device in it is the correct one,
+     * by requesting its name.
+     * @throws InstantiationException If room parameters are invalid
      */
     @Test
     void getListOfDevices_IsolationTest() throws InstantiationException {
         //Arrange
-        String name = "Kitchen";
+        String roomName = "Kitchen";
         int floor = 0;
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name,floor,roomWidth,roomLength,roomHeight);
+
         String deviceName = "Heater";
-        String deviceModel = "XPTO3000";
-        String deviceLocation = room.getRoomName();
         Device deviceDouble = mock(Device.class);
-        FactoryDevice factoryDeviceDouble = mock(ImplFactoryDevice.class);
-        when(factoryDeviceDouble.createDevice(deviceName,deviceModel,deviceLocation)).thenReturn(deviceDouble);
         when(deviceDouble.getDeviceName()).thenReturn(deviceName);
-        room.addDevice(deviceName,deviceModel,factoryDeviceDouble);
 
-        //Act
-        String result = room.getListOfDevices().get(0).getDeviceName();
-        //Assert
-        assertEquals(deviceName,result);
+        List<Device> deviceList = new ArrayList<>();
+        deviceList.add(deviceDouble);
+
+        try(MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class,(mock, context)-> {
+            when(mock.getDeviceList()).thenReturn(deviceList);
+        });
+            MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class,(mock, context)-> {
+            })) {
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+
+            Room room = new Room(roomName,floor,roomWidth,roomLength,roomHeight);
+
+            //Act
+            String result = room.getListOfDevices().get(0).getDeviceName();
+            //Assert
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            assertEquals(deviceName,result);
+        }
     }
 
-
-    /////////////////////////////////////////ISOLATION///////////////////////////////////////////////////////
+    /**
+     * This test ensures that when a Room is instantiated without any devices, it has no functionalities,
+     * and the ListOfDevices and RoomDimension objects are correctly accessed during their construction.
+     * A MockedConstruction of ListOfDevices and RoomDimensions is made. ListOfDevices behaviour is set.
+     * Two scenarios are present:
+     * 1. Asserts that the ListOfDevices and RoomDimensions constructors were called exactly once during the
+     * construction of the House.
+     * 2. The Room functionalities' map should have size 0, verifying that the Room does not have functionalities when
+     * there are no devices.
+     * @throws InstantiationException If room parameters are invalid.
+     */
     @Test
-    void getDimensions_UnitTest() throws InstantiationException {
+    void getRoomFunctionalitiesAndDimensions_RoomWithoutDevices_IsolationTest() throws InstantiationException {
         //Arrange
-        String name = "Kitchen";
+        String roomName = "Room Test";
         int floor = 0;
         double roomWidth = 4.5;
         double roomLength = 8.5;
         double roomHeight = 2;
-        Room room = new Room(name,floor,roomWidth,roomLength,roomHeight);
-        double[] expected = {4.5, 8.5, 2};
-        //Act
-        double[] result = room.getDimensions();
-        //Assert
-        assertArrayEquals(expected,result);
+        List<Device> deviceList = new ArrayList<>();
+
+        int expected = 0;
+
+        try(MockedConstruction<ListOfDevices> listOfDevicesDouble = mockConstruction(ListOfDevices.class,(mock, context)-> {
+            when(mock.getDeviceList()).thenReturn(deviceList);
+        });
+            MockedConstruction<RoomDimensions> roomDimensionsDouble = mockConstruction(RoomDimensions.class)) {
+
+            List<ListOfDevices> deviceLists = listOfDevicesDouble.constructed();
+            List<RoomDimensions> roomDimensionsList = roomDimensionsDouble.constructed();
+
+            Room room = new Room(roomName,floor,roomWidth,roomLength,roomHeight);
+
+            //Act
+            int result = room.getRoomFunctionalities().size();
+
+            //Assert
+            // 1.
+            assertEquals(1,deviceLists.size());
+            assertEquals(1,roomDimensionsList.size());
+            // 2.
+            assertEquals(expected,result);
+        }
     }
 
+
+    /////////////////////////////////////////INTEGRATION///////////////////////////////////////////////////////
+
+    /**
+     * Integration test to get room functionalities in R
+     * @throws InstantiationException if parameters for any object instantiation are invalid
+     */
     @Test
     void getRoomFunctionalities_TwoFunctionalities_IntegrationTest() throws InstantiationException {
         //Arrange

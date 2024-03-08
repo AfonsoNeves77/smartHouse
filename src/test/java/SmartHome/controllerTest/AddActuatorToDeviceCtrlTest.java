@@ -18,6 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddActuatorToDeviceCtrlTest {
+    /**
+     * Integration Test to add an already existing actuator to a device.
+     * Arrange a house with a room and a device.
+     * Add an actuator to a de
+     * Assert the actuator was successfully added.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
+     */
     @Test
     void addActuatorToDeviceBlindRoller_IntegrationTest() throws InstantiationException {
         //Arrange
@@ -50,12 +57,13 @@ public class AddActuatorToDeviceCtrlTest {
         //Assert
         assertTrue(result);
     }
+
     /**
-     * Test02
-     * Integration Test to add an already existing sensor to a device.
+     * Integration Test to add an already existing actuator to a device.
      * Arrange a house with a room and a device.
-     * Act to add the same sensor to the device.
-     * Assert the sensor was not successfully added.
+     * Act to add the same actuator to the device.
+     * Assert the actuator was not successfully added.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
      */
     @Test
     void addingActuatorToDeviceIntegrationTest_shouldNotSucceedForDuplicatedSensor() throws InstantiationException {
@@ -92,11 +100,11 @@ public class AddActuatorToDeviceCtrlTest {
     }
 
     /**
-     * Test03
-     * Integration Test to add a sensor with an invalid name to a device.
+     * Integration Test to add an actuator with an invalid name to a device.
      * Arrange a house with a room and a device.
-     * Act to add the invalid sensor to a device.
-     * Assert the sensor was not successfully added.
+     * Act to add the invalid actuator to a device.
+     * Assert the actuator was not successfully added.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
      */
     @Test
     void addingActuatorToDeviceIntegrationTest_shouldNotSucceedEmptyName() throws InstantiationException {
@@ -131,11 +139,11 @@ public class AddActuatorToDeviceCtrlTest {
     }
 
     /**
-     * Test04
-     * Integration Test to add a sensor with a null name to a device.
+     * Integration Test to add an actuator with a null name to a device.
      * Arrange a house with a room and a device.
-     * Act to add the invalid sensor to a device.
-     * Assert the sensor was not successfully added.
+     * Act to add the invalid actuator to a device.
+     * Assert the actuator was not successfully added.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
      */
     @Test
     void addingActuatorToDeviceIntegrationTest_shouldNotSucceedNullName() throws InstantiationException {
@@ -169,6 +177,10 @@ public class AddActuatorToDeviceCtrlTest {
         assertFalse(result);
     }
 
+    /**
+     * Successfuly gets a list containing all Rooms in the House.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
+     */
     @Test
     void getListOfRooms() throws InstantiationException {
         //Arrange
@@ -191,6 +203,14 @@ public class AddActuatorToDeviceCtrlTest {
         assertEquals(roomName, result);
     }
 
+    /**
+     * Integration test for retrieving the list of actuator types from the AddActuatorToDeviceCTRL controller.
+     * Two scenarios are present:
+     * 1. Asserts first type mentioned in the list.
+     * 2. Asserts the current size of the list of actuator types.
+     * @throws InstantiationException If House or Catalogue parameters are invalid
+     */
+
     @Test
     void getListOfActuatorTypes() throws InstantiationException {
         //Arrange
@@ -198,6 +218,7 @@ public class AddActuatorToDeviceCtrlTest {
         ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
 
         AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house1, catalogue);
+
         String expected = "SmartHome.domain.actuator.SwitchActuator";
         //Act
         List<String> listOfActuatorTypes= addActuatorCtrl.getListOfActuatorTypes();
@@ -206,5 +227,46 @@ public class AddActuatorToDeviceCtrlTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     Integration Test that aims to get the list of devices in a Room from the AddSensorToDeviceController.
+     * A Room is added to the House, then a device is added to the Room. Finally there is an attempt to
+     * get the list of devices and then accessing to the second device in the list, checking its name.
+     * @throws InstantiationException If any parameters for objects' instantiation are invalid
+     */
+    @Test
+    void getListOfDevices() throws InstantiationException {
+        //Arrange
+        House house = new House("test House");
+
+        String roomName = "Room 0";
+        int floor = 0;
+        double width = 4;
+        double length = 9;
+        double height = 2;
+        FactoryRoom factoryRoom = new FactoryIndoorRoom();
+        house.addRoom(roomName,floor,width,length,height,factoryRoom);
+
+        Room room = house.getListOfRooms().get(0);
+        String deviceName1 = "Dev1";
+        String deviceName2 = "Dev2";
+        String deviceModel = "XPTO";
+        FactoryDevice factoryDevice = new ImplFactoryDevice();
+        room.addDevice(deviceName1, deviceModel, factoryDevice);
+        room.addDevice(deviceName2, deviceModel, factoryDevice);
+
+        ActuatorCatalogue catalogue = new ActuatorCatalogue("config.properties");
+
+        AddActuatorToDeviceCtrl addActuatorCtrl = new AddActuatorToDeviceCtrl(house, catalogue);
+
+        //Act
+        String result = addActuatorCtrl.getListOfDevices(roomName).get(1).getName();
+
+        //Assert
+        assertEquals(deviceName2, result);
+    }
+
+
+
 }
 
