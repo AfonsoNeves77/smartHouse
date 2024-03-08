@@ -7,10 +7,10 @@ autonumber
 participant ":AddActuatorToDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
 participant ":CommonListOfDevices" as CD
-participant "device:Device" as D
-participant ":listOfActuators" as LA
-participant "actuatorCatalogue" as AC
-participant "actuator:Actuator" as A
+participant ":Device" as D
+participant ":ListOfActuators" as LA
+participant ":ActuatorCatalogue" as AC
+participant "actuator : Actuator" as A
 
 
 
@@ -59,9 +59,9 @@ deactivate AC
 [o<-- C : listOfInstantiableActuators
 deactivate C
 
-[o->C : addActuatorToDevice(actuatorName,actuatorType, deviceName, simHardware)
+[o->C : addActuatorToDevice(actuatorName, actuatorType, deviceName, simHardware)
 activate C
-C -> CD : getDeviceByName(deviceName,room)
+C -> CD : getDeviceByName(deviceName, room)
 activate CD
 CD -> CD : refreshMap(room)
 activate CD
@@ -69,14 +69,14 @@ deactivate CD
 CD --> C : device
 deactivate CD
 
-C -> D : addActuator(actuatorName, actuatorType, catalogue,simHardwareAct)
+C -> D : addActuator(actuatorName, actuatorType, catalogue, simHardwareAct)
 activate D
 D -> LA : addActuator(actuatorName,actuatorType, catalogue, simHardwareAct)
 activate LA
 
 LA -> AC : createActuator(actuatorName, actuatorType, simHardwareAct)
 activate AC
-AC -> A** : <create>
+AC -> A** : create(actuatorName, simHardwareAct)
 AC --> LA : actuator
 deactivate AC
 LA -> LA : add(actuator)
