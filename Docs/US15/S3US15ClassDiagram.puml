@@ -1,13 +1,12 @@
 @startuml
 title <size: 30> US15 Class Diagram
 
+note "<b>Only methods related to\n<b>US15 are represented" as 1
 interface Actuator {
     + getName() : String
 }
 
 class SimHardwareAct {
-     + executeCommandSim(commandType : String) : boolean
-     + executeIntegerCommandSim(position : int) : boolean
      + executeDecimalCommandSim(newValue : double) : boolean
 }
 

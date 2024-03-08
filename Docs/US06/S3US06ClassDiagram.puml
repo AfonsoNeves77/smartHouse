@@ -93,7 +93,7 @@ skinparam linetype ortho
        RoomDTOMapper ..> RoomDTO
        CommonListOfRooms -down.> House
        House "1" *-- "1" ListOfRooms
-       CommonListOfDevices "1" o-- "*" Room
+       CommonListOfDevices ..> Room
        Room "1" *-- "1" ListOfDevices
        GetListOfDevicesFromRoomCTRL ..> CommonListOfDevices
        CommonListOfDevices ..> DeviceDTOMapper

@@ -85,13 +85,16 @@ public class PositionSensor implements Sensor{
     }
 
     /**
-     * @return Returns the sensor's unit. This method is still not being called by any class, but it was created
-     * nonetheless as it is likely it will be needed for querying sensors by type.
+     * @return Returns the sensor's unit.
      */
 
     public String getUnit(){
         return this.unit;
     }
+
+    /**
+     * @return Returns the sensor's type.
+     */
 
     public String getType(){
         return Type;

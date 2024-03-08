@@ -1,6 +1,7 @@
 @startuml
 title <size: 30> US16 Class Diagram
 
+note "<b>Only methods related to\n<b>US16 are represented" as 1
 interface Actuator {
     + getName() : String
 }
@@ -17,7 +18,7 @@ class DecimalSetActuator{
     - isValueWithinLimits (value : Double) : boolean
     + getName() : String
     + executeCommand(newValue : double) : boolean
-    - hasOneDecimalPlaceOrNone(newValue : double) : boolean
+    - hasTheCorrectDecimalPrecision(newValue : double) : boolean
     + getValue() : double
     + setLimits(lowerLimit : Double, upperLimit : Double, decimalPrecision : Integer) : boolean
 }

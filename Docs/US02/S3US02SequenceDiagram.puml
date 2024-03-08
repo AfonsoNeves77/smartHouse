@@ -37,7 +37,7 @@ R -> RD** : <create>
 deactivate R
 FR --> LOR : room
 deactivate FR
-LOR -> LOR : add(room)
+LOR -> LOR : add(newRoom)
 LOR --> H : return true
 
 deactivate LOR
