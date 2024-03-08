@@ -17,12 +17,13 @@ class IntSetActuator {
     - upperLimit : Integer
     - lowerLimit : Integer
 
-    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + IntSetActuator(name : String, simHardwareAct : SimHardwareAct)
     + executeCommand(newValue : int) : boolean
-    - validateValue(value : int) : boolean
     + setLimits(lowerLimit : int, upperLimit : int) : void
     + getValue() : int
     + getName() : String
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    - validateValue(value : int) : boolean
 }
 
 Actuator <|.. IntSetActuator

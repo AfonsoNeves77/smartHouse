@@ -9,9 +9,10 @@ class BlindRollerActuator{
     - actuatorName : String
     - simHardwareAct : SimHardwareAct
 
-    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + BlindRollerActuator(actuatorName : String,simHardwareAct : SimHardwareAct)
     + getName() : String
     + executeRollerCommand(position : Integer) : boolean
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
     - validateCommand(position : Integer) : boolean
 }
 
