@@ -14,13 +14,14 @@ class DecimalSetActuator{
     - lowerLimit : Double
     - decimalPrecision : Integer
 
-    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
-    - isValueWithinLimits (value : Double) : boolean
+    + DecimalSetActuator(name : String, simHardwareAct : SimHardwareAct)
     + getName() : String
     + executeCommand(newValue : double) : boolean
-    - hasTheCorrectDecimalPrecision(newValue : double) : boolean
     + getValue() : double
     + setLimits(lowerLimit : Double, upperLimit : Double, decimalPrecision : Integer) : boolean
+    - hasTheCorrectDecimalPrecision(newValue : double) : boolean
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    - isValueWithinLimits (value : Double) : boolean
 }
 
 class SimHardwareAct {

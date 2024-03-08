@@ -10,11 +10,13 @@ class SwitchActuator{
     - state : String
     - simHardwareAct : SimHardwareAct
 
-    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+    + SwitchActuator(name : String, simHardwareAct : SimHardwareAct)
     + getName() : String
     + executeCommand(commandType : String) : boolean
-    - validateCommand(commandType : String) : boolean
     + getState() : String
+    - validateCommand(commandType : String) : boolean
+    - validateParams(name : String, simHardwareAct : SimHardwareAct) : boolean
+
 }
 
 class SimHardwareAct {
