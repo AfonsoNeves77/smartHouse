@@ -50,7 +50,7 @@ class EnergyConsumptionValue {
 Value <|.. EnergyConsumptionValue
 Sensor <|.. EnergyConsumptionSensor
 ExternalServices <|.. SimHardware
-EnergyConsumptionSensor <|.left. SimHardware
+EnergyConsumptionSensor <.left. SimHardware
 EnergyConsumptionSensor .right.> EnergyConsumptionValue
 
 

@@ -101,7 +101,7 @@ class DeviceDTO{
 
        AddSensorToDeviceCTRL ..> CommonListOfRooms
        AddSensorToDeviceCTRL ..> Device
-       Device --* ListOfSensors : has
+       Device  "1" *-- "1" ListOfSensors
        ListOfSensors ..> SensorCatalogue
        SensorCatalogue -- Sensor : creates >
        CommonListOfRooms ..> RoomDTOMapper
