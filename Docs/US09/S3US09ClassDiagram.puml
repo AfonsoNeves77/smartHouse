@@ -1,9 +1,10 @@
 @startuml
 title <size: 30> US09 Class Diagram
 note "<b>Only methods related to\n<b>US09 are represented" as N1
+skinparam linetype ortho
 
 class GetDevicesByFunctionalityCTRL {
-    - <b>house : House
+    - house : House
 
     + getDevicesByFunctionality() : HashMap<String, ArrayList<DeviceDTO>>
 }
@@ -12,24 +13,24 @@ class House {
     - houseName: String
     - gps : GPS
     - address : Address
-    - <b>listOfRooms : ListOfRooms
+    - listOfRooms : ListOfRooms
     - sensorTypeList : sensorTypeList
-    - <b>houseFunctionalities : Map<String, ArrayList<Device>>
+    - houseFunctionalities : Map<String, ArrayList<Device>>
 
     + getHouseFunctionalities() : Map<String,ArrayList<Device>>
     - updateHouseFunctionalities() : void
 }
 
 class ListOfRooms {
-    - <b>roomList : ArrayList<Room>
+    - roomList : ArrayList<Room>
 }
 
 class Room {
     - roomName: String
     - houseFloor : int
     - dimensions : RoomDimensions
-    - <b>deviceList : ListOfDevices
-    - <b>roomFunctionalities : Map<String,ArrayList<Device>>
+    - deviceList : ListOfDevices
+    - roomFunctionalities : Map<String,ArrayList<Device>>
 
     + getRoomFunctionalities() : Map<String, ArrayList<Device>>
     - updateRoomFunctionalities() : void
@@ -38,7 +39,7 @@ class Room {
 }
 
 class ListOfDevices {
-    - <b>deviceList : ArrayList<Device>
+    - deviceList : ArrayList<Device>
 }
 
 class DeviceDTO {
@@ -55,7 +56,7 @@ class Device {
     - status : boolean
     - listOfSensors : ListOfSensors
     - listOfActuators : ListOfActuators
-    - <b>deviceFunctionalities : List<String>
+    - deviceFunctionalities : List<String>
 
     - updateDeviceFunctionalities(sensorType : String) : void
 }
