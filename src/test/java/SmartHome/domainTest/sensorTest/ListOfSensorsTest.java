@@ -6,6 +6,9 @@ import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHome.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 import SmartHome.domain.sensor.ListOfSensors;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -128,4 +131,18 @@ public class ListOfSensorsTest {
         //Assert
         assertFalse(result);
     }
+
+    @Test
+    void getLog_NoFunctionalities_IsolationTest()  {
+        //Arrange
+
+        ListOfSensors listOfSensors = new ListOfSensors();
+
+        //Act
+       List<String> result =  listOfSensors.getLog("SensorName");
+        //Assert
+        assertNull(result);
+    }
+
+
 }

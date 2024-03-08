@@ -11,6 +11,7 @@ import SmartHome.domain.room.Room;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CommonListOfDevicesTest {
 
@@ -86,6 +87,34 @@ public class CommonListOfDevicesTest {
         assertEquals(result,deviceName);
 
     }
+
+    @Test
+    void getDeviceByName_DeviceNotFound_ShouldReturnNull() throws InstantiationException {
+
+        //Arrange
+        String houseName = "myHouse";
+        String roomName = "Room 1";
+        int roomFloor = 2;
+        double width = 1.9;
+        double length = 2;
+        double height = 4;
+        House house = new House(houseName);
+        FactoryRoom factoryRoom = new FactoryIndoorRoom();
+
+        house.addRoom(roomName,roomFloor,width,length,height,factoryRoom);
+        Room room = house.getListOfRooms().get(0);
+        String deviceName = "Device 1";
+
+        //Act
+
+        CommonListOfDevices commonListOfDevices = new CommonListOfDevices(house);
+        Device resultDevice = commonListOfDevices.getDeviceByName(deviceName,room);
+
+        //Assert
+        assertNull(resultDevice);
+
+    }
+
 
 
 }

@@ -309,6 +309,19 @@ public class SunriseSensorTest {
         assertEquals(expected,result);
     }
 
+    @Test
+    void getType_IsolationTest() throws InstantiationException {
+        //Arrange
+        String sensorName = "Sunrise Sensor";
+        ExternalServices serviceDouble = mock(SunTimeCalculator.class);
+        SunriseSensor SunriseSensor = new SunriseSensor(sensorName, serviceDouble);
+        String expected = "Sunrise Sensor";
+        //Act
+        String result = SunriseSensor.getType();
+        //Assert
+        assertEquals(expected,result);
+    }
+
     //.............................................................................INTEGRATION TESTS..............................................................................
     @Test
     void getSunriseTime_IntegrationTest() throws InstantiationException {
