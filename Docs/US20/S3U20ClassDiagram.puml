@@ -32,6 +32,7 @@ class SunriseSensor{
 }
 
 class SunTimeValue {
+    + SunTimeValue(sunTimeValue : ZonedDateTime)
     - sunTimeValue : ZonedDateTime
     + getValue() : ZonedDateTime
     + getValueAsString() : String

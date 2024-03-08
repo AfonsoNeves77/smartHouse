@@ -35,6 +35,7 @@ class DewPointSensor{
 }
 
 class DewPointValue {
+    + DewPointValue(reading : String)
     - isReadingValid() : boolean
     + getValue() : Double
     + getValueAsString() : String

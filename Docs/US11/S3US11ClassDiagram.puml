@@ -35,14 +35,20 @@ class HumiditySensor {
 class HumidityValue {
     - primitiveValue : int
 
+    +
+    + HumidityValue(reading : String)
     + getValue() : Integer
     + getValueAsString() : String
     - isReadingValid(reading : String) : boolean
+}
+
+interface ExternalServices{
 }
 
 Value <|.. HumidityValue
 Sensor <|.. HumiditySensor
 HumiditySensor .right.> HumidityValue
 HumiditySensor .left.> SimHardware
+ExternalServices <|.. SimHardware
 
 @enduml

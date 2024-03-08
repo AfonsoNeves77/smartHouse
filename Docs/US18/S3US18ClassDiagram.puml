@@ -33,6 +33,7 @@ class PositionSensor{
 class PositionValue{
     - primitiveValue : int
 
+    + PositionValue(reading : String)
     + getValue() : Integer
     + getValueAsString() : String
     - isReadingValid(reading : String) : boolean

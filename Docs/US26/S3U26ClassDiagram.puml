@@ -42,6 +42,7 @@ class EnergyConsumptionSensor{
 class EnergyConsumptionValue {
     - primitiveValue : Integer
 
+    + EnergyConsumptionValue((reading : String)
     - validateReading(reading : String) : boolean
     + getValue() : Integer
     + getValueAsString() : String

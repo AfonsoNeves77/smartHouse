@@ -36,6 +36,7 @@ class AveragePowerConsumptionSensor{
 }
 
 class AveragePowerConsumptionValue {
+    + AveragePowerConsumptionValue((reading : String)
     - validateReading(reading : String) : boolean
     + getValue() : Integer
     + getValueAsString() : String

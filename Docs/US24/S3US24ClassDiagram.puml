@@ -33,6 +33,7 @@ class InstantPowerConsumptionSensor{
 class InstantPowerConsumptionValue{
     - primitiveValue : int
 
+    + InstantPowerConsumptionValue(reading : String)
     + getValue() : Integer
     + getValueAsString() : String
     - isReadingValid(reading : String) : boolean
