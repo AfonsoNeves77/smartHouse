@@ -243,6 +243,12 @@ public class AddSensorToDeviceCTRLTest {
         assertFalse(result);
     }
 
+    /**
+     * Integration Test that aims to add a sensor to a device with an incompatible service.
+     * A Room is added to the House, then a device is added to the Room. Finally there is an attempt to
+     * add a sensor, which fails.
+     * @throws InstantiationException If any parameters for object instantiation are invalid
+     */
     @Test
     void addingSensorToDeviceIntegrationTest_shouldNotSucceedInadequateExternalService() throws InstantiationException {
         //Arrange
@@ -265,7 +271,7 @@ public class AddSensorToDeviceCTRLTest {
 
         SensorCatalogue catalogue = new SensorCatalogue("config.properties");
         AddSensorToDeviceCTRL addSensorCtrl = new AddSensorToDeviceCTRL(house1,catalogue);
-        String sensorName = null;
+        String sensorName = "XPTO";
         String sensorType = "SmartHome.domain.sensor.sensorImplementation.TemperatureSensor";
 
         //Act
@@ -324,7 +330,8 @@ public class AddSensorToDeviceCTRLTest {
      *   - Creates a test house without specific rooms.
      *   - Initializes the AddSensorToDeviceCTRL controller with the test house and a sensor catalog.
      *   - Retrieves the list of sensor types from the controller.
-     *   - Verifies that the retrieved sensor type matches the expected sensor type.
+     *   - 1. Verifies that the retrieved sensor type matches the expected sensor type.
+     *   - 2. Asserts the current size of the list of sensor types.
      *
      * @throws InstantiationException if there is an issue with instantiation during the test setup.
      */
@@ -336,13 +343,57 @@ public class AddSensorToDeviceCTRLTest {
 
         AddSensorToDeviceCTRL addSensorCtrl = new AddSensorToDeviceCTRL(house1, catalogue);
         String expected = "SmartHome.domain.sensor.sensorImplementation.HumiditySensor";
+        int expectedSize = 12;
         //Act
         List<String> listOfSensorTypes= addSensorCtrl.getListOfSensorTypes();
         String result = listOfSensorTypes.get(0);
+        int resultSize = listOfSensorTypes.size();
 
         //Assert
+        // 1.
         assertEquals(expected,result);
+        // 2.
+        assertEquals(expectedSize,resultSize);
     }
+
+    /**
+     Integration Test that aims to get the list of devices in a Room from the AddSensorToDeviceController.
+     * A Room is added to the House, then a device is added to the Room. Finally there is an attempt to
+     * get the list of devices and then accessing to the second device in the list, checking its name.
+     * @throws InstantiationException If any parameters for objects' instantiation are invalid
+     */
+    @Test
+    void getListOfDevices() throws InstantiationException {
+        //Arrange
+        House house = new House("test House");
+
+        String roomName = "Room 0";
+        int floor = 0;
+        double width = 4;
+        double length = 9;
+        double height = 2;
+        FactoryRoom factoryRoom = new FactoryIndoorRoom();
+        house.addRoom(roomName,floor,width,length,height,factoryRoom);
+
+        Room room = house.getListOfRooms().get(0);
+        String deviceName1 = "Dev1";
+        String deviceName2 = "Dev2";
+        String deviceModel = "XPTO";
+        FactoryDevice factoryDevice = new ImplFactoryDevice();
+        room.addDevice(deviceName1, deviceModel, factoryDevice);
+        room.addDevice(deviceName2, deviceModel, factoryDevice);
+
+        SensorCatalogue catalogue = new SensorCatalogue("config.properties");
+
+        AddSensorToDeviceCTRL addSensorCtrl = new AddSensorToDeviceCTRL(house, catalogue);
+
+        //Act
+        String result = addSensorCtrl.getListOfDevices(roomName).get(1).getName();
+
+        //Assert
+        assertEquals(deviceName2, result);
+    }
+
 
     //.............................................................................ISOLATION TESTS..............................................................................
 
