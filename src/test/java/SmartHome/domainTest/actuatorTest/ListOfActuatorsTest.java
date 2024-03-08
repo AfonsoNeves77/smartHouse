@@ -126,7 +126,7 @@ public class ListOfActuatorsTest {
     }
 
     @Test
-    void addTemperatureSensorToDevice_Success_Integration() throws InstantiationException {
+    void addBlindRollerActuatorToDevice_Success_Integration() throws InstantiationException {
         //Arrange
         SimHardwareAct simHardware = mock(SimHardwareAct.class);
         String actuatorName = "Actuator1";

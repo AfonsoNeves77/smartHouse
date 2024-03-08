@@ -411,11 +411,11 @@ class DeviceTest {
             int sizeOfActuatorsList = listOfMockedListOfActuators.size();
             int sizeOfSensorsList = listOfMockedListOfSensors.size();
 
-            String result = device.getDeviceName();
+            String result = device.getDeviceModel();
 
 
             //Assert
-            assertEquals(result,deviceName);
+            assertEquals(result,deviceModel);
             assertEquals(expectedSize,sizeOfActuatorsList);
             assertEquals(expectedSize,sizeOfSensorsList);
         }
@@ -443,11 +443,11 @@ class DeviceTest {
             int sizeOfActuatorsList = listOfMockedListOfActuators.size();
             int sizeOfSensorsList = listOfMockedListOfSensors.size();
 
-            String result = device.getDeviceName();
+            boolean result = device.getStatus();
 
 
             //Assert
-            assertEquals(result,deviceName);
+            assertTrue(result);
             assertEquals(expectedSize,sizeOfActuatorsList);
             assertEquals(expectedSize,sizeOfSensorsList);
         }
