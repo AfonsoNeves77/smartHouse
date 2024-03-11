@@ -1,6 +1,6 @@
  @startuml
 title User Story 8 - Main Success Scenario
-!theme cerulean
+
 autonumber
 
 participant ":DeactivateDeviceCTRL" as C

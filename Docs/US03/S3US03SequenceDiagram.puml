@@ -1,5 +1,5 @@
 @startuml
-!theme cerulean
+
 skinparam ParticipantPadding 50
 autonumber
 title User Story 3 - Main Success Scenario

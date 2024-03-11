@@ -1,6 +1,6 @@
  @startuml
 title User Story 6 - Main Success Scenario
-!theme cerulean
+
 autonumber
 
 participant ":GetListOfDevicesCTRL" as C

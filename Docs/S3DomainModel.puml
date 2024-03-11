@@ -1,10 +1,10 @@
 @startuml
 title <size: 30> Domain Model
 
-skinparam style strictuml
+
+hide circle
 hide empty members
 left to right direction
-skinparam ClassFontSize 18
 
 class House {
 houseName
@@ -69,10 +69,10 @@ class User {
 class UserRole {
 }
 
-User "*" ------- "1..*" UserRole : > has
+User "*" -- "1..*" UserRole : > has
 User "1..*"-- "1" House : > can configure
 User "0..1" -- "*" Room : < is managed
-User "1..*" ----- "*" Room : > may add
+User "1..*" --- "*" Room : > may add
 
 House "1" -- "*" Room : > has
 House "1" -- "1" Address : > has

@@ -2,7 +2,7 @@
 
 title User Story 07 - Main Success Scenario
 autonumber
-!theme cerulean
+
 
 participant ":AddSensorToDeviceCTRL" as C
 participant ":CommonListOfRooms" as CU
