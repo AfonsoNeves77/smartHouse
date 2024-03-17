@@ -1,0 +1,37 @@
+@startuml
+
+title User Story 9 - Main Success Scenario
+
+autonumber
+
+participant ":GetDevicesByFunctionalityCTRL" as C
+participant ":DeviceRepo" as DR
+participant ":SensorRepo" as SR
+participant ":Sensor" as S
+participant ":SensorDTOMapper" as SM
+participant ":DeviceDTOMapper" as DM
+
+[o-> C : getListOfDevicesByFuncionality()
+activate C
+C -> DR : listOfAllDevices = getListOfAllDevices()
+C -> SR : getFuncionalityDeviceIDMap()
+activate SR
+SR -> SR : getFuncionalityDeviceIDMap()
+activate SR
+loop for every Sensor in SensorRepo
+SR -> S : getType()
+activate S
+SR -> S : getDeviceID()
+end
+deactivate SR
+deactivate S
+SR --> C : funcionalityDeviceIDMap
+deactivate SR
+C -> SM : domainTODTO(funcionalityDeviceIDMap)
+activate SM
+SM --> C : functionalityDTODeviceIDMap
+C -> DM : domainTODTO(funcionalityDTODeviceIDMap,listOfAllDevices)
+activate DM
+DM --> C : functionalityDTODeviceDTOMap
+
+@enduml
