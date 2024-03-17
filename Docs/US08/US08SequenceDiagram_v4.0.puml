@@ -1,0 +1,96 @@
+@startuml
+
+title User Story 08 - Main Success Scenario
+autonumber
+!theme cerulean
+
+participant ":DeactivateDeviceCTLR" as C
+
+participant ":HouseRepository" as HR
+
+participant ":RoomRepository" as RR
+participant ":RoomDTOMapper" as RDM
+participant ":DeviceRepository" as DR
+participant ":DeviceDTOMapper" as DDM
+participant "device:Device" as dev
+
+
+[o->C : getListOfRooms()
+activate C
+C -> HR : getHouseID()
+activate HR
+HR --> C : idHouse
+deactivate HR
+C->RR : findAllById(idHouse)
+activate RR
+RR -> RR : cloneRooms()
+activate RR
+deactivate RR
+RR --> C : roomList
+deactivate RR
+C -> RDM : getRoomDTOList(roomList)
+activate RDM
+loop for each room in room list
+RDM -> RDM : RoomDTO = domainToDTO(room)
+activate RDM
+deactivate RDM
+RDM -> RDM : add(RoomDTO)
+activate RDM
+deactivate RDM
+end loop
+RDM --> C : listOfRoomsDto
+deactivate RDM
+[o<-- C : listOfRoomsDto
+deactivate C
+
+[o->C : getListOfDevices(roomDTO)
+activate C
+C -> RDM : getRoomID(roomDTO)
+activate RDM
+RDM --> C : roomID
+deactivate RDM
+C -> RR : isPresent(roomID)
+activate RR
+RR -> C : true
+deactivate RR
+C->DR : findAllById(roomID)
+activate DR
+DR -> DR : cloneDevices()
+activate DR
+deactivate DR
+DR --> C : deviceList
+deactivate DR
+C -> DDM : getDeviceDTOList(deviceList)
+activate DDM
+loop for each device in device list
+DDM -> DDM : DeviceDTO = domainToDTO(device)
+activate DDM
+deactivate DDM
+DDM -> DDM : add(DeviceDTO)
+activate DDM
+deactivate DDM
+end loop
+DDM --> C : listOfDevicesDto
+deactivate DDM
+[o<-- C : listOfDevicesDto
+deactivate C
+
+[o->C : deactivateDevices(DeviceDTO,State)
+activate C
+C -> DDM : getDeviceID(DeviceDTO)
+activate DDM
+DDM -> C : idDevice
+deactivate DDM
+C -> DR : findByID(idDevice)
+activate DR
+DR --> C : device
+deactivate DR
+C -> dev : deactivateDevice(DeviceState)
+
+activate dev
+dev --> C : false
+deactivate dev
+[o<-- C : false
+deactivate C
+
+@enduml
