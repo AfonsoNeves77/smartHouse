@@ -1,0 +1,80 @@
+@startuml
+skinparam ParticipantPadding 50
+    title User Story 7: Main Success Scenario
+    autonumber
+
+participant ":AddSensorToDeviceCTRL" as C
+participant ":HouseRepo" as HR
+participant ":RoomRepo" as RR
+participant ":RoomDTOMapper" as RM
+participant ":DeviceRepo" as DR
+participant ":DeviceDTOMapper" as DM
+participant ":SensorFactory" as SF
+participant ":SensorRepo" as SR
+participant "sensor : Sensor" as S
+
+
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> HR : getHouseId()
+activate HR
+HR --> C : houseId
+deactivate HR
+C -> RR : getListOfRooms(houseId)
+activate RR
+RR -> RR : cloneListOfRooms()
+activate RR
+deactivate RR
+RR --> C : clonedListOfRooms
+deactivate RR
+C -> C : toDTO
+activate C
+deactivate C
+[o<-- C : roomDTOList
+[o-> C : getListOfDevices(roomDTO)
+C -> RM : getRoomId(roomDTO)
+activate RM
+RM --> C : roomId
+deactivate RM
+C -> DR : getListOfDevices(roomId)
+activate DR
+DR -> DR : cloneListOfDevices()
+activate DR
+deactivate DR
+DR --> C : clonedListOfDevices
+deactivate DR
+C -> C : toDTO
+activate C
+deactivate C
+[o<-- C : deviceDTOList
+[o-> C : getListOfSensorTypes()
+C -> SR : getListOfSensorTypes()
+activate SR
+SR -> SR : cloneListOfSensorTypes()
+activate SR
+deactivate SR
+SR --> C : clonedListOfSensorTypes
+deactivate SR
+C -> C : toDTO
+activate C
+deactivate C
+[o<-- C : sensorTypeDTOList
+[o-> C : addSensorToDevice(deviceDTO, sensorName, sensorType)
+C -> DM : getDeviceId(deviceDTO)
+activate DM
+DM --> C : deviceId
+deactivate DM
+C -> SF : createSensor(sensorName, sensorType, deviceId)
+activate SF
+SF -> S** : create(sensorName, sensorType, deviceId)
+SF --> C : sensor
+deactivate SF
+C -> SR : save(sensor)
+activate SR
+SR --> C : return true
+deactivate SR
+[o<-- C : return true
+deactivate C
+@enduml
