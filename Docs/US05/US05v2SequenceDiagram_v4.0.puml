@@ -1,0 +1,79 @@
+@startuml
+
+skinparam ParticipantPadding 50
+autonumber
+title User Story 5v2 - Main Success Scenario
+
+participant ":AddDeviceToRoomController" as C
+participant ":HouseRepository" as HR
+participant ":RoomRepository" as RR
+participant ":RoomDTOMapper" as RM
+participant "roomDTO : RoomDTO" as RDTO
+participant "roomId : RoomId" as RID
+participant ":ImplFactoryDevice" as FD
+participant "deviceName : DeviceName" as DN
+participant "deviceModel : DeviceModel" as DM
+participant "device : Device" as D
+participant ":DeviceRepository" as DR
+
+note over RM : Should include interaction with RoomDTO?
+note over FD : Should receive VOs or create them?
+note over C : logic to save the device?? if true/false??
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> HR : houseId = getHouseId()
+C -> RR : getListOfRooms(houseId)
+
+activate RR
+RR -> RR : getRoomsFromMap()
+RR -> RR : clone()
+RR --> C : roomList
+deactivate RR
+
+C -> RM : domainToDto(roomList)
+activate RM
+loop for every room in roomList
+RM -> RM : RoomDTO = domainToDto(room)
+RM -> RM : add(RoomDTO)
+end
+RM --> C : roomDtoList
+deactivate RM
+[o<-- C : roomDtoList
+deactivate C
+
+[o-> C : addDeviceToRoom(strDeviceName, strDeviceModel, RoomDTO)
+activate C
+C -> RM : getRoomIdFromDTO(RoomDTO)
+activate RM
+RM -> RDTO : intRoomId = getId()
+RM -> RID : create(intRoomId)
+RM --> C : roomId
+deactivate RM
+
+C -> RR : validateRoom(roomId)
+activate RR
+RR --> C : <font color=green>**true**</font>
+deactivate RR
+
+C -> FD : createDevice(strDeviceName, strDeviceModel, roomId)
+activate FD
+FD -> DN ** : deviceName = create(strDeviceName)
+FD -> DM ** : deviceModel = create(strDeviceModel)
+FD -> D ** : create(deviceName, deviceModel, roomId)
+FD --> C : device
+deactivate FD
+
+C -> DR : saveDevice(device)
+activate DR
+DR -> DR : put(deviceId, device)
+DR --> C : <font color=green>**true**</font>
+deactivate DR
+
+[o<-- C : <font color=green>**true**</font>
+
+
+deactivate C
+
+@enduml
