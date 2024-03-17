@@ -4,76 +4,83 @@ skinparam ParticipantPadding 50
 autonumber
 title User Story 5v2 - Main Success Scenario
 
-participant ":AddDeviceToRoomController" as C
+participant ":AddDeviceToRoomCTRL" as C
 participant ":HouseRepository" as HR
 participant ":RoomRepository" as RR
 participant ":RoomDTOMapper" as RM
-participant "roomDTO : RoomDTO" as RDTO
-participant "roomId : RoomId" as RID
+participant ":RoomDTO" as RDTO
+participant "roomID : RoomID" as RID
 participant ":ImplFactoryDevice" as FD
 participant "deviceName : DeviceName" as DN
 participant "deviceModel : DeviceModel" as DM
 participant "device : Device" as D
 participant ":DeviceRepository" as DR
 
-note over RM : Should include interaction with RoomDTO?
+/'note over RM : Should include interaction with RoomDTO?
 note over FD : Should receive VOs or create them?
-note over C : logic to save the device?? if true/false??
+note over C : logic to save the device?? if true/false??'/
 
 
 [o-> C : getListOfRooms()
 activate C
-C -> HR : houseId = getHouseId()
-C -> RR : getListOfRooms(houseId)
+C -> HR : houseID = getHouseID()
+C -> RR : findAllByID(houseID)
 
 activate RR
-RR -> RR : getRoomsFromMap()
-RR -> RR : clone()
+RR -> RR : cloneList()
+activate RR
+deactivate RR
 RR --> C : roomList
 deactivate RR
 
-C -> RM : domainToDto(roomList)
+C -> RM : getRoomDTOList(roomList)
 activate RM
 loop for every room in roomList
-RM -> RM : RoomDTO = domainToDto(room)
-RM -> RM : add(RoomDTO)
-end
-RM --> C : roomDtoList
+
+RM -> RM : RoomDTO = domainToDTO(room)
+activate RM
 deactivate RM
-[o<-- C : roomDtoList
+RM -> RM : add(RoomDTO)
+activate RM
+deactivate RM
+end
+
+RM --> C : roomDTOList
+deactivate RM
+[o<-- C : roomDTOList
 deactivate C
 
 [o-> C : addDeviceToRoom(strDeviceName, strDeviceModel, RoomDTO)
 activate C
-C -> RM : getRoomIdFromDTO(RoomDTO)
+C -> RM : getRoomIDFromDTO(RoomDTO)
 activate RM
-RM -> RDTO : intRoomId = getId()
-RM -> RID : create(intRoomId)
-RM --> C : roomId
+RM -> RDTO : intRoomID = getID()
+RM -> RID ** : create(intRoomID)
+RM --> C : roomID
 deactivate RM
 
-C -> RR : validateRoom(roomId)
+C -> RR : containsID(roomID)
 activate RR
 RR --> C : <font color=green>**true**</font>
 deactivate RR
 
-C -> FD : createDevice(strDeviceName, strDeviceModel, roomId)
+C -> FD : createDevice(strDeviceName, strDeviceModel, roomID)
 activate FD
 FD -> DN ** : deviceName = create(strDeviceName)
 FD -> DM ** : deviceModel = create(strDeviceModel)
-FD -> D ** : create(deviceName, deviceModel, roomId)
+FD -> D ** : create(deviceName, deviceModel, roomID)
 FD --> C : device
 deactivate FD
 
-C -> DR : saveDevice(device)
+C -> DR : save(device)
 activate DR
-DR -> DR : put(deviceId, device)
+DR -> DR : put(deviceID, device)
+activate DR
+deactivate DR
 DR --> C : <font color=green>**true**</font>
 deactivate DR
 
 [o<-- C : <font color=green>**true**</font>
-
-
 deactivate C
 
 @enduml
