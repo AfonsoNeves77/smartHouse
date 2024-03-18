@@ -1,6 +1,6 @@
-package SmartHome.vo;
+package SmartHome.voTest;
 
-import SmartHome.domain.room.RoomWidthDDD;
+import SmartHome.vo.RoomWidthVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

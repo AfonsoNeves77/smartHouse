@@ -1,6 +1,6 @@
-package SmartHome.vo;
+package SmartHome.voTest;
 
-import SmartHome.domain.room.RoomFloorDDD;
+import SmartHome.vo.RoomFloorVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
