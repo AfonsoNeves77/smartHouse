@@ -1,0 +1,31 @@
+@startuml
+
+autonumber
+
+title User Story 1 - Main Success Scenario
+
+participant ":ConfigureLocationCTRL" as C
+participant ":HouseRepository" as HR
+participant ":House" as H
+participant ":FactoryLocation" as F
+
+activate C
+[o-> C : configureLocation(HouseId id, address : Address, gps : GPS)
+C -> HR : house : getById(id)
+
+activate H
+C -> H : configureLocation(address, gps)
+H -> F : createLocation(address, gps)
+
+activate F
+F -> F : createLocation(address, gps)
+F --> H : return true
+deactivate F
+
+H --> C : return true
+deactivate H
+
+[o<-- C : return true
+
+deactivate C
+@enduml

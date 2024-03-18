@@ -1,0 +1,71 @@
+@startuml
+
+title User Story 9 - Main Success Scenario
+
+autonumber
+
+participant ":GetDevicesByFunctionalityCTRL" as C
+participant ":GetDevicesByFunctionalitySERVICE" as CS
+participant ":DeviceRepo" as DR
+participant ":SensorRepo" as SR
+participant ":Sensor" as S
+participant ":SensorDTOMapper" as SM
+participant ":DeviceDTOMapper" as DM
+
+'1
+    [o-> C : getListOfDevicesByFuncionality()
+    activate C
+'2
+    C -> CS : getListOfDevicesByFuncionality()
+    activate CS
+'3
+    CS -> DR : getListOfAllDevices()
+    activate DR
+'4
+    DR --> CS : <color:red>idToDeviceMap
+    deactivate DR
+'5
+    CS -> SR : getFuncionalityDeviceIDMap()
+    activate SR
+'6
+    SR -> SR : getFuncionalityDeviceIDMap()
+    activate SR
+'7 and 8
+    loop for every Sensor in SensorRepo
+    SR -> S : getType()
+    activate S
+    SR -> S : getDeviceID()
+    end
+    deactivate SR
+    deactivate S
+'9
+    SR --> CS : <color:green>funcionalityDeviceIDMap
+    deactivate SR
+'10
+    CS --> CS : <color:blue>functionalityList<color:black> = extractFuncionality ( <color:green>funcionalityDeviceIDMap )
+'11
+    CS -> SM : domainToDTO ( <color:blue>funcionalityList )
+    activate SM
+'12
+    SM --> CS : <color:blue>functionalityDTOList
+    deactivate SM
+'13
+    CS --> CS : <color:red>deviceIDList<color:black> = extractDeviceID ( <color:green>funcionalityDeviceIDMap )
+'14
+    CS --> CS : <color:red>deviceList = deviceIDtoDevice ( deviceIDList, deviceIDtoDeviceMap )
+'15
+    CS -> DM : domainToDTO ( listOfDevices )
+    activate DM
+'16
+    DM --> CS : <color:red>deviceDTOList
+    deactivate DM
+'17
+    CS -> CS : <color:blue>functionalityDTO<color:red>DeviceDTOMap<color:black> = createFuncionalityDTODeviceDTOList ( <color:blue>functionalityDTOList, <color:red>listOfDeviceDTO, <color:green>funcionalityDeviceIDMap<color:black> )
+'18
+    CS --> C : functionalityDTODeviceDTOMap
+    deactivate CS
+'19
+    [o<-- C : functionalityDTODeviceDTOMap
+    deactivate C
+
+@enduml
