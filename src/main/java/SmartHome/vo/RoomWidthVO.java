@@ -1,6 +1,6 @@
 package SmartHome.vo;
 
-public class RoomWidthVO {
+public class RoomWidthVO implements ValueObject{
     private double roomWidth;
 
     public RoomWidthVO (double roomWidth){
