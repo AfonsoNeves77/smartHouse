@@ -1,20 +1,23 @@
 package SmartHome.voTest;
 
-import SmartHome.domain.actuator.BlindRollerActuator;
 import SmartHome.vo.DoorVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DoorVOTest {
+class DoorVOTest {
+
+    /**
+     * This test validates that the constructor throws an exception when given an invalid parameter.
+     */
     @Test
     void givenNullParameter_returnsException(){
         // Arrange
         String door = null;
-        String expected = "Invalid Paramaters";
+        String expected = "Invalid Parameters";
         // Act
-        Exception exception = assertThrows(InstantiationException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new DoorVO(door);
         });
         String result = exception.getMessage();
@@ -22,13 +25,16 @@ public class DoorVOTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * This test validates that the constructor throws an exception when given an invalid parameter.
+     */
     @Test
     void givenEmptyParameter_returnsException(){
         // Arrange
         String door = " ";
-        String expected = "Invalid Paramaters";
+        String expected = "Invalid Parameters";
         // Act
-        Exception exception = assertThrows(InstantiationException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new DoorVO(door);
         });
         String result = exception.getMessage();
@@ -36,14 +42,17 @@ public class DoorVOTest {
         assertEquals(expected,result);
     }
 
+    /**
+     * This test validates that the object returns its value correctly.
+     */
     @Test
-    void callingGetDoor_returnsDoorString(){
+    void callingGetDoor_returnsDoorString() {
         // Arrange
         String door = "4A";
         String expected = "4A";
         DoorVO doorVO = new DoorVO(door);
         // Act
-        String result = doorVO.getValue();
+        String result = doorVO.getDoor();
         // Assert
         assertEquals(expected,result);
     }
