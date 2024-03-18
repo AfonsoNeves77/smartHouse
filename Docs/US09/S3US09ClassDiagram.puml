@@ -4,81 +4,113 @@ note "<b>Only methods related to\n<b>US09 are represented" as N1
 skinparam linetype ortho
 
 class GetDevicesByFunctionalityCTRL {
-    - house : House
-
-    + getDevicesByFunctionality() : HashMap<String, ArrayList<DeviceDTO>>
+    - deviceRepo : DeviceRepository
+    - sensorRepo : SensorRepository
+    + getListOfDevicesByFunctionality() : Map<FunctionalityDTO, DeviceDTO>
 }
 
-class House {
-    - houseName: String
-    - gps : GPS
-    - address : Address
-    - listOfRooms : ListOfRooms
-    - sensorTypeList : sensorTypeList
-    - houseFunctionalities : Map<String, ArrayList<Device>>
-
-    + getHouseFunctionalities() : Map<String,ArrayList<Device>>
-    - updateHouseFunctionalities() : void
+class GetDevicesByFunctionalitySERVICE {
+    - functionalityDeviceIdMap : Map<Functionality, DeviceId>
+    - functionalityList : List<Functionality>
+    - functionalityDTOList : List<FunctionalityDTO>
+    - deviceIdList : List<DeviceId>
+    - deviceList : List<Device>
+    - deviceDTOList : List<DeviceDTO>
+    + getListOfDevicesByFunctionality() : Map<FunctionalityDTO, DeviceDTO>
+    + extractFunctionality( Map<Functionality, DeviceId> ) : List<Functionality>
+    + extractDeviceId ( Map<Functionality, DeviceId> ) : List<DeviceId>
+    + deviceIdToDevice ( List<DeviceID ) : List<Device>
+    + createFunctionalityDTODeviceDTOList ( List<FunctionalityDTO>, List<DeviceDTO>, Map<Functionality, DeviceId>) : Map<FunctionalityDTO, DeviceDTO>
 }
 
-class ListOfRooms {
-    - roomList : ArrayList<Room>
+class Device <<Entity>> <<Root>>{
+    -deviceID : DeviceID
+    -deviceModel : DeviceModel
+    -status : Status
+    -roomId : RoomId
+    +getDeviceID() : DeviceID
+    +getDeviceModel() : DeviceModel
+    +getStatus() : Status
+    +getRoomID() : RoomID
 }
 
-class Room {
-    - roomName: String
-    - houseFloor : int
-    - dimensions : RoomDimensions
-    - deviceList : ListOfDevices
-    - roomFunctionalities : Map<String,ArrayList<Device>>
-
-    + getRoomFunctionalities() : Map<String, ArrayList<Device>>
-    - updateRoomFunctionalities() : void
-
-
+class DeviceID <<Identity>> <<VO>> {
+    -deviceID : String
+    +getDeviceID() : String
 }
 
-class ListOfDevices {
-    - deviceList : ArrayList<Device>
+class DeviceModel <<VO>> {
+    -deviceModel : String
+    +getDeviceModel() : String
 }
 
-class DeviceDTO {
-    - deviceName : String
-    - deviceModel : String
-    - location : String
-    - status : boolean
+class RoomID <<VO>> {
+    -roomID : String
+    +getRoomID() : String
 }
 
-class Device {
-    - deviceName : String
-    - deviceModel : String
-    - deviceLocation : String
-    - status : boolean
-    - listOfSensors : ListOfSensors
-    - listOfActuators : ListOfActuators
-    - deviceFunctionalities : List<String>
+class Status <<VO>> {
+    -status : boolean
+    +getStatus : boolean
+}
 
-    - updateDeviceFunctionalities(sensorType : String) : void
+class DeviceRepository {
+    - map : Map<DeviceID, Device>
+    + getListOfAllDevices() : Map<DeviceID, Device>
+}
+
+class SensorRepository {
+    +getFunctionalityDeviceIdMap() : Map<Functionality, DeviceId>
+}
+
+class Sensor <<Entity>> <<Root>>{
+    - sensorID : SensorID
+    - sensorType : SensorType
+    - deviceID : DeviceID
+    +getType() : String
+    +getDeviceID() : String
+    +getSensorID() : String
+}
+
+class SensorID <<VO>> {
+    -sensorID : String
+    +getSensorID() : String
+}
+
+class SensorType <<VO>> {
+    -sensorType : String
+    +getSensorType() : String
+}
+
+class SensorDTOMapper {
+    +domainToDTO ( List<Functionality> ) : List<FunctionalityDTO>
 }
 
 class DeviceDTOMapper {
-    + domainToDTO(device : Device) : DeviceDTO
-    + domainToDTO(deviceList : ArrayList<Device>) : ArrayList<DeviceDTO>
-    + domainMapToDTO(map : Map<String,ArrayList<Device>>) : Map<String,ArrayList<DeviceDTO>>
+    +domainToDTO ( List<Device> ) : List<DeviceDTO>
 }
 
-GetDevicesByFunctionalityCTRL -up.> House
-House "1" *- "1" ListOfRooms
-ListOfRooms "1" o-- "*" Room
-Room "1" *-- "1" ListOfDevices
-ListOfDevices "1" o-right- "*" Device
+GetDevicesByFunctionalityCTRL ..> GetDevicesByFunctionalitySERVICE
 
-GetDevicesByFunctionalityCTRL -down.> DeviceDTOMapper
+GetDevicesByFunctionalitySERVICE ..> DeviceRepository
+GetDevicesByFunctionalitySERVICE ..> SensorDTOMapper
+GetDevicesByFunctionalitySERVICE ..> SensorRepository
+GetDevicesByFunctionalitySERVICE ..> DeviceDTOMapper
 
-DeviceDTOMapper ..> DeviceDTO
-DeviceDTOMapper ..> Device
+DeviceRepository o-- Device
+DeviceDTOMapper --> Device
 
+SensorRepository o-- Sensor
+SensorDTOMapper --> Sensor
 
+Device *..left DeviceModel
+Device *..right DeviceID
+Device *.. RoomID
+Device *.. Status
+
+Sensor *..right SensorType
+Sensor *..left DeviceID
+Sensor *.. SensorID
 
 @enduml
 
