@@ -5,22 +5,17 @@ public class RoomNameVO implements ValueObject{
     private String roomName;
 
     public RoomNameVO(String roomName) {
-        if(isDeviceNameNull(roomName) || isDeviceNameEmpty(roomName) || isDeviceNameBlank(roomName)) {
+        if(!areParametersValid(roomName)) {
             throw new IllegalArgumentException("Invalid parameters.");
         }
         this.roomName = roomName;
     }
 
-    private boolean isDeviceNameNull(String roomName) {
-        return roomName == null;
-    }
-
-    private boolean isDeviceNameEmpty(String roomName) {
-        return roomName.trim().isEmpty();
-    }
-
-    private boolean isDeviceNameBlank(String roomName) {
-        return roomName.isBlank();
+    private boolean areParametersValid(String roomName) {
+        if(roomName == null || roomName.trim().isEmpty() || roomName.isBlank()) {
+            return false;
+        }
+        return true;
     }
 
     public String getRoomName() {
