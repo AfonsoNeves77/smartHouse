@@ -28,8 +28,8 @@ class PostalCodeVOTest {
 
     @Test
     void testGetPostalCode_returnsPostalCode() throws InstantiationException {
-        String postalCode = "Portugal";
+        String postalCode = "1234-567";
         PostalCodeVO postalCodeVO = new PostalCodeVO(postalCode);
-        assertEquals(postalCode, postalCodeVO.getCountry());
+        assertEquals(postalCode, postalCodeVO.getPostalCode());
     }
 }

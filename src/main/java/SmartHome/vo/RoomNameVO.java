@@ -1,6 +1,6 @@
 package SmartHome.vo;
 
-public class RoomNameVO {
+public class RoomNameVO implements ValueObject{
 
     private String roomName;
 
