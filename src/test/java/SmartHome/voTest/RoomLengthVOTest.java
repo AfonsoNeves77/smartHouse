@@ -1,16 +1,16 @@
 package SmartHome.voTest;
 
-import SmartHome.vo.LengthVO;
+import SmartHome.vo.RoomLengthVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LengthVOTest {
+class RoomLengthVOTest {
     @Test
     public void shouldCreateAValidVO_length() {
         //Arrange
         double length = 1.0;
-        LengthVO vo_length = new LengthVO(length);
+        RoomLengthVO vo_length = new RoomLengthVO(length);
 
         //Act
         double result = vo_length.getLength();
@@ -27,7 +27,7 @@ class LengthVOTest {
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new LengthVO(length);
+            new RoomLengthVO(length);
         });
         String actualMessage = exception.getMessage();
 
@@ -43,7 +43,7 @@ class LengthVOTest {
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new LengthVO(length);
+            new RoomLengthVO(length);
         });
         String actualMessage = exception.getMessage();
 

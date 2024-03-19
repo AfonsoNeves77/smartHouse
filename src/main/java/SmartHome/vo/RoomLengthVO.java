@@ -1,9 +1,9 @@
 package SmartHome.vo;
 
-public class LengthVO implements ValueObject{
+public class RoomLengthVO implements ValueObject{
     private final double length;
 
-    public LengthVO(double length) {
+    public RoomLengthVO(double length) {
         if (!validateLength(length)) {
             throw new IllegalArgumentException("Invalid length value");
         }
