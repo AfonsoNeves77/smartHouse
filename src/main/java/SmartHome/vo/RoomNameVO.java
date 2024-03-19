@@ -2,7 +2,7 @@ package SmartHome.vo;
 
 public class RoomNameVO implements ValueObject{
 
-    private String roomName;git status
+    private String roomName;
 
     public RoomNameVO(String roomName) {
         if(isDeviceNameNull(roomName) || isDeviceNameEmpty(roomName) || isDeviceNameBlank(roomName)) {
