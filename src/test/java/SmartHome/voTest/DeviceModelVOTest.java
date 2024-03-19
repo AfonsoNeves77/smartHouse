@@ -14,7 +14,7 @@ class DeviceModelVOTest {
         String expected = "Device model cannot be null neither blank.";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class,() -> {
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> {
             new DeviceModelVO(deviceModel);
         });
         String result = exception.getMessage();
@@ -30,7 +30,7 @@ class DeviceModelVOTest {
         String expected = "Device model cannot be null neither blank.";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class,() -> {
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> {
             new DeviceModelVO(deviceModel);
         });
         String result = exception.getMessage();
@@ -46,7 +46,7 @@ class DeviceModelVOTest {
         String expected = "Device model cannot be null neither blank.";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class,() -> {
+        Exception exception = assertThrows(IllegalArgumentException.class,() -> {
             new DeviceModelVO(deviceModel);
         });
         String result = exception.getMessage();
@@ -56,7 +56,7 @@ class DeviceModelVOTest {
     }
 
     @Test
-    void whenToString_ShouldReturnDeviceModelAsString() throws InstantiationException {
+    void whenToString_ShouldReturnDeviceModelAsString() {
         //Arrange
         String deviceModel = "Model HKT";
         DeviceModelVO modelVO = new DeviceModelVO(deviceModel);
