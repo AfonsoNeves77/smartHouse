@@ -10,7 +10,7 @@ public class PostalCodeVO {
         this.postalCode = postalCode;
     }
 
-    public String getCountry() {
+    public String getPostalCode() {
         return postalCode;
     }
 

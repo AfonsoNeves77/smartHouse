@@ -1,9 +1,9 @@
 package SmartHome.vo;
 
-public class HeightVO implements ValueObject{
+public class RoomHeightVO implements ValueObject{
     private final double height;
 
-    public HeightVO(double height) {
+    public RoomHeightVO(double height) {
         if (!validateHeight(height)) {
             throw new IllegalArgumentException("Invalid height value");
         }

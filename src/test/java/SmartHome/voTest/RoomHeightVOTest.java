@@ -1,16 +1,16 @@
 package SmartHome.voTest;
 
-import SmartHome.vo.HeightVO;
+import SmartHome.vo.RoomHeightVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HeightVOTest {
+class RoomHeightVOTest {
     @Test
     public void shouldCreateAValidVO_height() {
         //Arrange
         double height = 1.5;
-        HeightVO vo_height = new HeightVO(height);
+        RoomHeightVO vo_height = new RoomHeightVO(height);
 
         //Act
         double result = vo_height.getHeight();
@@ -27,7 +27,7 @@ class HeightVOTest {
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new HeightVO(height);
+            new RoomHeightVO(height);
         });
         String actualMessage = exception.getMessage();
 
@@ -39,7 +39,7 @@ class HeightVOTest {
     public void shouldCreateValidVO_heightWithZeroHeight() {
         //Arrange
         double height = 0.0;
-        HeightVO vo_height = new HeightVO(height);
+        RoomHeightVO vo_height = new RoomHeightVO(height);
 
         //Act
         double result = vo_height.getHeight();
