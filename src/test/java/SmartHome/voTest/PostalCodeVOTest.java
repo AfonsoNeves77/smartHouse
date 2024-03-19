@@ -11,7 +11,7 @@ class PostalCodeVOTest {
     void testValidParameter_returnsPostalCodeVO() throws InstantiationException {
         String postalCode = "1234-567";
         PostalCodeVO postalCodeVO = new PostalCodeVO(postalCode);
-        assertNotNull(postalCode);
+        assertNotNull(postalCodeVO);
     }
 
     @Test
