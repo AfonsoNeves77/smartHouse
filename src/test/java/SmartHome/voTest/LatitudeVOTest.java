@@ -41,12 +41,11 @@ class LatitudeVOTest {
     void toStringShouldReturnCorrectLatitudeAsString_LastValidValue()  {
 
         //Arrange
-        double maximumValue = 90.0;
-        String expected = "90.0";
+        double expected = 90.0;
 
         //Act
-        LatitudeVO latitudeVO = new LatitudeVO(maximumValue);
-        String result = latitudeVO.toString();
+        LatitudeVO latitudeVO = new LatitudeVO(expected);
+        double result = latitudeVO.getLatitude();
 
         //Assert
         assertEquals(expected,result);
@@ -56,12 +55,11 @@ class LatitudeVOTest {
     void toStringShouldReturnCorrectLatitudeAsString_FirstValidValue()  {
 
         //Arrange
-        double minimumValue = -90.0;
-        String expected = "-90.0";
+        double expected = -90.0;
 
         //Act
-        LatitudeVO latitudeVO = new LatitudeVO(minimumValue);
-        String result = latitudeVO.toString();
+        LatitudeVO latitudeVO = new LatitudeVO(expected);
+        double result = latitudeVO.getLatitude();
 
         //Assert
         assertEquals(expected,result);
