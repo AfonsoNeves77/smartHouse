@@ -15,9 +15,8 @@ public class LongitudeVO implements ValueObject{
         return longitudeValue > 180.0 || longitudeValue < -180.0;
     }
 
-    @Override
-    public String toString() {
-        return longitudeValue + "";
+    public double getLongitude() {
+        return this.longitudeValue;
 
     }
 }

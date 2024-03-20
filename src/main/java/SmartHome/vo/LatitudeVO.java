@@ -15,9 +15,8 @@ public class LatitudeVO implements ValueObject{
         return latitudeValue > 90.0 || latitudeValue < -90.0;
     }
 
-    @Override
-    public String toString() {
-        return latitudeValue + "";
+    public double getLatitude() {
+        return this.latitudeValue;
 
     }
 }
