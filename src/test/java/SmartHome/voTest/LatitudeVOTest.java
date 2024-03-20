@@ -8,14 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class LatitudeVOTest {
 
     @Test
-    void whenInvalidMinimumLatitude_thenThrowsInstantiationException(){
+    void whenInvalidMinimumLatitude_thenThrowsIllegalArgumentException(){
 
         //Arrange
         double minimumValue = -90.1;
         String expected = "Invalid latitude value";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class,() ->new LatitudeVO(minimumValue));
+        Exception exception = assertThrows(IllegalArgumentException.class,() ->new LatitudeVO(minimumValue));
         String result = exception.getMessage();
 
         //Assert
@@ -23,14 +23,14 @@ class LatitudeVOTest {
     }
 
     @Test
-    void whenInvalidMaximumLatitude_thenThrowsInstantiationException(){
+    void whenInvalidMaximumLatitude_thenThrowsIllegalArgumentException(){
 
         //Arrange
         double minimumValue = 90.1;
         String expected = "Invalid latitude value";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class,() ->new LatitudeVO(minimumValue));
+        Exception exception = assertThrows(IllegalArgumentException.class,() ->new LatitudeVO(minimumValue));
         String result = exception.getMessage();
 
         //Assert
@@ -38,7 +38,7 @@ class LatitudeVOTest {
     }
 
     @Test
-    void toStringShouldReturnCorrectLatitudeAsString_LastValidValue() throws InstantiationException {
+    void toStringShouldReturnCorrectLatitudeAsString_LastValidValue()  {
 
         //Arrange
         double maximumValue = 90.0;
@@ -53,7 +53,7 @@ class LatitudeVOTest {
     }
 
     @Test
-    void toStringShouldReturnCorrectLatitudeAsString_FirstValidValue() throws InstantiationException {
+    void toStringShouldReturnCorrectLatitudeAsString_FirstValidValue()  {
 
         //Arrange
         double minimumValue = -90.0;

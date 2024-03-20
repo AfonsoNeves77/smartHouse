@@ -4,9 +4,9 @@ public class LatitudeVO implements ValueObject{
 
     private double latitudeValue;
 
-    public  LatitudeVO(double latitudeValue) throws InstantiationException {
+    public  LatitudeVO(double latitudeValue) {
         if(invalidLatitudeValues(latitudeValue)){
-            throw new InstantiationException("Invalid latitude value");
+            throw new IllegalArgumentException("Invalid latitude value");
         }
         this.latitudeValue = latitudeValue;
     }

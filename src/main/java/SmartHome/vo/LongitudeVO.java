@@ -4,9 +4,9 @@ public class LongitudeVO implements ValueObject{
 
     private double longitudeValue;
 
-    public LongitudeVO(double longitudeValue) throws InstantiationException {
+    public LongitudeVO(double longitudeValue)  {
         if(invalidLongitudeValues(longitudeValue)){
-            throw new InstantiationException("Invalid longitude value");
+            throw new IllegalArgumentException("Invalid longitude value");
         }
         this.longitudeValue = longitudeValue;
     }
