@@ -17,13 +17,13 @@ class PostalCodeVOTest {
     @Test
     void testNullParameter_throwsInstantiationException() {
         String postalCode = null;
-        assertThrows(InstantiationException.class, () -> new PostalCodeVO(postalCode));
+        assertThrows(IllegalArgumentException.class, () -> new PostalCodeVO(postalCode));
     }
 
     @Test
     void testEmptyParameter_throwsInstantiationException() {
         String postalCode = "";
-        assertThrows(InstantiationException.class, () -> new PostalCodeVO(postalCode));
+        assertThrows(IllegalArgumentException.class, () -> new PostalCodeVO(postalCode));
     }
 
     @Test

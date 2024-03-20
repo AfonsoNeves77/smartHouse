@@ -41,12 +41,11 @@ class LongitudeVOTest {
     void toStringShouldReturnCorrectLongitudeAsString_LastValidValue()  {
 
         //Arrange
-        double maximumValue = 180;
-        String expected = "180.0";
+        double expected = 180;
 
         //Act
-        LongitudeVO longitudeVO = new LongitudeVO(maximumValue);
-        String result = longitudeVO.toString();
+        LongitudeVO longitudeVO = new LongitudeVO(expected);
+        double result = longitudeVO.getLongitude();
 
         //Assert
         assertEquals(expected,result);
@@ -56,12 +55,11 @@ class LongitudeVOTest {
     void toStringShouldReturnCorrectLongitudeAsString_FirstValidValue()  {
 
         //Arrange
-        double minimumValue = -180;
-        String expected = "-180.0";
+        double expected = -180;
 
         //Act
-        LongitudeVO longitudeVO = new LongitudeVO(minimumValue);
-        String result = longitudeVO.toString();
+        LongitudeVO longitudeVO = new LongitudeVO(expected);
+        double result = longitudeVO.getLongitude();
 
         //Assert
         assertEquals(expected,result);

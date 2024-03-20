@@ -1,12 +1,12 @@
 package SmartHome.vo;
 
-public class PostalCodeVO {
+public class PostalCodeVO implements ValueObject {
 
     private final String postalCode;
 
-    public PostalCodeVO(String postalCode) throws InstantiationException {
+    public PostalCodeVO(String postalCode){
         if (postalCode == null || postalCode.trim().isEmpty())
-            throw new InstantiationException("Please insert a valid country name.");
+            throw new IllegalArgumentException("Please insert a valid country name.");
         this.postalCode = postalCode;
     }
 
