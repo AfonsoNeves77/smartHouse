@@ -1,12 +1,12 @@
 package SmartHome.vo;
 
-public class CountryVO {
+public class CountryVO implements ValueObject {
 
     private final String country;
 
-    public CountryVO(String country) throws InstantiationException {
+    public CountryVO(String country){
         if (country == null || country.trim().isEmpty())
-            throw new InstantiationException("Please insert a valid country name.");
+            throw new IllegalArgumentException("Please insert a valid country name.");
         this.country = country;
     }
 
