@@ -9,8 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class DomainIDTest {
+public class RoomIDVOTest {
 
+    /**
+     * Test case to verify that the RoomIDVO constructor throws an IllegalArgumentException
+     * when given a null identifier. The result exception description must also match the expected one.
+     */
     @Test
     public void givenNullIdentifier_ShouldThrowIllegalArgumentException(){
 
@@ -18,7 +22,7 @@ public class DomainIDTest {
         String expected = "Invalid Identifier";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new RoomID(null));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new RoomIDVO(null));
         String result = exception.getMessage();
 
         //Assert
@@ -26,6 +30,9 @@ public class DomainIDTest {
 
     }
 
+    /**
+     * Test case to verify that the getID method of RoomIDVO returns the correct ID as a string.
+     */
     @Test
     public void getIDShouldReturnCorrectIDAsString(){
 
@@ -34,7 +41,7 @@ public class DomainIDTest {
         String expected = roomIdentifier.toString();
 
         //Act
-        RoomID roomID = new RoomID(roomIdentifier);
+        RoomIDVO roomID = new RoomIDVO(roomIdentifier);
         String result = roomID.getID();
 
         //Assert
