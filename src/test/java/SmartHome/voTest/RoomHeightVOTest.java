@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoomHeightVOTest {
+
+    /**
+     * Test case to verify that the RoomHeightVO constructor throws an IllegalArgumentException
+     * when given a negative height. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldCreateAValidVO_height() {
         //Arrange
@@ -19,6 +24,10 @@ class RoomHeightVOTest {
         assertEquals(height, result);
     }
 
+    /**
+     * Test case to verify that the RoomHeightVO constructor throws an IllegalArgumentException
+     * when given a negative height. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldThrowExceptionVO_heightWithInvalidHeight() {
         //Arrange
@@ -35,6 +44,10 @@ class RoomHeightVOTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    /**
+     * Test case to verify that the RoomHeightVO constructor throws an IllegalArgumentException
+     * when given a zero height. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldCreateValidVO_heightWithZeroHeight() {
         //Arrange
