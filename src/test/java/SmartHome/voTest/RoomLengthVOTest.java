@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoomLengthVOTest {
+    /**
+     * Test case to verify that the RoomLengthVO constructor throws an IllegalArgumentException
+     * when given a negative length. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldCreateAValidVO_length() {
         //Arrange
@@ -19,6 +23,10 @@ class RoomLengthVOTest {
         assertEquals(length, result);
     }
 
+    /**
+     * Test case to verify that the RoomLengthVO constructor throws an IllegalArgumentException
+     * when given a negative length. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldThrowExceptionVO_lengthWithInvalidLength() {
         //Arrange
@@ -35,6 +43,10 @@ class RoomLengthVOTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    /**
+     * Test case to verify that the RoomLengthVO constructor throws an IllegalArgumentException
+     * when given a zero length. The result exception description must also match the expected one.
+     */
     @Test
     public void shouldThrowExceptionVO_lengthWithZeroLength() {
         //Arrange
