@@ -12,6 +12,10 @@ import static org.mockito.Mockito.when;
 
 public class RoomDimensionsVOTest {
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null length. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomParamsAreValid_thenGetRoomLength() {
             //Arrange
@@ -28,6 +32,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null width. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomParamsAreValid_thenGetRoomWidth() {
             //Arrange
@@ -44,6 +52,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null height. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomParamsAreValid_thenGetRoomHeight() {
             //Arrange
@@ -60,6 +72,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null length. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomLengthIsNull_thenThrowException() {
             //Arrange
@@ -76,6 +92,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null width. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomWidthIsNull_thenThrowException() {
             //Arrange
@@ -92,6 +112,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null height. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomHeightIsNull_thenThrowException() {
             //Arrange
@@ -108,6 +132,10 @@ public class RoomDimensionsVOTest {
             assertEquals(expected, result);
         }
 
+        /**
+         * Test case to verify that the RoomDimensionsVO constructor throws an IllegalArgumentException
+         * when given a null length, width, and height. The result exception description must also match the expected one.
+         */
         @Test
         public void whenRoomDimensionsAreValid_thenCreateRoomDimensions() {
             //Arrange
@@ -121,5 +149,4 @@ public class RoomDimensionsVOTest {
             //Assert
             assertNotNull(roomDimensions);
         }
-
     }
