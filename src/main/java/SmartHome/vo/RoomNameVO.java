@@ -2,7 +2,7 @@ package SmartHome.vo;
 
 public class RoomNameVO implements ValueObject{
 
-    private String roomName;
+    private final String roomName;
 
     /** RoomNameVO constructor for the corresponding Value Object, with a String roomName as its parameter.
      * If the String is either null, empty or blank it will throw an Illegal Argument Exception.

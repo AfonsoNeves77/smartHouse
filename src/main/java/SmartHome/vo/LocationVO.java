@@ -2,8 +2,8 @@ package SmartHome.vo;
 
 public class LocationVO implements ValueObject{
 
-    private AddressVO addressVO;
-    private GpsVO gpsVO;
+    private final AddressVO addressVO;
+    private final GpsVO gpsVO;
 
     /**
      * Location constructor for the corresponding Value Object, with addressVO and gpsVO as parameters, throwing an Illegal
