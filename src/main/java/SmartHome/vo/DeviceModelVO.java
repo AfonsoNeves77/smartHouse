@@ -2,7 +2,7 @@ package SmartHome.vo;
 
 public class DeviceModelVO implements ValueObject{
 
-    private String strDeviceModel;
+    private final String strDeviceModel;
 
     /**
      * DeviceModel Constructor for the corresponding Value Object
