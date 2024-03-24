@@ -1,6 +1,6 @@
 package SmartHome.ddd;
 
-public interface IdentityDomain {
+public interface DomainEntity {
 
     DomainID getId();
 }
