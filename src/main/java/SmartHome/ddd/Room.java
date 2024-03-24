@@ -15,7 +15,7 @@ import java.util.UUID;
  * if any of them are null. Additionally, the constructor instantiates a RoomIDVO object
  * for the room's unique identifier.
  */
-public class Room implements IdentityDomain {
+public class Room implements DomainEntity {
 
     private final RoomIDVO roomID;
     private RoomNameVO roomName;
