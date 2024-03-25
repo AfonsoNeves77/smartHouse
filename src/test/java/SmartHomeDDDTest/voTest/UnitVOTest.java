@@ -41,10 +41,9 @@ class UnitVOTest {
     void testEmptyUnit_ShouldReturnUnitVO() {
         // Given
         String unit = "";
-        // When
-        UnitVO unitVO = new UnitVO(unit);
+        //When
         // Then
-        assertEquals(unit, unitVO.getUnit());
+        assertThrows(IllegalArgumentException.class, () -> new UnitVO(unit));
     }
 
 
