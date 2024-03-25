@@ -1,8 +1,19 @@
 package SmartHome.vo;
 
+/**
+ * Represents a value object for City.
+ */
+
 public class CityVO implements ValueObject {
 
-        private String city;
+        private final String city;
+
+        /**
+         * Constructs a CityVO object with the given city.
+         *
+         * @param city The city.
+         * @throws IllegalArgumentException If the city is null or empty.
+         */
 
         public CityVO(String city) {
             if(city == null || city.isBlank()) {

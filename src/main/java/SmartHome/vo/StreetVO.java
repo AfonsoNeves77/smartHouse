@@ -2,7 +2,7 @@ package SmartHome.vo;
 
 public class StreetVO implements ValueObject {
 
-        private String street;
+        private final String street;
 
         public StreetVO(String street) {
             if(street == null || street.isBlank()) {
