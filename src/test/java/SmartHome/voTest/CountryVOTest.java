@@ -15,13 +15,13 @@ class CountryVOTest {
     }
 
     @Test
-    void testNullParameter_throwsInstantiationException() {
+    void testNullParameter_throwsIllegalArgumentException() {
         String country = null;
         assertThrows(IllegalArgumentException.class, () -> new CountryVO(country));
     }
 
     @Test
-    void testEmptyParameter_throwsInstantiationException() {
+    void testEmptyParameter_throwsIllegalArgumentException() {
         String country = "";
         assertThrows(IllegalArgumentException.class, () -> new CountryVO(country));
     }
