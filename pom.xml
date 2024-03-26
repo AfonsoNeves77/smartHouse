@@ -76,6 +76,14 @@
             <artifactId>commons-suncalc</artifactId>
             <version>3.9</version>
         </dependency>
+
+        <!-- Provides utility methods and decorators for Iterable instances -->
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.1</version>
+        </dependency>
     </dependencies>
 
     <build>
