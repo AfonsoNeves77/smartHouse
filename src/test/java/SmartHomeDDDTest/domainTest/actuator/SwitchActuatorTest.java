@@ -283,8 +283,9 @@ public class SwitchActuatorTest {
     void whenSwitchingLoadInTrueStatus_StatusShouldSwitchToFalse(){
         //Arrange
         String name = "Switch Actuator";
+        String type = "switchActuator";
         ActuatorNameVO actuatorName = new ActuatorNameVO(name);
-        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO(type);
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
         SimHardwareAct simHardwareAct = new SimHardwareAct();
 
@@ -310,8 +311,9 @@ public class SwitchActuatorTest {
     void whenSwitchingLoadInFalseStatus_StatusShouldSwitchToTrue(){
         //Arrange
         String name = "Switch Actuator";
+        String type = "switchActuator";
         ActuatorNameVO actuatorName = new ActuatorNameVO(name);
-        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO(type);
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
         SimHardwareAct simHardwareAct = new SimHardwareAct();
 

@@ -2,19 +2,29 @@ package SmartHomeDDD.vo.actuatorType;
 
 import SmartHomeDDD.domain.DomainID;
 
-import java.util.UUID;
 
 public class ActuatorTypeIDVO implements DomainID {
 
-    private final UUID actuatorTypeID;
+    private final String actuatorTypeID;
 
-    public ActuatorTypeIDVO(UUID actuatorTypeID) {
-        if (actuatorTypeID == null) throw new IllegalArgumentException("ActuatorTypeID cannot be null");
+    /**
+     * Constructor for ActuatorTypeID Value Object. It receives an identifier, and creates the object if the identifier
+     * is not null or empty;
+     * @param actuatorTypeID String identifier for the actuator type;
+     */
+
+    public ActuatorTypeIDVO(String actuatorTypeID) {
+        if (actuatorTypeID == null || actuatorTypeID.trim().isEmpty()){
+            throw new IllegalArgumentException("ActuatorTypeID cannot be null");
+        }
         this.actuatorTypeID = actuatorTypeID;
     }
 
-
+    /**
+     * Simple getter method;
+     * @return Receives the encapsulated value (which in this case is a string);
+     */
     public String getID() {
-        return actuatorTypeID.toString();
+        return actuatorTypeID;
     }
 }
