@@ -1,11 +1,7 @@
 package SmartHomeDDDTest.domainTest.sensorTest;
 
-import SmartHomeDDD.domain.sensor.SunriseSensor;
-import SmartHomeDDD.domain.sensor.SwitchSensor;
+import SmartHomeDDD.domain.sensor.DewPointSensor;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
-import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
-import SmartHomeDDD.domain.sensor.sensorValues.SwitchValue;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
@@ -13,14 +9,13 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
-class SwitchSensorTest {
+public class DewPointSensorTest {
 
     /**
      * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
@@ -32,13 +27,13 @@ class SwitchSensorTest {
         // Arrange
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Parameters cannot be null";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(null, deviceID, sensorTypeID));
+                    new DewPointSensor(null, deviceID, sensorTypeID));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -59,13 +54,13 @@ class SwitchSensorTest {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Parameters cannot be null";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(sensorName, null, sensorTypeID));
+                    new DewPointSensor(sensorName, null, sensorTypeID));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -86,13 +81,13 @@ class SwitchSensorTest {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Parameters cannot be null";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(sensorName, deviceID, null));
+                    new DewPointSensor(sensorName, deviceID, null));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -121,7 +116,7 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
             String result = sensor.getSensorName().toString();
@@ -151,7 +146,7 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
             String result = sensor.getSensorTypeID().getID();
@@ -182,7 +177,7 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
             String result = sensor.getDeviceID().getID();
@@ -211,7 +206,7 @@ class SwitchSensorTest {
             when(mock.getID()).thenReturn(expected);
         })) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
             // Act
             String result = sensor.getId().getID();
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -233,8 +228,7 @@ class SwitchSensorTest {
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
-        String expected = "Invalid external service";
+        DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
@@ -247,25 +241,24 @@ class SwitchSensorTest {
 
             // Assert
             assertEquals(0, listOfMockedSensorIDVO.size());
-            assertEquals(expected, result);
         }
     }
 
     /**
-     * This test ensures the method getSunriseTime returns an object of the type ZonedDateTimeDouble, which, when called
+     * This test ensures the method getDewPointValue returns an object of the type String, which, when called
      * with getValue and toString, returns the encapsulated value.
      */
     @Test
-    void givenValidParameters_ReturnsSwitchValueToString() throws InstantiationException {
+    void givenValidParameters_ReturnsDewPointValueToString() throws InstantiationException {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
         SimHardware simHardware = mock(SimHardware.class);
-        SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+        DewPointSensor sensor = new DewPointSensor(sensorName, deviceID, sensorTypeID);
 
-        String reading = "On";
-        String expected = "On";
+        String reading = "5.0";
+        String expected = "5.0";
 
         when(simHardware.getValue()).thenReturn(reading);
 
