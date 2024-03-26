@@ -48,7 +48,7 @@ public class SensorType implements DomainEntity {
      */
 
     @Override
-    public DomainID getId() {
+    public SensorTypeIDVO getId() {
         return sensorTypeID;
     }
 
