@@ -245,7 +245,7 @@ public class DewPointSensorTest {
     }
 
     /**
-     * This test ensures the method getSunriseTime returns an object of the type ZonedDateTimeDouble, which, when called
+     * This test ensures the method getDewPointValue returns an object of the type String, which, when called
      * with getValue and toString, returns the encapsulated value.
      */
     @Test
