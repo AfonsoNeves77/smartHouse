@@ -1,9 +1,9 @@
 package SmartHomeDDD.domain.sensor;
 
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.SwitchValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
+import SmartHomeDDD.domain.sensor.sensorValues.SwitchValue;
 import SmartHomeDDD.domain.DomainEntity;
+import SmartHomeDDD.vo.ValueObject;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
@@ -81,7 +81,7 @@ public class SwitchSensor implements Sensor, DomainEntity {
      * @return SwitchValue object
      * @throws InstantiationException
      */
-    public Value<String> getReading(SimHardware simHardware) throws InstantiationException {
+    public ValueObject<String> getReading(SimHardware simHardware) throws InstantiationException {
         if (simHardware == null) throw new IllegalArgumentException("Invalid external service");
         String simValue = simHardware.getValue();
         return new SwitchValue(simValue);
