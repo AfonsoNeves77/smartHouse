@@ -27,6 +27,8 @@ void whenConstructorInvoked_ThenMockObjectShouldBeCreated() throws Instantiation
 
     try(MockedConstruction<Device> deviceDouble = mockConstruction(Device.class,(mock, context)-> {
         when(mock.getDeviceName()).thenReturn(nameDouble);
+        when(mock.getDeviceModel()).thenReturn(modelDouble);
+        when(mock.getRoomID()).thenReturn(roomIdDouble);
     })) {
 
         DeviceFactory factoryDevice = new DeviceFactory();
@@ -38,7 +40,9 @@ void whenConstructorInvoked_ThenMockObjectShouldBeCreated() throws Instantiation
         List<Device> devices = deviceDouble.constructed();
 
         assertEquals(1, devices.size());
+        assertEquals(modelDouble, device.getDeviceModel());
         assertEquals(nameDouble, device.getDeviceName());
+        assertEquals(roomIdDouble,device.getRoomID());
     }
 }
 }
