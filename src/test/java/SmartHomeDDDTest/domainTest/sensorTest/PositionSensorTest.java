@@ -1,11 +1,8 @@
 package SmartHomeDDDTest.domainTest.sensorTest;
 
-import SmartHomeDDD.domain.sensor.SunriseSensor;
+import SmartHomeDDD.domain.sensor.PositionSensor;
 import SmartHomeDDD.domain.sensor.SwitchSensor;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
-import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
-import SmartHomeDDD.domain.sensor.sensorValues.SwitchValue;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
@@ -13,32 +10,29 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
-class SwitchSensorTest {
+public class PositionSensorTest {
 
     /**
-     * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
-     * does not get to be created as it does not reach that stage.
+     * Given a null SensorNameVO, the constructor throws IllegalArgumentException.
      */
     @Test
-    void givenNullNameVO_ThrowsIllegalArgument() {
+    void givenNullSensorNameVO_ThrowsIllegalArgument() {
         // Arrange
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Invalid Parameters";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(null, deviceID, sensorTypeID));
+                    new PositionSensor(null, deviceID, sensorTypeID));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -50,22 +44,20 @@ class SwitchSensorTest {
     }
 
     /**
-     * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
-     * does not get to be created as it does not reach that stage.
+     * Given a null DeviceIDVO, the constructor throws IllegalArgumentException.
      */
     @Test
     void givenNullDeviceID_ThrowsIllegalArgument() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Invalid Parameters";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(sensorName, null, sensorTypeID));
+                    new PositionSensor(sensorName, null, sensorTypeID));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -77,22 +69,20 @@ class SwitchSensorTest {
     }
 
     /**
-     * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
-     * does not get to be created as it does not reach that stage.
+     *  Given a null SensorTypeIDVO, the constructor throws IllegalArgumentException.
      */
     @Test
     void givenNullSensorTypeID_ThrowsIllegalArgument() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
-        String expected = "Invalid parameters.";
+        String expected = "Invalid Parameters";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             // Act
             Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                    new SwitchSensor(sensorName, deviceID, null));
+                    new PositionSensor(sensorName, deviceID, null));
             String result = exception.getMessage();
 
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -104,11 +94,10 @@ class SwitchSensorTest {
     }
 
     /**
-     * This test ensures the encapsulated VO's value is accessbile by calling getSensorName() : VO, then calling toString
-     * on the same VO;
+     *  When GetSensorName method is called, Then Returns Name.
      */
     @Test
-    void callingGetSensorNameToString_ReturnsNameVoAsString() {
+    void whenGetSensorNameMethodIsCalled_ThenReturnsName() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         when(sensorName.toString()).thenReturn("Test");
@@ -121,7 +110,7 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
             String result = sensor.getSensorName().toString();
@@ -134,11 +123,10 @@ class SwitchSensorTest {
     }
 
     /**
-     * This test ensures the encapsulated VO's value is accessbile by calling getSensorTypeID() : VO, then calling getID
-     * again on the same VO to receive its value as String;
+     *  When GetSensorType method is called, Then Returns SensorTypeID.
      */
     @Test
-    void callingGetSensorTypeIDToString_ReturnsSensorTypeIDAsString() {
+    void whenGetSensorTypeMethodIsCalled_ThenReturnsSensorTypeID() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
 
@@ -151,10 +139,10 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
-            String result = sensor.getSensorTypeID().getID();
+            String result = sensor.getSensorType().getID();
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
 
             // Assert
@@ -163,12 +151,12 @@ class SwitchSensorTest {
         }
     }
 
+
     /**
-     * This test ensures the encapsulated VO's value is accessbile by calling getDeviceID() : VO, then calling getID
-     * again on the same VO to receive its value as String;
+     *  When GetDeviceID method is called, Then Returns DeviceID.
      */
     @Test
-    void callingGetDeviceIDWithgetID_ReturnsDeviceIDAsString() {
+    void whenGetDeviceIDMethodIsCalled_thenReturnsDeviceID() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
 
@@ -182,7 +170,7 @@ class SwitchSensorTest {
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
             String result = sensor.getDeviceID().getID();
@@ -194,12 +182,12 @@ class SwitchSensorTest {
         }
     }
 
+
     /**
-     * This test ensures the encapsulated VO's value is accessbile by calling getID() : VO, then calling getID again
-     * on the same VO to receive its value as String;
+     *  When GetID method is called, Then Returns SensorID.
      */
     @Test
-    void callingGetIDToGetSensorIDVOThenCallingGetIDAgainToGetString_ReturnsSensorIDAsString() {
+    void whenGetIDToGetSensorIDVOThenCallingGetIDAgainToGetStringAreCalled_ThenReturnsSensorIDAsString() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
@@ -211,7 +199,7 @@ class SwitchSensorTest {
             when(mock.getID()).thenReturn(expected);
         })) {
 
-            SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+            PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
             // Act
             String result = sensor.getId().getID();
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
@@ -223,18 +211,18 @@ class SwitchSensorTest {
     }
 
     /**
-     * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
-     * does not get to be created as it does not reach that stage.
+     * Given a null SimHardware, the getReading method throws IllegalArgumentException.
+     * @throws InstantiationException When the external service is null.
      */
     @Test
-    void givenNullSimHardware_ThrowsIllegalArgument() {
+    void givenNullSimHardware_ThenThrowsIllegalArgument() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
-        SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
-        String expected = "Invalid external service";
+        PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
+        int expected = 0;
+        String expected2 = "Invalid external service";
 
         try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
@@ -246,31 +234,31 @@ class SwitchSensorTest {
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
 
             // Assert
-            assertEquals(0, listOfMockedSensorIDVO.size());
-            assertEquals(expected, result);
+            assertEquals(expected, listOfMockedSensorIDVO.size());
+            assertEquals(expected2, result);
         }
     }
 
     /**
-     * This test ensures the method getSunriseTime returns an object of the type ZonedDateTimeDouble, which, when called
-     * with getValue and toString, returns the encapsulated value.
+     * Given a valid SimHardware, the getReading method returns PositionValue.
+     * @throws InstantiationException If the external service is null.
      */
     @Test
-    void givenValidParameters_ReturnsSwitchValueToString() throws InstantiationException {
+    void whenGivenValidParameters_ThenReturnsPositionValueInteger() throws InstantiationException {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
         SimHardware simHardware = mock(SimHardware.class);
-        SwitchSensor sensor = new SwitchSensor(sensorName, deviceID, sensorTypeID);
+        PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
 
-        String reading = "On";
-        String expected = "On";
+        String reading = "5";
+        int expected = 5;
 
         when(simHardware.getValue()).thenReturn(reading);
 
         // Act
-        String result = sensor.getReading(simHardware).getValue().toString();
+        int result = sensor.getReading(simHardware).getValue();
 
         // Assert
         assertEquals(expected, result);
