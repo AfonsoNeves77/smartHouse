@@ -1,7 +1,5 @@
 package SmartHomeDDD.vo.houseVO;
 
-import SmartHomeDDD.vo.ValueObject;
-
 public class LocationVO {
 
     private final AddressVO addressVO;

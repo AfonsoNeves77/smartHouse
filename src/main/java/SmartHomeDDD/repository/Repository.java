@@ -1,8 +1,9 @@
 package SmartHomeDDD.repository;
 
+import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
 
-public interface Repository <T>{
+public interface Repository <ID extends DomainID, T extends DomainEntity>{
 
     /**
      * Saves a domainEntity unto the repository implementation
@@ -21,12 +22,12 @@ public interface Repository <T>{
      * @param id IDVO
      * @return Entity matching the inserted IDVO
      */
-    T findById(DomainID id);
+    T findById(ID id);
 
     /**
      * Verifies if an entity is present in the repository, queries by ID;
      * @param id IDVO
      * @return True or False
      */
-    boolean isPresent(DomainID id);
+    boolean isPresent(ID id);
 }
