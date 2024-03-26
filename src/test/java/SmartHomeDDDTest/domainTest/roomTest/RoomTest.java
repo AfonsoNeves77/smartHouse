@@ -135,7 +135,7 @@ class RoomTest {
      */
 
     @Test
-    void getRoomID_ShouldReturnCorrectHouseID(){
+    void getRoomID_ShouldReturnCorrectRoomID(){
 
         //Arrange
         int expectedMockedConstructions = 1;
