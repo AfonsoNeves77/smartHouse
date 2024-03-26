@@ -38,7 +38,7 @@ class UnitVOTest {
      * Should throw IllegalArgumentException
      */
     @Test
-    void testEmptyUnit_ShouldReturnUnitVO() {
+    void testEmptyUnit_ShouldThrowIllegalArgumentException() {
         // Given
         String unit = "";
         //When
