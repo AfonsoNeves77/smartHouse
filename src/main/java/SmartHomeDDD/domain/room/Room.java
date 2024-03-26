@@ -1,7 +1,6 @@
 package SmartHomeDDD.domain.room;
 
 import SmartHomeDDD.domain.DomainEntity;
-import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.vo.houseVO.HouseIDVO;
 import SmartHomeDDD.vo.roomVO.RoomDimensionsVO;
 import SmartHomeDDD.vo.roomVO.RoomFloorVO;
@@ -95,12 +94,11 @@ public class Room implements DomainEntity {
     }
 
     /**
-     *
      * @return Rooms´s identity, it´s ID;
      */
 
     @Override
-    public DomainID getId() {
+    public RoomIDVO getId() {
         return this.roomID;
     }
 }

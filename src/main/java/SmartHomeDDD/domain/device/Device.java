@@ -73,14 +73,26 @@ public class Device implements DomainEntity {
             return this.deviceModel;
         }
 
+        /**
+         * Gets the device's status.
+         * @return the device status object (DeviceStatusVO)
+         */
         public DeviceStatusVO getDeviceStatus() {
             return this.deviceStatus;
         }
 
+        /**
+         * Gets the device's ID.
+         * @return the device ID object (DeviceIDVO)
+         */
         public RoomIDVO getRoomID() {
             return this.roomID;
         }
 
+        /**
+         * Gets the device's ID.
+         * @return the device ID object (DeviceIDVO)
+         */
         @Override
         public DeviceIDVO getId() {
             return this.deviceID;
