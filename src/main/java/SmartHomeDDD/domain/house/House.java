@@ -12,14 +12,14 @@ public class House  implements DomainEntity {
 
     /**
      * Constructor for HouseEntity.
-     * @param location The location of the house.
+     * @param locationVO The locationVO of the house.
      */
-    public House(LocationVO location) {
-        if (!validateLocation(location)) {
+    public House(LocationVO locationVO) {
+        if (!validateLocation(locationVO)) {
             throw new IllegalArgumentException("Invalid House Entity parameters.");
         }
         this.houseID = new HouseIDVO(UUID.randomUUID());
-        this.location = location;
+        this.location = locationVO;
     }
 
     /**
