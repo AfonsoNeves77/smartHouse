@@ -11,8 +11,8 @@ class SensorTypeIDVOTest {
 
     @Test
     void testValidParameters_returnsSensorTypeIDVO() {
-        UUID sensorTypeID = UUID.randomUUID();
-        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(sensorTypeID);
+        String type = "humidity";
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(type);
         assertNotNull(sensorTypeIDVO);
     }
 
@@ -21,12 +21,17 @@ class SensorTypeIDVOTest {
         assertThrows(IllegalArgumentException.class, () -> new SensorTypeIDVO(null));
     }
 
+    @Test
+    void testEmptySensorTypeID_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new SensorTypeIDVO(" "));
+    }
+
 
     @Test
     void testGetSensorTypeID_returnsSensorTypeID() {
-        UUID sensorTypeID = UUID.randomUUID();
-        String expected = sensorTypeID.toString();
-        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(sensorTypeID);
+        String expected = "humidity";
+        String type = "humidity";
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(type);;
         assertEquals(expected, sensorTypeIDVO.getID());
     }
 }
