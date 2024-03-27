@@ -16,4 +16,8 @@ public class SimHardwareAct {
         return true;
     }
 
+    public boolean executeIntegerCommandSim(int position) {
+        return true;
+    }
+
 }

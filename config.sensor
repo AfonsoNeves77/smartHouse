@@ -1,0 +1,12 @@
+# DDD Sensors
+Humidity = SmartHomeDDD.domain.sensor.HumiditySensor
+Temperature = SmartHomeDDD.domain.sensor.TemperatureSensor
+Position = SmartHomeDDD.domain.sensor.PositionSensor
+Wind = SmartHomeDDD.domain.sensor.WindSensor
+DewPoint = SmartHomeDDD.domain.sensor.DewPointSensor
+Sunset = SmartHomeDDD.domain.sensor.SunsetSensor
+Sunrise = SmartHomeDDD.domain.sensor.SunriseSensor
+AveragePowerConsumption = SmartHomeDDD.domain.sensor.AveragePowerConsumptionSensor
+EnergyConsumption = SmartHomeDDD.domain.sensor.EnergyConsumptionSensor
+Switch = SmartHomeDDD.domain.sensor.SwitchSensor
+SolarIrradiance = SmartHomeDDD.domain.sensor.SolarIrradianceSensor
