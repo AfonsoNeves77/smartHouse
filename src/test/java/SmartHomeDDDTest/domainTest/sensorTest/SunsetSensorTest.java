@@ -1,8 +1,8 @@
 package SmartHomeDDDTest.domainTest.sensorTest;
 
-import SmartHome.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.sensor.AveragePowerConsumptionSensor;
-import SmartHomeDDD.domain.sensor.sensorValues.AveragePowerConsumptionValue;
+import SmartHomeDDD.domain.sensor.SunsetSensor;
+import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
+import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
@@ -10,6 +10,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
- * Test class for the AveragePowerConsumptionSensor
+ * Test class for SunsetSensor
  */
 
-public class AveragePowerConsumptionSensorTest {
+public class SunsetSensorTest {
 
     /**
-     * Test to check if the constructor throws an exception when the sensor name is null
+     * This test ensures the constructor throws an IllegalArgumentException when given a null SensorNameVO.
      */
 
     @Test
@@ -33,16 +34,16 @@ public class AveragePowerConsumptionSensorTest {
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
         DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
         String expected = "Parameters cannot be null";
-//        Act
+//            Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new AveragePowerConsumptionSensor(sensorName, deviceIDDouble, sensorTypeDouble));
-//        Assert
+                new SunsetSensor(sensorName, deviceIDDouble, sensorTypeDouble));
+//            Assert
         String result = exception.getMessage();
         assertEquals(expected, result);
     }
 
     /**
-     * Test to check if the constructor throws an exception when the sensor type is null
+     * This test ensures the constructor throws an IllegalArgumentException when given a null SensorTypeIDVO.
      */
 
     @Test
@@ -52,16 +53,16 @@ public class AveragePowerConsumptionSensorTest {
         SensorTypeIDVO sensorType = null;
         DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
         String expected = "Parameters cannot be null";
-//        Act
+//            Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorType));
-//        Assert
+                new SunsetSensor(sensorNameDouble, deviceIDDouble, sensorType));
+//            Assert
         String result = exception.getMessage();
         assertEquals(expected, result);
     }
 
     /**
-     * Test to check if the constructor throws an exception when the device ID is null
+     * This test ensures the constructor throws an IllegalArgumentException when given a null DeviceIDVO.
      */
 
     @Test
@@ -71,89 +72,75 @@ public class AveragePowerConsumptionSensorTest {
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
         DeviceIDVO deviceID = null;
         String expected = "Parameters cannot be null";
-//        Act
+//            Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new AveragePowerConsumptionSensor(sensorNameDouble, deviceID, sensorTypeDouble));
-//        Assert
+                new SunsetSensor(sensorNameDouble, deviceID, sensorTypeDouble));
+//            Assert
         String result = exception.getMessage();
         assertEquals(expected, result);
     }
 
     /**
-     * Test to check if the getReading method throws an exception when the SimHardware is null
+     * This test ensures that the method getSunsetTime throws an IllegalArgumentException when given a null SunTimeCalculator.
+     * It also ensures that the method creates a new instance of SensorIDVO.
      */
 
     @Test
-    void givenNullSimHardware_whenGetReading_thenThrowException() {
+    void givenNullSunTimeCalculator_whenGettingSunsetTime_thenThrowException() {
 //        Arrange
         SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
         DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
-        SimHardware simHardware = null;
-        String initialDate = "01-01-2021 00:00:00";
-        String finalDate = "01-01-2021 00:00:00";
+        SunTimeCalculator sunTimeCalculator = null;
+        String date = "2021-06-01";
+        String gpsLocation = "40.7128 : 74.0060";
         String expected = "Invalid external service";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
-//        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(initialDate, finalDate, simHardware));
-//        Assert
-        String result = exception.getMessage();
-        assertEquals(expected, result);
+        int expectedListSize = 1;
+
+        try (MockedConstruction<SensorIDVO> sensorIDVOMock = mockConstruction(SensorIDVO.class)) {
+            SunsetSensor sunsetSensor = new SunsetSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+//            Act
+            Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                    sunsetSensor.getSunsetTime(date, gpsLocation, sunTimeCalculator));
+//            Assert
+            String result = exception.getMessage();
+            List<SensorIDVO> createdInstances = sensorIDVOMock.constructed();
+
+            assertEquals(expected, result);
+            assertEquals(expectedListSize, createdInstances.size());
+        }
     }
 
     /**
-     * Test to check if the getReading method throws an exception when the date is invalid
+     * This test ensures that the method getSunsetTime returns the correct value when given a valid SunTimeCalculator.
+     * It also ensures that the method creates a new instance of SunTimeValue.
      */
 
     @Test
-    void givenInvalidDate_whenGetReading_thenThrowException() {
+    void givenValidSunTimeCalculator_whenGettingSunsetTime_thenReturnSunTimeValue() {
 //        Arrange
         SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
         DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
-        String initialDate = "15-12-2020 14:15:45";
-        String finalDate = "16/12/2020 14:15:45";
-        SimHardware simHardware = mock(SimHardware.class);
-        String expected = "Invalid date";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
-//        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensor.getReading(initialDate, finalDate, simHardware));
-//        Assert
-        String result = exception.getMessage();
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test to check if the getReading method returns the expected value
-     * It also checks if the AveragePowerConsumptionValue constructor is called
-     * and if the getValue method is called
-     * It also checks if the created instances of AveragePowerConsumptionValue is 1
-     */
-
-    @Test
-    void givenValidSimHardware_whenGetReading_thenReturnValue() {
-//        Arrange
-        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
-        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
-        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
-        String initialDate = "15-12-2020 14:15:45";
-        String finalDate = "16-12-2020 14:15:45";
-        AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
-        SimHardware simHardware = mock(SimHardware.class);
-        when(simHardware.getValue(initialDate, finalDate)).thenReturn("100");
-        int expected = 100;
+        SunTimeCalculator sunTimeCalculator = mock(SunTimeCalculator.class);
+        SunsetSensor sunsetSensor = new SunsetSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
         int expectedSize = 1;
 
-        try (MockedConstruction<AveragePowerConsumptionValue> averagePowerConsumptionValueMock = mockConstruction(AveragePowerConsumptionValue.class, (mock, context) -> {
-            when(mock.getValue()).thenReturn(100);
-        })) {
+        String date = "2021-06-01";
+        String gpsLocation = "40.7128 : 74.0060";
 
-//        Act
-            int result = sensor.getReading(initialDate, finalDate, simHardware).getValue();
-//        Assert
-            List<AveragePowerConsumptionValue> createdInstances = averagePowerConsumptionValueMock.constructed();
+        ZonedDateTime zonedDateTimeDouble = mock(ZonedDateTime.class);
+        when(zonedDateTimeDouble.toString()).thenReturn("2021-06-01T20:00:00Z");
+
+        String expected = "2021-06-01T20:00:00Z";
+
+        try (MockedConstruction<SunTimeValue> sunTimeValueMock = mockConstruction(SunTimeValue.class, (mock, context) -> {
+            when(mock.getValue()).thenReturn(zonedDateTimeDouble);
+        })) {
+//            Act
+            String result = sunsetSensor.getSunsetTime(date, gpsLocation, sunTimeCalculator).getValue().toString();
+//            Assert
+            List<SunTimeValue> createdInstances = sunTimeValueMock.constructed();
             assertEquals(expected, result);
             assertEquals(expectedSize, createdInstances.size());
         }
@@ -165,9 +152,9 @@ public class AveragePowerConsumptionSensorTest {
      */
 
     @Test
-    void givenGetSensorName_whenGetSensorName_thenReturnSensorNameAsString() {
+    void givenGetSensorName_whenGettingSensorName_thenReturnSensorNameAsString() {
 //        Arrange
-        String name = "Average Power Consumption Sensor";
+        String name = "SunsetSensor";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         when(sensorName.getValue()).thenReturn(name);
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
@@ -175,10 +162,10 @@ public class AveragePowerConsumptionSensorTest {
         int expectedSize = 1;
 
         try (MockedConstruction<SensorIDVO> sensorIDVOMock = mockConstruction(SensorIDVO.class)) {
-            AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorName, deviceIDDouble, sensorTypeDouble);
-//        Act
-            String result = sensor.getSensorName().getValue();
-//        Assert
+            SunsetSensor sunsetSensor = new SunsetSensor(sensorName, deviceIDDouble, sensorTypeDouble);
+//            Act
+            String result = sunsetSensor.getSensorName().getValue();
+//            Assert
             List<SensorIDVO> createdInstances = sensorIDVOMock.constructed();
             assertEquals(name, result);
             assertEquals(expectedSize, createdInstances.size());
@@ -191,20 +178,20 @@ public class AveragePowerConsumptionSensorTest {
      */
 
     @Test
-    void givenGetSensorTypeID_whenGetSensorTypeID_thenReturnSensorTypeIDAsString() {
+    void givenGetSensorTypeID_whenGettingSensorTypeID_thenReturnSensorTypeIDAsString() {
 //        Arrange
-        String sensorTypeID = "AveragePowerConsumptionSensor";
+        String sensorTypeID = "SunsetSensor";
         SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
-        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
-        when(sensorTypeIDVO.getID()).thenReturn(sensorTypeID);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+        when(sensorType.getID()).thenReturn(sensorTypeID);
         DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
         int expectedSize = 1;
 
         try (MockedConstruction<SensorIDVO> sensorIDVOMock = mockConstruction(SensorIDVO.class)) {
-            AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorTypeIDVO);
-//        Act
-            String result = sensor.getSensorTypeID().getID();
-//        Assert
+            SunsetSensor sunsetSensor = new SunsetSensor(sensorNameDouble, deviceIDDouble, sensorType);
+//            Act
+            String result = sunsetSensor.getSensorTypeID().getID();
+//            Assert
             List<SensorIDVO> createdInstances = sensorIDVOMock.constructed();
             assertEquals(sensorTypeID, result);
             assertEquals(expectedSize, createdInstances.size());
@@ -217,9 +204,9 @@ public class AveragePowerConsumptionSensorTest {
      */
 
     @Test
-    void givenGetDeviceID_whenGetDeviceID_thenReturnDeviceIDAsString() {
+    void givenGetDeviceID_whenGettingDeviceID_thenReturnDeviceIDAsString() {
 //        Arrange
-        String deviceID = "DeviceID";
+        String deviceID = "SunsetSensor";
         SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
@@ -227,10 +214,10 @@ public class AveragePowerConsumptionSensorTest {
         int expectedSize = 1;
 
         try (MockedConstruction<SensorIDVO> sensorIDVOMock = mockConstruction(SensorIDVO.class)) {
-            AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDVO, sensorTypeDouble);
-//        Act
-            String result = sensor.getDeviceID().getID();
-//        Assert
+            SunsetSensor sunsetSensor = new SunsetSensor(sensorNameDouble, deviceIDVO, sensorTypeDouble);
+//            Act
+            String result = sunsetSensor.getDeviceID().getID();
+//            Assert
             List<SensorIDVO> createdInstances = sensorIDVOMock.constructed();
             assertEquals(deviceID, result);
             assertEquals(expectedSize, createdInstances.size());
@@ -238,12 +225,12 @@ public class AveragePowerConsumptionSensorTest {
     }
 
     /**
-     * This test ensures that the method getId returns the correct value.
+     * This test ensures that the method getID returns the correct value.
      * It also ensures that the method creates a new instance of SensorIDVO.
      */
 
     @Test
-    void givenGetId_whenGetId_thenReturnSensorIDAsString() {
+    void givenGetID_whenGettingID_thenReturnSensorIDAsString() {
 //        Arrange
         String sensorID = "123";
         SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
@@ -254,10 +241,10 @@ public class AveragePowerConsumptionSensorTest {
         try (MockedConstruction<SensorIDVO> sensorIDVOMock = mockConstruction(SensorIDVO.class, (mock, context) -> {
             when(mock.getID()).thenReturn(sensorID);
         })) {
-            AveragePowerConsumptionSensor sensor = new AveragePowerConsumptionSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
-//        Act
-            String result = sensor.getId().getID();
-//        Assert
+            SunsetSensor sunsetSensor = new SunsetSensor(sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+//            Act
+            String result = sunsetSensor.getId().getID();
+//            Assert
             List<SensorIDVO> createdInstances = sensorIDVOMock.constructed();
             assertEquals(sensorID, result);
             assertEquals(expectedSize, createdInstances.size());
