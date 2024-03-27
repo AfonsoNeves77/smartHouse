@@ -1,4 +1,4 @@
-package SmartHomeDDDTest.domainTest.actuator;
+package SmartHomeDDDTest.domainTest.actuatorTest;
 
 import SmartHomeDDD.SimHardwareAct;
 import SmartHomeDDD.domain.actuator.SwitchActuator;
