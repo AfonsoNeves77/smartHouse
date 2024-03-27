@@ -27,18 +27,18 @@ public class AveragePowerConsumptionSensor implements Sensor, DomainEntity {
      * It throws an exception if any of the parameters is null.
      *
      * @param sensorName   the name of the sensor
-     * @param sensorTypeID the type of the sensor
      * @param deviceID     the ID of the device
+     * @param sensorTypeID the type of the sensor
      */
 
-    public AveragePowerConsumptionSensor(SensorNameVO sensorName, SensorTypeIDVO sensorTypeID, DeviceIDVO deviceID) {
-        if (areParamsNull(sensorName, sensorTypeID, deviceID)) {
+    public AveragePowerConsumptionSensor(SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        if (areParamsNull(sensorName, deviceID, sensorTypeID)) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
-        this.sensorID = new SensorIDVO(UUID.randomUUID());
         this.sensorName = sensorName;
-        this.sensorTypeID = sensorTypeID;
         this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+        this.sensorID = new SensorIDVO(UUID.randomUUID());
     }
 
     /**
@@ -51,8 +51,8 @@ public class AveragePowerConsumptionSensor implements Sensor, DomainEntity {
      * @return boolean
      */
 
-    private boolean areParamsNull(SensorNameVO sensorName, SensorTypeIDVO sensorTypeID, DeviceIDVO deviceID) {
-        return sensorName == null || sensorTypeID == null || deviceID == null;
+    private boolean areParamsNull(SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        return sensorName == null || deviceID == null || sensorTypeID == null;
     }
 
     /**
