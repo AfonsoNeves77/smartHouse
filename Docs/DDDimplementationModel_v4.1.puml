@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> DDD Implementation Model
+title <size: 30> DDD Implementation Model v4.1
 note "<b>This diagram presents the DDD approach to the \n<b>project. Methods are abstracted for readability." as n1
 skinparam linetype ortho
 
@@ -43,8 +43,6 @@ class DeviceID <<VO>> <<Identity>>{}
 package SensorAggregate {
     class Sensor <<Root>> <<Entity>>{}
     class SensorName <<VO>>{}
-    class Type <<VO>>{}
-    class Unit <<VO>>{}
 }
 
 class SensorID <<VO>> <<Identity>>{}
@@ -56,18 +54,30 @@ package ActuatorAggregate {
 
 class ActuatorID <<VO>> <<Identity>>{}
 
+package SensorTypeAggregate {
+    class SensorType <<Root>> <<Entity>>{}
+    class Unit <<VO>>
+}
 
-Room ..left> RoomName
-Room ..up> Floor
-Room ..up> Dimensions
-Dimensions ..up> Width
-Dimensions ..up> Length
-Dimensions ..up> Height
+class SensorTypeID <<VO>> <<Identity>>{}
+
+package ActuatorTypeAggregate {
+    class ActuatorType <<Root>> <<Entity>>{}
+}
+
+class ActuatorTypeID <<VO>> <<Identity>>{}
+
+Room ..> RoomName
+Room ..right> Floor
 Room ..> HouseID
-Room ..up> RoomID
+Room ..down> Dimensions
+Dimensions ..> Width
+Dimensions ..> Length
+Dimensions ..> Height
+Room --left* RoomID
 
-House ..> Location
-House ..up> HouseID
+House ..right> Location
+House --* HouseID
 Location ..> Address
 Location ..right> GPS
 Address ..> Door
@@ -80,19 +90,24 @@ GPS ..up> Longitude
 
 Device ..> DeviceName
 Device ..> DeviceModel
-Device ..> DeviceID
-Device ..> Status
-Device ..up> RoomID
+Device --* DeviceID
+Device --* Status
+Device ..> RoomID
 
-Sensor ..> SensorName
-Sensor ..> Type
-Sensor ..> Unit
-Sensor ..> SensorID
-Sensor ..up> DeviceID
+Sensor ..left> SensorName
+Sensor --* SensorID
+Sensor ...up> DeviceID
+Sensor ..> SensorTypeID
 
 Actuator ..> ActuatorName
-Actuator ..down> ActuatorID
-Actuator ..up> DeviceID
+Actuator --* ActuatorID
+Actuator ....up> DeviceID
+Actuator ..> ActuatorTypeID
+
+SensorType --up* SensorTypeID
+SensorType ..> Unit
+
+ActuatorType --up* ActuatorTypeID
 
 @enduml
 
