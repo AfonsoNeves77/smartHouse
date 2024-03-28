@@ -1,0 +1,49 @@
+@startuml
+autonumber
+title User Story 2 - Main Success Scenario
+participant ":AddRoomToHouseCTRL" as C
+participant ":RoomMapper" as Rm
+participant ":HouseService" as Hs
+participant ":HouseRepo" as Hr
+participant ":RoomService" as Rs
+participant ":RoomFactory" as fR
+participant "room : Room" as R
+participant ":RoomRepo" as rR
+skinparam ParticipantPadding 50
+
+[o-> C : addRoomToHouse(roomDTO)
+activate C
+C -> Rm : roomName = roomNameDTOtoRoomName(roomDTO)
+activate Rm
+C -> Rm : roomDimensions = roomDimensionsDTOtoRoomDimensions(roomDTO)
+C -> Rm : roomFloor = roomFloorDTOtoRoomFloor(roomDTO)
+deactivate Rm
+C -> Hs : gethouseID()
+activate Hs
+Hs -> Hr : gethouseID()
+deactivate Hs
+activate Hr
+C <-- Hr : houseID
+deactivate Hr
+C -> Rs : createRoom(houseID, roomName, \nroomDimensions, roomFloor)
+activate Rs
+Rs -> fR : createRoom(houseID, roomName, \nroomDimensions, roomFloor)
+deactivate Rs
+
+activate fR
+fR -> R** : newRoom(houseID, roomName,\nroomDimensions, roomFloor)
+C <-- fR : room
+deactivate fR
+
+C -> Rs : save(room)
+activate Rs
+Rs -> rR : save(room)
+deactivate Rs
+activate rR
+C <-- rR : true
+deactivate rR
+[o<-- C : Room Added!
+deactivate C
+
+
+@enduml
