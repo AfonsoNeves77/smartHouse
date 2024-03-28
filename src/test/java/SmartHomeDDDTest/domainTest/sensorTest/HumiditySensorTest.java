@@ -113,7 +113,7 @@ class HumiditySensorTest {
      * Finally, the expected SensorID is compared to the result, and the size of the list is checked.
      */
     @Test
-    void callingGetIDToGetSensorIDVOThenCallingGetIDAgainToGetString_ReturnsSensorIDAsString() {
+    void whenCallingGetIDToGetSensorIDVO_andCallingGetIDAgainToGetString_thenReturnsSensorIDAsString() {
         // Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);

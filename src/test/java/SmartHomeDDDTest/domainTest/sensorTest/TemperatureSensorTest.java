@@ -220,7 +220,13 @@ class TemperatureSensorTest {
 }
 
     /**
-    * Test if the getReading method returns the correct value when the reading is correct.
+     * This test verifies if the getReading method returns a TemperatureValue with the value set at 50.
+     * First, all the constructor's parameters are mocked and the temperature sensor is created.
+     * Then, the expected value is set to "25" and the TemperatureValue constructor is mocked to return the expected value.
+     * After that, the getReading method is called and turned to a String.
+     * Meanwhile, a list of TemperatureValue is created to store the mocked TemperatureValue.
+     * And create mockedConstruction for SensorIDVO.
+     * Finally, the expected value is compared to the result and the size of the list is checked.
      */
     @Test
     void whenReadingIsCorrect_thenReturnsValueSuccessfully() throws InstantiationException {
@@ -229,13 +235,13 @@ class TemperatureSensorTest {
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
-        TemperatureSensor sensor = new TemperatureSensor(sensorName, deviceID, sensorType);
         String expected = "36.1";
 
         try (MockedConstruction<TemperatureValue> temperatureValueDouble = mockConstruction(TemperatureValue.class, (mock, context)
-                -> {
-            when(mock.getValueAsString()).thenReturn("36.1");
-        })) {
+                -> when(mock.getValueAsString()).thenReturn("36.1"));
+             MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
+
+            TemperatureSensor sensor = new TemperatureSensor(sensorName, deviceID, sensorType);
 
             //Act
             TemperatureValue actualTemperatureValue = (TemperatureValue) sensor.getReading(simHardware);
@@ -248,4 +254,3 @@ class TemperatureSensorTest {
         }
     }
 }
-

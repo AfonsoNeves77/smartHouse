@@ -23,4 +23,21 @@ public class SimHardwareActTest {
         //Assert
         assertTrue(result);
     }
+
+    /**
+     * Test case to verify that the executeIntegerCommandSim method of SimHardwareAct returns true.
+
+     * This test instantiates a SimHardwareAct object and invokes its executeIntegerCommandSim method.
+     * It then asserts that the result is true, indicating successful execution of the command.
+
+     */
+
+    @Test
+    void executeIntegerCommandSimShouldReturnTrue(){
+        //Act
+        SimHardwareAct simHardwareAct = new SimHardwareAct();
+        boolean result = simHardwareAct.executeIntegerCommandSim(50);
+        //Assert
+        assertTrue(result);
+    }
 }
