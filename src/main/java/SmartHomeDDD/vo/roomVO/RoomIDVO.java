@@ -33,4 +33,19 @@ public class RoomIDVO implements DomainID {
     public String getID() {
         return this.identifier.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RoomIDVO)) return false;
+        RoomIDVO roomIDVO = (RoomIDVO) o;
+        return identifier.equals(roomIDVO.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
+    }
+
+
 }
