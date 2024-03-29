@@ -1,0 +1,57 @@
+@startuml
+
+skinparam ParticipantPadding 50
+autonumber
+title User Story 3 - Main Success Scenario
+
+participant ":GetListOfRoomsCTRL" as C
+participant ":RoomService" as RS
+participant ":RoomRepository" as RR
+participant ":RoomDTOMapper" as RM
+
+[o-> C : getListOfRooms()
+activate C
+C -> RS : getListOfRooms()
+activate RS
+
+RS -> RR : findAll()
+activate RR
+
+
+RR --> RS : iterableListOfRooms
+
+deactivate RR
+
+
+RS -> RS : clone(iterableListOfRooms)
+activate RS
+deactivate RS
+RS --> C : clonedListOfRooms
+
+deactivate RS
+
+C -> RM : domainToDTO(clonedListOfRooms)
+
+activate RM
+loop for each room in room list
+RM -> RM : RoomDTO = domainToDTO(room)
+activate RM
+deactivate RM
+RM -> RM : roomDTOList.add(RoomDTO)
+activate RM
+deactivate RM
+end loop
+RM --> C : roomDTOList
+deactivate RM
+
+
+
+
+[o<-- C : roomDTOList
+
+deactivate C
+
+
+
+
+@enduml
