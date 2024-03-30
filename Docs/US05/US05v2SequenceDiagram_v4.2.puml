@@ -27,11 +27,12 @@ participant ":DeviceRepository" as DR
 [o-> C : addDeviceToRoom(deviceDTO, roomDTO)
 activate C
 
-C -> RM : getRoomIDVO(roomDTO)
+C -> RM : createRoomIDVO(roomDTO)
 activate RM
 
 RM -> RDTO : strRoomID = getRoomID()
-RM -> RID ** : create(strRoomID)
+RM -> RM : uuid = fromString(strRoomID)
+RM -> RID ** : create(uuid)
 RM --> C : roomIDVO
 deactivate RM
 
