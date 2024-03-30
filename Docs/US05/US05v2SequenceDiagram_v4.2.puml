@@ -1,0 +1,101 @@
+@startuml
+
+skinparam ParticipantPadding 50
+
+autonumber
+title User Story 5v2 - Main Success Scenario
+
+participant ":AddDeviceToRoomCTRL" as C
+participant ":RoomDTOMapper" as RM
+participant ":RoomDTO" as RDTO
+participant "roomIDVO : RoomIDVO" as RID
+participant ":RoomService" as RS
+participant ":RoomRepository" as RR
+participant ":DeviceDTOMapper" as DDM
+participant ":DeviceDTO" as DDTO
+participant "deviceNameVO : DeviceNameVO" as DN
+participant "deviceModelVO : DeviceModelVO" as DM
+participant ":DeviceService" as DS
+participant ":DeviceFactory" as DF
+participant "device : Device" as D
+participant "deviceIDVO : DeviceIDVO" as DID
+participant "deviceStatusVO : DeviceStatusVO" as DStat
+participant ":DeviceRepository" as DR
+
+/'note over RM : Should include interaction with RoomDTO?'/
+
+[o-> C : addDeviceToRoom(deviceDTO, roomDTO)
+activate C
+
+C -> RM : getRoomIDVO(roomDTO)
+activate RM
+
+RM -> RDTO : strRoomID = getRoomID()
+RM -> RID ** : create(strRoomID)
+RM --> C : roomIDVO
+deactivate RM
+
+
+C -> RS : isPresent(roomIDVO)
+activate RS
+
+RS -> RR : isPresent(roomIDVO)
+activate RR
+RR --> RS : <font color=green>**true**</font>
+deactivate RR
+RS --> C : <font color=green>**true**</font>
+deactivate RS
+
+
+C -> C : createDevice(deviceDTO, roomIDVO)
+activate C
+C -> DDM : createDeviceNameVO(deviceDTO)
+activate DDM
+
+DDM -> DDTO : strDeviceName = getDeviceName()
+DDM ->DN ** : create(strDeviceName)
+DDM --> C : deviceNameVO
+deactivate DDM
+C -> DDM : createDeviceModelVO(deviceDTO)
+activate DDM
+DDM -> DDTO : strDeviceModel = getDeviceModel()
+DDM -> DM ** : create(strDeviceModel)
+DDM --> C : deviceModelVO
+deactivate DDM
+
+C -> DS : createDevice(deviceNameVO, deviceModelVO, roomIDVO)
+activate DS
+DS -> DF : createDevice(deviceNameVO, deviceModelVO, roomIDVO)
+activate DF
+DF -> D ** : create(deviceNameVO, deviceModelVO, roomIDVO)
+activate D
+D -> DID ** : create(uuid)
+D -> DStat ** : create(true)
+deactivate D
+DF --> DS : device
+deactivate DF
+DS --> C : device
+deactivate C
+deactivate DS
+
+
+C -> DS : saveDevice(device)
+activate DS
+
+DS -> DR : save(device)
+activate DR
+DR -> DR : validEntity(device)
+activate DR
+DR -> DR : put(deviceIDVO, device)
+
+deactivate DR
+DR --> DS : <font color=green>**true**</font>
+deactivate DR
+
+DS --> C : <font color=green>**true**</font>
+deactivate DS
+
+[o<-- C : <font color=green>**true**</font>
+deactivate C
+
+@enduml

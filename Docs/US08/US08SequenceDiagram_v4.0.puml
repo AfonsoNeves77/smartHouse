@@ -2,7 +2,6 @@
 
 title User Story 08 - Main Success Scenario
 autonumber
-!theme cerulean
 
 participant ":DeactivateDeviceCTLR" as C
 
