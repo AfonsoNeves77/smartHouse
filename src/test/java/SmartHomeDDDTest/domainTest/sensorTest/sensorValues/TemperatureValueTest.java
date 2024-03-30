@@ -11,13 +11,13 @@ class TemperatureValueTest {
      * Test if the constructor throws an exception when the reading is null.
      */
     @Test
-    void whenReadingIsNull_thenThrowsInstantiationException(){
+    void whenReadingIsNull_thenThrowsIllegalArgumentException(){
         //Arrange
         String reading = null;
         String expected = "Invalid reading";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> new TemperatureValue(reading));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new TemperatureValue(reading));
         String result = exception.getMessage();
 
         //Assert
@@ -28,13 +28,13 @@ class TemperatureValueTest {
      * Test if the constructor throws an exception when the reading is empty.
      */
     @Test
-    void whenReadingIsEmpty_thenThrowsInstantiationException(){
+    void whenReadingIsEmpty_thenThrowsIllegalArgumentException(){
         //Arrange
         String reading = " ";
         String expected = "Invalid reading";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> new TemperatureValue(reading));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new TemperatureValue(reading));
         String result = exception.getMessage();
 
         //Assert
@@ -45,13 +45,13 @@ class TemperatureValueTest {
      * Test if the constructor throws an exception when the reading is in invalid format.
      */
     @Test
-    void whenReadingIsInInvalidFormat_thenThrowsInstantiationException(){
+    void whenReadingIsInInvalidFormat_thenThrowsIllegalArgumentException(){
         //Arrange
         String reading = "this will fail";
         String expected = "Invalid reading";
 
         //Act
-        Exception exception = assertThrows(InstantiationException.class, () -> new TemperatureValue(reading));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new TemperatureValue(reading));
         String result = exception.getMessage();
 
         //Assert

@@ -21,7 +21,7 @@ public class DeviceRepository implements Repository<DeviceIDVO, Device> {
      */
     @Override
     public boolean save(Device entity) {
-        if (!validateEntity(entity)) {
+        if (!validateEntity(entity) || DATA.containsKey(entity.getId())) {
             return false;
         }
         DATA.put(entity.getId(), entity);

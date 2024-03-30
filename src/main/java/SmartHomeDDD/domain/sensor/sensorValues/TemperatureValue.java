@@ -10,9 +10,9 @@ import SmartHomeDDD.vo.ValueObject;
          * Constructor for Temperature value.
          * @param reading Value received by an external source, in line for conversion.
          */
-        public TemperatureValue(String reading) throws InstantiationException {
+        public TemperatureValue(String reading) {
             if(!isReadingValid(reading)){
-                throw new InstantiationException("Invalid reading");
+                throw new IllegalArgumentException("Invalid reading");
             }
             this.primitiveValue = parseDouble(reading);
         }
@@ -34,5 +34,4 @@ import SmartHomeDDD.vo.ValueObject;
             }
             return true;
         }
-
-}
+    }

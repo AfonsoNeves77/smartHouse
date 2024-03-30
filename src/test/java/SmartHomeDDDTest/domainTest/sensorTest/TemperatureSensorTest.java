@@ -1,6 +1,6 @@
 package SmartHomeDDDTest.domainTest.sensorTest;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
+import SmartHomeDDD.domain.sensor.sensorValues.TemperatureValue;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 
 import SmartHomeDDD.domain.sensor.TemperatureSensor;
@@ -237,8 +237,10 @@ class TemperatureSensorTest {
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
         String expected = "36.1";
 
-        try (MockedConstruction<TemperatureValue> temperatureValueDouble = mockConstruction(TemperatureValue.class, (mock, context)
-                -> when(mock.getValueAsString()).thenReturn("36.1"));
+        try (MockedConstruction<TemperatureValue> temperatureValueDouble = mockConstruction(TemperatureValue.class, (mock, context) -> {
+            when(mock.getValue()).thenReturn(36.1);
+            when(mock.toString()).thenReturn("36.1");
+        });
              MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
 
             TemperatureSensor sensor = new TemperatureSensor(sensorName, deviceID, sensorType);
@@ -246,7 +248,7 @@ class TemperatureSensorTest {
             //Act
             TemperatureValue actualTemperatureValue = (TemperatureValue) sensor.getReading(simHardware);
             List<TemperatureValue> constructedTemperatureValues = temperatureValueDouble.constructed();
-            String actualTemperatureValueString = actualTemperatureValue.getValueAsString();
+            String actualTemperatureValueString = actualTemperatureValue.toString();
 
             //Assert
             assertEquals(expected, actualTemperatureValueString);

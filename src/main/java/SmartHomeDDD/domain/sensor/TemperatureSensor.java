@@ -1,9 +1,9 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.TemperatureValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
+import SmartHomeDDD.domain.sensor.sensorValues.TemperatureValue;
 import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
+import SmartHomeDDD.vo.ValueObject;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
@@ -69,7 +69,7 @@ public class TemperatureSensor implements Sensor, DomainEntity {
      * @return Value of the reading.
      * @throws InstantiationException Exception thrown when the reading is invalid.
      */
-    public Value<Double> getReading(SimHardware simHardware) throws InstantiationException {
+    public ValueObject<Double> getReading(SimHardware simHardware) {
         if (simHardware == null) {
             throw new IllegalArgumentException("Invalid parameters.");
         }
