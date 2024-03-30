@@ -1,0 +1,71 @@
+@startuml
+title <size: 30> US14 Class Diagram
+
+interface Actuator {
+}
+
+interface DomainEntity{
+    + getID() : DomainID
+}
+
+interface DomainID{
+    + getID() : String
+}
+
+interface ValueObject<T> {
+    + getValue() : T
+}
+
+class RollerBlindActuator{
+    - actuatorID : ActuatorIDVO
+    - actuatorName : ActuatorNameVO
+    - actuatorTypeID : ActuatorTypeIDVO
+    - deviceID : DeviceIDVO
+
+    + RollerBlindActuator(actuatorName : ActuatorNameVO,actuatorTypeID : ActuatorTypeIDVO,deviceID : DeviceIDVO)
+    + executeCommand(position : Integer, simHardwareAct : SimHardwareAct ) : boolean
+    + getID() : ActuatorIDVO
+}
+
+class SimHardwareAct {
+    + executeIntegerCommandSim(position : Integer) : boolean
+}
+
+class ActuatorNameVO{
+    - actuatorName : String
+    + ActuatorNameVO(actuatorName : String)
+    + getValue() : String
+}
+
+class ActuatorIDVO{
+    - identifier : UUID
+    + ActuatorIDVO(identifier : UUID)
+    + getID() : String
+}
+
+class ActuatorTypeIDVO{
+    - actuatorTypeID : String
+    + ActuatorTypeIDVO(actuatorTypeID : String)
+    + getID() : String
+}
+
+class DeviceIDVO{
+    - deviceID : UUID
+    + DeviceIDVO(deviceID : UUID)
+    + getID() : String
+}
+
+
+DomainEntity <|.. RollerBlindActuator
+Actuator <|.. RollerBlindActuator
+SimHardwareAct <.. RollerBlindActuator
+ActuatorNameVO <.. RollerBlindActuator
+ActuatorIDVO *.. RollerBlindActuator
+ActuatorTypeIDVO <.. RollerBlindActuator
+DeviceIDVO <.. RollerBlindActuator
+ValueObject <|.. ActuatorNameVO
+DomainID <|.. ActuatorIDVO
+DomainID <|.. ActuatorTypeIDVO
+DomainID <|.. DeviceIDVO
+
+@enduml
