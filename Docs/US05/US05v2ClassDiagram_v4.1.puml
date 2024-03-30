@@ -15,7 +15,7 @@ class AddDeviceToRoomCTRL{
     - createDevice(deviceDTO : DeviceDTO, roomID : RoomIDVO) : Device
 }
 
-class RoomService{
+class RoomService <<Service>>{
     - roomFactory : RoomFactory
     - roomRepository : RoomRepository
 
@@ -43,7 +43,7 @@ class RoomDTO{
     - roomLength : double
     - roomHeight : double
 
-    + RoomDTO(strRoomName, intHouseFloor, dbRoomWidth, dbRoomLength, dbRoomHeight)
+    + RoomDTO(roomName : String, floor : int, roomWidth : double, \nroomLength : double, roomHeight : double)
     + getRoomID() : String
 }
 
@@ -57,7 +57,7 @@ class Room <<Entity>> <<Root>>{
     - houseID : HouseIDVO
 }
 
-class DeviceService{
+class DeviceService <<Service>>{
     - deviceFactory : DeviceFactory
     - deviceRepository : DeviceRepository
 
@@ -66,7 +66,7 @@ class DeviceService{
     + saveDevice(device : Device) : boolean
 }
 
-class DeviceFactory {
+class DeviceFactory <<Factory>>{
     + createDevice(deviceName : deviceNameVO, deviceModel : DeviceModelVO, \nroomID : RoomIDVO) : Device
 }
 
@@ -85,6 +85,7 @@ class DeviceDTO{
     - deviceName : String
     - deviceModel : String
     - deviceStatus : String
+    - roomID : String
 
     + DeviceDTO(deviceName : String, deviceModel : String)
     + getDeviceName() : String
