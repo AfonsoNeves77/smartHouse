@@ -1,0 +1,62 @@
+@startuml
+title <size: 30> US09 Class Diagram v4.1
+note "<b>Only methods related to\n<b>US09 are represented" as N1
+skinparam linetype ortho
+
+class GetDevicesByFunctionalityCTRL {
+    - deviceService : DeviceService
+    - sensorService : SensorService
+    - deviceMapper : DeviceMapper
+    + getListOfDevicesByFunctionality() : Map<str, DeviceDTO>
+}
+
+class SensorService {
+    - sensorRepository : SensorRepository
+    + SensorService (sensorRepository : SensorRepository)
+    + getListOfDevicesByFunctionality() : Map<str:DeviceIDVO>
+    - getUniqueSensorTypeIDasStrByDeviceIDVO() : Map<Str:DeviceIDVO>
+}
+
+class SensorRepository {
+    - data : Hashmap<SensorIDVO,Sensor>
+    + findAll() : Iterable<Sensor>
+}
+
+class DeviceService {
+    - deviceRepository : Device DeviceRepository
+    + DeviceService (deviceRepository : DeviceRepository)
+    + getSensorTypeIDstrToDeviceMap (sensorTypeIDstrToDeviceMap : Map<str:Device)
+}
+
+class DeviceRepository {
+    - data : Hashmap<DeviceIDVO,Device>
+    + findByID (DeviceIDVO) : Device
+}
+
+class DeviceMapper {
+    + domainToDTO (sensorTypeIDstrToDeviceMap) : sensorTypeIDstrToDeviceDTOMap
+}
+
+class DeviceDTO {
+
+}
+
+interface Repository {
+    + findAll() : Iterable<T>
+    + findByID (id : DomainID) : T
+}
+
+SensorService <|.. GetDevicesByFunctionalityCTRL
+DeviceService <|.. GetDevicesByFunctionalityCTRL
+DeviceMapper o.. GetDevicesByFunctionalityCTRL
+
+SensorRepository <|.. SensorService
+DeviceRepository <|.. DeviceService
+
+Repository <.. SensorRepository
+Repository <.. DeviceRepository
+
+DeviceDTO *.. DeviceMapper
+
+@enduml
+
