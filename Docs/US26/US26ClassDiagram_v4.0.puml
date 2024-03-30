@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US10 Class Diagram
+title <size: 30> US26 Class Diagram
 
 interface Sensor {
 
@@ -17,25 +17,25 @@ interface ValueObject<T> {
     + getValue() : T
 }
 
-class TemperatureSensor{
+class EnergyConsumptionSensor{
     - sensorName : SensorNameVO
     - sensorID : SensorIDVO
     - sensorTypeID : SensorTypeIDVO
     - deviceID : DeviceIDVO
 
-    + TempearatureSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
+    + EnergyConsumptionSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
     + getID() : SensorIDVO
     + getSensorName() : SensorNameVO
     + getSensorTypeID() : SensorTypeIDVO
     + getDeviceID() : DeviceIDVO
-    + getReading(simHardware : SimHardware) : Value<Double>
+    + getReading(initialDate : String, finalDate : String, simHardware : SimHardware) : ValueObject<Integer>
 }
 
-class TemperatureValue{
-    - primitiveValue : double
+class EnergyConsumptionValue{
+    - primitiveValue : integer
 
-    + TemperatureValue(reading: String)
-    + getValue() : Double
+    + EnergyConsumptionValue(reading: String)
+    + getValue() : Integer
 }
 
 class SimHardware{
@@ -68,21 +68,21 @@ class DeviceIDVO{
 }
 
 
-DomainEntity <|.. TemperatureSensor
-Sensor <|.. TemperatureSensor
-SimHardware <.. TemperatureSensor
+DomainEntity <|.. EnergyConsumptionSensor
+Sensor <|.. EnergyConsumptionSensor
+SimHardware <.. EnergyConsumptionSensor
 
-SensorNameVO <.. TemperatureSensor
-SensorIDVO *-- TemperatureSensor
-TemperatureValue *--right TemperatureSensor
-SensorTypeIDVO <.. TemperatureSensor
-DeviceIDVO <.. TemperatureSensor
+SensorNameVO <.. EnergyConsumptionSensor
+SensorIDVO *-- EnergyConsumptionSensor
+EnergyConsumptionValue *--right EnergyConsumptionSensor
+SensorTypeIDVO <.. EnergyConsumptionSensor
+DeviceIDVO <.. EnergyConsumptionSensor
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO
 DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
-ValueObject <|.. TemperatureValue
+ValueObject <|.. EnergyConsumptionValue
 
 @enduml
