@@ -2,8 +2,10 @@ package SmartHomeDDDTest.repositoryTest;
 
 import SmartHomeDDD.domain.device.Device;
 import SmartHomeDDD.repository.DeviceRepository;
+import SmartHomeDDD.repository.SensorRepository;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.roomVO.RoomIDVO;
+import SmartHomeDDD.vo.sensorVO.SensorIDVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -233,5 +235,29 @@ class DeviceRepositoryTest {
         //Assert
         assertTrue(listOfDevicesInARoom.contains(device1));
         assertTrue(listOfDevicesInARoom.contains(device2));
+    }
+
+    /**
+     * This test ensures no devices can be saved if the deviceID is already present as key.
+     */
+    @Test
+    void givenDuplicateEntity_RepositoryDoesNotSaveSecondOne(){
+        // Arrange
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+
+        Device device1 = mock(Device.class);
+        when(device1.getId()).thenReturn(deviceID);
+
+        Device device2 = mock(Device.class);
+        when(device2.getId()).thenReturn(deviceID);
+
+        DeviceRepository repository = new DeviceRepository();
+        repository.save(device1);
+
+        // Act
+        boolean result = repository.save(device2);
+
+        // Assert
+        assertFalse(result);
     }
 }

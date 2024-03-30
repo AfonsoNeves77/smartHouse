@@ -1,0 +1,88 @@
+@startuml
+title <size: 30> US10 Class Diagram
+
+interface Sensor {
+
+}
+
+interface DomainEntity{
+    + getID() : DomainID
+}
+
+interface DomainID{
+    + getID() : String
+}
+
+interface ValueObject<T> {
+    + getValue() : T
+}
+
+class TemperatureSensor{
+    - sensorName : SensorNameVO
+    - sensorID : SensorIDVO
+    - sensorTypeID : SensorTypeIDVO
+    - deviceID : DeviceIDVO
+
+    + TemperatureSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
+    + getID() : SensorIDVO
+    + getSensorName() : SensorNameVO
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getReading(simHardware : SimHardware) : ValueObject<Double>
+}
+
+class TemperatureValue{
+    - primitiveValue : double
+
+    + TemperatureValue(reading: String)
+    + getValue() : Double
+}
+
+class SimHardware{
+    + getValue(): String
+}
+
+class SensorNameVO{
+    - sensorName : String
+    + SensorNameVO(sensorName : String)
+    + getValue() : String
+}
+
+class SensorIDVO{
+    - identifier : UUID
+    + SensorIDVO(identifier : UUID)
+    + getID() : String
+}
+
+
+class SensorTypeIDVO{
+    - sensorTypeID : String
+    + SensorTypeIDVO(sensorTypeID : String)
+    + getID() : String
+}
+
+class DeviceIDVO{
+    - deviceID : UUID
+    + DeviceIDVO(deviceID : UUID)
+    + getID() : String
+}
+
+
+DomainEntity <|.. TemperatureSensor
+Sensor <|.. TemperatureSensor
+SimHardware <.. TemperatureSensor
+
+SensorNameVO <.. TemperatureSensor
+SensorIDVO *-- TemperatureSensor
+TemperatureValue *--right TemperatureSensor
+SensorTypeIDVO <.. TemperatureSensor
+DeviceIDVO <.. TemperatureSensor
+
+ValueObject <|.. SensorNameVO
+DomainID  <|.. SensorIDVO
+DomainID  <|.. SensorTypeIDVO
+DomainID  <|.. DeviceIDVO
+
+ValueObject <|.. TemperatureValue
+
+@enduml

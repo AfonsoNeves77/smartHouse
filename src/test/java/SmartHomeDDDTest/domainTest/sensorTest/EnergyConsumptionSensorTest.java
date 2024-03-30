@@ -1,5 +1,6 @@
-package SmartHomeDDD.domain.sensor;
+package SmartHomeDDDTest.domainTest.sensorTest;
 
+import SmartHomeDDD.domain.sensor.EnergyConsumptionSensor;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.domain.sensor.sensorValues.EnergyConsumptionValue;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
