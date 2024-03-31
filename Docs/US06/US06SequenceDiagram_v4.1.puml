@@ -1,0 +1,74 @@
+@startuml
+
+skinparam ParticipantPadding 50
+autonumber
+title User Story 6 - Main Success Scenario
+
+participant ":GetListOfDevicesCTRL" as C
+participant ":RoomService" as RS
+participant ":RoomRepository" as RR
+participant ":RoomDTOMapper" as RM
+participant ":RoomDTO" as RDTO
+participant ":RoomIDVO" as RID
+participant ":DeviceService" as DS
+participant ":DeviceRepository" as DR
+participant ":DeviceDTOMapper" as DM
+
+
+
+[o-> C : getListOfDevices(roomDTO)
+activate C
+
+C -> RM : createRoomIDVO(RoomDTO)
+activate RM
+
+RM -> RDTO : getRoomID(roomDTO)
+activate RDTO
+
+RDTO --> RM : roomID
+deactivate RDTO
+
+RM -> RID ** : createRoomIDVO(roomID)
+
+RM --> C : roomIDVO
+deactivate RM
+
+
+C -> DS : findByRoomID(roomIDVO)
+activate DS
+
+DS -> DR : findByRoomId(roomIDVO)
+activate DR
+
+
+DR --> DS : listOfDevices
+
+deactivate DR
+
+
+DS -> DS : clone(listOfDevices)
+activate DS
+deactivate DS
+DS --> C : clonedListOfDevices
+
+deactivate DS
+
+C -> DM : domainToDTO(clonedListOfDevices)
+
+activate DM
+loop for each deviec in cloned device list
+DM -> DM : DeviceDTO = domainToDTO(device)
+activate DM
+deactivate DM
+
+end loop
+DM --> C : deviceDTOList
+deactivate DM
+
+
+[o<-- C : deviceDTOList
+
+deactivate C
+
+
+@enduml
