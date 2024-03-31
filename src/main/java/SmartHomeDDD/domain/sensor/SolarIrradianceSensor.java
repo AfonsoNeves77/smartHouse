@@ -62,6 +62,7 @@ public class SolarIrradianceSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for Name
      */
+    @Override
     public SensorNameVO getSensorName(){
         return this.sensorName;
     }
@@ -70,6 +71,7 @@ public class SolarIrradianceSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for SensorTypeID
      */
+    @Override
     public SensorTypeIDVO getSensorTypeID(){
         return this.sensorTypeID;
     }
@@ -78,6 +80,7 @@ public class SolarIrradianceSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for DeviceID
      */
+    @Override
     public DeviceIDVO getDeviceID(){
         return this.deviceID;
     }

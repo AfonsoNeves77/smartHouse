@@ -55,14 +55,17 @@ public class EnergyConsumptionSensor implements Sensor, DomainEntity {
         return this.energyConsumptionSensorID;
     }
 
+    @Override
     public SensorNameVO getSensorName() {
         return this.name;
     }
 
+    @Override
     public SensorTypeIDVO getSensorTypeID() {
         return this.sensorTypeID;
     }
 
+    @Override
     public DeviceIDVO getDeviceID() {
         return this.deviceID;
     }

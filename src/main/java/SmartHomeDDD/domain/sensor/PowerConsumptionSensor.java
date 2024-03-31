@@ -53,6 +53,7 @@ public class PowerConsumptionSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for Name;
      */
+    @Override
     public SensorNameVO getSensorName(){
         return sensorName;
     }
@@ -62,6 +63,7 @@ public class PowerConsumptionSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for SensorTypeID;
      */
+    @Override
     public SensorTypeIDVO getSensorTypeID(){
         return sensorTypeID;
     }
@@ -71,6 +73,7 @@ public class PowerConsumptionSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for DeviceID;
      */
+    @Override
     public DeviceIDVO getDeviceID(){
         return deviceID;
     }

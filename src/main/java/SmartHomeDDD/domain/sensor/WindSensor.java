@@ -68,7 +68,8 @@ public class WindSensor implements Sensor {
      * Retrieves the name value object of the sensor.
      * @return The name value object.
      */
-    public SensorNameVO getNameVO() {
+    @Override
+    public SensorNameVO getSensorName() {
         return nameVO;
     }
 
@@ -76,7 +77,8 @@ public class WindSensor implements Sensor {
      * Retrieves the device ID value object of the sensor.
      * @return The device ID value object.
      */
-    public DeviceIDVO getDeviceIDVO() {
+    @Override
+    public DeviceIDVO getDeviceID() {
         return deviceIDVO;
     }
 
@@ -84,7 +86,8 @@ public class WindSensor implements Sensor {
      * Retrieves the sensor type ID value object of the sensor.
      * @return The sensor type ID value object.
      */
-    public SensorTypeIDVO getSensorTypeIDVO() {
+    @Override
+    public SensorTypeIDVO getSensorTypeID() {
         return sensorTypeIDVO;
     }
 

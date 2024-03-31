@@ -1,7 +1,6 @@
 package SmartHomeDDDTest.domainTest.sensorTest;
 
 import SmartHomeDDD.domain.sensor.PositionSensor;
-import SmartHomeDDD.domain.sensor.SwitchSensor;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
@@ -142,7 +141,7 @@ public class PositionSensorTest {
             PositionSensor sensor = new PositionSensor(sensorName, deviceID, sensorTypeID);
 
             // Act
-            String result = sensor.getSensorType().getID();
+            String result = sensor.getSensorTypeID().getID();
             List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
 
             // Assert

@@ -52,6 +52,7 @@ public class SwitchSensor implements Sensor, DomainEntity {
      *
      * @return The encapsulated VO for Name;
      */
+    @Override
     public SensorNameVO getSensorName() {
         return nameVO;
     }
@@ -61,6 +62,7 @@ public class SwitchSensor implements Sensor, DomainEntity {
      *
      * @return The encapsulated VO for SensorTypeID;
      */
+    @Override
     public SensorTypeIDVO getSensorTypeID() {
         return sensorTypeIDVO;
     }
@@ -70,6 +72,7 @@ public class SwitchSensor implements Sensor, DomainEntity {
      *
      * @return The encapsulated VO for DeviceID;
      */
+    @Override
     public DeviceIDVO getDeviceID() {
         return deviceIDVO;
     }

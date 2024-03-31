@@ -57,6 +57,7 @@ public class HumiditySensor implements Sensor, DomainEntity {
      * This method returns the sensor name.
      * @return SensorNameVO with the sensor name.
      */
+    @Override
     public SensorNameVO getSensorName() {
         return sensorName;
     }
@@ -65,6 +66,7 @@ public class HumiditySensor implements Sensor, DomainEntity {
      * This method returns the device ID.
      * @return DeviceIDVO with the device ID.
      */
+    @Override
     public DeviceIDVO getDeviceID() {
         return deviceID;
     }
@@ -73,6 +75,7 @@ public class HumiditySensor implements Sensor, DomainEntity {
      * This method returns the sensor type ID.
      * @return SensorTypeIDVO with the sensor type ID.
      */
+    @Override
     public SensorTypeIDVO getSensorTypeID() {
         return sensorTypeID;
     }

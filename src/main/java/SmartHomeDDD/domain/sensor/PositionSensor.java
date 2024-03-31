@@ -68,6 +68,7 @@ public class PositionSensor implements Sensor, DomainEntity {
      * Getter method for the sensor name.
      * @return  The sensor name.
      */
+    @Override
     public SensorNameVO getSensorName(){
         return this.sensorName;
     }
@@ -76,6 +77,7 @@ public class PositionSensor implements Sensor, DomainEntity {
      * Getter method for the device ID.
      * @return  The device ID.
      */
+    @Override
     public DeviceIDVO getDeviceID(){
         return this.deviceID;
     }
@@ -84,7 +86,8 @@ public class PositionSensor implements Sensor, DomainEntity {
      * Getter method for the sensor type.
      * @return  The sensor type.
      */
-    public SensorTypeIDVO getSensorType(){
+    @Override
+    public SensorTypeIDVO getSensorTypeID(){
         return this.sensorType;
     }
 

@@ -225,7 +225,7 @@ public class WindSensorTest {
             WindSensor windSensor = new WindSensor(expected, deviceID, sensorTypeID);
 
             // Act
-            SensorNameVO result = windSensor.getNameVO();
+            SensorNameVO result = windSensor.getSensorName();
 
             // Assert
             assertEquals(expected, result);
@@ -253,7 +253,7 @@ public class WindSensorTest {
             WindSensor windSensor = new WindSensor(sensorNameVO, deviceID, expected);
 
             // Act
-            SensorTypeIDVO result = windSensor.getSensorTypeIDVO();
+            SensorTypeIDVO result = windSensor.getSensorTypeID();
 
             // Assert
             assertEquals(expected, result);
@@ -312,7 +312,7 @@ public class WindSensorTest {
             WindSensor windSensor = new WindSensor(sensorNameVO, expected, sensorTypeID);
 
             // Act
-            DeviceIDVO result = windSensor.getDeviceIDVO();
+            DeviceIDVO result = windSensor.getDeviceID();
 
             // Assert
             assertEquals(expected, result);
