@@ -45,4 +45,107 @@ class DeviceIDVOTest {
         assertEquals(expected,result);
 
     }
+
+    @Test
+    public void whenBothDeviceIDVOsTheSame_shouldReturnTrue(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = deviceIDVO;
+
+        //Act
+        boolean result = deviceIDVO.equals(deviceIDVO2);
+
+        //Assert
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void whenDeviceIDVO2IsNull_shouldReturnFalse(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = null;
+
+        //Act
+        boolean result = deviceIDVO.equals(deviceIDVO2);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void whenDeviceIDVOComparedToOtherTypeOfObject_shouldReturnFalse(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        Object otherObject = new Object();
+
+        //Act
+        boolean result = deviceIDVO.equals(otherObject);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void whenDeviceIDVOComparedToDifferentDeviceIDVOWithSameId_shouldAssertTrue(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = new DeviceIDVO(deviceIdentifier);
+
+        //Act
+        boolean result = deviceIDVO.equals(deviceIDVO2);
+
+        //Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void whenDeviceIDVOComparedToDifferentDeviceIDVOWithDifferentId_shouldAssertFalse(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        UUID deviceIdentifier2 = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = new DeviceIDVO(deviceIdentifier2);
+
+        //Act
+        boolean result = deviceIDVO.equals(deviceIDVO2);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void whenHashCodeCalledOnTwoDeviceIDVOWithDifferentId_shouldReturnDifferentHashCode(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        UUID deviceIdentifier2 = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = new DeviceIDVO(deviceIdentifier2);
+
+        //Act
+        int result = deviceIDVO.hashCode();
+        int result2 = deviceIDVO2.hashCode();
+
+        //Assert
+        assertNotEquals(result,result2);
+    }
+
+    @Test
+    public void whenHashCodeCalledOnTwoDeviceIDVOWithSameId_shouldReturnSameHashCode(){
+        //Arrange
+        UUID deviceIdentifier = UUID.randomUUID();
+        DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
+        DeviceIDVO deviceIDVO2 = new DeviceIDVO(deviceIdentifier);
+
+        //Act
+        int result = deviceIDVO.hashCode();
+        int result2 = deviceIDVO2.hashCode();
+
+        //Assert
+        assertEquals(result,result2);
+    }
 }
