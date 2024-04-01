@@ -9,8 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
- * Mapper class that converts Room objects to RoomDTO objects and vice versa
+ * Mapper class that converts Room objects to RoomDTO objects and vice versa.
+ * It provides utility functions for mapping between Room domain objects and RoomDTO data transfer objects.
+ * This class facilitates the conversion of complex domain objects into simpler, flattened
+ * data structures suitable for transmission over the network or for use in interfaces
+ * where complex domain logic is not required.
+ * Each public static method in this class corresponds to a specific component of a Room, allowing for
+ * targeted conversion of individual attributes between the Room and RoomDTO representations.
  */
 public class RoomMapper {
 
