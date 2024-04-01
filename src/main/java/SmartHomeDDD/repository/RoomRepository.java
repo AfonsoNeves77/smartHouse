@@ -17,7 +17,7 @@ public class RoomRepository implements Repository<RoomIDVO, Room>{
      */
     @Override
     public boolean save(Room room) {
-        if(room == null || room.getId() == null){
+        if(room == null || room.getId() == null || isPresent(room.getId())) {
             return false;
         }
         DATA.put(room.getId(), room);
@@ -64,15 +64,6 @@ public class RoomRepository implements Repository<RoomIDVO, Room>{
      */
     public List<Room> findByHouseID(HouseIDVO houseID) {
         return DATA.values().stream().filter(room -> houseID.equals(room.getHouseID())).toList();
-    }
-
-    /**
-     * Verifies if a house is present in the repository, searching by its ID.
-     * @param houseID
-     * @return true if the house is present, false otherwise.
-     */
-    private boolean isHouseIDPresent(HouseIDVO houseID) {
-        return DATA.containsKey(houseID);
     }
 }
 

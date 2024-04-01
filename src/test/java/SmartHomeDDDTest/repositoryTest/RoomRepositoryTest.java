@@ -56,6 +56,29 @@ public class RoomRepositoryTest {
     }
 
     /**
+     * This test verifies that the save method returns false when a Room with a present ID is provided for saving.
+     * First, a roomRepository is created. Then, a Room is mocked, as well as the roomIDVO.
+     * The repository rejects attempts to save invalid data. The RoomIDVO represents
+     * invalid data as it would already be present in the repository.
+     */
+    @Test
+    public void whenRoomIDIsPresent_thenRoomNotSaved() {
+        //Arrange
+        Room roomDouble = mock(Room.class);
+        RoomIDVO roomID = mock(RoomIDVO.class);
+        when(roomDouble.getId()).thenReturn(roomID);
+
+        RoomRepository roomRepository = new RoomRepository();
+        roomRepository.save(roomDouble);
+
+        //Act
+        boolean result = roomRepository.save(roomDouble);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    /**
      * This test verifies that the save method returns true when a valid Room is provided for saving.
      * First, a roomRepository is created. Then, a Room is mocked, as well as the roomIDVO.
      * The repository accepts attempts to save valid data. Both the mocked Room and RoomIDVO represent
