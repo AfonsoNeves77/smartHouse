@@ -1,51 +1,81 @@
 @startuml
-title <size: 30> US22 Class Diagram
+title <size: 30> US22 Class Diagram - v4.0
+
 
 interface Sensor {
-    + getName() : String
-    + getUnit() : String
-    + getLog() : ArrayList<String>
 }
 
-interface Value<T> {
+interface DomainEntity {
+    + getID() : DomainID
+}
+
+interface DomainID {
+    + getID() : String
+}
+
+interface ValueObject<T> {
     + getValue() : T
-    + getValueAsString() : String
 }
-
-interface ExternalServices{
-}
-
-class SimHardware {
-     + getValue : String
-     }
 
 class DewPointSensor{
-    - sensorName : String
-    - unit : String
-    - TYPE : String
-    - simHardware : SimHardware
-    - log : ArrayList<Value<Double>>
+    + DewPointSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+    + getReading(simHardware : SimHardware) : simValue<DewPointValue>
+    + getSensorName() : SensorNameVO
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getID() : SensorIDVO
+    - areParamsNull(params... : Object) : boolean
+}
 
-    + DewPointSensor(sensorName : String,externalServices : ExternalServices)
-    + getReading() : Value<Double>
-    + getName() : String
-    + getUnit() : String
-    + getTYPE() : String
-    + getLog() : ArrayList<String>
-    - addValueToLog(value : Value<Double>) : void
+class SimHardware{
+    +getValue() : String
 }
 
 class DewPointValue {
-    + DewPointValue(reading : String)
-    - isReadingValid() : boolean
-    + getValue() : Double
-    + getValueAsString() : String
+    + DewPointValue(dewPointValue : String)
+    + getValue() : dewPointValue
+    - isReadingValid(dewPointValue : String) : boolean
 }
 
-Value <|.. DewPointValue
+class SensorNameVO {
+    - sensorName : String
+    + SensorNameVO(sensorName : String)
+    + getValue() : String
+}
+
+class SensorIDVO {
+    - identifier : UUID
+    + SensorIDVO(identifier : UUID)
+    + getID() : String
+}
+
+class SensorTypeIDVO {
+    - sensorTypeID : String
+    + SensorTypeIDVO(sensorTypeID : String)
+    + getID() : String
+}
+
+class DeviceIDVO {
+    - deviceID : UUID
+    + DeviceIDVO(identifier : UUID)
+    + getID() : String
+}
+
+DomainEntity <|.. DewPointSensor
 Sensor <|.. DewPointSensor
-DewPointSensor .right.> DewPointValue
-SimHardware <. DewPointSensor
-ExternalServices <|.. SimHardware
+SimHardware <|.. DewPointSensor
+
+SensorNameVO <.. DewPointSensor
+SensorIDVO *-- DewPointSensor
+DewPointValue *--right DewPointSensor
+SensorTypeIDVO <.. DewPointSensor
+DeviceIDVO <.. DewPointSensor
+
+ValueObject <.. SensorNameVO
+DomainID <|.. SensorIDVO
+DomainID <|.. SensorTypeIDVO
+DomainID <|.. DeviceIDVO
+
+ValueObject <|.. DewPointValue
 
 @enduml
