@@ -16,10 +16,9 @@ import java.util.UUID;
  load ON(true)/OFF(false).
  * This class implements both the DomainEntity and Actuator interfaces.
  */
-public class SwitchActuator implements DomainEntity, Actuator {
+public class SwitchActuator implements Actuator {
 
     private final ActuatorIDVO actuatorID;
-    private ActuatorStatusVO actuatorStatus;
     private ActuatorNameVO actuatorName;
     private ActuatorTypeIDVO actuatorTypeID;
     private DeviceIDVO deviceIDVO;
@@ -27,8 +26,7 @@ public class SwitchActuator implements DomainEntity, Actuator {
     /**
      * Constructs a new SwitchActuator with the provided actuatorName, actuatorTypeID, and deviceIDVO.
      * Throws an IllegalArgumentException if any of the provided parameters is null.
-     * Internally it generates it´s ID using a UUID and injecting that identifier in a ActuatorIDVO object,
-     * and it generates it´s state by injecting "true" in a ActuatorStatus object. The state is by default on (true)
+     * Internally it generates it´s ID using a UUID and injecting that identifier in a ActuatorIDVO object.
      *
      * @param actuatorName   The name of the actuator.
      * @param actuatorTypeID The type ID of the actuator.
@@ -40,7 +38,6 @@ public class SwitchActuator implements DomainEntity, Actuator {
             throw new IllegalArgumentException("Invalid Parameters");
         }
         this.actuatorID = new ActuatorIDVO(UUID.randomUUID());
-        this.actuatorStatus = new ActuatorStatusVO(true);
         this.actuatorName = actuatorName;
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
@@ -62,28 +59,16 @@ public class SwitchActuator implements DomainEntity, Actuator {
      * Switches the load using the provided SimHardwareAct.
      * SimHardwareAct is an abstraction that represents the external entity or "piece" of hardware this SwitchActuator is going
      * to act upon.
-     * Updates the actuatorStatus based on the execution result. If successful, instantiates an ActuatorStatus object with the negation
-     * of the previous state. This ensures state update.
+     * This function calls a method in SimHardwareAct class that executes the load switching command, this operation returns a boolean
+     * considering if the command was (or not) successfully executed. switchLoad() will return the output of that function.
      *
      * @param simHardwareAct The SimHardwareAct to use for executing the command.
      * @return true if the command was executed successfully, false otherwise.
      */
     public boolean switchLoad(SimHardwareAct simHardwareAct) {
         boolean executionResult = simHardwareAct.executeCommandSim();
-        if (executionResult) {
-            boolean switchedState = !this.actuatorStatus.getValue();
-            this.actuatorStatus = new ActuatorStatusVO(switchedState);
-        }
-        return executionResult;
-    }
 
-    /**
-     * Retrieves the current ActuatorStatusVO of the actuator.
-     *
-     * @return The ActuatorStatusVO representing the current state of the actuator.
-     */
-    public ActuatorStatusVO getState() {
-        return this.actuatorStatus;
+        return executionResult;
     }
 
     /**
