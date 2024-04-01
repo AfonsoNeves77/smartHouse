@@ -2,6 +2,7 @@ package SmartHomeDDD.vo.actuatorVO;
 
 import SmartHomeDDD.domain.DomainID;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -39,5 +40,29 @@ public class ActuatorIDVO implements DomainID {
     @Override
     public String getID() {
         return this.identifier.toString();
+    }
+
+    /**
+     * Compares this ActuatorIDVO object to another object of the same type to check if they are equal.
+     *
+     * @param o
+     * @return True if the objects are equal, false otherwise;
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActuatorIDVO that = (ActuatorIDVO) o;
+        return Objects.equals(identifier, that.identifier);
+    }
+
+    /**
+     * Generates a hash code for the object;
+     *
+     * @return The hash code;
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifier);
     }
 }
