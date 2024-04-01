@@ -11,10 +11,6 @@ public class SensorTypeDTO {
      * @param unit as String
      */
     public SensorTypeDTO(String sensorTypeID, String unit) {
-        if (sensorTypeID == null || sensorTypeID.isEmpty())
-            throw new IllegalArgumentException("SensorType cannot be null or empty");
-        if(unit == null || unit.isEmpty())
-            throw new IllegalArgumentException("Unit cannot be null or empty");
         this.sensorTypeID = sensorTypeID;
         this.unit = unit;
     }
