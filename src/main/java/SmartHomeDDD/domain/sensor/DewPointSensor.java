@@ -1,20 +1,15 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.DewPointValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.SwitchValue;
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
-import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
+import SmartHomeDDD.domain.sensor.sensorValues.DewPointValue;
 import SmartHomeDDD.vo.ValueObject;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class DewPointSensor implements Sensor, DomainEntity {
@@ -47,7 +42,7 @@ public class DewPointSensor implements Sensor, DomainEntity {
      * @return dewPointValue object
      * @throws InstantiationException
      */
-    public Value<Double> getReading(SimHardware simHardware) throws InstantiationException {
+    public ValueObject<Double> getReading(SimHardware simHardware) throws InstantiationException {
         if (simHardware == null) throw new IllegalArgumentException("Invalid external service");
         String simValue = simHardware.getValue();
         return new DewPointValue(simValue);
@@ -57,7 +52,6 @@ public class DewPointSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for Name;
      */
-    @Override
     public SensorNameVO getSensorName(){
         return this.sensorName;
     }
@@ -66,7 +60,6 @@ public class DewPointSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for SensorTypeID;
      */
-    @Override
     public SensorTypeIDVO getSensorTypeID(){
         return this.sensorTypeID;
     }
@@ -75,7 +68,6 @@ public class DewPointSensor implements Sensor, DomainEntity {
      * Simple getter method
      * @return The encapsulated VO for DeviceID;
      */
-    @Override
     public DeviceIDVO getDeviceID(){
         return this.deviceID;
     }

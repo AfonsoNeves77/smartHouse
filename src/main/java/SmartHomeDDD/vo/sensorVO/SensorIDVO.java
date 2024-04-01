@@ -28,4 +28,17 @@ public class SensorIDVO implements DomainID {
     public String getID() {
         return identifier.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SensorIDVO)) return false;
+        SensorIDVO sensorIDVO = (SensorIDVO) o;
+        return identifier.equals(sensorIDVO.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
+    }
 }

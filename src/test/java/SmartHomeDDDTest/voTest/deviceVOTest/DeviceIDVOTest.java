@@ -46,6 +46,10 @@ class DeviceIDVOTest {
 
     }
 
+    /**
+     * Test case to verify that the equals method of DeviceIDVO returns true when comparing two DeviceIDVO objects
+     * with the same identifier.
+     */
     @Test
     public void whenBothDeviceIDVOsTheSame_shouldReturnTrue(){
         //Arrange
@@ -60,7 +64,10 @@ class DeviceIDVOTest {
         assertTrue(result);
     }
 
-
+    /**
+     * Test case to verify that the equals method of DeviceIDVO returns false when comparing two DeviceIDVO objects
+     * with different identifiers.
+     */
     @Test
     public void whenDeviceIDVO2IsNull_shouldReturnFalse(){
         //Arrange
@@ -75,6 +82,10 @@ class DeviceIDVOTest {
         assertFalse(result);
     }
 
+    /**
+     * Test case to verify that the equals method of DeviceIDVO returns false when comparing a DeviceIDVO object
+     * with a different type of object.
+     */
     @Test
     public void whenDeviceIDVOComparedToOtherTypeOfObject_shouldReturnFalse(){
         //Arrange
@@ -89,6 +100,10 @@ class DeviceIDVOTest {
         assertFalse(result);
     }
 
+    /**
+     * Test case to verify that the equals method of DeviceIDVO returns true when comparing two DeviceIDVO objects
+     * with the same identifier.
+     */
     @Test
     public void whenDeviceIDVOComparedToDifferentDeviceIDVOWithSameId_shouldAssertTrue(){
         //Arrange
@@ -103,6 +118,10 @@ class DeviceIDVOTest {
         assertTrue(result);
     }
 
+    /**
+     * Test case to verify that the equals method of DeviceIDVO returns false when comparing two DeviceIDVO objects
+     * with different identifiers.
+     */
     @Test
     public void whenDeviceIDVOComparedToDifferentDeviceIDVOWithDifferentId_shouldAssertFalse(){
         //Arrange
@@ -118,6 +137,10 @@ class DeviceIDVOTest {
         assertFalse(result);
     }
 
+    /**
+     * Test case to verify that the hashCode method of DeviceIDVO returns different hash codes for two DeviceIDVO objects
+     * with different identifiers.
+     */
     @Test
     public void whenHashCodeCalledOnTwoDeviceIDVOWithDifferentId_shouldReturnDifferentHashCode(){
         //Arrange
@@ -134,6 +157,10 @@ class DeviceIDVOTest {
         assertNotEquals(result,result2);
     }
 
+    /**
+     * Test case to verify that the hashCode method of DeviceIDVO returns the same hash code for two DeviceIDVO objects
+     * with the same identifier.
+     */
     @Test
     public void whenHashCodeCalledOnTwoDeviceIDVOWithSameId_shouldReturnSameHashCode(){
         //Arrange
