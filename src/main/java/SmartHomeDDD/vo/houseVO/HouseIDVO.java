@@ -2,6 +2,7 @@ package SmartHomeDDD.vo.houseVO;
 
 import SmartHomeDDD.domain.DomainID;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,5 +33,18 @@ public class HouseIDVO implements DomainID {
     @Override
     public String getID() {
         return this.identifier.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HouseIDVO)) return false;
+        HouseIDVO houseIDVO = (HouseIDVO) o;
+        return Objects.equals(identifier, houseIDVO.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
     }
 }
