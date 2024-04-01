@@ -1,6 +1,6 @@
 package SmartHomeDDDTest.domainTest.sensorTest.externalServicesTest;
 
-import SmartHome.domain.sensor.externalServices.SimHardware;
+import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
