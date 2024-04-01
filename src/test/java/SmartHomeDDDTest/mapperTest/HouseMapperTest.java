@@ -1,4 +1,4 @@
-package SmartHomeDDDTest.domainTest.houseTest;
+package SmartHomeDDDTest.mapperTest;
 
 import SmartHomeDDD.dto.LocationDTO;
 import SmartHomeDDD.vo.houseVO.LocationVO;
@@ -7,7 +7,7 @@ import org.mockito.MockedConstruction;
 
 import java.util.List;
 
-import static SmartHomeDDD.domain.house.HouseMapper.dtoToDomain;
+import static SmartHomeDDD.mapper.HouseMapper.dtoToDomain;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

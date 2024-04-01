@@ -1,4 +1,4 @@
-package SmartHomeDDD.domain.house;
+package SmartHomeDDD.mapper;
 
 import SmartHomeDDD.dto.LocationDTO;
 import SmartHomeDDD.vo.houseVO.*;
