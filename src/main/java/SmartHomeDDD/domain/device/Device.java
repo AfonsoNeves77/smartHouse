@@ -36,14 +36,14 @@ public class Device implements DomainEntity {
         }
 
         /**
-         * Deactivates the device by setting its status to inactive.
-         * This method creates a new DeviceStatusVO object with the value false, representing that the device is inactive,
-         * and assigns it to the device's internal status field. It then returns the newly created DeviceStatusVO object.
-         * @return a new DeviceStatusVO object reflecting the deactivated device status
+         * Deactivates the device.
+         *
+         * @return true if the device was successfully deactivated, false otherwise.
          */
-        public DeviceStatusVO deactivateDevice() {
-            this.deviceStatus = new DeviceStatusVO(false);
-            return this.deviceStatus;
+        public boolean deactivateDevice() {
+                this.deviceStatus = new DeviceStatusVO(false);
+
+                return !this.deviceStatus.getValue();
         }
 
         /**

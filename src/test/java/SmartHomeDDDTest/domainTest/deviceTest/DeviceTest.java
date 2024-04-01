@@ -229,13 +229,14 @@ public class DeviceTest {
      * Then, the DeviceNameVO, DeviceModelVO, and RoomIDVO are mocked to simulate valid parameters.
      * The Device constructor is called with the mocked parameters to instantiate a Device object.
      * The deactivateDevice method is called on the Device object to deactivate the device.
-     * The DeviceStatusVO object constructed is retrieved and stored in the expected variable.
-     * The result is compared with the expected DeviceStatusVO object to ensure the correct device status is returned.
-     * The number of DeviceStatusVO objects constructed is also compared with the expected number to ensure the method is called.
-     * The DeviceStatusVO object is compared with the expected DeviceStatusVO object to ensure the correct device status is returned.
+     * The operation result (boolean) is retrieved and stored in the expected variable.
+     * The result is compared with the expected operation result (true) to ensure the correct device status is returned.
+     * The number of DeviceStatusVO objects constructed is also compared with the expected number to ensure that the object
+     * is being doubled everytime an initialization is required.
+     *
      */
     @Test
-    void whenDeactivateDeviceCalled_thenDeviceStatusIsReturnedFalse() {
+    void whenDeactivateDeviceAndDeviceStatusIsUpdated_ShouldReturnTrue() {
         //Arrange
         int expectedMockedConstruction = 2;
         DeviceNameVO deviceNameDouble = mock(DeviceNameVO.class);
@@ -248,14 +249,50 @@ public class DeviceTest {
              MockedConstruction<DeviceIDVO> deviceIDMockedConstruction = mockConstruction(DeviceIDVO.class)) {
             //Act
             Device device = new Device(deviceNameDouble, deviceModelDouble, roomIDDouble);
-            DeviceStatusVO result = device.deactivateDevice();
+            boolean result = device.deactivateDevice();
 
             //Assert
-            assertFalse(result.getValue());
+            assertTrue(result);
             int resultMockedConstruction = deviceStatusMockedConstruction.constructed().size();
             assertEquals(expectedMockedConstruction, resultMockedConstruction);
         }
     }
+
+    /**
+     * This test verifies that the deactivateDevice method returns the device status.
+     * First, the expected number of DeviceStatusVO objects to be constructed is defined.
+     * Then, the DeviceNameVO, DeviceModelVO, and RoomIDVO are mocked to simulate valid parameters.
+     * The Device constructor is called with the mocked parameters to instantiate a Device object.
+     * The deactivateDevice method is called on the Device object to deactivate the device.
+     * The operation result (boolean) is retrieved and stored in the expected variable.
+     * The result is compared with the expected operation result (false) to ensure the correct device status is returned.
+     * The number of DeviceStatusVO objects constructed is also compared with the expected number to ensure that the object
+     * is being doubled everytime an initialization is required.
+     *
+     */
+    @Test
+    void whenDeactivateDeviceAndDeviceStatusIsNotUpdated_ShouldReturnFalse() {
+        //Arrange
+        int expectedMockedConstruction = 2;
+        DeviceNameVO deviceNameDouble = mock(DeviceNameVO.class);
+        DeviceModelVO deviceModelDouble = mock(DeviceModelVO.class);
+        RoomIDVO roomIDDouble = mock(RoomIDVO.class);
+
+        try (MockedConstruction<DeviceStatusVO> deviceStatusMockedConstruction = mockConstruction(DeviceStatusVO.class, (mock, context) -> {
+            when(mock.getValue()).thenReturn(true);
+        });
+             MockedConstruction<DeviceIDVO> deviceIDMockedConstruction = mockConstruction(DeviceIDVO.class)) {
+            //Act
+            Device device = new Device(deviceNameDouble, deviceModelDouble, roomIDDouble);
+            boolean result = device.deactivateDevice();
+
+            //Assert
+            assertFalse(result);
+            int resultMockedConstruction = deviceStatusMockedConstruction.constructed().size();
+            assertEquals(expectedMockedConstruction, resultMockedConstruction);
+        }
+    }
+
 
     /**
      * This test verifies that the getDeviceName method returns the device name.
