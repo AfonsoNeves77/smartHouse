@@ -1,7 +1,9 @@
 package SmartHomeDDD.vo.sensorType;
 
 import SmartHomeDDD.domain.DomainID;
+import SmartHomeDDD.vo.roomVO.RoomIDVO;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class SensorTypeIDVO implements DomainID {
@@ -28,4 +30,18 @@ public class SensorTypeIDVO implements DomainID {
     public String getID() {
         return sensorTypeID;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SensorTypeIDVO)) return false;
+        SensorTypeIDVO sensorTypeIDVO = (SensorTypeIDVO) o;
+        return sensorTypeID.equals(sensorTypeIDVO.sensorTypeID);
+    }
+
+    @Override
+    public int hashCode() {
+        return sensorTypeID.hashCode();
+    }
+
 }
