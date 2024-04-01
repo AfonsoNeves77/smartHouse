@@ -4,11 +4,11 @@ public class RoomDTO {
     private final String id;
     private final String roomName;
     private final int floor;
-    private double roomHeight;
+    private final double roomHeight;
 
-    private double roomLength;
+    private final double roomLength;
 
-    private double roomWidth;
+    private final double roomWidth;
     private final String houseID;
 
     /**
