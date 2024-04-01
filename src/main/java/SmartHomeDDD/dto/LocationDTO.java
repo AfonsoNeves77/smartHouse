@@ -2,15 +2,15 @@ package SmartHomeDDD.dto;
 
 public class LocationDTO {
 
-        private String door;
-        private String street;
-        private String city;
+        private final String door;
+        private final String street;
+        private final String city;
 
-        private String country;
-        private String postalCode;
+        private final String country;
+        private final String postalCode;
 
-        private String latitude;
-        private String longitude;
+        private final double latitude;
+        private final double longitude;
 
         /**
          * Constructor for LocationDTO
@@ -22,7 +22,7 @@ public class LocationDTO {
          * @param latitude
          * @param longitude
          */
-        public LocationDTO(String door, String street, String city, String country, String postalCode, String latitude, String longitude) {
+        public LocationDTO(String door, String street, String city, String country, String postalCode, double latitude, double longitude) {
             this.door = door;
             this.street = street;
             this.city = city;
@@ -76,7 +76,7 @@ public class LocationDTO {
          * Getter method to retrieve latitude
          * @return latitude
          */
-        public String getLatitude() {
+        public double getLatitude() {
             return latitude;
         }
 
@@ -84,7 +84,7 @@ public class LocationDTO {
          * Getter method to retrieve longitude
          * @return longitude
          */
-        public String getLongitude() {
+        public double getLongitude() {
             return longitude;
         }
     }

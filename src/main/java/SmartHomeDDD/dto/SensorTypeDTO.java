@@ -1,8 +1,8 @@
 package SmartHomeDDD.dto;
 
 public class SensorTypeDTO {
-    private String sensorTypeID;
-    private String unit;
+    private final String sensorTypeID;
+    private final String unit;
 
     /**
      * Constructor for SensorTypeDTO

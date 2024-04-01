@@ -18,8 +18,8 @@ public class LocationDTOTest {
         String city = "Porto";
         String country = "Portugal";
         String postalCode = "4400-200";
-        String latitude = " 41";
-        String longitude = "8";
+        double latitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(expectedDoor,street,city,country,postalCode,latitude,longitude);
         //Act
         String resultDoor = locationDTO.getDoor();
@@ -39,8 +39,8 @@ public class LocationDTOTest {
         String city = "Porto";
         String country = "Portugal";
         String postalCode = "4400-200";
-        String latitude = " 41";
-        String longitude = "8";
+        double latitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,expectedStreet,city,country,postalCode,latitude,longitude);
         //Act
         String resultStreet = locationDTO.getStreet();
@@ -60,8 +60,8 @@ public class LocationDTOTest {
         String expectedCity = "Porto";
         String country = "Portugal";
         String postalCode = "4400-200";
-        String latitude = " 41";
-        String longitude = "8";
+        double latitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,expectedCity,country,postalCode,latitude,longitude);
         //Act
         String resultCity = locationDTO.getCity();
@@ -81,8 +81,8 @@ public class LocationDTOTest {
         String city = "Porto";
         String expectedCountry = "Portugal";
         String postalCode = "4400-200";
-        String latitude = " 41";
-        String longitude = "8";
+        double latitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,expectedCountry,postalCode,latitude,longitude);
         //Act
         String resultCountry = locationDTO.getCountry();
@@ -102,8 +102,8 @@ public class LocationDTOTest {
         String city = "Porto";
         String country = "Portugal";
         String expectedPostalCode = "4400-200";
-        String latitude = " 41";
-        String longitude = "8";
+        double latitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,expectedPostalCode,latitude,longitude);
         //Act
         String resultPostalCode = locationDTO.getPostalCode();
@@ -123,11 +123,11 @@ public class LocationDTOTest {
         String city = "Porto";
         String country = "Portugal";
         String postalCode = "4400-200";
-        String expectedLatitude = " 41";
-        String longitude = "8";
+        double expectedLatitude = 41;
+        double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,postalCode,expectedLatitude,longitude);
         //Act
-        String resultLatitude= locationDTO.getLatitude();
+        double resultLatitude= locationDTO.getLatitude();
 
         //Assert
         assertEquals(expectedLatitude, resultLatitude);
@@ -144,11 +144,11 @@ public class LocationDTOTest {
         String city = "Porto";
         String country = "Portugal";
         String postalCode = "4400-200";
-        String latitude = " 41";
-        String expectedLongitude = "8";
+        double latitude = 41;
+        double expectedLongitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,postalCode,latitude,expectedLongitude);
         //Act
-        String resultLongitude= locationDTO.getLongitude();
+        double resultLongitude= locationDTO.getLongitude();
 
         //Assert
         assertEquals(expectedLongitude, resultLongitude);

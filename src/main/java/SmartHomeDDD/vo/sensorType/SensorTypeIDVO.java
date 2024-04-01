@@ -1,10 +1,6 @@
 package SmartHomeDDD.vo.sensorType;
 
 import SmartHomeDDD.domain.DomainID;
-import SmartHomeDDD.vo.roomVO.RoomIDVO;
-
-import java.util.Objects;
-import java.util.UUID;
 
 public class SensorTypeIDVO implements DomainID {
 

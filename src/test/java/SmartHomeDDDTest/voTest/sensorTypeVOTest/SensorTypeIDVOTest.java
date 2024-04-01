@@ -1,11 +1,8 @@
 package SmartHomeDDDTest.voTest.sensorTypeVOTest;
 
-import SmartHome.domain.sensor.sensorImplementation.Sensor;
-import SmartHomeDDD.vo.roomVO.RoomIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +34,7 @@ class SensorTypeIDVOTest {
         assertEquals(expected, sensorTypeIDVO.getID());
     }
     /**
-     * Test case to verify that the equals method of RoomIDVO returns true when comparing the same RoomIDVO object.
+     * Test case to verify that the equals method of SensorTypeIDVO returns true when comparing the same SensorTypeIDVO object.
      */
     @Test
     public void givenSameSensorTypeIDVO_ShouldReturnTrue(){
@@ -54,7 +51,7 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the equals method of RoomIDVO returns false when comparing a RoomIDVO object with a null object.
+     * Test case to verify that the equals method of SensorTypeIDVO returns false when comparing a SensorTypeIDVO object with a null object.
      */
     @Test
     public void givenSensorTypeIDVOAndNullObject_ShouldReturnFalse(){
@@ -71,10 +68,10 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the equals method of RoomIDVO returns true when comparing two RoomIDVO objects with the same identifier.
+     * Test case to verify that the equals method of SensorTypeIDVO returns true when comparing two SensorTypeIDVO objects with the same sensorTypeID.
      */
     @Test
-    public void givenTwoSensorTypeIDVOWithSameSensorType_ShouldReturnTrue(){
+    public void givenTwoSensorTypeIDVOWithSameSensorTypeID_ShouldReturnTrue(){
 
         //Arrange
         String sensorTypeID = "humidity";
@@ -89,7 +86,7 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the equals method of RoomIDVO returns false when comparing two RoomIDVO objects with different identifiers.
+     * Test case to verify that the equals method of SensorTypeIDVO returns false when comparing two SensorTypeIDVO objects with different sensorTypeID.
      */
     @Test
     public void givenTwoSensorTypeIDVOWithDifferentSensorTypeID_ShouldReturnFalse(){
@@ -108,7 +105,7 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the equals method of RoomIDVO returns false when comparing a RoomIDVO object with a different object.
+     * Test case to verify that the equals method of SensorTypeIDVO returns false when comparing a SensorTypeIDVO object with a different object.
      */
     @Test
     public void givenSensorTypeIDVOAndDifferentObject_ShouldReturnFalse(){
@@ -125,7 +122,7 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the hashCode method of RoomIDVO returns the correct hash code.
+     * Test case to verify that the hashCode method of SensorTypeIDVO returns the correct hash code.
      */
     @Test
     public void givenTwoSensorTypeIDVOWithSameSensorTypeID_ShouldReturnSameHashCode() {
@@ -142,7 +139,7 @@ class SensorTypeIDVOTest {
     }
 
     /**
-     * Test case to verify that the hashCode method of RoomIDVO returns different hash codes for two RoomIDVO objects with different identifiers.
+     * Test case to verify that the hashCode method of SensorTypeIDVO returns different hash codes for two SensorTypeIDVO objects with different sensorTypeID.
      */
     @Test
     public void givenTwoSensorTypeIDVOWithSameSensorTypeID_ShouldReturnDifferentHashCode() {

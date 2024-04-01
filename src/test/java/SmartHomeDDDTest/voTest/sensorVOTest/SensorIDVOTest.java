@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SensorIDVOTest {
     /**
@@ -47,5 +46,125 @@ public class SensorIDVOTest {
         //Assert
         assertEquals(expected, result);
     }
+    /**
+     * Test case to verify that the equals method of SensorIDVO returns true when comparing the same SensorIDVO object.
+     */
+    @Test
+    public void givenSameSensorIDVO_ShouldReturnTrue(){
 
+        //Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+
+        //Act
+        SensorIDVO sensorID = new SensorIDVO(sensorIdentifier);
+
+        //Assert
+        assertTrue(sensorID.equals(sensorID));
+
+    }
+
+    /**
+     * Test case to verify that the equals method of SensorIDVO returns false when comparing a SensorIDVO object with a null object.
+     */
+    @Test
+    public void givenSensorIDVOAndNullObject_ShouldReturnFalse(){
+
+        //Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+
+        //Act
+        SensorIDVO sensorID = new SensorIDVO(sensorIdentifier);
+
+        //Assert
+        assertFalse(sensorID.equals(null));
+
+    }
+
+    /**
+     * Test case to verify that the equals method of SensorIDVO returns true when comparing two SensorIDVO objects with the same identifier.
+     */
+    @Test
+    public void givenTwoSensorIDVOWithSameIdentifier_ShouldReturnTrue(){
+
+        //Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+
+        //Act
+        SensorIDVO sensorID1 = new SensorIDVO(sensorIdentifier);
+        SensorIDVO sensorID2 = new SensorIDVO(sensorIdentifier);
+
+        //Assert
+        assertTrue(sensorID1.equals(sensorID2));
+
+    }
+
+    /**
+     * Test case to verify that the equals method of SensorIDVO returns false when comparing two SensorIDVO objects with different identifiers.
+     */
+    @Test
+    public void givenTwoSensorIDVOWithDifferentIdentifier_ShouldReturnFalse(){
+
+        //Arrange
+        UUID sensorIdentifier1 = UUID.randomUUID();
+        UUID sensorIdentifier2 = UUID.randomUUID();
+
+        //Act
+        SensorIDVO sensorID1 = new SensorIDVO(sensorIdentifier1);
+        SensorIDVO sensorID2 = new SensorIDVO(sensorIdentifier2);
+
+        //Assert
+        assertFalse(sensorID1.equals(sensorID2));
+
+    }
+
+    /**
+     * Test case to verify that the equals method of SensorIDV0 returns false when comparing a SensorIDVO object with a different object.
+     */
+    @Test
+    public void givenSensorIDVOAndDifferentObject_ShouldReturnFalse(){
+
+        //Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+
+        //Act
+        SensorIDVO sensorID = new SensorIDVO(sensorIdentifier);
+        Object object = new Object();
+
+        //Assert
+        assertFalse(sensorID.equals(object));
+    }
+
+    /**
+     * Test case to verify that the hashCode method of SensorIDVO returns the correct hash code.
+     */
+    @Test
+    public void givenTwoSensorIDVOWithSameIdentifier_ShouldReturnSameHashCode() {
+        // Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+
+        // Act
+        SensorIDVO sensorID1 = new SensorIDVO(sensorIdentifier);
+        SensorIDVO sensorID2 = new SensorIDVO(sensorIdentifier);
+
+        // Assert
+        assertEquals(sensorID1.hashCode(), sensorID2.hashCode());
+    }
+
+    /**
+     * Test case to verify that the hashCode method of SensorIDVO returns different hash codes for two SensorIDVO objects with different identifiers.
+     */
+    @Test
+    public void givenTwoRoomIDVOWithDifferentIdentifier_ShouldReturnDifferentHashCode() {
+        // Arrange
+        UUID sensorIdentifier = UUID.randomUUID();
+        UUID sensorIdentifier2 = UUID.randomUUID();
+
+        // Act
+        SensorIDVO sensorID1 = new SensorIDVO(sensorIdentifier);
+        SensorIDVO sensorID2 = new SensorIDVO(sensorIdentifier2);
+
+        // Assert
+        assertNotEquals(sensorID1.hashCode(), sensorID2.hashCode());
+    }
 }
+
