@@ -137,9 +137,17 @@ public class RoomMapperTest {
         RoomFloorVO floorDouble = mock(RoomFloorVO.class);
         RoomDimensionsVO roomDimensionsDouble = mock(RoomDimensionsVO.class);
         HouseIDVO houseIDDouble = mock(HouseIDVO.class);
-        Room room = new Room(nameDouble, floorDouble, roomDimensionsDouble, houseIDDouble);
+        RoomIDVO roomIDDouble = mock(RoomIDVO.class);
+
+        Room roomDouble = mock(Room.class);
+        when(roomDouble.getFloor()).thenReturn(floorDouble);
+        when(roomDouble.getRoomDimensions()).thenReturn(roomDimensionsDouble);
+        when(roomDouble.getRoomName()).thenReturn(nameDouble);
+        when(roomDouble.getHouseID()).thenReturn(houseIDDouble);
+        when(roomDouble.getId()).thenReturn(roomIDDouble);
+
         List<Room> listOfRooms = new ArrayList<>();
-        listOfRooms.add(room);
+        listOfRooms.add(roomDouble);
         int expectedSizeOfList = 1;
 
         //Act
@@ -157,19 +165,39 @@ public class RoomMapperTest {
     @Test
     public void whenDomainToDTOisCalled_ThenExpectedListOfRoomsDTOExpectedSizeIsOf2(){
         // Arrange
+
+            // Mock dependencies inside Room.
         RoomNameVO nameDouble = mock(RoomNameVO.class);
         RoomFloorVO floorDouble = mock(RoomFloorVO.class);
         RoomDimensionsVO roomDimensionsDouble = mock(RoomDimensionsVO.class);
         HouseIDVO houseIDDouble = mock(HouseIDVO.class);
+        RoomIDVO roomIDDouble = mock(RoomIDVO.class);
         RoomNameVO nameDouble2 = mock(RoomNameVO.class);
         RoomFloorVO floorDouble2 = mock(RoomFloorVO.class);
         RoomDimensionsVO roomDimensionsDouble2 = mock(RoomDimensionsVO.class);
         HouseIDVO houseIDDouble2 = mock(HouseIDVO.class);
-        Room room1 = new Room(nameDouble, floorDouble, roomDimensionsDouble, houseIDDouble);
-        Room room2 = new Room(nameDouble2, floorDouble2, roomDimensionsDouble2, houseIDDouble2);
+        RoomIDVO roomIDDouble2 = mock(RoomIDVO.class);
+
+            // Mock One Room and stub to return mocked VOs.
+        Room roomDouble = mock(Room.class);
+        when(roomDouble.getFloor()).thenReturn(floorDouble);
+        when(roomDouble.getRoomDimensions()).thenReturn(roomDimensionsDouble);
+        when(roomDouble.getRoomName()).thenReturn(nameDouble);
+        when(roomDouble.getHouseID()).thenReturn(houseIDDouble);
+        when(roomDouble.getId()).thenReturn(roomIDDouble);
+
+            // Mock Another Room and stub to return mocked VOs.
+        Room roomDouble2 = mock(Room.class);
+        when(roomDouble2.getFloor()).thenReturn(floorDouble2);
+        when(roomDouble2.getRoomDimensions()).thenReturn(roomDimensionsDouble2);
+        when(roomDouble2.getRoomName()).thenReturn(nameDouble2);
+        when(roomDouble2.getHouseID()).thenReturn(houseIDDouble2);
+        when(roomDouble2.getId()).thenReturn(roomIDDouble2);
+
+            // Create a list of Rooms and add the mocked Rooms.
         List<Room> listOfRooms = new ArrayList<>();
-        listOfRooms.add(room1);
-        listOfRooms.add(room2);
+        listOfRooms.add(roomDouble);
+        listOfRooms.add(roomDouble2);
         int expectedSizeOfList = 2;
 
         //Act
@@ -182,9 +210,10 @@ public class RoomMapperTest {
 
     /**
      * Test to verify that the values from the RoomDTO object match the values from the Room object.
-     * First, mock the dependencies inside Room and stub the methods to return specific values.
-     * Then, mock the Room object and stub to return the mocked VO's.
-     * After that, call the domainToDTO method and check if the values match.
+     * First, mock it mocks the dependencies inside Room and stub the methods to return specific values.
+     * Then, mocks the Room object and stubs to return the mocked VO's.
+     * After that, calls the domainToDTO method and checks if the values match between the
+     * first RoomDTO object of the output's list and the only Room object given.
      */
     @Test
     public void whenDomainToDTOisCalled_thenValuesFromRoomDTOObjectMatchValuesFromRoomObject() {
@@ -207,7 +236,7 @@ public class RoomMapperTest {
         when(mockRoomIDVO.getID()).thenReturn("123e4567-e89b-12d3-a456-426655440000");
         when(mockHouseIDVO.getID()).thenReturn("00000000-0000-0000-0000-000000000000");
 
-            // Mock Room and stub to return mocked VOs
+            //  Mock Room object and stub to return mocked VO's.
         Room roomDouble = mock(Room.class);
         when(roomDouble.getFloor()).thenReturn(mockRoomFloorVO);
         when(roomDouble.getRoomDimensions()).thenReturn(mockRoomDimensionsVO);
