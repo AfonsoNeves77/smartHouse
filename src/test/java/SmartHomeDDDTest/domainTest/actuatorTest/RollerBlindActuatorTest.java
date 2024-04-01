@@ -5,7 +5,6 @@ import SmartHomeDDD.domain.actuator.RollerBlindActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorStatusVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -95,15 +94,13 @@ class RollerBlindActuatorTest {
         when(simHardwareAct.executeIntegerCommandSim(50)).thenReturn(true);
 
 
-        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);
-            MockedConstruction<ActuatorStatusVO> actuatorStatusVOMockedConstruction = mockConstruction(ActuatorStatusVO.class)){
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 50);
             //Assert
             assertTrue(result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
-            assertEquals(expectedStatusDoubleSize, actuatorStatusVOMockedConstruction.constructed().size());
         }
 
     }
@@ -129,15 +126,13 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(false);
-        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);
-            MockedConstruction<ActuatorStatusVO> actuatorStatusVOMockedConstruction = mockConstruction(ActuatorStatusVO.class)){
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 101);
             //Assert
             assertFalse(result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
-            assertEquals(expectedStatusDoubleSize, actuatorStatusVOMockedConstruction.constructed().size());
         }
     }
 
@@ -162,15 +157,13 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(-1)).thenReturn(false);
-        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);
-            MockedConstruction<ActuatorStatusVO> actuatorStatusVOMockedConstruction = mockConstruction(ActuatorStatusVO.class)){
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             boolean result = rollerBlindActuator.executeCommand(simHardwareAct, -1);
             //Assert
             assertFalse(result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
-            assertEquals(expectedStatusDoubleSize, actuatorStatusVOMockedConstruction.constructed().size());
         }
     }
 
@@ -199,8 +192,7 @@ class RollerBlindActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(50)).thenReturn(true);
 
-        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);
-        MockedConstruction<ActuatorStatusVO> actuatorStatusVOMockedConstruction = mockConstruction(ActuatorStatusVO.class)){
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             ActuatorIDVO result = rollerBlindActuator.getId();
@@ -208,7 +200,6 @@ class RollerBlindActuatorTest {
             ActuatorIDVO expected = actuatorIDVOMockedConstruction.constructed().get(0);
             assertEquals(expected, result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
-            assertEquals(expectedStatusDoubleSize, actuatorStatusVOMockedConstruction.constructed().size());
         }
     }
 

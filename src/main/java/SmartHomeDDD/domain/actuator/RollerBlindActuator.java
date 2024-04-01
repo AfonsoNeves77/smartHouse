@@ -2,11 +2,9 @@ package SmartHomeDDD.domain.actuator;
 
 import SmartHomeDDD.SimHardwareAct;
 import SmartHomeDDD.domain.DomainEntity;
-import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorStatusVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
 import java.util.UUID;
@@ -17,13 +15,11 @@ public class RollerBlindActuator implements DomainEntity, Actuator{
     private ActuatorTypeIDVO actuatorTypeID;
     private DeviceIDVO deviceIDVO;
     private ActuatorNameVO actuatorName;
-    private ActuatorStatusVO actuatorStatus;
 
     /**
      * Constructs a new RollerBlindActuator with the provided actuatorName, actuatorTypeID, and deviceIDVO. Throws an
      * IllegalArgumentException if any of the provided parameters is null.
-     * Internally it generates its ID using a UUID and injecting that identifier in a ActuatorIDVO object,
-     * and it generates its state by injecting "true" in a ActuatorStatus object.
+     * Internally it generates its ID using a UUID and injecting that identifier in a ActuatorIDVO object.
      * @param actuatorName The name of the actuator.
      * @param actuatorTypeID The type ID of the actuator.
      * @param deviceIDVO The ID of the device associated with the actuator.
@@ -37,7 +33,6 @@ public class RollerBlindActuator implements DomainEntity, Actuator{
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
         this.actuatorName = actuatorName;
-        this.actuatorStatus = new ActuatorStatusVO(true);
     }
 
 
