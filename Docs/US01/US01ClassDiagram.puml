@@ -1,0 +1,205 @@
+@startuml
+
+title <size: 30> US01 Class Diagram
+
+'note "<b>Only methods related to\n<b>US01 are represented" as N1
+
+skinparam linetype ortho
+
+class House <<Entity>> <<Root>>{
+- houseID : HouseIDVO
+- locationVO : LocationVO
++ House(locationVO : LocationVO)
++ configureLocation(locationVO : LocationVO) : boolean
+- validateLocation(locationVO : LocationVO) : boolean
++ getLocation() : LocationVO
++ getId() : HouseIDVO
+}
+
+interface DomainEntity {
++ getId() : DomainID
+}
+
+class HouseIDVO {
+- identifier : UUID
++ HouseIDVO(identifier : UUID)
++ getID : String
+}
+
+interface DomainID {
++ getID() : String
+}
+
+class LocationMapper {
+{static} + mapToLocationVO(locationDTO : LocationDTO) : LocationVO
+{static} + createAddressVO(locationDTO : LocationDTO) : AddressVO
+{static} + createGpsVO(locationDTO : LocationDTO) : GpsVO
+{static} + createLatitudeVO(locationDTO : LocationDTO) : LatitudeVO
+{static} + createLongitudeVO(locationDTO : LocationDTO) : LongitudeVO
+{static} + createDoorVO(locationDTO : LocationDTO) : DoorVO
+{static} + createStreetVO(locationDTO : LocationDTO) : StreetVO
+{static} + createCityVO(locationDTO : LocationDTO) : CityVO
+{static} + createCountryVO(locationDTO : LocationDTO) : CountryVO
+{static} + createPostalCodeVO(locationDTO : LocationDTO) : PostalCodeVO
+}
+
+class LocationDTO {
+- door : String
+- street : String
+- city : String
+- country : String
+- postalCode : String
+- latitude : double
+- longitude : double
++ LocationDTO(door : String, street : String,\n city : String, country : String,\n postalCode : String, latitude : double,\n longitude : double)
++ getDoor() : String
++ getStreet() : String
++ getCity() : String
++ getCountry() : String
++ getPostalCode() : String
++ getLatitude() : double
++ getLongitude() : double
+}
+
+interface ValueObject<T> {
++ getValue() : T
+}
+
+class LocationVO {
+- addressVO : AddressVO
+- gpsVO : GpsVO
++ LocationVO(addressVO : AddressVO, gpsVO : GpsVO)
++ getDoor() : String
++ getStreet() : String
++ getCity() : String
++ getCountry() : String
++ getPostalCode() : String
++ getLatitude() : double
++ getLongitude() : double
++ toString() : String
+}
+
+class GpsVO {
+- latitudeVO : LatitudeVO
+- longitudeVO : LongitudeVO
++ GpsVO(latitudeVO : LatitudeVO, longitudeVO : LongitudeVO)
+}
+
+class LatitudeVO {
+- latitudeValue : double
++ LatitudeVO(latitudeValue : double)
+- invalidLatitudeValues(latitudeValue : double) : boolean
++ getValue() : Double
+}
+
+class LongitudeVO {
+- longitudeValue : double
++ LongitudeVO(longitudeValue : double)
+- invalidLongitudeValues(longitudeValue : double) : boolean
++ getValue() : Double
+}
+
+class AddressVO {
+- doorVO : DoorVO
+- streetVO : StreetVO
+- cityVO : CityVO
+- countryVO : CountryVO
+- postalCodeVO : PostalCodeVO
++ AddressVO(doorVO : DoorVO, streetVO : StreetVO,\n cityVO : CityVO, countryVO : CountryVO,\n postalCodeVO : PostalCodeVO)
++ getDoor() : String
++ getStreet() : String
++ getCity() : String
++ getCountry() : String
++ getPostalCode() : String
+- validArgs(doorVO : DoorVO, streetVO : StreetVO,\n cityVO : CityVO, countryVO : CountryVO,\n postalCodeVO : PostalCodeVO) : boolean
+}
+
+class DoorVO {
+- door : String
++ DoorVO(door : String)
+- isParamValid(param : String) : boolean
++ getValue() : String
+}
+
+class StreetVO {
+- street : String
++ StreetVO(street : String)
++ getValue() : String
+}
+
+class CityVO {
+- city : String
++ CityVO(city : String)
++ getValue() : String
+}
+
+class CountryVO {
+- country : String
++ CountryVO(country : String)
++ getValue() : String
+}
+
+class PostalCodeVO {
+- postalCode : String
++ PostalCode(postalCode : String)
++ getValue() : String
+}
+
+class HouseRepository {
+    - houseIDAndHouseMap : Map<HouseIDVO, House>
+    + save(entity : House) : boolean
+    + findAll() : Iterable<House>
+    + findById(id : HouseIDVO) : House
+    + isPresent(id : HouseIDVO) : boolean
+}
+
+class HouseService {
+- houseRepository : HouseRepository
++ HouseService(houseRepository : HouseRepository)
+- getFirstHouse() : House
++ updateLocation(locationVO : LocationVO) : boolean
+}
+
+class ConfigureLocationCtrl {
+- houseService : HouseService
++ ConfigureLocationCtrl(houseService : HouseService)
++ configureHouseLocation(locationDTO : LocationDTO) : boolean
+}
+
+interface Repository <ID extends DomainID, T extends DomainEntity> {
++ save(entity : T) : boolean
++ findAll() : Iterable<T>
++ findById(id : ID) : T
++ isPresent(id : ID) : boolean
+}
+
+ConfigureLocationCtrl -right-> HouseService : 1
+ConfigureLocationCtrl -left..> LocationMapper : <<uses>>
+LocationMapper -left..> LocationDTO : <<uses>>
+HouseService -right..> HouseRepository : <<uses>>
+HouseRepository -right..|> Repository
+HouseRepository -down-> House : <<stores>>
+House -right-> HouseIDVO
+House -down-> LocationVO
+LocationVO -left-> AddressVO
+LocationVO -down-> GpsVO
+DoorVO -right-> AddressVO
+StreetVO -up-> AddressVO
+CityVO -up-> AddressVO
+CountryVO -up-> AddressVO
+PostalCodeVO -up-> AddressVO
+LatitudeVO -right-> GpsVO
+LongitudeVO -up-> GpsVO
+HouseIDVO -up-> DomainID
+House -up-> DomainEntity
+Repository -down--|> DomainEntity
+Repository -down--|> DomainID
+CityVO -down..|> ValueObject
+CountryVO -down..|> ValueObject
+PostalCodeVO -down..|> ValueObject
+StreetVO -down..|> ValueObject
+DoorVO -down..|> ValueObject
+ValueObject <|..-right LatitudeVO
+ValueObject <|..-down LongitudeVO
+
+@enduml
