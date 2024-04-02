@@ -5,7 +5,6 @@ import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorStatusVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -195,5 +194,53 @@ public class SwitchActuatorTest {
             int actuatorIDDoubles = actuatorIDMockedConstruction.constructed().size();
             assertEquals(actuatorIDDoubles,expectedIDDoublesSize);
         };
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns actuatorNameVo object
+     */
+    @Test
+    void getActuatorName_returnsActuatorNameVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SwitchActuator actuator = new SwitchActuator(name,type,deviceID);
+        // Act
+        ActuatorNameVO result = actuator.getActuatorName();
+        // Assert
+        assertEquals(name,result);
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns ActuatorTypeIDVO object
+     */
+    @Test
+    void getActuatorTypeID_returnsActuatorTypeIDVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SwitchActuator actuator = new SwitchActuator(name,type,deviceID);
+        // Act
+        ActuatorTypeIDVO result = actuator.getActuatorTypeID();
+        // Assert
+        assertEquals(type,result);
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns DeviceIDVO object
+     */
+    @Test
+    void getActuatorTypeID_returnsDeviceIDVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SwitchActuator actuator = new SwitchActuator(name,type,deviceID);
+        // Act
+        DeviceIDVO result = actuator.getDeviceID();
+        // Assert
+        assertEquals(deviceID,result);
     }
 }

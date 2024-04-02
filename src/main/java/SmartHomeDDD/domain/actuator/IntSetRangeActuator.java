@@ -111,4 +111,31 @@ public class IntSetRangeActuator implements DomainEntity, Actuator {
         }
         return false;
     }
+
+    /**
+     * Simple getter method.
+     * @return ActuatorTypeIDVO object
+     */
+    @Override
+    public ActuatorTypeIDVO getActuatorTypeID() {
+        return this.actuatorType;
+    }
+
+    /**
+     * Simple getter method.
+     * @return DeviceIDVO object
+     */
+    @Override
+    public DeviceIDVO getDeviceID() {
+        return this.deviceID;
+    }
+
+    /**
+     * Simple getter method.
+     * @return ActuatorName object
+     */
+    @Override
+    public ActuatorNameVO getActuatorName() {
+        return this.actuatorName;
+    }
 }

@@ -80,4 +80,31 @@ public class RollerBlindActuator implements DomainEntity, Actuator{
     private boolean validateCommand(int position) {
         return position >= 0 && position <= 100;
     }
+
+    /**
+     * Simple getter method.
+     * @return ActuatorTypeIDVO object
+     */
+    @Override
+    public ActuatorTypeIDVO getActuatorTypeID() {
+        return this.actuatorTypeID;
+    }
+
+    /**
+     * Simple getter method.
+     * @return DeviceIDVO object
+     */
+    @Override
+    public DeviceIDVO getDeviceID() {
+        return this.deviceIDVO;
+    }
+
+    /**
+     * Simple getter method.
+     * @return ActuatorName object
+     */
+    @Override
+    public ActuatorNameVO getActuatorName() {
+        return this.actuatorName;
+    }
 }

@@ -2,6 +2,7 @@ package SmartHomeDDDTest.domainTest.actuatorTest;
 
 import SmartHomeDDD.SimHardwareAct;
 import SmartHomeDDD.domain.actuator.RollerBlindActuator;
+import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
@@ -201,6 +202,54 @@ class RollerBlindActuatorTest {
             assertEquals(expected, result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns actuatorNameVo object
+     */
+    @Test
+    void getActuatorName_returnsActuatorNameVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        RollerBlindActuator actuator = new RollerBlindActuator(name,type,deviceID);
+        // Act
+        ActuatorNameVO result = actuator.getActuatorName();
+        // Assert
+        assertEquals(name,result);
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns ActuatorTypeIDVO object
+     */
+    @Test
+    void getActuatorTypeID_returnsActuatorTypeIDVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        RollerBlindActuator actuator = new RollerBlindActuator(name,type,deviceID);
+        // Act
+        ActuatorTypeIDVO result = actuator.getActuatorTypeID();
+        // Assert
+        assertEquals(type,result);
+    }
+
+    /**
+     * This test validates that getActuatorName successfully returns DeviceIDVO object
+     */
+    @Test
+    void getActuatorTypeID_returnsDeviceIDVO(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        RollerBlindActuator actuator = new RollerBlindActuator(name,type,deviceID);
+        // Act
+        DeviceIDVO result = actuator.getDeviceID();
+        // Assert
+        assertEquals(deviceID,result);
     }
 
 }
