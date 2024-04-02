@@ -73,7 +73,7 @@ class SensorFactoryTest {
     @Test
     void givenCorrectVOs_createSensorReturnsASensorObject(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
@@ -99,7 +99,7 @@ class SensorFactoryTest {
     @Test
     void givenNullSensorNameVO_createSensorReturnsNull(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
 
@@ -123,7 +123,7 @@ class SensorFactoryTest {
     @Test
     void givenNullDeviceIDVO_createSensorReturnsNull(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
 
@@ -147,7 +147,7 @@ class SensorFactoryTest {
     @Test
     void givenNullSensorTypeID_createSensorReturnsNull(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
@@ -172,7 +172,7 @@ class SensorFactoryTest {
     @Test
     void givenSensorTypeIDVO_whenGetIDFromVOreturnsNull_createSensorReturnsNull(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
@@ -199,7 +199,7 @@ class SensorFactoryTest {
     @Test
     void givenSensorTypeIDVO_whenGetIDFromVOreturnsInvalidType_createSensorReturnsNull(){
         // Arrange
-        String path = "config.sensor";
+        String path = "sensor.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);

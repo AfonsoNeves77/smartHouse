@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ActuatorFactory {
 
-    private final String filePath = "config.actuator";
+    private final String filePath = "actuator.properties";
     private Configuration configuration;
 
     /**
@@ -34,7 +34,7 @@ public class ActuatorFactory {
      * @param actuatorName Actuator name
      * @param actuatorTypeID Actuator type ID
      * @param deviceID Device ID to link the actuator to
-     * @return The Actuator object in case of correct instantiation, null if operation does not succeed
+     * @return The Actuator object in case of correct instantiation, null if operation does not succeed.
      */
     public Actuator createActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceID) {
         if (!validParameters(actuatorName, actuatorTypeID, deviceID))
@@ -58,7 +58,7 @@ public class ActuatorFactory {
     /**
      * Validates all the parameters to instantiate an actuator.
      * @param parameters ActuatorName, ActuatorTypeID, DeviceID
-     * @return True if all parameters are valid (not null), false otherwise
+     * @return True if all parameters are valid (not null), false otherwise.
      */
     private boolean validParameters(Object... parameters){
         for(Object param : parameters) {
@@ -72,7 +72,7 @@ public class ActuatorFactory {
     /**
      * Initializes the Configuration Object with the proper file path.
      * @param filePath File path to be considered, containing the required actuators' data
-     * @throws ConfigurationException If file path is invalid
+     * @throws ConfigurationException If file path is invalid.
      */
     private void initializeConfiguration(String filePath) throws ConfigurationException {
         Configurations configs = new Configurations();
@@ -81,9 +81,9 @@ public class ActuatorFactory {
     }
 
     /**
-     * Extracts from the file the path to the Class of the pretended actuator type
+     * Extracts from the file the path to the Class of the pretended actuator type.
      * @param actuatorTypeID ActuatorTypeID to get the correct path from the file
-     * @return Optional container, which might be empty in case actuator type does not exist in the file
+     * @return Optional container, which might be empty in case actuator type does not exist in the file.
      */
     private Optional<String> getPath(ActuatorTypeIDVO actuatorTypeID){
         String strActuatorType = actuatorTypeID.getID();
