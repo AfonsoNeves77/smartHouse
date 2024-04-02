@@ -39,6 +39,26 @@ class HouseMapperTest {
     }
 
     /**
+     * This test checks if when trying to convert a null LocationDTO object to a LocationVO object
+     * an IllegalArgumentException is thrown
+     */
+    @Test
+    public void whenDtoToDomainIsCalled_ShouldThrowIllegalArgumentException() {
+        //Arrange
+        LocationDTO locationDTO = null;
+        String expected = "LocationDTO is null";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            dtoToDomain(locationDTO);
+        });
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
      * This test is used to check if after using the dtoToDomain method to get a domain object
      * it is returning the correct street information
      */

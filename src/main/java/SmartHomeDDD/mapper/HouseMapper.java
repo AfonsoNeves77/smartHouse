@@ -11,6 +11,9 @@ public class HouseMapper {
      * @return LocationVO
      */
     public static LocationVO dtoToDomain(LocationDTO locationDTO) {
+        if (!validateLocationDTO(locationDTO)) {
+            throw new IllegalArgumentException("LocationDTO is null");
+        }
         return new LocationVO(createAddressVO(locationDTO), createGPSLocationVO(locationDTO));
     }
 
@@ -93,5 +96,14 @@ public class HouseMapper {
      */
     private static LongitudeVO createLongitudeVO(LocationDTO locationDTO) {
         return new LongitudeVO(locationDTO.getLongitude());
+    }
+
+    /**
+     *  Method to validate LocationDTO before converting it to LocationVO.
+     * @param locationDTO
+     * @return
+     */
+    private static boolean validateLocationDTO(LocationDTO locationDTO) {
+        return locationDTO != null;
     }
 }
