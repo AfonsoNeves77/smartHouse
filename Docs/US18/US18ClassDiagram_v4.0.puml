@@ -1,0 +1,45 @@
+@startuml
+title <size: 30> US18 Class Diagram
+
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO;
+    + getDeviceID() : DeviceIDVO;
+    + getSensorName() : SensorNameVO;
+}
+
+interface DomainEntity {
+    + getID() : DomainID
+}
+
+interface ValueObject<T> {
+    + getValue() : T
+}
+
+
+class PositionSensor{
+    - sensorName : SensorNameVO
+    - deviceID : DeviceIDVO
+    - sensorType : SensorTypeIDVO
+    - sensorID : SensorIDVO
+
+    + getReading(simHardware : SimHardware) : ValueObject<Integer>
+}
+
+class PositionValue{
+    - positionValue : int
+
+    + getValue() : Integer
+    - isReadingValid(positionValue : int) : boolean
+}
+
+class SimHardware{
+    + getValue() : String
+}
+
+ValueObject <|.. PositionValue
+Sensor <|.. PositionSensor
+DomainEntity <|.. PositionSensor
+PositionSensor .right.> PositionValue
+PositionSensor .left.> SimHardware
+
+@enduml
