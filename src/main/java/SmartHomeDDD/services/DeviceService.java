@@ -9,7 +9,10 @@ import SmartHomeDDD.vo.deviceVO.DeviceNameVO;
 import SmartHomeDDD.vo.deviceVO.DeviceStatusVO;
 import SmartHomeDDD.vo.roomVO.RoomIDVO;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service class responsible for managing devices in the smart home domain (create,save,checking for activation status and retrieving a list of devices in a room).
@@ -134,5 +137,25 @@ public class DeviceService {
         }
         return true;
     }
+
+    /**
+     * This method receives a map with string, List<DeviceIDVO> and replaces all DeviceIDVOs with Device objects.
+     * @param map string, List<Device>
+     * @return
+     */
+        public Map<String, List<Device>> getDevices (Map<String, List<DeviceIDVO>> map){
+        LinkedHashMap<String, List<Device>> newMap = new LinkedHashMap<>();
+        for (String key : map.keySet()){
+            List<DeviceIDVO> idList = map.get(key);
+            List<Device> deviceList = new ArrayList<>();
+            for (DeviceIDVO id : idList){
+                Device device = this.deviceRepository.findById(id);
+                deviceList.add(device);
+            }
+            newMap.put(key,deviceList);
+        }
+        return newMap;
+    }
+
 
 }

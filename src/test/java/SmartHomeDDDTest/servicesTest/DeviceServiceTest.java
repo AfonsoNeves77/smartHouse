@@ -11,9 +11,7 @@ import SmartHomeDDD.vo.deviceVO.DeviceStatusVO;
 import SmartHomeDDD.vo.roomVO.RoomIDVO;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -590,4 +588,114 @@ public class DeviceServiceTest {
         assertFalse(result);
     }
 
+    /**
+     * This test ensures getDevices successfully converts all DeviceIDVO instances with Device.
+     */
+    @Test
+    void getDevices_whenGivenAListWithDeviceIDVO_SuccessfullyreplacesWithDeviceObjects(){
+        // Arrange
+        DeviceFactory factory = mock(DeviceFactory.class);
+
+        // Device + DeviceIDVO
+        Device device1 = mock(Device.class);
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        when(device1.getId()).thenReturn(id1);
+
+        Device device2 = mock(Device.class);
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        when(device2.getId()).thenReturn(id2);
+
+        DeviceRepository repository = mock(DeviceRepository.class);
+        when(repository.findById(id1)).thenReturn(device1);
+        when(repository.findById(id2)).thenReturn(device2);
+
+        DeviceService service = new DeviceService(factory,repository);
+
+        // Entry parameter arrange.
+        Map<String, List<DeviceIDVO>> map = new HashMap<>();
+
+        List<DeviceIDVO> firstKeyList = new ArrayList<>();
+        firstKeyList.add(id1);
+        firstKeyList.add(id2);
+        map.put("key1",firstKeyList);
+
+        // Pre-act
+        int expectedSize = 2;
+        Map<String, List<Device>> resultMap = service.getDevices(map);
+
+        // Act
+        Device resultDevice = resultMap.get("key1").get(0);
+        int resultSize = resultMap.get("key1").size();
+
+        // Assert
+        assertEquals(expectedSize,resultSize);
+        assertEquals(device1,resultDevice);
+    }
+
+    /**
+     * This test ensures getDevices successfully converts all DeviceIDVO instances with Device.
+     */
+    @Test
+    void getDevices_whenGivenAListWithDeviceIDVO_SuccessfullyReplacesWithDeviceObjects(){
+        // Arrange
+        DeviceFactory factory = mock(DeviceFactory.class);
+
+        // Device + DeviceIDVO
+        Device device1 = mock(Device.class);
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        when(device1.getId()).thenReturn(id1);
+
+        Device device2 = mock(Device.class);
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        when(device2.getId()).thenReturn(id2);
+
+        Device device3 = mock(Device.class);
+        DeviceIDVO id3 = mock(DeviceIDVO.class);
+        when(id3.getID()).thenReturn("id3");
+        when(device3.getId()).thenReturn(id3);
+
+        Device device4 = mock(Device.class);
+        DeviceIDVO id4 = mock(DeviceIDVO.class);
+        when(id4.getID()).thenReturn("id4");
+        when(device4.getId()).thenReturn(id4);
+
+        DeviceRepository repository = mock(DeviceRepository.class);
+        when(repository.findById(id1)).thenReturn(device1);
+        when(repository.findById(id2)).thenReturn(device2);
+        when(repository.findById(id3)).thenReturn(device3);
+        when(repository.findById(id4)).thenReturn(device4);
+
+        DeviceService service = new DeviceService(factory,repository);
+
+        // Entry parameter arrange.
+        Map<String, List<DeviceIDVO>> map = new HashMap<>();
+
+        List<DeviceIDVO> firstKeyList = new ArrayList<>();
+        firstKeyList.add(id1);
+        firstKeyList.add(id2);
+        map.put("key1",firstKeyList);
+
+        List<DeviceIDVO> secondKeyList = new ArrayList<>();
+        secondKeyList.add(id3);
+        secondKeyList.add(id4);
+        map.put("key2",secondKeyList);
+
+        // Pre-act
+        int expectedSize = 2;
+        Map<String, List<Device>> resultMap = service.getDevices(map);
+
+        // Act
+        Device resultDevice = resultMap.get("key2").get(0);
+        String resultDeviceID = resultDevice.getId().getID();
+        int resultSize = resultMap.get("key2").size();
+
+        // Assert
+        assertEquals(expectedSize,resultSize);
+        assertEquals("id3",resultDeviceID);
+        assertEquals(device3,resultDevice);
+    }
 }
