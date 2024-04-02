@@ -38,6 +38,19 @@ class SensorTypeMapperTest {
     }
 
     /**
+     * Test if the method createSensorTypeIDVO throws an IllegalArgumentException.
+     * The method should throw an IllegalArgumentException when called with a null SensorTypeDTO object as parameter.
+     * The test will pass if an IllegalArgumentException is thrown, and fail otherwise.
+     */
+    @Test
+    void whenCreateSensorTypeIDVOWithNull_ThenIllegalArgumentExceptionIsThrown() {
+        // Arrange
+        SensorTypeDTO sensorTypeDTO = null;
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> SensorTypeMapper.createSensorTypeIDVO(sensorTypeDTO));
+    }
+
+    /**
      * Test if the method domainToDTO returns a list of SensorTypeDTO objects.
      * The method should return a list of SensorTypeDTO objects with the same sensorTypeID and unit as the SensorType
      * objects in the provided list.
