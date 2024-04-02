@@ -6,11 +6,11 @@ skinparam ParticipantPadding 50
 participant ":AddSensorToDeviceCTRL" as C
 participant ":SensorTypeService" as STS
 participant ":SensorTypeRepository" as STR
+participant ":SensorMapper" as SM
+participant ":SensorTypeMapper" as STM
 participant ":DeviceMapper" as DM
 participant ":DeviceService" as DS
 participant ":DeviceRepository" as DR
-participant ":SensorMapper" as SM
-participant ":SensorTypeMapper" as STM
 participant ":SensorService" as SS
 participant ":SensorFactory" as SF
 participant ":SensorRepository" as SR
@@ -25,14 +25,18 @@ C -> STS : getListOfSensorTypes()
 activate STS
 STS -> STR : findAll()
 activate STR
-STR --> STS : listOfSensorTypes
+STR --> STS : sensorTypeList
 deactivate STR
-STS -> STS : cloneListOfSensorTypes()
-STS --> C : clonedListOfSensorTypes
+loop for each sensorType in sensorTypeList
+    STS -> STS : listOfSensorTypes.add(sensorType)
+    activate STS
+    deactivate STS
+    end
+STS --> C : listOfSensorTypes
 deactivate STS
-C -> STM : domainToDTO(clonedListOfSensorTypes)
+C -> STM : domainToDTO(listOfSensorTypes)
 activate STM
-loop for each sensorType in clonedListOfSensorTypes
+loop for each sensorType in listOfSensorTypes
     STM -> STM : SensorTypeDTO = domainToDTO(sensorType)
     activate STM
     deactivate STM
@@ -44,10 +48,26 @@ STM --> C : sensorTypeDTOList
 deactivate STM
 [o<-- C : sensorTypeDTOList
 [o-> C : addSensorToDevice(deviceDTO, sensorDTO, sensorTypeDTO)
+C -> SM : createSensorNameVO(sensorDTO)
+activate SM
+SM --> C : sensorNameVO
+deactivate SM
+C -> STM : createSensorTypeIDVO(sensorTypeDTO)
+activate STM
+STM --> C : sensorTypeIDVO
+deactivate STM
 C -> DM : createDeviceIDVO(deviceDTO)
 activate DM
 DM --> C : deviceIDVO
 deactivate DM
+C -> STS : sensorTypeExists(sensorTypeIDVO)
+activate STS
+STS -> STR : isPresent(sensorTypeIDVO)
+activate STR
+STR --> STS : true
+deactivate STR
+STS --> C : true
+deactivate STS
 C -> DS : isActive(deviceIDVO)
 activate DS
 DS -> DR : findByID(deviceIDVO)
@@ -59,21 +79,6 @@ activate DS
 deactivate DS
 DS --> C : true
 deactivate DS
-C -> SM : createSensorNameVO(sensorDTO)
-activate SM
-SM --> C : sensorNameVO
-deactivate SM
-C -> STM : createSensorTypeIDVO(sensorTypeDTO)
-activate STM
-STM --> C : sensorTypeIDVO
-deactivate STM
-C -> STS : sensorTypeExists(sensorTypeIDVO)
-activate STS
-STS -> STR : isPresent(sensorTypeIDVO)
-activate STR
-STR --> STS : true
-deactivate STR
-STS --> C : true
 deactivate STS
 deactivate STM
 C -> SS : createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO)
