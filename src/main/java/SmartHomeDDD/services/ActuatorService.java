@@ -7,8 +7,12 @@ import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
-public class ActuatorService {
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+public class ActuatorService {
     private ActuatorFactory factoryActuator;
     private ActuatorRepository actuatorRepository;
 
@@ -78,4 +82,45 @@ public class ActuatorService {
         return true;
     }
 
+    /**
+     * This method communicates with the Actuator Repository and requests a list of actuators.
+     * @return List <Actuator>
+     */
+    public List<Actuator> getListOfActuators(){
+        Iterable<Actuator> actuators = this.actuatorRepository.findAll();
+        List<Actuator> finalList = new ArrayList<>();
+
+        for (Actuator type : actuators){
+            finalList.add(type);
+        }
+        return finalList;
+    }
+
+    /**
+     * This method iterates through the list of Actuator to create a map of unique types to List <Devices>
+     * 0. Creates a map: string(value of typeVO), List <DeviceIDVO>
+     * 1. Requests the ActuatorType and DeviceID;
+     * 2. Checks if there is an entry on the map with that type, if not, adding it. Checks if the deviceID is already
+     * present in the List <DeviceID> related to that entry, adding it if not.
+     * @return Map string, List<DeviceIDVO>
+     */
+    public Map<String,List<DeviceIDVO>> getListOfDeviceIDsByFunctionality (){
+        List<Actuator> actuatorList = getListOfActuators();
+        LinkedHashMap<String,List<DeviceIDVO>> filteredMap = new LinkedHashMap<>();
+        for (Actuator actuator : actuatorList){
+            String type = actuator.getActuatorTypeID().getID();
+            DeviceIDVO deviceID = actuator.getDeviceID();
+            if (filteredMap.containsKey(type)){
+                List<DeviceIDVO> devicesPerKey = filteredMap.get(type);
+                if(!devicesPerKey.contains(deviceID)){
+                    devicesPerKey.add(deviceID);
+                }
+            } else {
+                List<DeviceIDVO> devicesPerKey = new ArrayList<>();
+                devicesPerKey.add(deviceID);
+                filteredMap.put(type,devicesPerKey);
+            }
+        }
+        return filteredMap;
+    }
 }

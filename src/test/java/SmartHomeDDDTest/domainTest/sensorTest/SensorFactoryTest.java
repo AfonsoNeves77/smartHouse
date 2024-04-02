@@ -78,7 +78,7 @@ class SensorFactoryTest {
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
-        when(sensorType.getID()).thenReturn("Sunrise");
+        when(sensorType.getID()).thenReturn("SunriseSensor");
 
         try(MockedConstruction<SunriseSensor> mockedConstruction = mockConstruction(SunriseSensor.class)) {
             SensorFactory factory = new SensorFactory(path);

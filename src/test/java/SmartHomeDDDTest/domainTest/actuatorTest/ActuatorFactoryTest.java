@@ -157,7 +157,7 @@ public class ActuatorFactoryTest {
 
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
-        when(actuatorTypeID.getID()).thenReturn("Switch");
+        when(actuatorTypeID.getID()).thenReturn("SwitchActuator");
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
         int expectedSize = 1;
@@ -188,7 +188,7 @@ public class ActuatorFactoryTest {
         ActuatorFactory factory = new ActuatorFactory();
         String name = "My actuator";
         ActuatorNameVO actuatorName = new ActuatorNameVO(name);
-        String type = "Switch";
+        String type = "SwitchActuator";
         ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO(type);
         UUID devID = UUID.randomUUID();
         DeviceIDVO deviceID = new DeviceIDVO(devID);
