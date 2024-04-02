@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +51,7 @@ public class RoomMapperTest {
      * Test to verify that the RoomNameVO object is created correctly.
      */
     @Test
-    public void whenCreateRoomNameVO_RoomNameVOisRetrieved() {
+    public void whenCreateRoomNameVOisCalled_RoomNameVOisRetrieved() throws InstantiationException {
         // Arrange
         String expected = "BedRoom";
 
@@ -61,11 +62,29 @@ public class RoomMapperTest {
         assertEquals(expected, result.getValue());
     }
 
+
+    /**
+     * Test to verify that when the RoomDTO object is null, an InstantiationException is
+     * thrown when creating a RoomNameVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateRoomNameVOisCalledWithNullEntry_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createRoomNameVO(null); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
     /**
      * Test to verify that the RoomFloorVO object is created correctly.
      */
     @Test
-    public void whenCreateRoomFloorVO_RoomFloorVOisRetrieved() {
+    public void whenCreateRoomFloorVOisCalled_RoomFloorVOisRetrieved() throws InstantiationException {
         // Arrange
         int expected = 2;
 
@@ -77,10 +96,28 @@ public class RoomMapperTest {
     }
 
     /**
+     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * when creating a RoomFloorVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateRoomFloorVOisCalledWithNullEntry_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createRoomFloorVO(null); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
+
+    /**
      * Test to verify that the RoomDimensionsVO object is created correctly.
      */
     @Test
-    public void whenCreateRoomDimensionsVO_RoomDimensionsVOisRetrieved() {
+    public void whenCreateRoomDimensionsVOisCalled_RoomDimensionsVOisRetrieved() throws InstantiationException {
         // Arrange
         double expectedLength = 5.6;
         double expectedWidth = 3.2;
@@ -96,10 +133,56 @@ public class RoomMapperTest {
     }
 
     /**
+     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * when creating a RoomDimensionsVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateRoomDimensionsVOisCalledWithNullEntry_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createRoomDimensionsVO(null); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
+
+    /**
+     * Test to verify that when the RoomDTO object has invalid values, an InstantiationException is
+     * thrown when creating a RoomDimensionsVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateRoomDimensionsVOisCalledWithInvalidDTOValues_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String roomID1 = "123e4567-e89b-12d3-a456-426655440000";
+        String roomName1 = "BedRoom";
+        int floor1 = 2;
+        double roomHeight1 = -1;
+        double roomLength1 = 0;
+        double roomWidth1 = 0;
+        String houseID1 = "00000000-0000-0000-0000-000000000000";
+        RoomDTO room1DTO = new RoomDTO(roomID1, roomName1, floor1, roomHeight1, roomLength1, roomWidth1, houseID1);
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createRoomDimensionsVO(room1DTO); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
+
+
+
+    /**
      * Test to verify that the RoomIDVO object is created correctly.
      */
     @Test
-    public void whenCreateRoomIDVO_RoomIDVOisRetrieved() {
+    public void whenCreateRoomIDVOisCalled_RoomIDVOisRetrieved() throws InstantiationException {
         // Arrange
         String expected = "123e4567-e89b-12d3-a456-426655440000";
 
@@ -111,11 +194,30 @@ public class RoomMapperTest {
     }
 
 
+
+    /**
+     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * when creating a RoomIDVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateRoomIDVOisCalledWithNullEntry_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createRoomIDVO(null); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
+
     /**
      * Test to verify that the HouseIDVO object is created correctly.
      */
     @Test
-    public void whenCreateHouseIDVO_HouseIDVOisRetrieved() {
+    public void whenCreateHouseIDVOisCalled_HouseIDVOisRetrieved() throws InstantiationException {
         // Arrange
         String expected = "00000000-0000-0000-0000-000000000000";
 
@@ -125,6 +227,25 @@ public class RoomMapperTest {
         // Assert
         assertEquals(expected, result.getID());
     }
+
+
+    /**
+     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown when
+     * creating a HouseIDVO object.
+     * @throws InstantiationException
+     */
+    @Test
+    public void whenCreateHouseIDVOisCalledWithNullEntry_ThrowsInstantiationException() throws InstantiationException {
+        // Arrange
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception e = assertThrows(InstantiationException.class, () -> { RoomMapper.createHouseIDVO(null); });
+
+        // Assert
+        assertEquals(expectedMessage, e.getMessage());
+    }
+
 
     /**
      * Test to verify that a list of Room objects of size 1 is correctly converted
