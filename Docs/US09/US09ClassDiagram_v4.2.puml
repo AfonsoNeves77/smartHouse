@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US09 Class Diagram v4.1
+title <size: 30> US09 Class Diagram v4.2
 note "<b>Only methods related to\n<b>US09 are represented" as N1
 skinparam linetype ortho
 
@@ -13,8 +13,7 @@ class GetDevicesByFunctionalityCTRL {
 class SensorService {
     - sensorRepository : SensorRepository
     + SensorService (sensorRepository : SensorRepository)
-    + getListOfDevicesByFunctionality() : Map<str:DeviceIDVO>
-    - getUniqueSensorTypeIDasStrByDeviceIDVO() : Map<Str:DeviceIDVO>
+    + getListOfDeviceIDsByFunctionality() : Map<str:DeviceIDVO>
 }
 
 class SensorRepository {
@@ -22,10 +21,35 @@ class SensorRepository {
     + findAll() : Iterable<Sensor>
 }
 
+class Sensor {
+    - sensorTypeID : SensorTypeIDVO
+    - deviceIDVO : DeviceIDVO
+    + getSensorID().getID() : String
+    + getDeviceIDVO() : DeviceIDVO
+}
+
+class ActuatorService {
+    - actuatorRepository : actuatorRepository
+    + actuatorService (actuatorRepository : atuatorRepository)
+    + getListOfDeviceIDsByFunctionality() : Map<str:DeviceIDVO>
+}
+
+class ActuatorRepository {
+    - data : Hashmap<ActuatorIDVO,Actuator>
+    + findAll() : Iterable<Actuator>
+}
+
+class Actuator {
+    - actuatorTypeID : actuatorTypeIDVO
+    - deviceIDVO : DeviceIDVO
+    + getActuatorID().getID() : String
+    + getDeviceIDVO() : DeviceIDVO
+}
+
 class DeviceService {
     - deviceRepository : Device DeviceRepository
     + DeviceService (deviceRepository : DeviceRepository)
-    + getSensorTypeIDstrToDeviceMap (sensorTypeIDstrToDeviceMap : Map<str:Device)
+    + getDevices(sensorTypeIDstrToDeviceIDVO) : Map<str:Device>
 }
 
 class DeviceRepository {
@@ -38,7 +62,6 @@ class DeviceMapper {
 }
 
 class DeviceDTO {
-
 }
 
 interface Repository {
@@ -47,13 +70,19 @@ interface Repository {
 }
 
 SensorService <|.. GetDevicesByFunctionalityCTRL
+ActuatorService <|.. GetDevicesByFunctionalityCTRL
 DeviceService <|.. GetDevicesByFunctionalityCTRL
 DeviceMapper o.. GetDevicesByFunctionalityCTRL
 
 SensorRepository <|.. SensorService
+ActuatorRepository <|.. ActuatorService
 DeviceRepository <|.. DeviceService
 
+Sensor o.. SensorService
+Actuator o.. ActuatorService
+
 Repository <.. SensorRepository
+Repository <.. ActuatorRepository
 Repository <.. DeviceRepository
 
 DeviceDTO *.. DeviceMapper

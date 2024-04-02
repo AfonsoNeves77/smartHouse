@@ -1,8 +1,8 @@
 # DDD Actuators
-Switch = SmartHomeDDD.domain.actuator.SwitchActuator
-BlindRoller = SmartHomeDDD.domain.actuator.BlindRollerActuator
-DecimalSet = SmartHomeDDD.domain.actuator.DecimalSetActuator
-IntSet = SmartHomeDDD.domain.actuator.IntSetActuator
+SwitchActuator = SmartHomeDDD.domain.actuator.SwitchActuator
+BlindRollerActuator  = SmartHomeDDD.domain.actuator.BlindRollerActuator
+DecimalSetActuator  = SmartHomeDDD.domain.actuator.DecimalSetActuator
+IntSetActuator  = SmartHomeDDD.domain.actuator.IntSetActuator
 
 ## Do not delete, for actuator test purposes
 Hydraulic =

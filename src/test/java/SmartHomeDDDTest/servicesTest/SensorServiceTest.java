@@ -1,13 +1,26 @@
 package SmartHomeDDDTest.servicesTest;
 
+import SmartHomeDDD.domain.actuator.Actuator;
+import SmartHomeDDD.domain.actuator.ActuatorFactory;
+import SmartHomeDDD.domain.actuator.RollerBlindActuator;
+import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.domain.sensor.Sensor;
 import SmartHomeDDD.domain.sensor.SensorFactory;
+import SmartHomeDDD.domain.sensor.SunriseSensor;
+import SmartHomeDDD.domain.sensor.SwitchSensor;
+import SmartHomeDDD.repository.ActuatorRepository;
 import SmartHomeDDD.repository.SensorRepository;
+import SmartHomeDDD.services.ActuatorService;
 import SmartHomeDDD.services.SensorService;
+import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -226,5 +239,242 @@ class SensorServiceTest {
 
         // Assert
         assertFalse(result);
+    }
+
+    /**
+     * This test ensures that when getListOfDeviceIDByFunctionality is called, when communicating with a repository with
+     * three devices that have two repeated types, only returns a map with 2 entries. Entries are related to the unique types.
+     */
+    @Test
+    void getListOfDeviceIDByFunctionality_whenRepositoryHas3devicesButTwoRepeatedTypes_returnHasSizeTwo(){
+        // Arrange
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        DeviceIDVO id3 = mock(DeviceIDVO.class);
+        when(id3.getID()).thenReturn("id3");
+
+        SensorTypeIDVO type1 = mock(SensorTypeIDVO.class);
+        when(type1.getID()).thenReturn("SwitchActuator");
+        SensorTypeIDVO type2 = mock(SensorTypeIDVO.class);
+        when(type2.getID()).thenReturn("RollerBlindActuator");
+        SensorTypeIDVO type3 = mock(SensorTypeIDVO.class);
+        when(type3.getID()).thenReturn("SwitchActuator");
+
+        Sensor sensor1 = mock(SwitchSensor.class);
+        when(sensor1.getSensorTypeID()).thenReturn(type1);
+        when(sensor1.getDeviceID()).thenReturn(id1);
+        Sensor sensor2 = mock(SunriseSensor.class);
+        when(sensor2.getSensorTypeID()).thenReturn(type2);
+        when(sensor2.getDeviceID()).thenReturn(id2);
+        Sensor sensor3 = mock(SwitchSensor.class);
+        when(sensor3.getSensorTypeID()).thenReturn(type3);
+        when(sensor3.getDeviceID()).thenReturn(id3);
+
+        List<Sensor> sensors = new ArrayList<>();
+        sensors.add(sensor1);
+        sensors.add(sensor2);
+        sensors.add(sensor3);
+
+        SensorRepository repository = mock(SensorRepository.class);
+        when(repository.findAll()).thenReturn(sensors);
+
+        SensorFactory factory = mock(SensorFactory.class);
+
+        SensorService service = new SensorService(repository,factory);
+
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+
+        int expectedSize = 2;
+        // Act
+        int resultSize = map.size();
+
+        // Assert
+        assertEquals(expectedSize,resultSize);
+    }
+
+    /**
+     * This test ensures that when getListOfDeviceIDByFunctionality is called, when communicating with a repository with
+     * three devices that have two repeated types, it returns a map where the first two keys match the expected ones.
+     */
+    @Test
+    void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_theReturningFirstTwoKeysAreSimilar(){
+        // Arrange
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        DeviceIDVO id3 = mock(DeviceIDVO.class);
+        when(id3.getID()).thenReturn("id3");
+
+        SensorTypeIDVO type1 = mock(SensorTypeIDVO.class);
+        when(type1.getID()).thenReturn("SwitchActuator");
+        SensorTypeIDVO type2 = mock(SensorTypeIDVO.class);
+        when(type2.getID()).thenReturn("RollerBlindActuator");
+        SensorTypeIDVO type3 = mock(SensorTypeIDVO.class);
+        when(type3.getID()).thenReturn("SwitchActuator");
+
+        Sensor sensor1 = mock(SwitchSensor.class);
+        when(sensor1.getSensorTypeID()).thenReturn(type1);
+        when(sensor1.getDeviceID()).thenReturn(id1);
+        Sensor sensor2 = mock(SunriseSensor.class);
+        when(sensor2.getSensorTypeID()).thenReturn(type2);
+        when(sensor2.getDeviceID()).thenReturn(id2);
+        Sensor sensor3 = mock(SwitchSensor.class);
+        when(sensor3.getSensorTypeID()).thenReturn(type3);
+        when(sensor3.getDeviceID()).thenReturn(id3);
+
+        List<Sensor> sensors = new ArrayList<>();
+        sensors.add(sensor1);
+        sensors.add(sensor2);
+        sensors.add(sensor3);
+
+        SensorRepository repository = mock(SensorRepository.class);
+        when(repository.findAll()).thenReturn(sensors);
+
+        SensorFactory factory = mock(SensorFactory.class);
+
+        SensorService service = new SensorService(repository,factory);
+
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+
+        String expectedFirstKey = "SwitchActuator";
+        String expectedSecondKey = "RollerBlindActuator";
+        String expectedThirdKey = null;
+        // Act
+        String resultFirstKey = map.keySet().stream().findFirst().orElse(null);
+        String resultSecondKey = map.keySet().stream().skip(1).findFirst().orElse(null);
+        String resultThirdKey = map.keySet().stream().skip(2).findFirst().orElse(null);
+
+        // Assert
+        assertEquals(expectedFirstKey,resultFirstKey);
+        assertEquals(expectedSecondKey,resultSecondKey);
+        assertEquals(expectedThirdKey,resultThirdKey);
+    }
+
+    /**
+     * This test ensures that when getListOfDeviceIDByFunctionality is called, when communicating with a repository with
+     * three devices that have two repeated types, it returns a map where the values of first two keys match the expected ones.
+     */
+    @Test
+    void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_ReturnsListOfExpectedDeviceIDRefs(){
+        // Arrange
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        DeviceIDVO id3 = mock(DeviceIDVO.class);
+        when(id3.getID()).thenReturn("id3");
+
+        SensorTypeIDVO type1 = mock(SensorTypeIDVO.class);
+        when(type1.getID()).thenReturn("SwitchActuator");
+        SensorTypeIDVO type2 = mock(SensorTypeIDVO.class);
+        when(type2.getID()).thenReturn("RollerBlindActuator");
+        SensorTypeIDVO type3 = mock(SensorTypeIDVO.class);
+        when(type3.getID()).thenReturn("SwitchActuator");
+
+        Sensor sensor1 = mock(SwitchSensor.class);
+        when(sensor1.getSensorTypeID()).thenReturn(type1);
+        when(sensor1.getDeviceID()).thenReturn(id1);
+        Sensor sensor2 = mock(SunriseSensor.class);
+        when(sensor2.getSensorTypeID()).thenReturn(type2);
+        when(sensor2.getDeviceID()).thenReturn(id2);
+        Sensor sensor3 = mock(SwitchSensor.class);
+        when(sensor3.getSensorTypeID()).thenReturn(type3);
+        when(sensor3.getDeviceID()).thenReturn(id3);
+
+        List<Sensor> sensors = new ArrayList<>();
+        sensors.add(sensor1);
+        sensors.add(sensor2);
+        sensors.add(sensor3);
+
+        SensorRepository repository = mock(SensorRepository.class);
+        when(repository.findAll()).thenReturn(sensors);
+
+        SensorFactory factory = mock(SensorFactory.class);
+
+        SensorService service = new SensorService(repository,factory);
+
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+
+        String firstKey = map.keySet().stream().findFirst().orElse(null);
+        String secondKey = map.keySet().stream().skip(1).findFirst().orElse(null);
+
+        String firstListIDRefs = "[" + id1.toString() + ", " + id3.toString() + "]";
+        String secondListIDRefs = "[" + id2.toString() + "]";
+
+        // Act
+        String resultfirstKey = map.get(firstKey).toString();
+        String resultsecondKey = map.get(secondKey).toString();
+
+        // Assert
+        assertEquals(firstListIDRefs,resultfirstKey);
+        assertEquals(secondListIDRefs,resultsecondKey);
+    }
+
+    /**
+     * This test ensures that when getListOfDeviceIDByFunctionality is called, when communicating with a repository with
+     * three devices that have two repeated types and 2 similar DeviceIDs, it returns a map where the values of first
+     * two keys match the expected ones, considering no DeviceIDs should be duplicated within the same key:value pair.
+     */
+    @Test
+    void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_ReturnsListOfExpectedDeviceIDRefsWithNoDuplicatedIds(){
+        // Arrange
+        DeviceIDVO id1 = mock(DeviceIDVO.class);
+        when(id1.getID()).thenReturn("id1");
+        DeviceIDVO id2 = mock(DeviceIDVO.class);
+        when(id2.getID()).thenReturn("id2");
+        DeviceIDVO id3 = mock(DeviceIDVO.class);
+        when(id3.getID()).thenReturn("id3");
+
+        SensorTypeIDVO type1 = mock(SensorTypeIDVO.class);
+        when(type1.getID()).thenReturn("SwitchActuator");
+        SensorTypeIDVO type2 = mock(SensorTypeIDVO.class);
+        when(type2.getID()).thenReturn("RollerBlindActuator");
+        SensorTypeIDVO type3 = mock(SensorTypeIDVO.class);
+        when(type3.getID()).thenReturn("SwitchActuator");
+
+        Sensor sensor1 = mock(SwitchSensor.class);
+        when(sensor1.getSensorTypeID()).thenReturn(type1);
+        when(sensor1.getDeviceID()).thenReturn(id1);
+        Sensor sensor2 = mock(SunriseSensor.class);
+        when(sensor2.getSensorTypeID()).thenReturn(type2);
+        when(sensor2.getDeviceID()).thenReturn(id2);
+        Sensor sensor3 = mock(SwitchSensor.class);
+        when(sensor3.getSensorTypeID()).thenReturn(type3);
+        when(sensor3.getDeviceID()).thenReturn(id3);
+
+        Sensor sensor4 = mock(SwitchSensor.class);
+        when(sensor4.getSensorTypeID()).thenReturn(type3);
+        when(sensor4.getDeviceID()).thenReturn(id3);
+
+        List<Sensor> sensors = new ArrayList<>();
+        sensors.add(sensor1);
+        sensors.add(sensor2);
+        sensors.add(sensor3);
+
+        SensorRepository repository = mock(SensorRepository.class);
+        when(repository.findAll()).thenReturn(sensors);
+
+        SensorFactory factory = mock(SensorFactory.class);
+
+        SensorService service = new SensorService(repository,factory);
+
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+
+        String firstKey = map.keySet().stream().findFirst().orElse(null);
+        String secondKey = map.keySet().stream().skip(1).findFirst().orElse(null);
+
+        String firstListIDRefs = "[" + id1.toString() + ", " + id3.toString() + "]";
+        String secondListIDRefs = "[" + id2.toString() + "]";
+
+        // Act
+        String resultfirstKey = map.get(firstKey).toString();
+        String resultsecondKey = map.get(secondKey).toString();
+
+        // Assert
+        assertEquals(firstListIDRefs,resultfirstKey);
+        assertEquals(secondListIDRefs,resultsecondKey);
     }
 }
