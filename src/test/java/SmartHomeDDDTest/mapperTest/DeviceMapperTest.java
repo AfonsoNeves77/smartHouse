@@ -12,9 +12,7 @@ import SmartHomeDDD.vo.roomVO.RoomIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -403,5 +401,110 @@ class DeviceMapperTest {
         assertEquals(deviceStatusVODouble.getValue().toString(), result.get(0).getDeviceStatus());
         assertEquals(deviceIDVODouble2.getID(), result.get(0).getDeviceID());
         assertEquals(roomIDVODouble2.getID(), result.get(0).getRoomID());
+    }
+
+    @Test
+    void domainToDTO_whenGivenAStrToDeviceMap_SuccessfullyConvertsDeviceToDTO(){
+        // Arrange
+
+        // Arranging device1
+        Device device1 = mock(Device.class);
+
+        DeviceNameVO name1 = mock(DeviceNameVO.class);
+        when(name1.getValue()).thenReturn("name1");
+        when(device1.getDeviceName()).thenReturn(name1);
+
+        DeviceModelVO model1 = mock(DeviceModelVO.class);
+        when(model1.getValue()).thenReturn("model1");
+        when(device1.getDeviceModel()).thenReturn(model1);
+
+        RoomIDVO roomid1 = mock(RoomIDVO.class);
+        when(roomid1.getID()).thenReturn("roomid1");
+        when(device1.getRoomID()).thenReturn(roomid1);
+
+        DeviceStatusVO status1 = mock(DeviceStatusVO.class);
+        when(model1.getValue()).thenReturn("status1");
+        when(device1.getDeviceStatus()).thenReturn(status1);
+
+        DeviceIDVO deviceid1 = mock(DeviceIDVO.class);
+        when(deviceid1.getID()).thenReturn("deviceid1");
+        when(device1.getId()).thenReturn(deviceid1);
+
+        // Arranging Device 2
+        Device device2 = mock(Device.class);
+
+        DeviceNameVO name2 = mock(DeviceNameVO.class);
+        when(name2.getValue()).thenReturn("name2");
+        when(device2.getDeviceName()).thenReturn(name2);
+
+        DeviceModelVO model2 = mock(DeviceModelVO.class);
+        when(model2.getValue()).thenReturn("model2");
+        when(device2.getDeviceModel()).thenReturn(model2);
+
+        RoomIDVO roomid2 = mock(RoomIDVO.class);
+        when(roomid2.getID()).thenReturn("roomid2");
+        when(device2.getRoomID()).thenReturn(roomid2);
+
+        DeviceStatusVO status2 = mock(DeviceStatusVO.class);
+        when(model2.getValue()).thenReturn("status2");
+        when(device2.getDeviceStatus()).thenReturn(status2);
+
+        DeviceIDVO deviceid2 = mock(DeviceIDVO.class);
+        when(deviceid2.getID()).thenReturn("deviceid2");
+        when(device2.getId()).thenReturn(deviceid2);
+
+        // Arranging Device 3
+        Device device3 = mock(Device.class);
+
+        DeviceNameVO name3 = mock(DeviceNameVO.class);
+        when(name3.getValue()).thenReturn("name3");
+        when(device3.getDeviceName()).thenReturn(name3);
+
+        DeviceModelVO model3 = mock(DeviceModelVO.class);
+        when(model3.getValue()).thenReturn("model3");
+        when(device3.getDeviceModel()).thenReturn(model3);
+
+        RoomIDVO roomid3 = mock(RoomIDVO.class);
+        when(roomid3.getID()).thenReturn("roomid3");
+        when(device3.getRoomID()).thenReturn(roomid3);
+
+        DeviceStatusVO status3 = mock(DeviceStatusVO.class);
+        when(model3.getValue()).thenReturn("status3");
+        when(device3.getDeviceStatus()).thenReturn(status3);
+
+        DeviceIDVO deviceid3 = mock(DeviceIDVO.class);
+        when(deviceid3.getID()).thenReturn("deviceid3");
+        when(device3.getId()).thenReturn(deviceid3);
+
+        // Arranging lists of Devices to add unto entry parameter map
+        List<Device> listKeyOne = new ArrayList<>();
+        listKeyOne.add(device1);
+        listKeyOne.add(device2);
+
+        List<Device> listKeyTwo = new ArrayList<>();
+        listKeyTwo.add(device3);
+
+        Map<String, List<Device>> map = new HashMap<>();
+        map.put("key1",listKeyOne);
+        map.put("key2",listKeyTwo);
+
+        Map<String,List<DeviceDTO>> resultMap = DeviceMapper.domainToDTO(map);
+
+        // Pre-act
+        int expectedSize = 2;
+
+        DeviceDTO deviceDTO1 = resultMap.get("key1").get(0);
+
+        DeviceDTO deviceDTO3 = resultMap.get("key2").get(0);
+
+        // Act
+        int resultSize = resultMap.size();
+        String deviceDTO01name = deviceDTO1.getDeviceName();
+        String deviceDTO03roomId = deviceDTO3.getRoomID();
+
+        // Assert
+        assertEquals(expectedSize,resultSize);
+        assertEquals("name1",deviceDTO01name);
+        assertEquals("roomid3",deviceDTO03roomId);
     }
 }

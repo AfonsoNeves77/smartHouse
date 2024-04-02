@@ -6,9 +6,7 @@ import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.deviceVO.DeviceModelVO;
 import SmartHomeDDD.vo.deviceVO.DeviceNameVO;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class DeviceMapper {
 
@@ -94,6 +92,25 @@ public class DeviceMapper {
         return deviceDTOList;
     }
 
+    public static Map<String,List<DeviceDTO>> domainToDTO(Map<String, List<Device>> map) {
+        LinkedHashMap<String,List<DeviceDTO>> newMap = new LinkedHashMap<>();
+        for (String key : map.keySet()) {
+            List<Device> deviceList = map.get(key);
+            List<DeviceDTO> deviceDTOList = new ArrayList<>();
+            for (Device device : deviceList) {
+                String name = device.getDeviceName().getValue();
+                String model = device.getDeviceModel().getValue();
+                String roomID = device.getRoomID().getID();
+                String status = device.getDeviceStatus().getValue().toString();
+                String deviceID = device.getId().getID();
+                DeviceDTO deviceDTO = new DeviceDTO(deviceID, name, model, status, roomID);
+                deviceDTOList.add(deviceDTO);
+            }
+            newMap.put(key, deviceDTOList);
+        }
+        return newMap;
+    }
+
     /**
      * Validates the device name.
      * @param deviceName the device name to be validated
@@ -129,4 +146,6 @@ public class DeviceMapper {
         }
         return !deviceID.trim().isEmpty();
     }
+
+
 }
