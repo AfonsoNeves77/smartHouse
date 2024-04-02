@@ -1,0 +1,32 @@
+@startuml
+
+autonumber
+
+title User Story 1 - Main Success Scenario
+
+participant ":ConfigureLocationCTRL" as C
+participant ":LocationMapper" as LM
+participant ":HouseService" as HS
+participant ":HouseRepository" as HR
+participant ":House" as H
+
+[o-> C : updateLocation(locationDTO)
+activate C
+C -> LM : locationVO : mapToLocationVO(locationDTO)
+C -> HS : updateLocation(locationVO)
+activate HS
+HS -> HR : houseCollection : findAll()
+HS -> HS : house : getFirstHouse()
+HS -> H : configureLocation(locationVO)
+activate H
+H -> H : configureLocation(locationVO)
+
+H --> HS : <color:green>**true**
+deactivate H
+
+HS --> C : <color:green>**true**
+deactivate HS
+
+[o<-- C : <color:green>**true**
+deactivate C
+@enduml
