@@ -51,6 +51,26 @@ class DeviceRepositoryTest {
     }
 
     /**
+     * Tests if a device is saved when its ID is already saved.
+     * This test case verifies that a device cannot be saved when its ID is present1.
+     */
+    @Test
+    public void whenDeviceIsPresent_thenItCannotBeSaved(){
+        //Arrange
+        DeviceRepository deviceRepository = new DeviceRepository();
+        Device device = mock(Device.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        when(device.getId()).thenReturn(deviceID);
+        deviceRepository.save(device);
+
+        //Act
+        boolean result = deviceRepository.save(device);
+
+        //Assert
+        assertFalse(result);
+    }
+
+    /**
      * Tests if a device is saved when it is valid.
      * This test case verifies that a device can be saved when it is valid.
      */
