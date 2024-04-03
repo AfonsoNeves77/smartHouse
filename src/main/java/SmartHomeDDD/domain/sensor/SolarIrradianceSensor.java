@@ -1,7 +1,6 @@
 package SmartHomeDDD.domain.sensor;
 
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.domain.sensor.sensorValues.SolarIrradianceValue;
 import SmartHomeDDD.vo.ValueObject;
@@ -12,7 +11,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
 import java.util.UUID;
 
-public class SolarIrradianceSensor implements Sensor, DomainEntity {
+public class SolarIrradianceSensor implements Sensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;
