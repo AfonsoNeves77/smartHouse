@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class DeviceRepository implements Repository<DeviceIDVO, Device> {
 
-    private static final Map<DeviceIDVO, Device> DATA = new HashMap<>();
+    private final LinkedHashMap<DeviceIDVO, Device> DATA = new LinkedHashMap<>();
 
     /**
      * Saves an entity onto the repository;

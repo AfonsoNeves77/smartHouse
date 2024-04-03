@@ -138,53 +138,52 @@ public class SensorTypeRepositoryTest {
      * Test case to verify the behavior of the findAll method in SensorTypeRepository
      * when the repository has one record.
      * This test uses an Apache library that provides utility methods and decorators for Iterable instances.
-     * It is invoked findAll() in repository class and the resulting iterable must be asserted with one record.
+     * It is invoked findAll() in repository class and the resulting iterable must have the added sensorType.
      */
 
     @Test
-    void findAll_whenRepositoryHasOneRecord_ReturnedIterableShouldHaveOneRecord(){
+    void findAll_whenRepositoryHasOneRecord_ReturnedIterableShouldHaveInsertedRecord(){
         //Arrange
-        int expected = 1;
-        SensorType sensorTypeDouble = mock(SensorType.class);
+        SensorType expected = mock(SensorType.class);
         SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
-        when(sensorTypeDouble.getId()).thenReturn(sensorTypeIDVO);
+        when(expected.getId()).thenReturn(sensorTypeIDVO);
 
         //Act
         SensorTypeRepository sensorTypeRepository = new SensorTypeRepository();
-        sensorTypeRepository.save(sensorTypeDouble);
+        sensorTypeRepository.save(expected);
         Iterable<SensorType> sensorTypeIterable = sensorTypeRepository.findAll();
 
         //Assert
-        int result = IterableUtils.size(sensorTypeIterable);
-        assertEquals(expected,result);
+       SensorType result = IterableUtils.get(sensorTypeIterable,0);
+       assertEquals(expected,result);
     }
 
     /**
      * Test case to verify the behavior of the findAll method in SensorTypeRepository
      * when the repository has two records.
      * This test uses an Apache library that provides utility methods and decorators for Iterable instances.
-     * It is invoked findAll() in repository class and the resulting iterable must be asserted with two record.
+     * It is invoked findAll() in repository class and the resulting iterable must have in the second index
+     * the sensorType added last.
      */
     @Test
-    void findAll_whenRepositoryHasTwoRecords_ReturnedIterableShouldHaveTwoRecords(){
+    void findAll_whenRepositoryHasTwoRecords_ReturnedIterableShouldHaveCorrectSensorTypeInSecondIndex(){
         //Arrange
-        int expected = 2;
         SensorType sensorTypeDouble = mock(SensorType.class);
         SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
         when(sensorTypeDouble.getId()).thenReturn(sensorTypeIDVO);
 
+        SensorType expected = mock(SensorType.class);
         SensorTypeIDVO sensorTypeIDVOTwo = mock(SensorTypeIDVO.class);
+        when(expected.getId()).thenReturn(sensorTypeIDVOTwo);
 
         //Act
         SensorTypeRepository sensorTypeRepository = new SensorTypeRepository();
         sensorTypeRepository.save(sensorTypeDouble);
-
-        when(sensorTypeDouble.getId()).thenReturn(sensorTypeIDVOTwo);
-        sensorTypeRepository.save(sensorTypeDouble);
+        sensorTypeRepository.save(expected);
 
         Iterable<SensorType> sensorTypeIterable = sensorTypeRepository.findAll();
         //Assert
-        int result = IterableUtils.size(sensorTypeIterable);
+        SensorType result = IterableUtils.get(sensorTypeIterable,1);
         assertEquals(expected,result);
     }
 

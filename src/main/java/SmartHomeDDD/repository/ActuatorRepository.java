@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 
 public class ActuatorRepository implements Repository<ActuatorIDVO, Actuator>{
 
-    private LinkedHashMap<ActuatorIDVO, Actuator> actuatorMap = new LinkedHashMap<>();
+    private final LinkedHashMap<ActuatorIDVO, Actuator> actuatorMap = new LinkedHashMap<>();
 
     /**
      * Saves a new actuator in the repository.

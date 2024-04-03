@@ -1,5 +1,6 @@
 package SmartHomeDDD.repository;
 import SmartHomeDDD.domain.DomainID;
+import SmartHomeDDD.domain.house.House;
 import SmartHomeDDD.domain.room.Room;
 import SmartHomeDDD.vo.roomVO.RoomIDVO;
 import SmartHomeDDD.vo.houseVO.HouseIDVO;
@@ -8,7 +9,7 @@ import SmartHomeDDD.vo.houseVO.HouseIDVO;
 import java.util.*;
 public class RoomRepository implements Repository<RoomIDVO, Room>{
 
-    private static final Map<RoomIDVO, Room> DATA = new HashMap<>();
+    private final LinkedHashMap<RoomIDVO, Room> DATA = new LinkedHashMap<>();
 
     /**
      * Saves a room to the repository.

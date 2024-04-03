@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 
 public class SensorRepository implements Repository<SensorIDVO,Sensor>{
 
-    private LinkedHashMap<SensorIDVO, Sensor> sensorMap = new LinkedHashMap<>();
+    private final LinkedHashMap<SensorIDVO, Sensor> sensorMap = new LinkedHashMap<>();
 
     /**
      * @param sensor Entity to be saved

@@ -1,15 +1,18 @@
 package SmartHomeDDD.repository;
 
 import SmartHomeDDD.domain.DomainID;
+import SmartHomeDDD.domain.device.Device;
 import SmartHomeDDD.domain.house.House;
+import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.houseVO.HouseIDVO;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HouseRepository implements Repository<HouseIDVO,House>{
 
-    private final Map<HouseIDVO,House> houseIDAndHouseMap = new HashMap<>();
+    private final LinkedHashMap<HouseIDVO, House> DATA = new LinkedHashMap<>();
 
 
     /**
@@ -21,7 +24,7 @@ public class HouseRepository implements Repository<HouseIDVO,House>{
         if(entity == null || entity.getId() == null || isPresent(entity.getId())){
             return false;
         }
-        houseIDAndHouseMap.put(entity.getId(),entity);
+       DATA.put(entity.getId(),entity);
         return true;
     }
 
@@ -32,7 +35,7 @@ public class HouseRepository implements Repository<HouseIDVO,House>{
      */
     @Override
     public Iterable<House> findAll() {
-        return houseIDAndHouseMap.values();
+        return DATA.values();
     }
 
 
@@ -44,7 +47,7 @@ public class HouseRepository implements Repository<HouseIDVO,House>{
     @Override
     public House findById(HouseIDVO id) {
         if(isPresent(id)){
-            return houseIDAndHouseMap.get(id);
+            return DATA.get(id);
         } else{
             return null;
         }
@@ -58,6 +61,6 @@ public class HouseRepository implements Repository<HouseIDVO,House>{
      */
     @Override
     public boolean isPresent(HouseIDVO id) {
-        return houseIDAndHouseMap.containsKey(id);
+        return DATA.containsKey(id);
     }
 }
