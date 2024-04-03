@@ -5,8 +5,10 @@ import SmartHomeDDD.domain.device.Device;
 import SmartHomeDDD.domain.house.House;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.houseVO.HouseIDVO;
+import SmartHomeDDD.vo.houseVO.LocationVO;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,5 +64,31 @@ public class HouseRepository implements Repository<HouseIDVO,House>{
     @Override
     public boolean isPresent(HouseIDVO id) {
         return DATA.containsKey(id);
+    }
+
+    /**
+     * Getter method to retrieve the first House
+     * @return Firsthouse
+     */
+    public House getFirstHouse(){
+        Iterator<House> iterator = this.DATA.values().iterator();
+        if(!iterator.hasNext()){
+            return null;
+        }
+        else {
+            return iterator.next();
+        }
+    }
+    /**
+     * Getter method to retrieve the first HouseIDVO
+     * @return FirstHouseIDVO
+     */
+    public HouseIDVO getFirstHouseIDVO() {
+        Iterator<HouseIDVO> iterator = this.DATA.keySet().iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        } else {
+            return iterator.next();
+        }
     }
 }

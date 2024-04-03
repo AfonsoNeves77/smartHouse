@@ -2,9 +2,11 @@ package SmartHomeDDDTest.repositoryTest;
 
 import SmartHomeDDD.domain.house.House;
 import SmartHomeDDD.repository.HouseRepository;
-import SmartHomeDDD.vo.houseVO.HouseIDVO;
+import SmartHomeDDD.vo.houseVO.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
 import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -177,5 +179,69 @@ class HouseRepositoryTest {
         boolean isPresent = houseRepository.isPresent(houseID);
         // Assert
         assertTrue(isPresent);
+    }
+    @Test
+    void givenHouse_getFirstHouse(){
+        //Arrange
+        AddressVO addressVO = mock(AddressVO.class);
+        GpsVO gpsVO = mock(GpsVO.class);
+        when(addressVO.getDoor()).thenReturn("1");
+        when(addressVO.getStreet()).thenReturn("Rua do Ouro");
+        when(addressVO.getCity()).thenReturn("Porto");
+        when(addressVO.getCountry()).thenReturn("Portugal");
+        when(addressVO.getPostalCode()).thenReturn("PT-1234-567");
+        when(gpsVO.getLatitude()).thenReturn(75.7);
+        when(gpsVO.getLongitude()).thenReturn(155.3);
+        LocationVO locationVO = new LocationVO(addressVO,gpsVO);
+        House expectedHouse = new House(locationVO);
+        HouseRepository repository = new HouseRepository();
+        repository.save(expectedHouse);
+
+        //Act
+
+        House resultHouse = repository.getFirstHouse();
+
+        //Assert
+        assertEquals(expectedHouse, resultHouse);
+    }
+    @Test
+    void givenHouse_getFirstHouseIDVO(){
+        //Arrange
+        AddressVO addressVO = mock(AddressVO.class);
+        GpsVO gpsVO = mock(GpsVO.class);
+        when(addressVO.getDoor()).thenReturn("1");
+        when(addressVO.getStreet()).thenReturn("Rua do Ouro");
+        when(addressVO.getCity()).thenReturn("Porto");
+        when(addressVO.getCountry()).thenReturn("Portugal");
+        when(addressVO.getPostalCode()).thenReturn("PT-1234-567");
+        when(gpsVO.getLatitude()).thenReturn(75.7);
+        when(gpsVO.getLongitude()).thenReturn(155.3);
+        LocationVO locationVO = new LocationVO(addressVO,gpsVO);
+        House expectedHouse = new House(locationVO);
+        HouseRepository repository = new HouseRepository();
+
+        //Act
+        repository.save(expectedHouse);
+        HouseIDVO result = repository.getFirstHouseIDVO();
+        //Assert
+        assertEquals(expectedHouse.getId(),result);
+    }
+    @Test
+    void givenNothing_getHouse(){
+        //Arrange
+        HouseRepository repository = new HouseRepository();
+        //act
+        House result = repository.getFirstHouse();
+        //Assert
+        assertNull(result);
+    }
+    @Test
+    void givenNothing_getHouseIDVO(){
+        //Arrange
+        HouseRepository repository = new HouseRepository();
+        //act
+        HouseIDVO result = repository.getFirstHouseIDVO();
+        //Assert
+        assertNull(result);
     }
 }
