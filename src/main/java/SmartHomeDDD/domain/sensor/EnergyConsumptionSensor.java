@@ -1,7 +1,5 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.domain.sensor.sensorValues.EnergyConsumptionValue;
 import SmartHomeDDD.vo.ValueObject;
@@ -15,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
-public class EnergyConsumptionSensor implements Sensor, DomainEntity {
+public class EnergyConsumptionSensor implements Sensor {
     private SensorNameVO name;
     private final DeviceIDVO deviceID;
     private final SensorTypeIDVO sensorTypeID;

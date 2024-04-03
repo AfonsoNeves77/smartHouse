@@ -1,7 +1,6 @@
 package SmartHomeDDD.domain.sensor;
 
 import SmartHomeDDD.domain.sensor.sensorValues.TemperatureValue;
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.vo.ValueObject;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
@@ -11,7 +10,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
 import java.util.UUID;
 
-public class TemperatureSensor implements Sensor, DomainEntity {
+public class TemperatureSensor implements Sensor{
     private SensorNameVO name;
     private final DeviceIDVO deviceID;
     private final SensorTypeIDVO sensorTypeID;
