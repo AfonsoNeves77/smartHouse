@@ -12,7 +12,7 @@ import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 
 import java.util.UUID;
 
-public class SwitchSensor implements Sensor, DomainEntity {
+public class SwitchSensor implements Sensor {
 
     private SensorNameVO nameVO;
     private final DeviceIDVO deviceIDVO;
