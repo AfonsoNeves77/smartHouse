@@ -26,9 +26,20 @@ class CountryVOTest {
         assertThrows(IllegalArgumentException.class, () -> new CountryVO(country));
     }
 
+    /**
+     * This test checks if when trying to create a CountryVO object with an invalid country
+     * an IllegalArgumentException is thrown
+     */
+
+    @Test
+    void testInvalidCountry_throwsIllegalArgumentException() {
+        String country = "Burkina Faso";
+        assertThrows(IllegalArgumentException.class, () -> new CountryVO(country));
+    }
+
     @Test
     void testGetCountry_returnsCountry() throws InstantiationException {
-        String country = "Portugal";
+        String country = "USA";
         CountryVO countryVO = new CountryVO(country);
         assertEquals(country, countryVO.getValue());
     }
