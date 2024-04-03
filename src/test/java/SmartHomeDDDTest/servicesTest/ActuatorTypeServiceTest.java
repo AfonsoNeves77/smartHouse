@@ -1,10 +1,13 @@
 package SmartHomeDDDTest.servicesTest;
 
 import SmartHomeDDD.domain.actuatorType.ActuatorType;
+import SmartHomeDDD.domain.actuatorType.ActuatorTypeFactory;
 import SmartHomeDDD.repository.ActuatorTypeRepository;
 import SmartHomeDDD.services.ActuatorTypeService;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +21,110 @@ public class ActuatorTypeServiceTest {
 
 
     /**
-     * Test to check if the ActuatorTypeService
-     * constructor throws an IllegalArgumentException
+     * Test to check if the ActuatorTypeService constructor
+     * throws an IllegalArgumentException when given a null repository.
      */
     @Test
     void whenGivenANullRepository_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new ActuatorTypeService(null));
+                new ActuatorTypeService(null, actuatorTypeFactoryDouble, "filepath"));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+
+    /**
+     * Test to check if the ActuatorTypeService constructor
+     * throws an IllegalArgumentException when given a null factory.
+     */
+    @Test
+    void whenGivenANullFactory_throwsIllegalArgument(){
+        // Arrange
+        String expected = "Invalid repository";
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new ActuatorTypeService(actuatorTypeRepositoryDouble, null, "filepath"));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+
+    /**
+     * Test to check if the ActuatorTypeService constructor
+     * throws an IllegalArgumentException when given a null filepath.
+     */
+    @Test
+    void whenGivenANullFilepath_throwsIllegalArgument(){
+        // Arrange
+        String expected = "Invalid repository";
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new ActuatorTypeService(actuatorTypeRepositoryDouble, actuatorTypeFactoryDouble, null));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+
+    /**
+     * Test to check if the ActuatorTypeService constructor
+     * throws an IllegalArgumentException when given a empty repository.
+     */
+    @Test
+    void whenGivenAnEmptyFilepath_throwsIllegalArgument(){
+        // Arrange
+        String expected = "Invalid repository";
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+        String filepath = " ";;
+
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new ActuatorTypeService(actuatorTypeRepositoryDouble, actuatorTypeFactoryDouble, filepath));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+
+    /**
+     * Test to check if the ActuatorTypeService constructor
+     * throws an IllegalArgumentException when given a wrong repository.
+     */
+    @Test
+    void whenGivenWrongFilepath_throwsIllegalArgument(){
+        // Arrange
+        String expected = "Filepath non existent";
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+        String filepath = "WrongFilePath";;
+
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new ActuatorTypeService(actuatorTypeRepositoryDouble, actuatorTypeFactoryDouble, filepath));
         String result = exception.getMessage();
 
         // Assert
@@ -41,17 +137,21 @@ public class ActuatorTypeServiceTest {
      *  when getListOfActuatorTypes is called.
      */
     @Test
-    void whenGetListOfActuatorTypesCalled_returnsAListOfActuatorTypes(){
+    void whenGetListOfActuatorTypesCalled_returnsAListOfActuatorTypesOfSize1() throws ConfigurationException {
         // Arrange
         ActuatorType actuatorType = mock(ActuatorType.class);
         ArrayList<ActuatorType> list = new ArrayList<>();
         list.add(actuatorType);
         Iterable<ActuatorType> iterable = () -> list.stream().iterator();
 
-        ActuatorTypeRepository repository = mock(ActuatorTypeRepository.class);
-        when(repository.findAll()).thenReturn(iterable);
+        ActuatorTypeRepository repositoryDouble = mock(ActuatorTypeRepository.class);
+        when(repositoryDouble.findAll()).thenReturn(iterable);
 
-        ActuatorTypeService service = new ActuatorTypeService(repository);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+        String filePath = "actuator.properties";
+
+        ActuatorTypeService service = new ActuatorTypeService(repositoryDouble, actuatorTypeFactoryDouble, filePath);
 
         int expected = 1;
 
@@ -70,15 +170,19 @@ public class ActuatorTypeServiceTest {
      * when getListOfActuatorTypes is called and the repository contains zero entries.
      */
     @Test
-    void whenGetListOfActuatorTypesCalled_returnsEmptyListIfRepoContainsZeroEntries(){
+    void whenGetListOfActuatorTypesCalled_returnsEmptyListIfRepoContainsZeroEntries() throws ConfigurationException {
         // Arrange
         ArrayList<ActuatorType> list = new ArrayList<>();
         Iterable<ActuatorType> iterable = () -> list.stream().iterator();
 
-        ActuatorTypeRepository repository = mock(ActuatorTypeRepository.class);
-        when(repository.findAll()).thenReturn(iterable);
+        ActuatorTypeRepository repositoryDouble = mock(ActuatorTypeRepository.class);
+        when(repositoryDouble.findAll()).thenReturn(iterable);
 
-        ActuatorTypeService service = new ActuatorTypeService(repository);
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+        String filePath = "actuator.properties";
+
+        ActuatorTypeService service = new ActuatorTypeService(repositoryDouble, actuatorTypeFactoryDouble, filePath);
 
         int expected = 0;
         List<ActuatorType> expectedList = new ArrayList<>();
@@ -97,13 +201,18 @@ public class ActuatorTypeServiceTest {
      * actuatorTypeExists method is called and the repository contains the ActuatorType.
      */
     @Test
-    void whenActuatorTypeExistsCalled_returnsTrueIfRepoContainsAnActuatorType(){
+    void whenActuatorTypeExistsCalled_returnsTrueIfRepoContainsAnActuatorType() throws ConfigurationException {
         // Arrange
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
-        ActuatorTypeRepository repository = mock(ActuatorTypeRepository.class);
-        when(repository.isPresent(id)).thenReturn(true);
+        ActuatorTypeRepository repositoryDouble = mock(ActuatorTypeRepository.class);
+        when(repositoryDouble.isPresent(id)).thenReturn(true);
 
-        ActuatorTypeService service = new ActuatorTypeService(repository);
+
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+        String filePath = "actuator.properties";
+
+        ActuatorTypeService service = new ActuatorTypeService(repositoryDouble, actuatorTypeFactoryDouble, filePath);
 
         // Act
         boolean result = service.actuatorTypeExists(id);
@@ -117,13 +226,18 @@ public class ActuatorTypeServiceTest {
      * actuatorTypeExists method is called and the repository does not contain the ActuatorType.
      */
     @Test
-    void whenActuatorTypeExistsCalled_returnsFalseIfRepoDoesNotContainTheActuatorType(){
+    void whenActuatorTypeExistsCalled_returnsFalseIfRepoDoesNotContainTheActuatorType() throws ConfigurationException {
         // Arrange
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
-        ActuatorTypeRepository repository = mock(ActuatorTypeRepository.class);
-        when(repository.isPresent(id)).thenReturn(false);
+        ActuatorTypeRepository repositoryDouble = mock(ActuatorTypeRepository.class);
+        when(repositoryDouble.isPresent(id)).thenReturn(false);
 
-        ActuatorTypeService service = new ActuatorTypeService(repository);
+
+        ActuatorTypeFactory actuatorTypeFactoryDouble = mock(ActuatorTypeFactory.class);
+
+        String filePath = "actuator.properties";
+
+        ActuatorTypeService service = new ActuatorTypeService(repositoryDouble, actuatorTypeFactoryDouble, filePath);
 
         // Act
         boolean result = service.actuatorTypeExists(id);

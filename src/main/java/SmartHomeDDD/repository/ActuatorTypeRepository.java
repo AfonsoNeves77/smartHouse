@@ -7,14 +7,11 @@ import SmartHomeDDD.domain.actuatorType.ActuatorType;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ActuatorTypeRepository implements Repository<ActuatorTypeIDVO, ActuatorType> {
-    private final Map<ActuatorTypeIDVO, ActuatorType> actuatorTypes;
-
-    public ActuatorTypeRepository() {
-        this.actuatorTypes = new HashMap<ActuatorTypeIDVO, ActuatorType>();
-    }
+    private final Map<ActuatorTypeIDVO, ActuatorType> actuatorTypes = new LinkedHashMap<>();
 
     @Override
     public boolean save(ActuatorType entity) {

@@ -1,10 +1,18 @@
 package SmartHomeDDD.services;
 
 import SmartHomeDDD.domain.actuatorType.ActuatorType;
+import SmartHomeDDD.domain.actuatorType.ActuatorTypeFactory;
+import SmartHomeDDD.mapper.ActuatorTypeMapper;
 import SmartHomeDDD.repository.ActuatorTypeRepository;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
+import java.io.File;
+import java.lang.module.Configuration;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,17 +30,73 @@ public class ActuatorTypeService {
 
     private final ActuatorTypeRepository actuatorTypeRepository;
 
+    private final ActuatorTypeFactory actuatorTypeFactory;
+
+    private final String filepath;
+
     /**
-     * Constructor for ActuatorTypeService. Checks if the repository is null.
+     * Constructor for ActuatorTypeService. Checks if the repository, factory and filepath are null
+     * and if the filepath is empty, null or non existent. If any of these conditions
+     * are met, an IllegalArgumentException is thrown.
+     * Additionally, it calls the populateRepository() method to populate the repository with actuator types.
      * @param actuatorTypeRepository Repository for ActuatorType.
      */
-    public ActuatorTypeService(ActuatorTypeRepository actuatorTypeRepository) {
-        if (actuatorTypeRepository == null){
+    public ActuatorTypeService(ActuatorTypeRepository actuatorTypeRepository, ActuatorTypeFactory actuatorTypeFactory, String filepath) throws ConfigurationException {
+        if (actuatorTypeRepository == null || actuatorTypeFactory == null || filepath == null || filepath.trim().isEmpty()){
             throw new IllegalArgumentException("Invalid repository");
         }
-        this.actuatorTypeRepository = actuatorTypeRepository;
+        else {
+            try {
+                this.actuatorTypeRepository = actuatorTypeRepository;
+                this.actuatorTypeFactory = actuatorTypeFactory;
+                this.filepath = filepath;
+                populateRepository();
+            } catch (NullPointerException | ConfigurationException e) {
+                throw new IllegalArgumentException("Filepath non existent");
+            }
+        }
+
     }
 
+
+    /**
+     * Populates the repository with all actuator types from the configuration file.
+     * Each actuator type is used to initialize ActuatorTypeIDVO (Actuator type mapper is used to initialize ActuatorTypeIDVO) ;
+     * Initializes an actuatorType with this value object;
+     * Saves the newly created actuatorType in the actuator type repository;
+     * @throws ConfigurationException
+     */
+    private void populateRepository() throws ConfigurationException {
+        List<String> actuatorTypes = new ArrayList<>();
+        actuatorTypes = actuatorTypeReadingAndConversion();
+        for(String type : actuatorTypes){
+            ActuatorTypeIDVO actuatorTypeIDVO = ActuatorTypeMapper.createActuatorTypeIDVO(type);
+            ActuatorType actuatorType = actuatorTypeFactory.createActuatorType(actuatorTypeIDVO);
+            this.actuatorTypeRepository.save(actuatorType);
+        }
+    }
+
+
+
+    /**
+     * Reads all actuator types from the configuration file and converts them to a list of strings.
+     * @return List of actuator types.
+     * @throws ConfigurationException
+     */
+    private List<String> actuatorTypeReadingAndConversion() throws ConfigurationException {
+        List<String> actuatorTypes = new ArrayList<>();
+
+        // Read all actuator types from configuration file
+        Configurations configs = new Configurations();
+        PropertiesConfiguration configuration = configs.properties(new File(filepath));
+
+        // Get all values (Actuator Types) from actuator.properties where the key is actuatorRepo and places them on
+        // an array of String, which is then converted to a List
+        String [] types = configuration.getStringArray("actuatorRepo");
+        actuatorTypes = List.of(types);
+
+        return actuatorTypes;
+    }
 
     /**
      * Returns a list of all ActuatorTypes in the system.
