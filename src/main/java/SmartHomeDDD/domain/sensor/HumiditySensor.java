@@ -12,7 +12,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
 import java.util.UUID;
 
-public class HumiditySensor implements Sensor, DomainEntity {
+public class HumiditySensor implements Sensor {
 
     private SensorNameVO sensorName;
     private final DeviceIDVO deviceID;
