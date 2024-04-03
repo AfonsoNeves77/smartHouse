@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.domain.sensor.sensorValues.PowerConsumptionValue;
 import SmartHomeDDD.vo.ValueObject;
@@ -13,7 +12,7 @@ import java.util.UUID;
 
 import static java.lang.Integer.parseInt;
 
-public class PowerConsumptionSensor implements Sensor, DomainEntity {
+public class PowerConsumptionSensor implements Sensor {
 
     private SensorNameVO sensorName;
     private final SensorIDVO sensorID;
