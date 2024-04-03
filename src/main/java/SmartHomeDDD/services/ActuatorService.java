@@ -104,23 +104,22 @@ public class ActuatorService {
      * present in the List <DeviceID> related to that entry, adding it if not.
      * @return Map string, List<DeviceIDVO>
      */
-    public Map<String,List<DeviceIDVO>> getListOfDeviceIDsByFunctionality (){
+    public LinkedHashMap<String,List<DeviceIDVO>> getListOfDeviceIDsByFunctionality (LinkedHashMap<String,List<DeviceIDVO>> previousMap){
         List<Actuator> actuatorList = getListOfActuators();
-        LinkedHashMap<String,List<DeviceIDVO>> filteredMap = new LinkedHashMap<>();
         for (Actuator actuator : actuatorList){
             String type = actuator.getActuatorTypeID().getID();
             DeviceIDVO deviceID = actuator.getDeviceID();
-            if (filteredMap.containsKey(type)){
-                List<DeviceIDVO> devicesPerKey = filteredMap.get(type);
+            if (previousMap.containsKey(type)){
+                List<DeviceIDVO> devicesPerKey = previousMap.get(type);
                 if(!devicesPerKey.contains(deviceID)){
                     devicesPerKey.add(deviceID);
                 }
             } else {
                 List<DeviceIDVO> devicesPerKey = new ArrayList<>();
                 devicesPerKey.add(deviceID);
-                filteredMap.put(type,devicesPerKey);
+                previousMap.put(type,devicesPerKey);
             }
         }
-        return filteredMap;
+        return previousMap;
     }
 }

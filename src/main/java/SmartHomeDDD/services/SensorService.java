@@ -94,7 +94,7 @@ public class SensorService {
      * present in the List <DeviceID> related to that entry, adding it if not.
      * @return Map string, List<DeviceIDVO>
      */
-    public Map<String,List<DeviceIDVO>> getListOfDeviceIDsByFunctionality (){
+    public LinkedHashMap<String,List<DeviceIDVO>> getListOfDeviceIDsByFunctionality (){
         List<Sensor> sensorList = getListOfSensors();
         LinkedHashMap<String,List<DeviceIDVO>> filteredMap = new LinkedHashMap<>();
         for (Sensor sensor : sensorList){

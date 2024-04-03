@@ -484,11 +484,11 @@ class DeviceMapperTest {
         List<Device> listKeyTwo = new ArrayList<>();
         listKeyTwo.add(device3);
 
-        Map<String, List<Device>> map = new HashMap<>();
+        LinkedHashMap<String, List<Device>> map = new LinkedHashMap<>();
         map.put("key1",listKeyOne);
         map.put("key2",listKeyTwo);
 
-        Map<String,List<DeviceDTO>> resultMap = DeviceMapper.domainToDTO(map);
+        LinkedHashMap<String,List<DeviceDTO>> resultMap = DeviceMapper.domainToDTO(map);
 
         // Pre-act
         int expectedSize = 2;

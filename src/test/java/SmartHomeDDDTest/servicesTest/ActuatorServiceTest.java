@@ -11,9 +11,7 @@ import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -248,6 +246,8 @@ class ActuatorServiceTest {
     @Test
     void getListOfDeviceIDByFunctionality_whenRepositoryHas3devicesButTwoRepeatedTypes_returnHasSizeTwo(){
         // Arrange
+        LinkedHashMap<String,List<DeviceIDVO>> entryMap = new LinkedHashMap<>();
+
         DeviceIDVO id1 = mock(DeviceIDVO.class);
         when(id1.getID()).thenReturn("id1");
         DeviceIDVO id2 = mock(DeviceIDVO.class);
@@ -284,7 +284,7 @@ class ActuatorServiceTest {
 
         ActuatorService service = new ActuatorService(factory,repository);
 
-        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality(entryMap);
 
         int expectedSize = 2;
         // Act
@@ -301,6 +301,8 @@ class ActuatorServiceTest {
     @Test
     void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_theReturningFirstTwoKeysAreSimilar(){
         // Arrange
+        LinkedHashMap<String,List<DeviceIDVO>> entryMap = new LinkedHashMap<>();
+
         DeviceIDVO id1 = mock(DeviceIDVO.class);
         when(id1.getID()).thenReturn("id1");
         DeviceIDVO id2 = mock(DeviceIDVO.class);
@@ -337,7 +339,7 @@ class ActuatorServiceTest {
 
         ActuatorService service = new ActuatorService(factory,repository);
 
-        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality(entryMap);
 
         String expectedFirstKey = "SwitchActuator";
         String expectedSecondKey = "RollerBlindActuator";
@@ -360,6 +362,8 @@ class ActuatorServiceTest {
     @Test
     void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_ReturnsListOfExpectedDeviceIDRefs(){
         // Arrange
+        LinkedHashMap<String,List<DeviceIDVO>> entryMap = new LinkedHashMap<>();
+
         DeviceIDVO id1 = mock(DeviceIDVO.class);
         when(id1.getID()).thenReturn("id1");
         DeviceIDVO id2 = mock(DeviceIDVO.class);
@@ -396,7 +400,7 @@ class ActuatorServiceTest {
 
         ActuatorService service = new ActuatorService(factory,repository);
 
-        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality(entryMap);
 
         String firstKey = map.keySet().stream().findFirst().orElse(null);
         String secondKey = map.keySet().stream().skip(1).findFirst().orElse(null);
@@ -421,6 +425,8 @@ class ActuatorServiceTest {
     @Test
     void whenRepositoryHasThreeDevicesButOnlyTwoTypesOfID_getListOfDevicesByFuncionalities_ReturnsListOfExpectedDeviceIDRefsWithNoDuplicatedIds(){
         // Arrange
+        LinkedHashMap<String,List<DeviceIDVO>> entryMap = new LinkedHashMap<>();
+
         DeviceIDVO id1 = mock(DeviceIDVO.class);
         when(id1.getID()).thenReturn("id1");
         DeviceIDVO id2 = mock(DeviceIDVO.class);
@@ -461,7 +467,7 @@ class ActuatorServiceTest {
 
         ActuatorService service = new ActuatorService(factory,repository);
 
-        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality();
+        Map<String, List<DeviceIDVO>> map = service.getListOfDeviceIDsByFunctionality(entryMap);
 
         String firstKey = map.keySet().stream().findFirst().orElse(null);
         String secondKey = map.keySet().stream().skip(1).findFirst().orElse(null);

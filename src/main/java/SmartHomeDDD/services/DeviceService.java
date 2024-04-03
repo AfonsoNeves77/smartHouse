@@ -143,7 +143,7 @@ public class DeviceService {
      * @param map string, List<Device>
      * @return
      */
-        public Map<String, List<Device>> getDevices (Map<String, List<DeviceIDVO>> map){
+        public LinkedHashMap<String, List<Device>> getDevices (Map<String, List<DeviceIDVO>> map){
         LinkedHashMap<String, List<Device>> newMap = new LinkedHashMap<>();
         for (String key : map.keySet()){
             List<DeviceIDVO> idList = map.get(key);

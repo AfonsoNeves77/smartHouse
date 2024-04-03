@@ -15,8 +15,11 @@ skinparam linetype ortho
        SensorTypeService ..> SensorTypeRepository
        SensorFactory -- Sensor : creates >
        DeviceMapper ..> DeviceDTO
+         DeviceMapper -- DeviceIDVO : creates >
        SensorMapper ..> SensorDTO
+       SensorMapper -- SensorNameVO : creates >
        SensorTypeMapper ..> SensorTypeDTO
+         SensorTypeMapper -- SensorTypeIDVO : creates >
        DeviceService ..> DeviceRepository
        DeviceRepository ..|> Repository
        SensorRepository ..|> Repository
@@ -48,12 +51,13 @@ skinparam linetype ortho
         -sensorRepository: SensorRepository
         -sensorFactory: SensorFactory
         +SensorService(sensorRepository, sensorFactory)
-        +addSensorToDevice(sensorNameVO, deviceIDVO, sensorTypeIDVO): boolean
+        +createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): Sensor
+        +save(sensor): boolean
     }
 
     class SensorRepository{
         -sensorMap : Map<SensorIDVO, Sensor>
-        +save(sensor: Sensor): boolean
+        +save(sensor): boolean
     }
 
     class SensorFactory{
@@ -110,6 +114,21 @@ skinparam linetype ortho
         -roomID: String
         -deviceStatus: boolean
         +getDeviceID(): String
+    }
+
+    class SensorNameVO{
+        -sensorName: String
+        +SensorNameVO(sensorName)
+    }
+
+    class SensorTypeIDVO{
+        -sensorTypeID: String
+        +SensorTypeIDVO(sensorTypeID)
+    }
+
+    class DeviceIDVO{
+        -deviceID: UUID
+        +DeviceIDVO(deviceID)
     }
 
     interface Repository{
