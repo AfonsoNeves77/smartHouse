@@ -92,7 +92,7 @@ public class DeviceMapper {
         return deviceDTOList;
     }
 
-    public static Map<String,List<DeviceDTO>> domainToDTO(Map<String, List<Device>> map) {
+    public static LinkedHashMap<String,List<DeviceDTO>> domainToDTO(LinkedHashMap<String, List<Device>> map) {
         LinkedHashMap<String,List<DeviceDTO>> newMap = new LinkedHashMap<>();
         for (String key : map.keySet()) {
             List<Device> deviceList = map.get(key);
