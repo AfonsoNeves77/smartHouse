@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
 import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
@@ -13,7 +12,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public class SunsetSensor implements Sensor, DomainEntity {
+public class SunsetSensor implements Sensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;
@@ -23,6 +22,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
     /**
      * Constructor for SunsetSensor. It validates the received VOs and creates a new SensorIDVO utilizing the UUID
      * library. Received VOs and SensorID are encapsulated within the object.
+     *
      * @param sensorName   Sensor name
      * @param deviceID     Device ID
      * @param sensorTypeID SensorType ID
@@ -41,6 +41,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
     /**
      * Method to validate if the received parameters are null. It receives a SensorNameVO, SensorTypeIDVO and DeviceIDVO
      * and returns a boolean.
+     *
      * @param sensorName   Sensor name
      * @param sensorTypeID SensorType ID
      * @param deviceID     Device ID
@@ -54,8 +55,9 @@ public class SunsetSensor implements Sensor, DomainEntity {
     /**
      * Obtains the sunset time. It receives a data, gps location and SunTimeCalculator external service (validating it
      * against null). Returns a SunTimeValue object as ValueObject<ZoneDateTime>
-     * @param date Date
-     * @param gpsLocation Geolocation
+     *
+     * @param date              Date
+     * @param gpsLocation       Geolocation
      * @param sunTimeCalculator SunTimeCalculator external service
      * @return SunTimeValue object
      */
@@ -70,6 +72,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
 
     /**
      * Simple getter method
+     *
      * @return The encapsulated VO for Name;
      */
     @Override
@@ -79,6 +82,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
 
     /**
      * Simple getter method
+     *
      * @return The encapsulated VO for SensorTypeID;
      */
     @Override
@@ -88,6 +92,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
 
     /**
      * Simple getter method
+     *
      * @return The encapsulated VO for DeviceID;
      */
     @Override
@@ -98,6 +103,7 @@ public class SunsetSensor implements Sensor, DomainEntity {
     /**
      * Simple getter method
      * It's an override from DomainEntity interface
+     *
      * @return The encapsulated VO for SensorID;
      */
 
