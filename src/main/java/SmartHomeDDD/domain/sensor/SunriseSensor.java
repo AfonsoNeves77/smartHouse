@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.domain.sensor.externalServices.SunTimeCalculator;
 import SmartHomeDDD.domain.sensor.sensorValues.SunTimeValue;
@@ -13,7 +12,7 @@ import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public class SunriseSensor implements Sensor, DomainEntity {
+public class SunriseSensor implements Sensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;
