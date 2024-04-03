@@ -20,7 +20,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectDoorInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 1.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "PT-4444-222", 1.0, 1.0);
         String expected = "25A";
 
         //Act
@@ -65,7 +65,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectStreetInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 1.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "USA", "US-4444-222", 1.0, 1.0);
         String expected = "Rua da Alegria";
 
         //Act
@@ -90,7 +90,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectCityInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 1.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Spain", "ES-4444-222", 1.0, 1.0);
         String expected = "Porto";
 
         //Act
@@ -115,7 +115,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectCountryInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 1.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "France", "FR-4444-222", 1.0, 1.0);
         String expected = "Portugal";
 
         //Act
@@ -140,7 +140,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectPostalCodeInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 1.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "PT-4444-222", 1.0, 1.0);
         String expected = "4444-222";
 
         //Act
@@ -165,7 +165,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectLatitudeInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 5.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "PT-4444-222", 1.0, 5.0);
         double expected = 1.0;
 
         //Act
@@ -190,7 +190,7 @@ class HouseMapperTest {
     @Test
     public void whenDtoToDomainIsCalled_ShouldGetCorrectLongitudeInformation() {
         //Arrange
-        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "4444-222", 1.0, 5.0);
+        LocationDTO locationDTO = new LocationDTO("25A", "Rua da Alegria", "Porto", "Portugal", "PT-4444-222", 1.0, 5.0);
         double expected = 5.0;
 
         //Act
