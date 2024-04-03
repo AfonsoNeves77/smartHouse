@@ -1,8 +1,7 @@
 package SmartHomeDDD.domain.sensor;
 
-import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.domain.DomainID;
+import SmartHomeDDD.domain.sensor.externalServices.SimHardware;
 import SmartHomeDDD.domain.sensor.sensorValues.AveragePowerConsumptionValue;
 import SmartHomeDDD.vo.ValueObject;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
@@ -15,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
-public class AveragePowerConsumptionSensor implements Sensor, DomainEntity {
+public class AveragePowerConsumptionSensor implements Sensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;
