@@ -4,6 +4,7 @@ import SmartHomeDDD.domain.sensorType.SensorType;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Map;
 public class SensorTypeRepository implements Repository<SensorTypeIDVO, SensorType> {
 
     /** The data store for SensorType entities, mapped by their unique identifiers. */
-    private final Map<SensorTypeIDVO, SensorType> DATA = new HashMap<>();
+    private final Map<SensorTypeIDVO, SensorType> DATA = new LinkedHashMap<>();
 
     /**
      * Saves a SensorType entity to the repository.
