@@ -9,7 +9,7 @@ class PostalCodeVOTest {
 
     @Test
     void testValidParameter_returnsPostalCodeVO() throws InstantiationException {
-        String postalCode = "1234-567";
+        String postalCode = "PT-1234-567";
         PostalCodeVO postalCodeVO = new PostalCodeVO(postalCode);
         assertNotNull(postalCodeVO);
     }
@@ -26,9 +26,20 @@ class PostalCodeVOTest {
         assertThrows(IllegalArgumentException.class, () -> new PostalCodeVO(postalCode));
     }
 
+    /**
+     * This test checks if when trying to create a PostalCodeVO object with an invalid prefix
+     * an IllegalArgumentException is thrown
+     */
+
+    @Test
+    void testInvalidPostalCode_throwsIllegalArgumentException() {
+        String postalCode = "UK-1234-567";
+        assertThrows(IllegalArgumentException.class, () -> new PostalCodeVO(postalCode));
+    }
+
     @Test
     void testGetPostalCode_returnsPostalCode() throws InstantiationException {
-        String postalCode = "1234-567";
+        String postalCode = "PT-1234-567";
         PostalCodeVO postalCodeVO = new PostalCodeVO(postalCode);
         assertEquals(postalCode, postalCodeVO.getValue());
     }
