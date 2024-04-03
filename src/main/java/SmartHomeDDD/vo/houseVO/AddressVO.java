@@ -1,7 +1,5 @@
 package SmartHomeDDD.vo.houseVO;
 
-import SmartHomeDDD.vo.*;
-
 public class AddressVO {
 
     private final DoorVO doorVO;
@@ -19,7 +17,7 @@ public class AddressVO {
      * @param postalCodeVO Postal Code
      */
     public AddressVO(DoorVO doorVO, StreetVO streetVO, CityVO cityVO, CountryVO countryVO, PostalCodeVO postalCodeVO) {
-        if (!validArgs(doorVO, streetVO, cityVO, countryVO, postalCodeVO))
+        if (!validArgs(doorVO, streetVO, cityVO, countryVO, postalCodeVO) || !validCountryVOPostalCodeVOCombination(countryVO, postalCodeVO))
             throw new IllegalArgumentException("Invalid arguments.");
         this.doorVO=doorVO;
         this.streetVO=streetVO;
@@ -66,6 +64,27 @@ public class AddressVO {
      */
     public String getPostalCode(){
         return postalCodeVO.getValue();
+    }
+
+    /**
+     * Validates if the country and postal code are a valid combination.
+     * The inserted CountryVO must match de correct country code inserted in PostalCodeVO.
+     * @param countryVO CountryVO that encapsulates a String with the country name
+     * @param postalCodeVO PostalCodeVO that encapsulates a String with the postal code in ISO 3166-1 alfa-2 convention.
+     * @return boolean, true if the combination is valid, false otherwise.
+     */
+
+    private boolean validCountryVOPostalCodeVOCombination(CountryVO countryVO, PostalCodeVO postalCodeVO) {
+        String country = countryVO.getValue().trim().toLowerCase();
+        int index = postalCodeVO.getValue().indexOf("-");
+        String countryCode = postalCodeVO.getValue().substring(0, index);
+        return switch (country) {
+            case "portugal" -> countryCode.equals("PT");
+            case "usa" -> countryCode.equals("US");
+            case "spain" -> countryCode.equals("ES");
+            case "france" -> countryCode.equals("FR");
+            default -> false;
+        };
     }
 
     /**
