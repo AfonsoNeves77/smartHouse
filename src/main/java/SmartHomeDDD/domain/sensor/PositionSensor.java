@@ -17,7 +17,7 @@ import static java.lang.Integer.parseInt;
 /**
  * PositionSensor is a domain entity that represents a sensor that measures the position/value in a scale.
  */
-public class PositionSensor implements Sensor, DomainEntity {
+public class PositionSensor implements Sensor {
 
     private SensorNameVO sensorName;
     private final DeviceIDVO deviceID;
@@ -59,8 +59,7 @@ public class PositionSensor implements Sensor, DomainEntity {
      * Getter method for the sensor ID.
      * @return  The sensor ID.
      */
-    @Override
-    public DomainID getId(){
+    public SensorIDVO getId(){
         return this.sensorID;
     }
 
