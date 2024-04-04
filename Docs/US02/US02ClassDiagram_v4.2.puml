@@ -4,37 +4,40 @@ title <size: 30> US02 Class Diagram
 note "<b>Only methods related to\n<b>US02 are represented" as N1
 skinparam linetype ortho
 
-interface Repository {
+interface Repository <T> {
+    + save(entity : T) : boolean
+    + findAll() : Iterable<T>
+    + findById(id : ID) : Optional<T>
+    + isPresent(id : ID) : boolean
 }
 
 class RoomMapper {
-    + roomDTOtoRoomName(roomDTO : RoomDTO) : RoomNameVO
-    + roomDTOtoRoomFloor(roomDTO : RoomDTO) : RoomFloorVO
-    + roomDTOtoRoomDimensions(roomDTO : RoomsDTO) : RoomDimensionsVO
+    + createRoomNameVO(roomDTO : RoomDTO) : RoomNameVO
+    + createRoomFloorVO(roomDTO : RoomDTO) : RoomFloorVO
+    + createRoomDimensionsVO(roomDTO : RoomsDTO) : RoomDimensionsVO
+
 }
 
 class HouseService {
-    + houseRepo : HouseRepo
+    + houseRepository : HouseRepository
+    + houseFactory : HouseFactory
 
-    + getHouseID() : HouseIDVO
+    + getFirstHouseIDVO() : HouseIDVO
 }
 
 class AddRoomToHouseCTRL {
     - houseService : HouseService
     - roomService : RoomService
-    - roomMapper : RoomMapper
 
-    + addRoom(roomDTO : RoomDTO) : Room
-    + save(room Room) : boolean
-    - getHouseID() : HouseIDVO
+    + addRoom(roomDTO : RoomDTO) : boolean
 }
 
 class RoomService {
-    - RoomRepo roomRepo;
-    - RoomFactory RoomFactory;
+    - roomRepository : RoomRepository;
+    - roomFactory : RoomFactory;
 
     + createRoom (roomName : RoomNameVO, roomFloor : RoomFloorVO, \nroomDimensions : RoomDimensionsVO, houseID : House IDVO) : Room
-    + save (room : Room) : boolean
+    + saveRoom (room : Room) : boolean
 }
 
 class Room {
@@ -78,15 +81,16 @@ class RoomFloorVO{
 class HouseIDVO{
      - houseID : int
 }
-class HouseRepo{
-    + getHouseID() : HouseIDVO
+class HouseRepository{
+    + DATA : LinkedHashMap<HouseIDVO, House>
+    + getFirstHouseIDVO() : HouseIDVO
 }
 
 class RoomFactory{
     + createRoom (roomName : RoomNameVO, roomFloor : RoomFloorVO, \nroomDimensions : RoomDimensionsVO, houseID : House IDVO) : Room
 }
-class RoomRepo{
-    + roomMap : HashMap<RoomIDVO, Room>
+class RoomRepository{
+    + DATA : LinkedHashMap<RoomIDVO, Room>
     + save(room : Room ) : boolean
 }
 
@@ -94,11 +98,11 @@ AddRoomToHouseCTRL ..> RoomMapper
 AddRoomToHouseCTRL ..right> HouseService
 AddRoomToHouseCTRL ..> RoomService
 RoomService ..> RoomFactory
-HouseService ..> HouseRepo
-RoomService ..> RoomRepo
+HouseService ..> HouseRepository
+RoomService ..> RoomRepository
 RoomFactory ..> Room
-HouseRepo <|.. Repository
-RoomRepo <|.. Repository
+HouseRepository <|.. Repository
+RoomRepository <|.. Repository
 
 ' Aggregation relationships
 Room "1" *-- "1" RoomNameVO
