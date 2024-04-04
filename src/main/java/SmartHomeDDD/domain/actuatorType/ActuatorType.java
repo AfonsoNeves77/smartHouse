@@ -25,15 +25,6 @@ public class ActuatorType implements DomainEntity {
     }
 
     /**
-     * Get the actuatorType
-     *
-     * @return ActuatorType as String
-     */
-    public String getActuatorType() {
-        return actuatorTypeIDVO.toString();
-    }
-
-    /**
      * Get the actuatorTypeIDVO
      *
      * @return ActuatorTypeIDVO

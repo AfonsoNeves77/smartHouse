@@ -57,7 +57,7 @@ class ActuatorTypeTest {
         when(actuatorTypeIDVODouble.toString()).thenReturn("ActuatorType");
 
         // Act
-        String actuatorTypeString = actuatorType.getActuatorType();
+        String actuatorTypeString = actuatorType.getId().toString();
         String expected = "ActuatorType";
 
         // Assert
