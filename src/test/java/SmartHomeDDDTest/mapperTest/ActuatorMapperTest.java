@@ -1,17 +1,16 @@
 package SmartHomeDDDTest.mapperTest;
 
-import SmartHomeDDD.domain.actuator.Actuator;
-import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.dto.ActuatorDTO;
 import SmartHomeDDD.mapper.ActuatorMapper;
+import SmartHomeDDD.vo.Settings;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
+import SmartHomeDDD.vo.actuatorVO.DecimalSettingsVO;
+import SmartHomeDDD.vo.actuatorVO.IntegerSettingsVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,23 +22,6 @@ import static org.mockito.Mockito.*;
  */
 
 public class ActuatorMapperTest {
-
-    /**
-     * Test to verify that an exception is thrown when the ActuatorDTO object is null.
-     * Should throw an IllegalArgumentException with the message "Invalid DTO, ActuatorDTO cannot be null" since it fails to create an ActuatorIDVO object.
-     */
-
-    @Test
-    void givenNullActuatorDTO_WhenCreateActuatorIDVO_ThenThrowException() {
-//        Arrange
-        ActuatorDTO actuatorDTO = null;
-        String expectedMessage = "Invalid DTO, ActuatorDTO cannot be null";
-//        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createActuatorIDVO(actuatorDTO));
-//        Assert
-        String resultingMessage = exception.getMessage();
-        assertEquals(expectedMessage, resultingMessage);
-    }
 
     /**
      * Test to verify that an exception is thrown when the ActuatorDTO object is null.
@@ -93,35 +75,16 @@ public class ActuatorMapperTest {
     }
 
     /**
-     * Test to verify that an ActuatorIDVO object is created correctly.
-     */
-
-    @Test
-    void givenActuatorDTO_WhenCreateActuatorIDVO_ThenReturnActuatorIDVO() {
-//        Arrange
-        String expectedActuatorID = "123e4567-e89b-12d3-a456-426651110000";
-        String expectedActuatorName = "Smart Thermostat";
-        String actuatorType = "Thermostat";
-        String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorID, expectedActuatorName, actuatorType, deviceID);
-//        Act
-        ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorDTO);
-//        Assert
-        assertEquals(expectedActuatorID, actuatorIDVO.getID());
-    }
-
-    /**
      * Test to verify that an ActuatorNameVO object is created correctly.
      */
 
     @Test
     void givenActuatorDTO_WhenCreateActuatorNameVO_ThenReturnActuatorNameVO() {
 //        Arrange
-        String expectedActuatorID = "123e4567-e89b-12d3-a456-426651110000";
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorID, expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
 //        Act
         ActuatorNameVO actuatorNameVO = ActuatorMapper.createActuatorNameVO(actuatorDTO);
 //        Assert
@@ -135,11 +98,10 @@ public class ActuatorMapperTest {
     @Test
     void givenActuatorDTO_WhenCreateActuatorTypeIDVO_ThenReturnActuatorTypeIDVO() {
 //        Arrange
-        String expectedActuatorID = "123e4567-e89b-12d3-a456-426651110000";
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorID, expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
 //        Act
         ActuatorTypeIDVO actuatorTypeIDVO = ActuatorMapper.createActuatorTypeIDVO(actuatorDTO);
 //        Assert
@@ -153,11 +115,10 @@ public class ActuatorMapperTest {
     @Test
     void givenActuatorDTO_WhenCreateDeviceIDVO_ThenReturnDeviceIDVO() {
 //        Arrange
-        String expectedActuatorID = "123e4567-e89b-12d3-a456-426651110000";
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "123e4567-e89b-12d3-a456-111111111111";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorID, expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
 //        Act
         DeviceIDVO deviceIDVO = ActuatorMapper.createDeviceIDVO(actuatorDTO);
 //        Assert
@@ -165,103 +126,51 @@ public class ActuatorMapperTest {
     }
 
     /**
-     * Test to verify if the domainToDTO method returns a list of ActuatorDTO objects.
-     * Should return a list of ActuatorDTO objects with the same size as the list of Actuator objects.
-     * The test makes use of mock objects to simulate the Actuator objects in order to facilitate testing.
+     * Test to verify that an IntegerSettingsVO object is created correctly when the ActuatorDTO object has limits.
+     * It creates an IntegerSettingsVO object with the lower and upper limits. Then uses a getter to retrieve the values.
+     * The expected values are the lower and upper limits in a string format.
      */
 
     @Test
-    void givenActuatorList_WhenDomainToDTOIsCalled_ThenShouldReturnActuatorDTOListSizeEqualsOne() {
+    void givenActuatorDTOWithLimits_WhenCreateSettingsVO_ThenReturnIntegerSettingsVO() {
 //        Arrange
-        ActuatorIDVO actuatorIDVODouble = mock(ActuatorIDVO.class);
-        ActuatorNameVO actuatorNameVODouble = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeIDVODouble = mock(ActuatorTypeIDVO.class);
-        DeviceIDVO deviceIDVODouble = mock(DeviceIDVO.class);
-
-        Actuator actuatorTestDouble = mock(SwitchActuator.class);
-        when(actuatorTestDouble.getId()).thenReturn(actuatorIDVODouble);
-        when(actuatorTestDouble.getActuatorName()).thenReturn(actuatorNameVODouble);
-        when(actuatorTestDouble.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble);
-        when(actuatorTestDouble.getDeviceID()).thenReturn(deviceIDVODouble);
-
-        List<Actuator> actuatorList = new ArrayList<>();
-        actuatorList.add(actuatorTestDouble);
-        int expectedListSize = 1;
-//        Act
-        List<ActuatorDTO> actuatorDTOList = ActuatorMapper.domainToDTO(actuatorList);
-//        Assert
-        assertEquals(expectedListSize, actuatorDTOList.size());
-    }
-
-    /**
-     * Test to verify if the domainToDTO method returns a list of ActuatorDTO objects.
-     * Should return a list of ActuatorDTO objects with the same attributes as the Actuator object that is contained in the list.
-     * The test makes use of mock objects to simulate the Actuator objects in order to facilitate testing.
-     */
-
-    @Test
-    void givenActuatorList_WhenDomainToDTOIsCalled_ThenShouldReturnActuatorDTOList() {
-//        Arrange
-        String actuatorID = "123e4567-e89b-12d3-a456-426651110000";
-        ActuatorIDVO actuatorIDVODouble = mock(ActuatorIDVO.class);
-        when(actuatorIDVODouble.getID()).thenReturn(actuatorID);
-
-        String actuatorName = "Smart Thermostat";
-        ActuatorNameVO actuatorNameVODouble = mock(ActuatorNameVO.class);
-        when(actuatorNameVODouble.getValue()).thenReturn(actuatorName);
-
+        String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
-        ActuatorTypeIDVO actuatorTypeIDVODouble = mock(ActuatorTypeIDVO.class);
-        when(actuatorTypeIDVODouble.getID()).thenReturn(actuatorType);
-
-        String deviceID = "123e4567-e89b-12d3-a456-111111111111";
-        DeviceIDVO deviceIDVODouble = mock(DeviceIDVO.class);
-        when(deviceIDVODouble.getID()).thenReturn(deviceID);
-
-        Actuator actuatorTestDouble = mock(SwitchActuator.class);
-        when(actuatorTestDouble.getId()).thenReturn(actuatorIDVODouble);
-        when(actuatorTestDouble.getActuatorName()).thenReturn(actuatorNameVODouble);
-        when(actuatorTestDouble.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble);
-        when(actuatorTestDouble.getDeviceID()).thenReturn(deviceIDVODouble);
-
-        List<Actuator> actuatorList = new ArrayList<>();
-        actuatorList.add(actuatorTestDouble);
+        String deviceID = "frt3-567p-32za";
+        String lowerLimit = "10";
+        String upperLimit = "30";
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit);
 //        Act
-        List<ActuatorDTO> actuatorDTOList = ActuatorMapper.domainToDTO(actuatorList);
+        Settings integerSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
 //        Assert
-        assertEquals(actuatorDTOList.get(0).getActuatorID(), actuatorID);
-        assertEquals(actuatorDTOList.get(0).getActuatorName(), actuatorName);
-        assertEquals(actuatorDTOList.get(0).getActuatorType(), actuatorType);
-        assertEquals(actuatorDTOList.get(0).getDeviceID(), deviceID);
+        Object[] expectedValues = integerSettingsVO.getValue();
+        assertEquals(lowerLimit, expectedValues[0].toString());
+        assertEquals(upperLimit, expectedValues[1].toString());
     }
 
     /**
-     * Verifies when a valid DTO is received (not null), ActuatorIDVO is created, and when getID() is called on it,
-     * the expected actuator ID in a string format is retrieved.
-     * ActuatorMapper Class has two collaborators in this scenario, ActuatorDTO and ActuatorIDVO classes. To isolate
-     * the class under test (ActuatorMapper), a double of the ActuatorDTO class is made as well as a MockedConstruction of the
-     * ActuatorIDVO Class, in order to condition its behaviour when a ActuatorIDVO is created.
-     * It also verifies the number of times the ActuatorIDVO constructor is called.
+     * Test to verify that a DecimalSettingsVO object is created correctly when the ActuatorDTO object has limits and precision.
+     * It creates a DecimalSettingsVO object with the lower and upper limits and precision. Then uses a getter to retrieve the values.
+     * The expected values are the lower limit, upper limit and precision in a string format.
      */
 
     @Test
-    void givenActuatorDTOMock_WhenCreateActuatorIDVO_ThenReturnActuatorIDVO() {
+    void givenActuatorDTOWithLimitsAndPrecision_WhenCreateSettingsVO_ThenReturnDecimalSettingsVO() {
 //        Arrange
-        String expectedActuatorID = "123e4567-e89b-12d3-a456-426651110000";
-        int expectedListSize = 1;
-        ActuatorDTO actuatorDTODouble = mock(ActuatorDTO.class);
-        when(actuatorDTODouble.getActuatorID()).thenReturn(expectedActuatorID);
-
-        try (MockedConstruction<ActuatorIDVO> mockedActuatorIDVO = mockConstruction(ActuatorIDVO.class, (mock, context) -> {
-            when(mock.getID()).thenReturn("123e4567-e89b-12d3-a456-426651110000");
-        })) {
-//            Act
-            ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorDTODouble);
-//            Assert
-            List<ActuatorIDVO> listOfMockedActuatorIDVO = mockedActuatorIDVO.constructed();
-            assertEquals(expectedListSize, listOfMockedActuatorIDVO.size());
-            assertEquals(expectedActuatorID, actuatorIDVO.getID());
-        }
+        String expectedActuatorName = "Smart Thermostat";
+        String actuatorType = "Thermostat";
+        String deviceID = "frt3-567p-32za";
+        String lowerLimit = "10.3";
+        String upperLimit = "30.2";
+        String precision = "0.1";
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, precision);
+//        Act
+        Settings decimalSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
+//        Assert
+        Object[] expectedValues = decimalSettingsVO.getValue();
+        assertEquals(lowerLimit, expectedValues[0].toString());
+        assertEquals(upperLimit, expectedValues[1].toString());
+        assertEquals(precision, expectedValues[2].toString());
     }
 
     /**
@@ -348,6 +257,75 @@ public class ActuatorMapperTest {
             List<DeviceIDVO> listOfMockedDeviceIDVO = mockedDeviceIDVO.constructed();
             assertEquals(expectedListSize, listOfMockedDeviceIDVO.size());
             assertEquals(deviceID, deviceIDVO.getID());
+        }
+    }
+
+/**
+     * Verifies when a valid DTO is received (not null), IntegerSettingsVO is created, and when getValue() is called on it,
+     * the expected lower and upper limits in a string format are retrieved.
+     * ActuatorMapper Class has two collaborators in this scenario, ActuatorDTO and IntegerSettingsVO classes. To isolate
+     * the class under test (ActuatorMapper), a double of the ActuatorDTO class is made as well as a MockedConstruction of the
+     * IntegerSettingsVO Class, in order to condition its behaviour when a IntegerSettingsVO is created.
+     * It also verifies the number of times the IntegerSettingsVO constructor is called.
+     */
+
+    @Test
+    void givenActuatorDTOMock_WhenCreateSettingsVOWithLimits_ThenReturnIntegerSettingsVO() {
+//        Arrange
+        String lowerLimit = "10";
+        String upperLimit = "30";
+        int expectedListSize = 1;
+        ActuatorDTO actuatorDTODouble = mock(ActuatorDTO.class);
+        when(actuatorDTODouble.getLowerLimit()).thenReturn(lowerLimit);
+        when(actuatorDTODouble.getUpperLimit()).thenReturn(upperLimit);
+
+        try (MockedConstruction<IntegerSettingsVO> mockedIntegerSettingsVO = mockConstruction(IntegerSettingsVO.class, (mock, context) -> {
+            when(mock.getValue()).thenReturn(new Integer[]{10, 30});
+        })) {
+//            Act
+            Settings integerSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTODouble);
+//            Assert
+            List<IntegerSettingsVO> listOfMockedIntegerSettingsVO = mockedIntegerSettingsVO.constructed();
+            Object[] expectedValues = integerSettingsVO.getValue();
+            assertEquals(expectedListSize, listOfMockedIntegerSettingsVO.size());
+            assertEquals(lowerLimit, expectedValues[0].toString());
+            assertEquals(upperLimit, expectedValues[1].toString());
+        }
+    }
+
+    /**
+     * Verifies when a valid DTO is received (not null), DecimalSettingsVO is created, and when getValue() is called on it,
+     * the expected lower limit, upper limit and precision in a string format are retrieved.
+     * ActuatorMapper Class has two collaborators in this scenario, ActuatorDTO and DecimalSettingsVO classes. To isolate
+     * the class under test (ActuatorMapper), a double of the ActuatorDTO class is made as well as a MockedConstruction of the
+     * DecimalSettingsVO Class, in order to condition its behaviour when a DecimalSettingsVO is created.
+     * It also verifies the number of times the DecimalSettingsVO constructor is called.
+     */
+
+    @Test
+    void givenActuatorDTOMock_WhenCreateSettingsVOWithLimitsAndPrecision_ThenReturnDecimalSettingsVO() {
+//        Arrange
+        String lowerLimit = "10.3";
+        String upperLimit = "30.2";
+        String precision = "0.1";
+        int expectedListSize = 1;
+        ActuatorDTO actuatorDTODouble = mock(ActuatorDTO.class);
+        when(actuatorDTODouble.getLowerLimit()).thenReturn(lowerLimit);
+        when(actuatorDTODouble.getUpperLimit()).thenReturn(upperLimit);
+        when(actuatorDTODouble.getPrecision()).thenReturn(precision);
+
+        try (MockedConstruction<DecimalSettingsVO> mockedDecimalSettingsVO = mockConstruction(DecimalSettingsVO.class, (mock, context) -> {
+            when(mock.getValue()).thenReturn(new Double[]{10.3, 30.2, 0.1});
+        })) {
+//            Act
+            Settings decimalSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTODouble);
+//            Assert
+            List<DecimalSettingsVO> listOfMockedDecimalSettingsVO = mockedDecimalSettingsVO.constructed();
+            Object[] expectedValues = decimalSettingsVO.getValue();
+            assertEquals(expectedListSize, listOfMockedDecimalSettingsVO.size());
+            assertEquals(lowerLimit, expectedValues[0].toString());
+            assertEquals(upperLimit, expectedValues[1].toString());
+            assertEquals(precision, expectedValues[2].toString());
         }
     }
 }

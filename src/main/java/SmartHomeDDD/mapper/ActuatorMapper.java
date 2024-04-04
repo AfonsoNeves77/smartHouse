@@ -1,14 +1,13 @@
 package SmartHomeDDD.mapper;
 
-import SmartHomeDDD.domain.actuator.Actuator;
 import SmartHomeDDD.dto.ActuatorDTO;
+import SmartHomeDDD.vo.Settings;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
+import SmartHomeDDD.vo.actuatorVO.DecimalSettingsVO;
+import SmartHomeDDD.vo.actuatorVO.IntegerSettingsVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,23 +17,6 @@ import java.util.UUID;
  */
 
 public class ActuatorMapper {
-
-    /**
-     * Method to create an ActuatorIDVO object from an ActuatorDTO object.
-     * It throws an IllegalArgumentException if the ActuatorDTO object is null.
-     *
-     * @param actuatorDTO ActuatorDTO object
-     * @return ActuatorIDVO object
-     */
-
-    public static ActuatorIDVO createActuatorIDVO(ActuatorDTO actuatorDTO) {
-        if (actuatorDTO == null) {
-            throw new IllegalArgumentException("Invalid DTO, ActuatorDTO cannot be null");
-        } else {
-            UUID actuatorID = UUID.fromString(actuatorDTO.getActuatorID());
-            return new ActuatorIDVO(actuatorID);
-        }
-    }
 
     /**
      * Method to create an ActuatorNameVO object from an ActuatorDTO object.
@@ -49,6 +31,23 @@ public class ActuatorMapper {
             throw new IllegalArgumentException("Invalid DTO, ActuatorDTO cannot be null");
         } else {
             return new ActuatorNameVO(actuatorDTO.getActuatorName());
+        }
+    }
+
+    public static Settings createSettingsVO(ActuatorDTO actuatorDTO) {
+        String lowerLimit = actuatorDTO.getLowerLimit();
+        String upperLimit = actuatorDTO.getUpperLimit();
+        String precision = actuatorDTO.getPrecision();
+        try {
+            if (precision == null && lowerLimit != null && upperLimit != null) {
+                return new IntegerSettingsVO(lowerLimit, upperLimit);
+            } else if (precision != null && lowerLimit != null && upperLimit != null) {
+                return new DecimalSettingsVO(lowerLimit, upperLimit, precision);
+            } else {
+                return null;
+            }
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 
@@ -68,7 +67,7 @@ public class ActuatorMapper {
         }
     }
 
-    /**
+        /**
      * Method to create a DeviceIDVO object from an ActuatorDTO object.
      * It throws an IllegalArgumentException if the ActuatorDTO object is null.
      *
@@ -83,36 +82,5 @@ public class ActuatorMapper {
             UUID deviceID = UUID.fromString(actuatorDTO.getDeviceID());
             return new DeviceIDVO(deviceID);
         }
-    }
-
-    /**
-     * Method that converts a list of domain Actuator objects to a list of ActuatorDTO objects.
-     *
-     * @param actuators List of Actuator objects
-     * @return List of ActuatorDTO objects
-     */
-
-    public static List<ActuatorDTO> domainToDTO(List<Actuator> actuators) {
-        List<ActuatorDTO> actuatorDTOList = new ArrayList<>();
-        for (Actuator actuator : actuators) {
-            ActuatorDTO actuatorDTO = convertActuatorFromDomainToDTO(actuator);
-            actuatorDTOList.add(actuatorDTO);
-        }
-        return actuatorDTOList;
-    }
-
-    /**
-     * Method that converts a domain Actuator object to an ActuatorDTO object.
-     *
-     * @param actuator Actuator object
-     * @return ActuatorDTO object
-     */
-
-    private static ActuatorDTO convertActuatorFromDomainToDTO(Actuator actuator) {
-        String actuatorID = actuator.getId().getID();
-        String actuatorName = actuator.getActuatorName().getValue();
-        String actuatorType = actuator.getActuatorTypeID().getID();
-        String deviceID = actuator.getDeviceID().getID();
-        return new ActuatorDTO(actuatorID, actuatorName, actuatorType, deviceID);
     }
 }
