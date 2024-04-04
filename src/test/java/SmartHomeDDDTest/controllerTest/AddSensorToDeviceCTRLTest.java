@@ -1,6 +1,6 @@
 package SmartHomeDDDTest.controllerTest;
 
-import SmartHomeDDD.controller.AddSensorToDeviceController;
+import SmartHomeDDD.controller.AddSensorToDeviceCTRL;
 import SmartHomeDDD.domain.device.Device;
 import SmartHomeDDD.domain.device.DeviceFactory;
 import SmartHomeDDD.domain.sensor.SensorFactory;
@@ -27,10 +27,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddSensorToDeviceControllerTest {
+class AddSensorToDeviceCTRLTest {
 
     /**
-     * Test for the constructor of AddSensorToDeviceController.
+     * Test for the constructor of AddSensorToDeviceCTRL.
      * Tests if the constructor throws an IllegalArgumentException when the sensorTypeService is null.
      */
     @Test
@@ -47,7 +47,7 @@ class AddSensorToDeviceControllerTest {
         SensorTypeService sensorTypeService = null;
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService));
 
         //Assert
         String actualMessage = exception.getMessage();
@@ -55,7 +55,7 @@ class AddSensorToDeviceControllerTest {
     }
 
     /**
-     * Test for the constructor of AddSensorToDeviceController.
+     * Test for the constructor of AddSensorToDeviceCTRL.
      * Tests if the constructor throws an IllegalArgumentException when the sensorService is null.
      */
     @Test
@@ -72,7 +72,7 @@ class AddSensorToDeviceControllerTest {
         SensorService sensorService = null;
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService));
 
         //Assert
         String actualMessage = exception.getMessage();
@@ -80,7 +80,7 @@ class AddSensorToDeviceControllerTest {
     }
 
     /**
-     * Test for the constructor of AddSensorToDeviceController.
+     * Test for the constructor of AddSensorToDeviceCTRL.
      * Tests if the constructor throws an IllegalArgumentException when the deviceService is null.
      */
     @Test
@@ -97,7 +97,7 @@ class AddSensorToDeviceControllerTest {
         DeviceService deviceService = null;
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService));
 
         //Assert
         String actualMessage = exception.getMessage();
@@ -105,7 +105,7 @@ class AddSensorToDeviceControllerTest {
     }
 
     /**
-     * Test for the getListOfSensorTypes method of AddSensorToDeviceController.
+     * Test for the getListOfSensorTypes method of AddSensorToDeviceCTRL.
      * Tests if the method returns a list of SensorTypeDTO of all the available sensor types.
      * The expected size of the list is 12, which corresponds to the number of sensor types in the sensor.properties file.
      * The first sensor type in the list is HumiditySensor.
@@ -127,10 +127,10 @@ class AddSensorToDeviceControllerTest {
         DeviceFactory deviceFactory = new DeviceFactory();
         DeviceRepository deviceRepository = new DeviceRepository();
         DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
-        AddSensorToDeviceController addSensorToDeviceController = new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService);
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService);
 
         //Act
-        List<SensorTypeDTO> result = addSensorToDeviceController.getListOfSensorTypes();
+        List<SensorTypeDTO> result = addSensorToDeviceCTRL.getListOfSensorTypes();
 
         //Assert
         assertEquals(expectedSize, result.size());
@@ -138,7 +138,7 @@ class AddSensorToDeviceControllerTest {
     }
 
     /**
-     * Test for the addSensorToDevice method of AddSensorToDeviceController.
+     * Test for the addSensorToDevice method of AddSensorToDeviceCTRL.
      * Tests if the method returns true when adding a sensor to a device.
      * 1. Every service is initialized with the necessary repositories and factories. The SensorFactory and the
      * SensorTypeService are initialized with the path to the sensor.properties file.
@@ -170,8 +170,8 @@ class AddSensorToDeviceControllerTest {
         DeviceRepository deviceRepository = new DeviceRepository();
         DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
 
-            // AddSensorToDeviceController instantiation
-        AddSensorToDeviceController addSensorToDeviceController = new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService);
+            // AddSensorToDeviceCTRL instantiation
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService);
 
             // Device instantiation. Device is saved in the repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
@@ -201,14 +201,14 @@ class AddSensorToDeviceControllerTest {
         SensorDTO sensorDTO = new SensorDTO(sensorName);
 
         //Act
-        boolean result = addSensorToDeviceController.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
+        boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
 
         //Assert
         assertTrue(result);
     }
 
     /**
-     * Test for the addSensorToDevice method of AddSensorToDeviceController.
+     * Test for the addSensorToDevice method of AddSensorToDeviceCTRL.
      * Tests if the method returns false when adding a sensor to a device with an inactive status.
      * 1. Every service is initialized with the necessary repositories and factories. The SensorFactory and the
      * SensorTypeService are initialized with the path to the sensor.properties file.
@@ -240,8 +240,8 @@ class AddSensorToDeviceControllerTest {
         DeviceRepository deviceRepository = new DeviceRepository();
         DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
 
-            // AddSensorToDeviceController instantiation
-        AddSensorToDeviceController addSensorToDeviceController = new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService);
+            // AddSensorToDeviceCTRL instantiation
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService);
 
             // Device instantiation. Device is saved in the repository and then deactivated
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
@@ -272,14 +272,14 @@ class AddSensorToDeviceControllerTest {
         SensorDTO sensorDTO = new SensorDTO(sensorName);
 
         //Act
-        boolean result = addSensorToDeviceController.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
+        boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
 
         //Assert
         assertFalse(result);
     }
 
     /**
-     * Test for the addSensorToDevice method of AddSensorToDeviceController.
+     * Test for the addSensorToDevice method of AddSensorToDeviceCTRL.
      * Tests if the method returns false when adding a sensor to a device that does not exist in the repository.
      * 1. Every service is initialized with the necessary repositories and factories. The SensorFactory and the
      * SensorTypeService are initialized with the path to the sensor.properties file.
@@ -311,8 +311,8 @@ class AddSensorToDeviceControllerTest {
         DeviceRepository deviceRepository = new DeviceRepository();
         DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
 
-            // AddSensorToDeviceController instantiation
-        AddSensorToDeviceController addSensorToDeviceController = new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService);
+            // AddSensorToDeviceCTRL instantiation
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService);
 
             // Device instantiation. Device is not saved in the repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
@@ -341,14 +341,14 @@ class AddSensorToDeviceControllerTest {
         SensorDTO sensorDTO = new SensorDTO(sensorName);
 
         //Act
-        boolean result = addSensorToDeviceController.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
+        boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
 
         //Assert
         assertFalse(result);
     }
 
     /**
-     * Test for the addSensorToDevice method of AddSensorToDeviceController.
+     * Test for the addSensorToDevice method of AddSensorToDeviceCTRL.
      * Tests if the method returns false when adding a sensor to a device with a non-existent sensor type.
      * 1. Every service is initialized with the necessary repositories and factories. The SensorFactory and the
      * SensorTypeService are initialized with the path to the sensor.properties file.
@@ -380,8 +380,8 @@ class AddSensorToDeviceControllerTest {
         DeviceRepository deviceRepository = new DeviceRepository();
         DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
 
-            // AddSensorToDeviceController instantiation
-        AddSensorToDeviceController addSensorToDeviceController = new AddSensorToDeviceController(sensorTypeService, sensorService, deviceService);
+            // AddSensorToDeviceCTRL instantiation
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorTypeService, sensorService, deviceService);
 
             // Device instantiation. Device is saved in the repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
@@ -411,7 +411,7 @@ class AddSensorToDeviceControllerTest {
         SensorDTO sensorDTO = new SensorDTO(sensorName);
 
         //Act
-        boolean result = addSensorToDeviceController.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
+        boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, sensorTypeDTO, sensorDTO);
 
         //Assert
         assertFalse(result);
