@@ -11,11 +11,11 @@ class AddDeviceToRoomCTRL{
     - deviceService : DeviceService
 
     + AddDeviceToRoomCTRL(roomService : RoomService, deviceService : DeviceService)
-    + addDeviceToRoom(deviceDTO : DeviceDTO, roomDTO : RoomDTO) : boolean
+    + addDeviceToRoom(roomDTO : RoomDTO, deviceDTO : DeviceDTO) : boolean
     - createDevice(deviceDTO : DeviceDTO, roomID : RoomIDVO) : Device
 }
 
-class RoomService <<Service>>{
+class RoomService {
     - roomFactory : RoomFactory
     - roomRepository : RoomRepository
 
@@ -23,7 +23,7 @@ class RoomService <<Service>>{
     + isPresent(roomID : RoomIDVO) : boolean
 }
 
-class RoomRepository <<Repository>>{
+class RoomRepository {
     - DATA : Map<RoomIDVO, Room>
 
     + isPresent(roomID : RoomIDVO) : boolean
@@ -49,7 +49,7 @@ class RoomDTO{
 
 
 
-class Room <<Entity>> <<Root>>{
+class Room {
     - roomID : RoomIDVO
     - roomName : RoomNameVO
     - floor : RoomFloorVO
@@ -57,7 +57,7 @@ class Room <<Entity>> <<Root>>{
     - houseID : HouseIDVO
 }
 
-class DeviceService <<Service>>{
+class DeviceService {
     - deviceFactory : DeviceFactory
     - deviceRepository : DeviceRepository
 
@@ -66,11 +66,11 @@ class DeviceService <<Service>>{
     + saveDevice(device : Device) : boolean
 }
 
-class DeviceFactory <<Factory>>{
+class DeviceFactory {
     + createDevice(deviceName : deviceNameVO, deviceModel : DeviceModelVO, \nroomID : RoomIDVO) : Device
 }
 
-class RoomIDVO <<Value Object>><<ID>>{
+class RoomIDVO {
     - identifier : UUID
     + RoomID(identifier : UUID)
 }
@@ -92,19 +92,19 @@ class DeviceDTO{
     + getDeviceModel() : String
 }
 
-class DeviceIDVO <<Value Object>><<ID>>{
+class DeviceIDVO {
     - identifier : UUID
 
     + DeviceIDVO(identifier : UUID)
 }
 
-class DeviceNameVO <<Value Object>>{
+class DeviceNameVO {
     - deviceName : String
 
     + DeviceNameVO(deviceName : String)
 }
 
-class DeviceModelVO <<Value Object>>{
+class DeviceModelVO {
     - deviceModel : String
 
     + DeviceModelVO(deviceModel : String)
@@ -116,7 +116,7 @@ class DeviceStatusVO <<Value Object>>{
 }
 
 
-class Device <<Entity>> <<Root>>{
+class Device {
     - deviceID : DeviceIDVO
     - deviceName : DeviceNameVO
     - deviceModel : DeviceModelVO
@@ -126,7 +126,7 @@ class Device <<Entity>> <<Root>>{
     + Device(deviceName : DeviceNameVO, deviceModel : DeviceModelVO, roomID : RoomIDVO)
 }
 
-class DeviceRepository <<Repository>>{
+class DeviceRepository {
      - DATA : Map<DeviceIDVO, Device>
 
      + save(device : Device) : boolean
@@ -168,7 +168,7 @@ DeviceDTOMapper ..> DeviceModelVO : <create>
 DeviceFactory ..> Device : <create>
 
 
-Device "1" o-- "1" RoomIDVO
+Device "*" o-- "1" RoomIDVO
 Room "1" *-- "1" RoomIDVO
 Device "1" o-up- "1" DeviceNameVO
 Device "1" o-left- "1" DeviceModelVO

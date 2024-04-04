@@ -18,13 +18,13 @@ participant "deviceModelVO : DeviceModelVO" as DM
 participant ":DeviceService" as DS
 participant ":DeviceFactory" as DF
 participant "device : Device" as D
-participant "deviceIDVO : DeviceIDVO" as DID
 participant "deviceStatusVO : DeviceStatusVO" as DStat
+participant "deviceIDVO : DeviceIDVO" as DID
 participant ":DeviceRepository" as DR
 
 /'note over RM : Should include interaction with RoomDTO?'/
 
-[o-> C : addDeviceToRoom(deviceDTO, roomDTO)
+[o-> C : addDeviceToRoom(roomDTO, deviceDTO)
 activate C
 
 C -> RM : createRoomIDVO(roomDTO)
@@ -35,8 +35,9 @@ RM -> RM : uuid = fromString(strRoomID)
 RM -> RID ** : create(uuid)
 RM --> C : roomIDVO
 deactivate RM
-
-
+|||
+C -> C : createDevice(roomIDVO, deviceDTO)
+activate C
 C -> RS : isPresent(roomIDVO)
 activate RS
 
@@ -47,9 +48,6 @@ deactivate RR
 RS --> C : <font color=green>**true**</font>
 deactivate RS
 
-
-C -> C : createDevice(deviceDTO, roomIDVO)
-activate C
 C -> DDM : createDeviceNameVO(deviceDTO)
 activate DDM
 
@@ -70,8 +68,8 @@ DS -> DF : createDevice(deviceNameVO, deviceModelVO, roomIDVO)
 activate DF
 DF -> D ** : create(deviceNameVO, deviceModelVO, roomIDVO)
 activate D
-D -> DID ** : create(uuid)
 D -> DStat ** : create(true)
+D -> DID ** : create(uuid)
 deactivate D
 DF --> DS : device
 deactivate DF
@@ -85,7 +83,7 @@ activate DS
 
 DS -> DR : save(device)
 activate DR
-DR -> DR : validEntity(device)
+DR -> DR : validateEntity(device)
 activate DR
 DR -> DR : put(deviceIDVO, device)
 
