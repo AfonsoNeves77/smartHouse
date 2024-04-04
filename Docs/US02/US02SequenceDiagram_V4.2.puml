@@ -1,7 +1,7 @@
 @startuml
 autonumber
 title User Story 2 - Main Success Scenario
-participant ":AddRoomToHouseCTRL" as C
+participant ":AddRoomCTRL" as C
 participant ":RoomMapper" as Rm
 participant ":HouseService" as Hs
 participant ":HouseRepo" as Hr
@@ -11,31 +11,31 @@ participant "room : Room" as R
 participant ":RoomRepo" as rR
 skinparam ParticipantPadding 50
 
-[o-> C : addRoomToHouse(roomDTO)
+[o-> C : addRoom(roomDTO)
 activate C
-C -> Rm : roomName = roomNameDTOtoRoomName(roomDTO)
+C -> Rm : roomNameVO = createRoomNameVO(roomDTO)
 activate Rm
-C -> Rm : roomDimensions = roomDimensionsDTOtoRoomDimensions(roomDTO)
-C -> Rm : roomFloor = roomFloorDTOtoRoomFloor(roomDTO)
+C -> Rm : roomFloorVO = createRoomFloorVO(roomDTO)
+C -> Rm : roomDimensionsVO = createRoomDimensionsVO(roomDTO)
 deactivate Rm
-C -> Hs : gethouseID()
+C -> Hs : getHouseIDVO()
 activate Hs
-Hs -> Hr : gethouseID()
+Hs -> Hr : getHouseIDVO()
 deactivate Hs
 activate Hr
-C <-- Hr : houseID
+C <-- Hr : houseIDVO
 deactivate Hr
-C -> Rs : createRoom(houseID, roomName, \nroomDimensions, roomFloor)
+C -> Rs : createRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO, houseIDVO)
 activate Rs
-Rs -> fR : createRoom(houseID, roomName, \nroomDimensions, roomFloor)
+Rs -> fR : createRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO, houseIDVO)
 deactivate Rs
 
 activate fR
-fR -> R** : newRoom(houseID, roomName,\nroomDimensions, roomFloor)
+fR -> R** : newRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO, houseIDVO)
 C <-- fR : room
 deactivate fR
 
-C -> Rs : save(room)
+C -> Rs : saveRoom(room)
 activate Rs
 Rs -> rR : save(room)
 deactivate Rs
