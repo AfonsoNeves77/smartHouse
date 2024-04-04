@@ -11,7 +11,7 @@ participant ":RoomDTOMapper" as RM
 
 [o-> C : getListOfRooms()
 activate C
-C -> RS : getListOfRooms()
+C -> RS : findAll()
 activate RS
 
 RS -> RR : findAll()
@@ -26,15 +26,15 @@ deactivate RR
 RS -> RS : clone(iterableListOfRooms)
 activate RS
 deactivate RS
-RS --> C : clonedListOfRooms
+RS --> C : roomList
 
 deactivate RS
 
-C -> RM : domainToDTO(clonedListOfRooms)
+C -> RM : domainToDTO(roomList)
 
 activate RM
 loop for each room in room list
-RM -> RM : RoomDTO = domainToDTO(room)
+RM -> RM : RoomDTO = convertRoomToDTO(room)
 activate RM
 deactivate RM
 RM -> RM : roomDTOList.add(RoomDTO)
