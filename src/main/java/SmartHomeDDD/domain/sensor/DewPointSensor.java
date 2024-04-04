@@ -12,7 +12,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
 import java.util.UUID;
 
-public class DewPointSensor implements Sensor, DomainEntity {
+public class DewPointSensor implements Sensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;
@@ -77,7 +77,7 @@ public class DewPointSensor implements Sensor, DomainEntity {
      * @return The encapsulated VO for SensorID;
      */
     @Override
-    public DomainID getId() {
+    public SensorIDVO getId() {
         return this.sensorID;
     }
 
