@@ -7,12 +7,29 @@ interface Sensor {
     + getSensorName() : SensorNameVO;
 }
 
-interface DomainEntity {
-    + getID() : DomainID
-}
 
 interface ValueObject<T> {
     + getValue() : T
+}
+
+class SensorNameVO{
+    - sensorName : String
+    + getValue() : String
+}
+
+class DeviceIDVO{
+    - deviceID : UUID
+    + getID : String
+}
+
+class SensorTypeIDVO{
+    - sensorTypeID : String
+    + getID() : String
+}
+
+class SensorIDVO{
+    - identifier : UUID
+    + getValue() : String
 }
 
 
@@ -38,8 +55,11 @@ class SimHardware{
 
 ValueObject <|.. PositionValue
 Sensor <|.. PositionSensor
-DomainEntity <|.. PositionSensor
 PositionSensor .right.> PositionValue
 PositionSensor .left.> SimHardware
+PositionSensor .down.> SensorNameVO
+PositionSensor .down.> DeviceIDVO
+PositionSensor .down.> SensorTypeIDVO
+PositionSensor .down.> SensorIDVO
 
 @enduml
