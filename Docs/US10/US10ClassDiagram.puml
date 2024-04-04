@@ -1,6 +1,8 @@
 @startuml
 title <size: 30> US10 Class Diagram
 
+skinparam linetype ortho
+
 interface Sensor {
 
 }
@@ -17,13 +19,19 @@ interface ValueObject<T> {
     + getValue() : T
 }
 
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getSensorName() : SensorNameVO
+}
+
 class TemperatureSensor{
     - sensorName : SensorNameVO
-    - sensorID : SensorIDVO
-    - sensorTypeID : SensorTypeIDVO
     - deviceID : DeviceIDVO
+    - sensorTypeID : SensorTypeIDVO
+    - temperatureSensorID : SensorIDVO
 
-    + TemperatureSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
+    + TemperatureSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
     + getID() : SensorIDVO
     + getSensorName() : SensorNameVO
     + getSensorTypeID() : SensorTypeIDVO
@@ -40,6 +48,7 @@ class TemperatureValue{
 
 class SimHardware{
     + getValue(): String
+    + getValue(initialDate : String, finalDate : String) : String
 }
 
 class SensorNameVO{
@@ -68,15 +77,14 @@ class DeviceIDVO{
 }
 
 
-DomainEntity <|.. TemperatureSensor
 Sensor <|.. TemperatureSensor
-SimHardware <.. TemperatureSensor
+SimHardware <.. TemperatureSensor : <<uses>>
 
-SensorNameVO <.. TemperatureSensor
-SensorIDVO *-- TemperatureSensor
-TemperatureValue *--right TemperatureSensor
-SensorTypeIDVO <.. TemperatureSensor
-DeviceIDVO <.. TemperatureSensor
+SensorNameVO <.. TemperatureSensor : <<has>>
+SensorIDVO --* TemperatureSensor
+TemperatureValue <..right TemperatureSensor : <<creates>>
+SensorTypeIDVO <.. TemperatureSensor : <<has>>
+DeviceIDVO <.. TemperatureSensor : <<has>>
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO
@@ -84,5 +92,6 @@ DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
 ValueObject <|.. TemperatureValue
+Sensor --|>DomainEntity
 
 @enduml
