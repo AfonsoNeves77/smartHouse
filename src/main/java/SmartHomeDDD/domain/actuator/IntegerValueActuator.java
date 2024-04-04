@@ -1,54 +1,41 @@
 package SmartHomeDDD.domain.actuator;
 
 import SmartHomeDDD.SimHardwareAct;
-import SmartHomeDDD.domain.DomainEntity;
+import SmartHomeDDD.vo.Settings;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
+import SmartHomeDDD.vo.actuatorVO.IntegerSettingsVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
 import java.util.UUID;
 
-public class IntSetRangeActuator implements DomainEntity, Actuator {
+public class IntegerValueActuator implements Actuator {
     private ActuatorNameVO actuatorName;
     private final ActuatorTypeIDVO actuatorType;
     private final DeviceIDVO deviceID;
     private final ActuatorIDVO actuatorID;
-    private Integer lowerLimit;
-    private Integer upperLimit;
-    private int value;
+    private final IntegerSettingsVO integerSettings;
 
     /**
-     * Constructs a new IntSetRangeActuator object with the specified actuator name, type, and device ID.
+     * Constructs a new IntSetRangeActuator object with the specified actuator name, type, device ID and the settings interface.
      * Validates the provided parameters to ensure they are not null.
+     * Tries to cast the settings interface to an IntegerSettingsVO object.
      * Assigns a unique actuator ID using a randomly generated UUID.
      */
-    public IntSetRangeActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID){
-        if(areParamsNull(actuatorName, actuatorType, deviceID)){
+    public IntegerValueActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID, Settings settings){
+        if(areParamsNull(actuatorName, actuatorType, deviceID, settings)){
             throw new IllegalArgumentException("Parameters cannot be null");
+        }
+        try{
+            this.integerSettings = (IntegerSettingsVO) settings;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Invalid settings type");
         }
         this.actuatorName = actuatorName;
         this.actuatorType = actuatorType;
         this.deviceID = deviceID;
         this.actuatorID = new ActuatorIDVO(UUID.randomUUID());
-    }
-
-    /**
-     * This method sets the lower and upper limits for the actuator.
-     * The lower limit must be less than the upper limit, otherwise throws an IllegalArgumentException.
-     * The value of the actuator is then set to the lower limit by default.
-     * @param lowerLimit the lower limit for the actuator
-     * @param upperLimit the upper limit for the actuator
-     * @return true if the limits are successfully set, false otherwise
-     */
-    public boolean setLimits(int lowerLimit, int upperLimit){
-        if(lowerLimit >= upperLimit){
-            throw new IllegalArgumentException("Upper limit can't be less than or equal to lower limit.");
-        }
-        this.lowerLimit = lowerLimit;
-        this.upperLimit = upperLimit;
-        this.value = lowerLimit;
-        return true;
     }
 
     /**
@@ -64,30 +51,29 @@ public class IntSetRangeActuator implements DomainEntity, Actuator {
      * @param value the value to set the actuator to
      * @return true if the command is successfully executed, false otherwise
      */
-    public boolean executeCommand(SimHardwareAct simHardwareAct, int value) {
-        if (lowerLimit == null || upperLimit == null || !validateValue(value)) {
-            throw new IllegalArgumentException("Limits not set or value out of range");
-        } else {
-            if (simHardwareAct == null) {
-                throw new IllegalArgumentException("SimHardwareAct cannot be null");
-            }
-            boolean executionResult = simHardwareAct.executeIntegerCommandSim(value);
-            if (executionResult) {
-                this.value = value;
-            }
-            return executionResult;
+    public String executeCommand(SimHardwareAct simHardwareAct, int value) {
+        if (simHardwareAct == null) {
+            return "Invalid hardware, could not execute command";
         }
+        if (!isValueWithinLimits(value)) {
+            return "Invalid value, could not execute command";
+        }
+        if (simHardwareAct.executeIntegerCommandSim(value)) {
+            return "Value was set";
+        }
+        return "Error: Value was not set";
     }
+
+
 
     /**
      * This method verifies if a given value is within the range of the pre-established limits for the present state of the actuator.
      * @return true if the value is within the limits, false otherwise
      */
-    private boolean validateValue(int value){
-        if(value < lowerLimit || value > upperLimit){
-            return false;
-        }
-        return true;
+    private boolean isValueWithinLimits(int value){
+        int lowerLimit = this.integerSettings.getValue()[0];
+        int upperLimit = this.integerSettings.getValue()[1];
+        return (value >= lowerLimit && value <= upperLimit);
     }
 
     /**
@@ -99,18 +85,6 @@ public class IntSetRangeActuator implements DomainEntity, Actuator {
         return this.actuatorID;
     }
 
-    /**
-     * This method verifies if a given set of parameters are null.
-     * @return true if any of the parameters are null, false otherwise
-     */
-    private boolean areParamsNull(Object... params){
-        for (Object param : params){
-            if (param == null){
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Simple getter method.
@@ -137,5 +111,18 @@ public class IntSetRangeActuator implements DomainEntity, Actuator {
     @Override
     public ActuatorNameVO getActuatorName() {
         return this.actuatorName;
+    }
+
+    /**
+     * This method verifies if a given set of parameters are null.
+     * @return true if any of the parameters are null, false otherwise
+     */
+    private boolean areParamsNull(Object... params){
+        for (Object param : params){
+            if (param == null){
+                return true;
+            }
+        }
+        return false;
     }
 }
