@@ -5,14 +5,11 @@ import SmartHomeDDD.domain.actuatorType.ActuatorTypeFactory;
 import SmartHomeDDD.mapper.ActuatorTypeMapper;
 import SmartHomeDDD.repository.ActuatorTypeRepository;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
-import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
-import java.io.File;
-import java.lang.module.Configuration;
+import org.apache.commons.configuration2.Configuration;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -70,7 +67,7 @@ public class ActuatorTypeService {
         List<String> actuatorTypes = new ArrayList<>();
         actuatorTypes = actuatorTypeReadingAndConversion();
         for(String type : actuatorTypes){
-            ActuatorTypeIDVO actuatorTypeIDVO = ActuatorTypeMapper.createActuatorTypeIDVO(type);
+            ActuatorTypeIDVO actuatorTypeIDVO = ActuatorTypeMapper.createActuatorTypeIDVOFromString(type);
             ActuatorType actuatorType = actuatorTypeFactory.createActuatorType(actuatorTypeIDVO);
             this.actuatorTypeRepository.save(actuatorType);
         }
@@ -88,7 +85,7 @@ public class ActuatorTypeService {
 
         // Read all actuator types from configuration file
         Configurations configs = new Configurations();
-        PropertiesConfiguration configuration = configs.properties(new File(filepath));
+        Configuration configuration = configs.properties(filepath);
 
         // Get all values (Actuator Types) from actuator.properties where the key is actuatorRepo and places them on
         // an array of String, which is then converted to a List
@@ -105,10 +102,7 @@ public class ActuatorTypeService {
     public List<ActuatorType> getListOfActuatorTypes(){
         Iterable<ActuatorType> actuatorTypes = this.actuatorTypeRepository.findAll();
         List<ActuatorType> listOfActuatorTypes = new ArrayList<>();
-
-        for (ActuatorType type : actuatorTypes){
-            listOfActuatorTypes.add(type);
-        }
+        actuatorTypes.forEach(listOfActuatorTypes::add);
         return listOfActuatorTypes;
     }
 

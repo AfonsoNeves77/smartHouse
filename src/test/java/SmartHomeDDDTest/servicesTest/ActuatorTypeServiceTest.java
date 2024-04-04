@@ -9,8 +9,9 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,7 +26,7 @@ public class ActuatorTypeServiceTest {
      * throws an IllegalArgumentException when given a null repository.
      */
     @Test
-    void whenGivenANullRepository_throwsIllegalArgument(){
+    public void whenGivenANullRepository_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);

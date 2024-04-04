@@ -1,4 +1,4 @@
-package SmartHomeDDDTest.controller;
+package SmartHomeDDDTest.controllerTest;
 
 import SmartHomeDDD.controller.AddSensorToDeviceController;
 import SmartHomeDDD.domain.device.Device;

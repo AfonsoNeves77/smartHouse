@@ -1,4 +1,4 @@
-package SmartHomeDDDTest.controller;
+package SmartHomeDDDTest.controllerTest;
 
 import SmartHomeDDD.controller.AddDeviceToRoomCTRL;
 import SmartHomeDDD.domain.device.Device;

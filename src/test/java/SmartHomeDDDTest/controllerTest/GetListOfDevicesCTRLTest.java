@@ -1,4 +1,4 @@
-package SmartHomeDDDTest.controller;
+package SmartHomeDDDTest.controllerTest;
 
 import SmartHomeDDD.controller.GetListOfDevicesCTRL;
 import SmartHomeDDD.domain.device.Device;
