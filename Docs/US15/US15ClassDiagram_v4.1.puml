@@ -74,11 +74,11 @@ class IntegerSettingsVO <<Value Object>>{
 DomainEntity <|-- Actuator
 Actuator <|.. IntegerValueActuator
 SimHardwareAct <.. IntegerValueActuator
-ActuatorNameVO "1" ..o "1" IntegerValueActuator
-ActuatorIDVO "1" ..* "1" IntegerValueActuator
-ActuatorTypeIDVO "1" ..o "*" IntegerValueActuator
-DeviceIDVO "1" ..o "*" IntegerValueActuator
-IntegerSettingsVO "1" ..o "1" IntegerValueActuator
+ActuatorNameVO --* IntegerValueActuator : has a >
+ActuatorIDVO --* IntegerValueActuator : has a >
+ActuatorTypeIDVO --* IntegerValueActuator : has a >
+DeviceIDVO --* IntegerValueActuator : has a >
+IntegerSettingsVO --* IntegerValueActuator : has a >
 ValueObject <|... ActuatorNameVO
 ValueObject <|... IntegerSettingsVO
 DomainID <|.. ActuatorIDVO
