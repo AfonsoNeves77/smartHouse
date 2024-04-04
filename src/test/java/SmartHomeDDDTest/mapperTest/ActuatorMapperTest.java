@@ -13,8 +13,7 @@ import org.mockito.MockedConstruction;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -171,6 +170,23 @@ public class ActuatorMapperTest {
         assertEquals(lowerLimit, expectedValues[0].toString());
         assertEquals(upperLimit, expectedValues[1].toString());
         assertEquals(precision, expectedValues[2].toString());
+    }
+
+    /**
+     * Test to verify that a null object is returned when the ActuatorDTO object has null limits.
+     */
+
+    @Test
+    void givenActuatorDTONullLimits_WhenCreateSettingsVO_ThenReturnNullObject() {
+//        Arrange
+        String expectedActuatorName = "Smart Thermostat";
+        String actuatorType = "Thermostat";
+        String deviceID = "frt3-567p-32za";
+        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
+//        Act
+        Settings settingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
+//        Assert
+        assertNull(settingsVO);
     }
 
     /**

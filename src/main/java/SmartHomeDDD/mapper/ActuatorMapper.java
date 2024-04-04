@@ -41,14 +41,14 @@ public class ActuatorMapper {
         try {
             if (precision == null && lowerLimit != null && upperLimit != null) {
                 return new IntegerSettingsVO(lowerLimit, upperLimit);
-            } else if (precision != null && lowerLimit != null && upperLimit != null) {
+            }
+            if (precision != null && lowerLimit != null && upperLimit != null) {
                 return new DecimalSettingsVO(lowerLimit, upperLimit, precision);
-            } else {
-                return null;
             }
         } catch (IllegalArgumentException e) {
             return null;
         }
+        return null;
     }
 
     /**
