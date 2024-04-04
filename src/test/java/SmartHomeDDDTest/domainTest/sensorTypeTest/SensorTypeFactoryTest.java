@@ -5,18 +5,20 @@ import SmartHomeDDD.domain.sensorType.SensorTypeFactory;
 import SmartHomeDDD.vo.UnitVO;
 import SmartHomeDDD.vo.sensorType.SensorTypeIDVO;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
 
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
 
 class SensorTypeFactoryTest {
 
+     /*
+    SYSTEM UNDER TEST: FACTORY + SENSORTYPE IMPLEMENTATION
+    A double of all the other collaborators is done (which are the required value objects to create the sensorType).
+     */
+
     /**
-     * Test that verifies if the SensorTypeFactory creates a SensorType Entity with the given sensorTypeIDVO and unitVO.
+     * Test that verifies if the SensorTypeFactory creates a SensorType object with the given sensorTypeIDVO and unitVO.
      */
     @Test
     void givenSensorTypeFactory_whenCreateSensorType_thenSensorTypeIsCreated() {
@@ -24,14 +26,13 @@ class SensorTypeFactoryTest {
         SensorTypeFactory sensorTypeFactory = new SensorTypeFactory();
         SensorTypeIDVO sensorTypeIDVODouble = mock(SensorTypeIDVO.class);
         UnitVO unitVODouble = mock(UnitVO.class);
-        try(MockedConstruction<SensorType> sensorTypeMockedConstruction = mockConstruction(SensorType.class)) {
-            // Act
-            SensorType sensorType = sensorTypeFactory.createSensorType(sensorTypeIDVODouble, unitVODouble);
-            // Assert
-            List<SensorType> sensorTypeList = sensorTypeMockedConstruction.constructed();
-            SensorType sensorTypeResult = sensorTypeList.get(0);
-            assertEquals(sensorType, sensorTypeResult);
-        }
+        // Act
+        SensorType sensorType = sensorTypeFactory.createSensorType(sensorTypeIDVODouble, unitVODouble);
+        // Assert
+        UnitVO resultUnitVO = sensorType.getUnit();
+        SensorTypeIDVO resultSensorTypeIDVO = sensorType.getId();
+        assertEquals(unitVODouble, resultUnitVO);
+        assertEquals(sensorTypeIDVODouble, resultSensorTypeIDVO);
     }
 
     /**
