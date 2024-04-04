@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> DDD Implementation Model v4.1
+title <size: 30> DDD Implementation Model v4.2
 note "<b>This diagram presents the DDD approach to the \n<b>project. Methods are abstracted for readability." as n1
 skinparam linetype ortho
 
@@ -41,15 +41,16 @@ package DeviceAggregate {
 class DeviceID <<VO>> <<Identity>>{}
 
 package SensorAggregate {
-    class Sensor <<Root>> <<Entity>>{}
+    interface Sensor <<Root>> <<Entity>>{}
     class SensorName <<VO>>{}
 }
 
 class SensorID <<VO>> <<Identity>>{}
 
 package ActuatorAggregate {
-    class Actuator <<Root>> <<Entity>>{}
+    interface Actuator <<Root>> <<Entity>>{}
     class ActuatorName <<VO>>{}
+    Interface Settings <<VO>>{}
 }
 
 class ActuatorID <<VO>> <<Identity>>{}
@@ -103,6 +104,8 @@ Actuator ..> ActuatorName
 Actuator --* ActuatorID
 Actuator ....up> DeviceID
 Actuator ..> ActuatorTypeID
+Actuator ..> Settings
+Note bottom of Settings: Optional
 
 SensorType --up* SensorTypeID
 SensorType ..> Unit
