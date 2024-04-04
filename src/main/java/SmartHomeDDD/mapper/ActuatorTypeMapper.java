@@ -9,8 +9,6 @@ import java.util.List;
 
 public class ActuatorTypeMapper {
 
-    private static List<ActuatorTypeDTO> actuatorTypeDTOList = new ArrayList<ActuatorTypeDTO>();
-
 
     /**
      * Maps a list of ActuatorType to a list of ActuatorTypeDTO
@@ -19,6 +17,7 @@ public class ActuatorTypeMapper {
      * @return list of ActuatorTypeDTO
      */
     public static List<ActuatorTypeDTO> domainToDTO(List<ActuatorType> actuatorTypeList) {
+        List<ActuatorTypeDTO> actuatorTypeDTOList = new ArrayList<ActuatorTypeDTO>();
         for (ActuatorType actuatorType : actuatorTypeList) {
             actuatorTypeDTOList.add(new ActuatorTypeDTO(actuatorType.getId().getID()));
         }
