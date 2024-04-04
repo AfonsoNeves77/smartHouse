@@ -1,0 +1,86 @@
+@startuml
+title <size: 30> US21 Class Diagram
+
+skinparam linetype ortho
+
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getSensorName() : SensorNameVO
+}
+
+class SensorIDVO {
+    - indentifier : UUID
+    + SensorIDVO(identifier : UUID) : SensorIDVO
+    + getID() : String
+}
+
+class SensorNameVO {
+    - sensorName : String
+    + SensorNameVO(sensorName : String) : SensorNameVO
+    + getValue() : String
+}
+
+class SensorTypeIDVO {
+    - sensorTypeID : String
+    + SensorTypeIDVO(sensorTypeID : String) : SensorTypeIDVO
+    + getID() : String
+}
+
+class DeviceIDVO {
+    - deviceID : UUID
+    + DeviceIDVO(deviceID : UUID) : DeviceIDVO
+    + getID() : String
+}
+
+interface DomainID {
+    + getID() : String
+}
+
+interface ValueObject<T> {
+    + getValue() : T
+}
+
+class SunsetSensor {
+    - sensorID : SensorIDVO
+    - sensorName : SensorNameVO
+    - sensorTypeID : SensorTypeIDVO
+    - deviceID : DeviceIDVO
+    + SunsetSensor(sensorName : SensorNameVO,\n deviceID : DeviceIDVO,\n sensorTypeID : SensorTypeIDVO) : SunsetSensor
+    + getSunsetTime(date : String,\n gpsLocation : String,\n sunTimeCalculator : SunTimeCalculator) : ValueObject<ZonedDateTime>
+    + getSensorName() : SensorNameVO
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getId() : DomainID
+}
+
+class SunTimeValue {
+    - sunTimeValue : ZonedDateTime
+    + SunTimeValue(sunTimeValue : ZonedDateTime)
+    + getValue() : ZonedDateTime
+}
+
+class SunTimeCalculator {
+    + computeSunset(date : String, gpsCoordinates : String) : ZonedDateTime
+    + computeSunrise(date : String, gpsCoordinates : String) : ZonedDateTime
+}
+
+interface DomainEntity{
+    + getID() : DomainID
+}
+
+SunsetSensor *---down SensorIDVO
+SunsetSensor -down..> SensorTypeIDVO : <<has>>
+SunsetSensor -down..> DeviceIDVO : <<has>>
+SunsetSensor -left..> SensorNameVO : <<has>>
+SensorIDVO -down..|> DomainID
+SensorTypeIDVO -down..|> DomainID
+DeviceIDVO -down..|> DomainID
+SensorNameVO -left..|> ValueObject
+SunTimeValue -up..|> ValueObject
+SunsetSensor -left..> SunTimeValue : <<creates>>
+SunsetSensor -right..> SunTimeCalculator : <<uses>>
+SunsetSensor -up..|> Sensor
+Sensor -right--|>DomainEntity
+
+@enduml
