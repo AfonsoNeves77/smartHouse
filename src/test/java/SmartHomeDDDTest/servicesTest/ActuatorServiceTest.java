@@ -74,72 +74,72 @@ class ActuatorServiceTest {
      * All ActuatorService collaborators, that are involved in this operation are doubled, ensuring proper isolation.
      */
 
-    @Test
-    void createActuator_WhenNullActuatorNameVO_ShouldReturnNull(){
-
-        //Arrange
-        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
-        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
-        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
-
-        ActuatorNameVO actuatorNameVO = null;
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
-        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-
-        //Act
-        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-
-        //Assert
-        assertNull(result);
-    }
+//    @Test
+//    void createActuator_WhenNullActuatorNameVO_ShouldReturnNull(){
+//
+//        //Arrange
+//        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+//        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+//        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
+//
+//        ActuatorNameVO actuatorNameVO = null;
+//        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+//        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+//
+//        //Act
+//        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+//
+//        //Assert
+//        assertNull(result);
+//    }
 
     /**
      * Test case to verify that creating an Actuator with a null ActuatorTypeIDVO parameter returns null.
      * All ActuatorService collaborators, that are involved in this operation are doubled, ensuring proper isolation.
      */
 
-    @Test
-    void createActuator_WhenNullActuatorTypeIDVO_ShouldReturnNull(){
-
-        //Arrange
-        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
-        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
-        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
-
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeIDVO = null;
-        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-
-        //Act
-        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-
-        //Assert
-        assertNull(result);
-    }
+//    @Test
+//    void createActuator_WhenNullActuatorTypeIDVO_ShouldReturnNull(){
+//
+//        //Arrange
+//        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+//        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+//        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
+//
+//        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+//        ActuatorTypeIDVO actuatorTypeIDVO = null;
+//        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+//
+//        //Act
+//        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+//
+//        //Assert
+//        assertNull(result);
+//    }
 
     /**
      * Test case to verify that creating an Actuator with a null DeviceIDVO parameter returns null.
      * All ActuatorService collaborators, that are involved in this operation are doubled, ensuring proper isolation.
      */
 
-    @Test
-    void createActuator_WhenNullDeviceIDVO_ShouldReturnNull(){
-
-        //Arrange
-        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
-        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
-        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
-
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
-        DeviceIDVO deviceIDVO = null;
-
-        //Act
-        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-
-        //Assert
-        assertNull(result);
-    }
+//    @Test
+//    void createActuator_WhenNullDeviceIDVO_ShouldReturnNull(){
+//
+//        //Arrange
+//        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+//        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+//        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
+//
+//        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+//        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+//        DeviceIDVO deviceIDVO = null;
+//
+//        //Act
+//        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+//
+//        //Assert
+//        assertNull(result);
+//    }
 
     /**
      * Test case to verify that creating an Actuator with valid parameters returns a non-null Actuator instance.
@@ -147,27 +147,27 @@ class ActuatorServiceTest {
      * In this test case, the behavior of ActuatorFactory is configured to return a doubled Actuator when the createActuator method is called.
      * The assertion is performed by comparing the returned Actuator object with the expected Actuator.
      */
-    @Test
-    void createActuator_ShouldReturnCorrectActuator(){
-
-        //Arrange
-        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
-        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
-        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
-
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
-        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-
-        Actuator expected = mock(Actuator.class);
-        when(actuatorFactory.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO)).thenReturn(expected);
-
-        //Act
-        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-
-        //Assert
-        assertEquals(expected,result);
-    }
+//    @Test
+//    void createActuator_ShouldReturnCorrectActuator(){
+//
+//        //Arrange
+//        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+//        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+//        ActuatorService actuatorService = new ActuatorService(actuatorFactory,actuatorRepository);
+//
+//        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+//        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+//        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+//
+//        Actuator expected = mock(Actuator.class);
+//        when(actuatorFactory.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO)).thenReturn(expected);
+//
+//        //Act
+//        Actuator result = actuatorService.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+//
+//        //Assert
+//        assertEquals(expected,result);
+//    }
 
     /**
      * Test case to verify that saving a null Actuator returns false.

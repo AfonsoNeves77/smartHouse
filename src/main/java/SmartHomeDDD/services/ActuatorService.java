@@ -41,12 +41,12 @@ public class ActuatorService {
      * @return The created Actuator instance, or null if the parameters are invalid.
      */
 
-    public Actuator createActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO, DeviceIDVO deviceIDVO){
-        if(validParams(actuatorNameVO, actuatorTypeIDVO,deviceIDVO)){
-            return factoryActuator.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-        }
-        return null;
-    }
+//    public Actuator createActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO, DeviceIDVO deviceIDVO){
+//        if(validParams(actuatorNameVO, actuatorTypeIDVO,deviceIDVO)){
+//            return factoryActuator.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+//        }
+//        return null;
+//    }
 
     /**
      * Saves the given Actuator to the repository.
