@@ -47,7 +47,9 @@ public class HouseService {
         if (locationVO == null) {
             throw new IllegalArgumentException("Invalid location");
         } else {
-            return houseFactory.createHouse(locationVO);
+            House house = houseFactory.createHouse(locationVO);
+            houseRepository.save(house);
+            return house;
         }
     }
 
