@@ -20,4 +20,14 @@ public class SimHardwareAct {
         return true;
     }
 
+    /**
+     * This method is used to execute a command on the simulated hardware.
+     * @param value The value to be set
+     * @return True if the command was executed successfully, false otherwise (at the moment, it is defined to be
+     * always true, since hardware interaction is still unknown).
+     */
+    public boolean executeDecimalCommand(double value){
+        return true;
+    }
+
 }
