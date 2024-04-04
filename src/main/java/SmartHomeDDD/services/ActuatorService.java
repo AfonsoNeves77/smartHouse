@@ -3,6 +3,7 @@ package SmartHomeDDD.services;
 import SmartHomeDDD.domain.actuator.Actuator;
 import SmartHomeDDD.domain.actuator.ActuatorFactory;
 import SmartHomeDDD.repository.ActuatorRepository;
+import SmartHomeDDD.vo.Settings;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
@@ -10,7 +11,6 @@ import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ActuatorService {
     private ActuatorFactory factoryActuator;
@@ -38,15 +38,16 @@ public class ActuatorService {
      * @param actuatorNameVO The name of the Actuator.
      * @param actuatorTypeIDVO The type of the Actuator.
      * @param deviceIDVO The ID of the device where the Actuator will be located.
+     * @param settings The settings that contain upper limit, down limit and precision.
      * @return The created Actuator instance, or null if the parameters are invalid.
      */
 
-//    public Actuator createActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO, DeviceIDVO deviceIDVO){
-//        if(validParams(actuatorNameVO, actuatorTypeIDVO,deviceIDVO)){
-//            return factoryActuator.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
-//        }
-//        return null;
-//    }
+    public Actuator createActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO, DeviceIDVO deviceIDVO, Settings settings){
+        if(validParams(actuatorNameVO, actuatorTypeIDVO,deviceIDVO)){
+            return factoryActuator.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO,settings);
+        }
+        return null;
+    }
 
     /**
      * Saves the given Actuator to the repository.
