@@ -5,14 +5,13 @@ autonumber
 title User Story 6 - Main Success Scenario
 
 participant ":GetListOfDevicesCTRL" as C
-participant ":RoomService" as RS
-participant ":RoomRepository" as RR
-participant ":RoomDTOMapper" as RM
+participant ":RoomMapper" as RM
 participant ":RoomDTO" as RDTO
 participant ":RoomIDVO" as RID
+participant ":RoomService" as RS
 participant ":DeviceService" as DS
 participant ":DeviceRepository" as DR
-participant ":DeviceDTOMapper" as DM
+participant ":DeviceMapper" as DM
 
 
 
@@ -22,33 +21,39 @@ activate C
 C -> RM : createRoomIDVO(RoomDTO)
 activate RM
 
-RM -> RDTO : getRoomID(roomDTO)
+RM -> RDTO : getId()
 activate RDTO
 
-RDTO --> RM : roomID
+RDTO --> RM : id
 deactivate RDTO
 
-RM -> RID ** : createRoomIDVO(roomID)
+RM -> RID ** : create(id)
 
 RM --> C : roomIDVO
 deactivate RM
 
+C -> RS : isPresent(roomIDVO)
+activate RS
 
-C -> DS : findByRoomID(roomIDVO)
+RS --> C : false
+deactivate RS
+
+C -> DS : getListOfDevicesInARoom(roomIDVO)
 activate DS
 
 DS -> DR : findByRoomId(roomIDVO)
 activate DR
 
+DR -> DR : clone(listOfDevices)
+activate DR
+deactivate DR
 
-DR --> DS : listOfDevices
+DR --> DS : clonedListOfDevices
 
 deactivate DR
 
 
-DS -> DS : clone(listOfDevices)
-activate DS
-deactivate DS
+
 DS --> C : clonedListOfDevices
 
 deactivate DS
@@ -56,8 +61,8 @@ deactivate DS
 C -> DM : domainToDTO(clonedListOfDevices)
 
 activate DM
-loop for each deviec in cloned device list
-DM -> DM : DeviceDTO = domainToDTO(device)
+loop for each device in cloned device list
+DM -> DM : domainToDTO(clonedListOfDevices)
 activate DM
 deactivate DM
 

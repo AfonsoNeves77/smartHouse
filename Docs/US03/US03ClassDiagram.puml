@@ -42,9 +42,9 @@ interface Repository{
     + findAll() : Iterable<T>
 }
 
-GetListOfRoomsCTRL --> RoomService : <<use>>
-RoomService --> RoomRepository : <<use>>
-GetListOfRoomsCTRL --> RoomDTOMapper : <<use>>
-RoomDTOMapper --> RoomDTO : <<use>>
-Repository <|..up RoomRepository : <<implements>>
+GetListOfRoomsCTRL ..> RoomService
+RoomService ..> RoomRepository
+GetListOfRoomsCTRL..> RoomDTOMapper
+RoomDTOMapper ..> RoomDTO
+Repository <|..up RoomRepository
 @enduml1
