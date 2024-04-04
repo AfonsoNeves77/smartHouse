@@ -1,6 +1,8 @@
 @startuml
 title <size: 30> US26 Class Diagram
 
+skinparam linetype ortho
+
 interface Sensor {
 
 }
@@ -17,13 +19,21 @@ interface ValueObject<T> {
     + getValue() : T
 }
 
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getSensorName() : SensorNameVO
+}
+
 class EnergyConsumptionSensor{
     - sensorName : SensorNameVO
-    - sensorID : SensorIDVO
-    - sensorTypeID : SensorTypeIDVO
     - deviceID : DeviceIDVO
+    - sensorTypeID : SensorTypeIDVO
+    - sensorID : SensorIDVO
 
-    + EnergyConsumptionSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
+
+
+    + EnergyConsumptionSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
     + getID() : SensorIDVO
     + getSensorName() : SensorNameVO
     + getSensorTypeID() : SensorTypeIDVO
@@ -32,7 +42,7 @@ class EnergyConsumptionSensor{
 }
 
 class EnergyConsumptionValue{
-    - primitiveValue : integer
+    - primitiveValue : int
 
     + EnergyConsumptionValue(reading: String)
     + getValue() : Integer
@@ -40,6 +50,7 @@ class EnergyConsumptionValue{
 
 class SimHardware{
     + getValue(): String
+    + getValue(initialDate : String, finalDate : String) : String
 }
 
 class SensorNameVO{
@@ -68,15 +79,14 @@ class DeviceIDVO{
 }
 
 
-DomainEntity <|.. EnergyConsumptionSensor
-Sensor <|.. EnergyConsumptionSensor
-SimHardware <.. EnergyConsumptionSensor
+Sensor <|..  EnergyConsumptionSensor
+SimHardware <.. EnergyConsumptionSensor : <<uses>>
 
-SensorNameVO <.. EnergyConsumptionSensor
-SensorIDVO *-- EnergyConsumptionSensor
-EnergyConsumptionValue *--right EnergyConsumptionSensor
-SensorTypeIDVO <.. EnergyConsumptionSensor
-DeviceIDVO <.. EnergyConsumptionSensor
+SensorNameVO <.. EnergyConsumptionSensor : <<has>>
+SensorIDVO --* EnergyConsumptionSensor
+EnergyConsumptionValue <..right EnergyConsumptionSensor : <<creates>>
+SensorTypeIDVO <.. EnergyConsumptionSensor : <<has>>
+DeviceIDVO <.. EnergyConsumptionSensor : <<has>>
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO
@@ -84,5 +94,6 @@ DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
 ValueObject <|.. EnergyConsumptionValue
+Sensor --|>DomainEntity
 
 @enduml
