@@ -53,4 +53,29 @@ public class HouseFactoryTest {
 //        Assert
         assertNull(house);
     }
+
+       /*
+    SYSTEM UNDER TEST: FACTORY + HOUSE
+    A double of all the other collaborators is done (essentially the required value objects to create the actuator).
+     */
+
+    /**
+     * Test that verifies if the house factory creates a House with the provided location.
+     * This test intends to assert the successful creation of a House object with the correct LocationVO.
+     */
+
+    @Test
+    void createHouse_WhenValidLocation_HouseShouldReturnProvidedLocation() {
+        //Arrange
+        LocationVO expected = mock(LocationVO.class);
+        HouseFactory houseFactory = new HouseFactory();
+
+        //Act
+        House house = houseFactory.createHouse(expected);
+        LocationVO result = house.getLocation();
+        //Assert
+        assertEquals(expected,result);
+    }
+
+
 }
