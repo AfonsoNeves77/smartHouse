@@ -2,37 +2,25 @@ package SmartHomeDDD.dto;
 
 /**
  * Data Transfer Object that contains the actuator ID, name, type and device ID.
+ * It is used to transfer data between the Actuator class and the ActuatorMapper class.
+ * It is also contains the lower limit, upper limit and precision of the actuator for specific Actuators.
  */
 
 public class ActuatorDTO {
 
-    private String actuatorID;
     private String actuatorName;
     private String actuatorType;
     private String deviceID;
+    private String lowerLimit;
+    private String upperLimit;
+    private String precision;
 
     /**
-     * Constructor for ActuatorDTO. It initializes the actuator ID, name, type and device ID.
-     *
-     * @param actuatorName actuator name
-     * @param actuatorType actuator type
-     * @param deviceID     device ID in string format
-     */
-
-    public ActuatorDTO(String actuatorID, String actuatorName, String actuatorType, String deviceID) {
-        this.actuatorID = actuatorID;
-        this.actuatorName = actuatorName;
-        this.actuatorType = actuatorType;
-        this.deviceID = deviceID;
-    }
-
-    /**
-     * Constructor for ActuatorDTO. It initializes the actuator name, type and device ID.
-     * Used to create a new actuator. Does not include the actuator ID because it is generated automatically.
-     *
-     * @param actuatorName actuator name
-     * @param actuatorType actuator type
-     * @param deviceID     device ID in string format
+     * Constructor for the ActuatorDTO class.
+     * It initializes the actuator name, type and device ID. Used to create an Actuator.
+     * @param actuatorName The name of the actuator.
+     * @param actuatorType The type of the actuator.
+     * @param deviceID The ID of the device.
      */
 
     public ActuatorDTO(String actuatorName, String actuatorType, String deviceID) {
@@ -42,6 +30,45 @@ public class ActuatorDTO {
     }
 
     /**
+     * Constructor for the ActuatorDTO class.
+     * It initializes the actuator name, type, device ID, lower limit and upper limit. Used to create an Actuator that receives limits.
+     * @param actuatorName The name of the actuator.
+     * @param actuatorType The type of the actuator.
+     * @param deviceID The ID of the device.
+     * @param lowerLimit The lower limit of the actuator.
+     * @param upperLimit The upper limit of the actuator.
+     */
+
+    public ActuatorDTO(String actuatorName, String actuatorType, String deviceID, String lowerLimit, String upperLimit) {
+        this.actuatorName = actuatorName;
+        this.actuatorType = actuatorType;
+        this.deviceID = deviceID;
+        this.lowerLimit = lowerLimit;
+        this.upperLimit = upperLimit;
+    }
+
+    /**
+     * Constructor for the ActuatorDTO class.
+     * It initializes the actuator name, type, device ID, lower limit, upper limit and precision. Used to create an Actuator that receives limits and precision.
+     * @param actuatorName The name of the actuator.
+     * @param actuatorType The type of the actuator.
+     * @param deviceID The ID of the device.
+     * @param lowerLimit The lower limit of the actuator.
+     * @param upperLimit The upper limit of the actuator.
+     * @param precision The precision of the actuator.
+     */
+
+    public ActuatorDTO(String actuatorName, String actuatorType, String deviceID, String lowerLimit, String upperLimit, String precision) {
+        this.actuatorName = actuatorName;
+        this.actuatorType = actuatorType;
+        this.deviceID = deviceID;
+        this.lowerLimit = lowerLimit;
+        this.upperLimit = upperLimit;
+        this.precision = precision;
+    }
+
+
+    /**
      * Method to get the actuator name.
      *
      * @return The name of the actuator.
@@ -49,16 +76,6 @@ public class ActuatorDTO {
 
     public String getActuatorName() {
         return actuatorName;
-    }
-
-    /**
-     * Method to get the actuator ID.
-     *
-     * @return The ID of the actuator.
-     */
-
-    public String getActuatorID() {
-        return actuatorID;
     }
 
     /**
@@ -79,5 +96,35 @@ public class ActuatorDTO {
 
     public String getDeviceID() {
         return deviceID;
+    }
+
+    /**
+     * Method to get the lower limit.
+     *
+     * @return The lower limit of the actuator.
+     */
+
+    public String getLowerLimit() {
+        return lowerLimit;
+    }
+
+    /**
+     * Method to get the upper limit.
+     *
+     * @return The upper limit of the actuator.
+     */
+
+    public String getUpperLimit() {
+        return upperLimit;
+    }
+
+    /**
+     * Method to get the precision.
+     *
+     * @return The precision of the actuator.
+     */
+
+    public String getPrecision() {
+        return precision;
     }
 }
