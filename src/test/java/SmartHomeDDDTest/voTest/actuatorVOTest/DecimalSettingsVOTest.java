@@ -159,6 +159,44 @@ class DecimalSettingsVOTest {
     }
 
     /**
+     * Verifies that a DecimalSettingsVO cannot be created with a precision higher than one.
+     */
+    @Test
+    void givenPrecisionHigherThanOne_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
+        //Arrange
+        String lowerLimit = "6.55";
+        String upperLimit = "7.83";
+        String precision = "1.54";
+        String expected = "Invalid actuator settings";
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DecimalSettingsVO(lowerLimit, upperLimit, precision);
+        });
+        String result = exception.getMessage();
+        //Arrange
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Verifies that a DecimalSettingsVO cannot be created with a precision equal to one.
+     */
+    @Test
+    void givenPrecisionEqualToOne_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
+        //Arrange
+        String lowerLimit = "6.55";
+        String upperLimit = "7.83";
+        String precision = "1";
+        String expected = "Invalid actuator settings";
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new DecimalSettingsVO(lowerLimit, upperLimit, precision);
+        });
+        String result = exception.getMessage();
+        //Arrange
+        assertEquals(expected, result);
+    }
+
+    /**
      * Verifies that a DecimalSettingsVO cannot be created with if limits are defined with a higher precision than the
      * defined.
      */
@@ -205,8 +243,8 @@ class DecimalSettingsVOTest {
         //Arrange
         String lowerLimit = "6.555";
         String upperLimit = "7.835";
-        String precision = "0.001";
-        Double[] expected = {6.555, 7.835, 0.001};
+        String precision = "0.555";
+        Double[] expected = {6.555, 7.835, 0.555};
         DecimalSettingsVO settingsVO = new DecimalSettingsVO(lowerLimit, upperLimit, precision);
         //Act
         Double[] result = settingsVO.getValue();

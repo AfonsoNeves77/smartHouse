@@ -47,10 +47,15 @@ public class DecimalSettingsVO implements Settings {
         int lowerLimDP = countDecimalPlaces(lowerLimit);
         int upperLimDP = countDecimalPlaces(upperLimit);
         int precisionDP = countDecimalPlaces(precision);
-        return (lowerLimit < upperLimit &&
-                precision > 0 &&
-                lowerLimDP == upperLimDP &&
-                lowerLimDP <= precisionDP);
+        if(lowerLimit >= upperLimit)
+            return false;
+        if(precision <= 0.0 || precision >= 1.0)
+            return false;
+        if(lowerLimDP != upperLimDP)
+            return false;
+        if(lowerLimDP > precisionDP)
+            return false;
+        return true;
     }
 
     /**
