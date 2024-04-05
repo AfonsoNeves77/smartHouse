@@ -1,8 +1,7 @@
 package SmartHomeDDDTest.domainTest.actuatorTest;
 
-import SmartHomeDDD.SimHardwareAct;
+import SmartHomeDDD.domain.actuator.SimHardwareAct;
 import SmartHomeDDD.domain.actuator.RollerBlindActuator;
-import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;

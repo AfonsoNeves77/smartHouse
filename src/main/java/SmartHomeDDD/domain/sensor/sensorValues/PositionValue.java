@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.sensor.sensorValues;
 
-import SmartHome.domain.sensor.sensorImplementation.sensorValues.Value;
 import SmartHomeDDD.vo.ValueObject;
 
 /**

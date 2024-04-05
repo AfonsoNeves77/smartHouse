@@ -1,6 +1,6 @@
 package SmartHomeDDDTest;
 
-import SmartHomeDDD.SimHardwareAct;
+import SmartHomeDDD.domain.actuator.SimHardwareAct;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
