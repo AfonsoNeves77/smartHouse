@@ -22,16 +22,16 @@ import static java.util.Objects.isNull;
 
 public class AddActuatorToDeviceCTRL {
 
-    private ActuatorService actuatorService;
-    private ActuatorTypeService actuatorTypeService;
-    private DeviceService deviceService;
+    private final ActuatorService actuatorService;
+    private final ActuatorTypeService actuatorTypeService;
+    private final DeviceService deviceService;
 
     /**
      * Constructor for AddActuatorToDeviceCTRL
      *
-     * @param actuatorService
-     * @param actuatorTypeService
-     * @param deviceService
+     * @param actuatorService ActuatorService
+     * @param actuatorTypeService ActuatorTypeService
+     * @param deviceService DeviceService
      */
     public AddActuatorToDeviceCTRL(ActuatorService actuatorService, ActuatorTypeService actuatorTypeService, DeviceService deviceService) {
         if (isNull(actuatorService) || isNull(actuatorTypeService) || isNull(deviceService)) {
@@ -49,16 +49,15 @@ public class AddActuatorToDeviceCTRL {
      */
     public List<ActuatorTypeDTO> getListOfActuatorTypes() {
         List<ActuatorType> actuatorTypes = this.actuatorTypeService.getListOfActuatorTypes();
-        List<ActuatorTypeDTO> actuatorTypeDTOList = ActuatorTypeMapper.domainToDTO(actuatorTypes);
-        return actuatorTypeDTOList;
+        return ActuatorTypeMapper.domainToDTO(actuatorTypes);
     }
 
     /**
      * Add an actuator to a device
      *
-     * @param actuatorDTO
-     * @param actuatorTypeDTO
-     * @param deviceDTO
+     * @param actuatorDTO ActuatorDTO
+     * @param actuatorTypeDTO ActuatorTypeDTO
+     * @param deviceDTO DeviceDTO
      * @return boolean depending on the success of the operation
      */
     public boolean addActuatorToDevice(ActuatorDTO actuatorDTO, ActuatorTypeDTO actuatorTypeDTO, DeviceDTO deviceDTO) {
