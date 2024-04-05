@@ -49,6 +49,126 @@ class IntegerSettingsVOTest {
     }
 
     /**
+     * Test if the lower limit is null.
+     * When the constructor is called with a null lower limit, an exception is thrown.
+     */
+    @Test
+    void ifLowerLimitIsNull_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = null;
+        String upperLimit = "10";
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test if the upper limit is null.
+     * When the constructor is called with a null upper limit, an exception is thrown.
+     */
+    @Test
+    void ifUpperLimitNull_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = "10";
+        String upperLimit = null;
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test if both limits are null.
+     * When the constructor is called with both limits null, an exception is thrown.
+     */
+    @Test
+    void ifBothLimitsNull_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = null;
+        String upperLimit = null;
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test if the lower limit is an invalid string.
+     * When the constructor is called with an invalid string as the lower limit, an exception is thrown.
+     */
+    @Test
+    void ifLowerLimitIsAnInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = "teste";
+        String upperLimit = "10";
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test if the upper limit is an invalid string.
+     * When the constructor is called with an invalid string as the upper limit, an exception is thrown.
+     */
+    @Test
+    void ifUpperLimitIsAnInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = "10";
+        String upperLimit = "teste";
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test if both limits are invalid strings.
+     * When the constructor is called with both limits as invalid strings, an exception is thrown.
+     */
+    @Test
+    void ifBothLimitsInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        String lowerLimit = "teste";
+        String upperLimit = "outro teste";
+        String expected = "Invalid actuator settings";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new IntegerSettingsVO(lowerLimit, upperLimit);
+        });
+        String result = exception.getMessage();
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
      * Tests if the object is created if the parameters are valid.
      */
     @Test
