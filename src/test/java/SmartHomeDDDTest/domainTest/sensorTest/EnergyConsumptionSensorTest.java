@@ -168,6 +168,30 @@ class EnergyConsumptionSensorTest {
     }
 
     /**
+     * Test for EnergyConsumptionSensor
+     * Given a valid SensorNameVO, DeviceIDVO and SensorTypeIDVO, when the constructor is called, then the sensor is created
+     */
+    @Test
+    void whenSensorIsSuccessfullyCreated_thenReturnsDeviceID() {
+        //Arrange
+        SensorNameVO sensorName = mock(SensorNameVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+        try (MockedConstruction<SensorIDVO> mockedConstruction = mockConstruction(SensorIDVO.class)) {
+
+            //Act
+            EnergyConsumptionSensor energyConsumptionSensor = new EnergyConsumptionSensor(sensorName, deviceID, sensorType);
+            DeviceIDVO result = energyConsumptionSensor.getDeviceID();
+
+            List<SensorIDVO> listOfMockedSensorIDVO = mockedConstruction.constructed();
+
+            //Assert
+            assertEquals(deviceID, result);
+            assertEquals(1, listOfMockedSensorIDVO.size());
+        }
+    }
+
+    /**
      * Tests that if simHardware is null, then an IllegalArgumentException is thrown
      */
     @Test

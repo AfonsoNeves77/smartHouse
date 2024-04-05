@@ -2,17 +2,16 @@ package SmartHomeDDDTest.repositoryTest;
 
 import SmartHomeDDD.domain.device.Device;
 import SmartHomeDDD.repository.DeviceRepository;
-import SmartHomeDDD.repository.SensorRepository;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import SmartHomeDDD.vo.roomVO.RoomIDVO;
-import SmartHomeDDD.vo.sensorVO.SensorIDVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class DeviceRepositoryTest {
     /**
@@ -55,7 +54,7 @@ class DeviceRepositoryTest {
      * This test case verifies that a device cannot be saved when its ID is present1.
      */
     @Test
-    public void whenDeviceIsPresent_thenItCannotBeSaved(){
+    public void whenDeviceIsPresent_thenItCannotBeSaved() {
         //Arrange
         DeviceRepository deviceRepository = new DeviceRepository();
         Device device = mock(Device.class);
@@ -117,8 +116,8 @@ class DeviceRepositoryTest {
      * This test case ensures that when a device  saved in the repository,
      * it does appear in the list of devices returned by the findAll method.
      */
-   @Test
-   public void whenDeviceIsSaved_thenItShouldAppearInFindAll() {
+    @Test
+    public void whenDeviceIsSaved_thenItShouldAppearInFindAll() {
         //Arrange
         DeviceRepository deviceRepository = new DeviceRepository();
 
@@ -135,13 +134,13 @@ class DeviceRepositoryTest {
 
         //Act
         Iterable<Device> iterable = deviceRepository.findAll();
-       boolean isDevice2Present = StreamSupport.stream(iterable.spliterator(), false)
-               .anyMatch(device -> device.equals(device2));
+        boolean isDevice2Present = StreamSupport.stream(iterable.spliterator(), false)
+                .anyMatch(device -> device.equals(device2));
 
         //Assert
 
-       assertTrue(isDevice2Present);
-        }
+        assertTrue(isDevice2Present);
+    }
 
     /**
      * Tests if a device is not saved and does not appear in the findAll method.
@@ -201,8 +200,8 @@ class DeviceRepositoryTest {
     }
 
     /**
-        *Tests if when RoomID is not found, an empty list is returned.
-        */
+     * Tests if when RoomID is not found, an empty list is returned.
+     */
     @Test
     public void whenRoomIDIsNotPresent_thenReturnEmptyList() {
         //Arrange
@@ -261,7 +260,7 @@ class DeviceRepositoryTest {
      * This test ensures no devices can be saved if the deviceID is already present as key.
      */
     @Test
-    void givenDuplicateEntity_RepositoryDoesNotSaveSecondOne(){
+    void givenDuplicateEntity_RepositoryDoesNotSaveSecondOne() {
         // Arrange
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
@@ -279,5 +278,48 @@ class DeviceRepositoryTest {
 
         // Assert
         assertFalse(result);
+    }
+
+    /**
+     * This test ensures that the repository can find a device by its specific RoomID.
+     */
+    @Test
+    void givenHouseWithTwoRooms_ThenReturnListOfDevicesInSpecificRoom() {
+        //Arrange
+        DeviceRepository deviceRepository = new DeviceRepository();
+        RoomIDVO roomID = mock(RoomIDVO.class);
+        RoomIDVO roomID2 = mock(RoomIDVO.class);
+
+        Device device1 = mock(Device.class);
+        Device device2 = mock(Device.class);
+        Device device3 = mock(Device.class);
+
+        DeviceIDVO deviceID1 = mock(DeviceIDVO.class);
+        DeviceIDVO deviceID2 = mock(DeviceIDVO.class);
+        DeviceIDVO deviceID3 = mock(DeviceIDVO.class);
+
+        when(device1.getId()).thenReturn(deviceID1);
+        when(device2.getId()).thenReturn(deviceID2);
+        when(device3.getId()).thenReturn(deviceID3);
+
+        deviceRepository.save(device1);
+        deviceRepository.save(device2);
+        deviceRepository.save(device3);
+
+        when(device1.getRoomID()).thenReturn(roomID);
+        when(device2.getRoomID()).thenReturn(roomID2);
+        when(device3.getRoomID()).thenReturn(roomID);
+
+        when(device1.getRoomID()).thenReturn(roomID);
+        when(device2.getRoomID()).thenReturn(roomID);
+        when(device3.getRoomID()).thenReturn(roomID2);
+
+        //Act
+        List<Device> listOfDevicesInARoom = deviceRepository.findByRoomID(roomID);
+
+        //Assert
+        assertTrue(listOfDevicesInARoom.contains(device1));
+        assertTrue(listOfDevicesInARoom.contains(device2));
+        assertFalse(listOfDevicesInARoom.contains(device3));
     }
 }

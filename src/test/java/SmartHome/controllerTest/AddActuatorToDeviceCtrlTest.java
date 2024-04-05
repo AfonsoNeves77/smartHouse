@@ -232,7 +232,7 @@ public class AddActuatorToDeviceCtrlTest {
     }
 
     /**
-     Integration Test that aims to get the list of devices in a Room from the AddSensorToDeviceController.
+     Integration Test that aims to get the list of devices in a Room from the AddSensorToDeviceCTRL.
      * A Room is added to the House, then a device is added to the Room. Finally there is an attempt to
      * get the list of devices and then accessing to the second device in the list, checking its name.
      * @throws InstantiationException If any parameters for objects' instantiation are invalid

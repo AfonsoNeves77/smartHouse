@@ -13,23 +13,20 @@ interface DomainID{
     + getID() : String
 }
 
+interface DomainEntity{
+    +getID() : DomainID4
+}
+
 interface ValueObject<T> {
     + getValue() : T
 }
 
-interface Sensor {
-    + getSensorTypeID() : SensorTypeIDVO
-    + getDeviceID() : DeviceIDVO
-    + getSensorName() : SensorNameVO
-}
 
 class HumiditySensor{
     - sensorName : SensorNameVO
     - deviceID : DeviceIDVO
     - sensorTypeID : SensorTypeIDVO
     - sensorID : SensorIDVO
-
-
 
     + HumiditySensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
     + getReading(simHardware : SimHardware) : ValueObject<Integer>
@@ -44,7 +41,6 @@ class HumidityValue{
 
     + HumidityValue(reading: String)
     + getValue() : Integer
-    - isReadingValid(reading : String) : boolean
 }
 
 class SimHardware{
@@ -77,12 +73,18 @@ class DeviceIDVO{
     + getID() : String
 }
 
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
+    + getSensorName() : SensorNameVO
+}
+
 
 Sensor <|.. HumiditySensor
 SimHardware <.. HumiditySensor
 
 SensorNameVO <.. HumiditySensor
-SensorIDVO *-- HumiditySensor
+SensorIDVO --* HumiditySensor
 HumidityValue *--right HumiditySensor
 SensorTypeIDVO <.. HumiditySensor
 DeviceIDVO <.. HumiditySensor
@@ -93,5 +95,6 @@ DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
 ValueObject <|.. HumidityValue
+Sensor --|> DomainEntity
 
 @enduml

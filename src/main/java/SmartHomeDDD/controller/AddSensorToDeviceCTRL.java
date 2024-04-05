@@ -17,7 +17,7 @@ import SmartHomeDDD.vo.sensorVO.SensorNameVO;
 
 import java.util.List;
 
-public class AddSensorToDeviceController {
+public class AddSensorToDeviceCTRL {
 
     private SensorTypeService sensorTypeService;
     private SensorService sensorService;
@@ -25,14 +25,14 @@ public class AddSensorToDeviceController {
 
 
     /**
-     * Constructor for AddSensorToDeviceController. It takes a sensorTypeService, sensorService and deviceService as
+     * Constructor for AddSensorToDeviceCTRL. It takes a sensorTypeService, sensorService and deviceService as
      * parameters, encapsulating them.
      * @param sensorTypeService SensorTypeService object
      * @param sensorService SensorService object
      * @param deviceService DeviceService object
      * @throws IllegalArgumentException if any of the parameters are null
      */
-    public AddSensorToDeviceController(SensorTypeService sensorTypeService, SensorService sensorService, DeviceService deviceService) {
+    public AddSensorToDeviceCTRL(SensorTypeService sensorTypeService, SensorService sensorService, DeviceService deviceService) {
         if(sensorTypeService == null || sensorService == null || deviceService == null){
             throw new IllegalArgumentException("Invalid service");
         }

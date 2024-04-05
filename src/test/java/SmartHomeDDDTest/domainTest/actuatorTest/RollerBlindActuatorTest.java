@@ -80,14 +80,13 @@ class RollerBlindActuatorTest {
      * SimHardwareAct to return true when invoked.
      * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
      * After execution, it asserts that the result is true.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO and ActuatorStatusVO,
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
      * ensuring that the number of mocked constructions of these objects match the expected.
      */
     @Test
     void whenValidPositionAndExecuteCommand_ThenReturnTrue(){
         //Arrange
         int expectedIdDoubleSize = 1;
-        int expectedStatusDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
@@ -114,19 +113,18 @@ class RollerBlindActuatorTest {
      * SimHardwareAct to return false when invoked.
      * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
      * After execution, it asserts that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO and ActuatorStatusVO,
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
      * ensuring that the number of mocked constructions of these objects match the expected.
      */
     @Test
     void whenInvalidPositionOver100AndExecuteCommand_ThenReturnFalse(){
         //Arrange
         int expectedIdDoubleSize = 1;
-        int expectedStatusDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
-        when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(false);
+        when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(true);
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
@@ -145,19 +143,18 @@ class RollerBlindActuatorTest {
      * SimHardwareAct to return false when invoked.
      * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
      * After execution, it asserts that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO and ActuatorStatusVO,
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
      * ensuring that the number of mocked constructions of these objects match the expected.
      */
     @Test
     void whenInvalidPositionUnder0AndExecuteCommand_ThenReturnFalse(){
         //Arrange
         int expectedIdDoubleSize = 1;
-        int expectedStatusDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
-        when(simHardwareAct.executeIntegerCommandSim(-1)).thenReturn(false);
+        when(simHardwareAct.executeIntegerCommandSim(-1)).thenReturn(true);
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
@@ -170,6 +167,97 @@ class RollerBlindActuatorTest {
 
 
     /**
+     * This test verifies that the executeCommand method returns true when the position is 0 and
+     * the command execution in the SimHardwareAct object is successful.
+     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
+     * SimHardwareAct to return true when invoked.
+     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
+     * After execution, it asserts that the result is true.
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
+     * ensuring that the number of mocked constructions of these objects match the expected.
+     */
+    @Test
+    void whenValidPositionEquals0AndExecuteCommand_ThenReturnTrue(){
+        //Arrange
+        int expectedIdDoubleSize = 1;
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(0)).thenReturn(true);
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
+            //Act
+            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 0);
+            //Assert
+            assertTrue(result);
+            assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
+        }
+    }
+
+
+    /**
+     * This test verifies that the executeCommand method returns true when the position is 100 and
+     * the command execution in the SimHardwareAct object is successful.
+     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
+     * SimHardwareAct to return true when invoked.
+     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
+     * After execution, it asserts that the result is true.
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
+     * ensuring that the number of mocked constructions of these objects match the expected.
+     */
+    @Test
+    void whenValidPositionEquals100AndExecuteCommand_ThenReturnTrue(){
+        //Arrange
+        int expectedIdDoubleSize = 1;
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(100)).thenReturn(true);
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class);){
+            //Act
+            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 100);
+            //Assert
+            assertTrue(result);
+            assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
+        }
+    }
+
+    /**
+     * This test verifies that the executeCommand method returns false when the position is valid (between 0 and 100),
+     * but the command execution in the SimHardwareAct object fails.
+     * It isolates all Actuators collaborators and conditions the behavior of the executeCommandSim method of
+     * SimHardwareAct to return false when invoked.
+     * It then constructs a RollerBlindActuator object using the mocked objects and executes the executeCommand method on it.
+     * After execution, it asserts that the result is false.
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
+     * ensuring that the number of mocked constructions of these objects match the expected.
+     */
+    @Test
+    void whenValidPositionAndExecuteCommandFails_ThenReturnFalse() {
+        // Arrange
+        int expectedIdDoubleSize = 1;
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(50)).thenReturn(false);
+
+        try (MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)) {
+            // Act
+            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 50);
+            // Assert
+            assertFalse(result);
+            assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
+        }
+    }
+
+
+
+    /**
      * This test verifies that the correct ActuatorID value object is returned when the getId() method is called.
      * It isolates all Actuators collaborators and compares the object returned by the previously referred method
      * with the doubled ActuatorID.
@@ -179,14 +267,13 @@ class RollerBlindActuatorTest {
      * The assertion is made by getting the doubled object from MockedConstruction.constructed() list and compare it with the object
      * returned in the getID() operation. The references must match because the objects must be the same.
      * This assertion gives us certainty that the intercepted object is the object being return (as it should)
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO and ActuatorStatusVO,
+     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
      * ensuring that the number of mocked constructions of these objects match the expected.
      */
     @Test
     void whenGetId_ThenReturnActuatorIDObject(){
         //Arrange
         int expectedIdDoubleSize = 1;
-        int expectedStatusDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
@@ -237,10 +324,10 @@ class RollerBlindActuatorTest {
     }
 
     /**
-     * This test validates that getActuatorName successfully returns DeviceIDVO object
+     * This test validates that getDeviceID successfully returns DeviceIDVO object
      */
     @Test
-    void getActuatorTypeID_returnsDeviceIDVO(){
+    void getDeviceID_returnsDeviceIDVO(){
         // Arrange
         ActuatorNameVO name = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
