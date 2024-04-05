@@ -278,6 +278,93 @@ class IntegerValueActuatorTest {
     }
 
     /**
+     * This test verifies that if the value is equal to the lower limit, the executeCommand method returns a success message.
+     * All the parameters are mocked, and the settings are set to a lower limit of 5 and an upper limit of 10.
+     * A value is set to be used in the executeCommand method.
+     * SimhardwareAct is mocked to return true when the executeIntegerCommandSim method is called.
+     * An expected string is set to compare with the result message.
+     * An expected size is set to compare with the size of the actuator ID list.
+     * The actuatorIDVO is mocked to be used in the test.
+     * The IntSetRangeActuator is created with the mocked parameters.
+     * An actuatorIDVO list is created to check the size of the list.
+     * A string is set to be attributed with the result of the executeCommand method.
+     * Finally, the expected message is compared with the result message and the expected size is compared with the size of the list.
+     */
+    @Test
+    void givenValueEqualToLowerLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValueWasSet(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
+        when(settings.getValue()).thenReturn(new Integer[]{5,10});
+        int value = 5;
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(value)).thenReturn(true);
+
+
+        String expected = "Value was set";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            IntegerValueActuator actuator = new IntegerValueActuator(actuatorName, typeId, deviceId, settings);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(simHardwareAct, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    /**
+     * This test verifies that if the value is higher than the upper limit, the executeCommand method returns an error message.
+     * All the parameters are mocked, and the settings are set to a lower limit of 5 and an upper limit of 10.
+     * A value is set to be used in the executeCommand method.
+     * SimhardwareAct is mocked to return true when the executeIntegerCommandSim method is called.
+     * An expected string is set to compare with the result message.
+     * An expected size is set to compare with the size of the actuator ID list.
+     * The actuatorIDVO is mocked to be used in the test.
+     * The actuator is created with the mocked parameters.
+     * An actuatorIDVO list is created to check the size of the list.
+     * A list is created to check the size of the list.
+     * A string is set to be attributed with the result of the executeCommand method.
+     * Finally, the expected message is compared with the result message and the expected size is compared with the size of the list.
+     */
+    @Test
+    void givenValueEqualToUpperLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValueWasSet(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
+        when(settings.getValue()).thenReturn(new Integer[]{5,10});
+        int value = 10;
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(value)).thenReturn(true);
+
+
+        String expected = "Value was set";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            IntegerValueActuator actuator = new IntegerValueActuator(actuatorName, typeId, deviceId, settings);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(simHardwareAct, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    /**
      * This test verifies that if the value is higher than the upper limit, the executeCommand method returns an error message.
      * All the parameters are mocked, and the settings are set to a lower limit of 5 and an upper limit of 10.
      * A value is set to be used in the executeCommand method.
@@ -316,6 +403,8 @@ class IntegerValueActuatorTest {
             assertEquals(idListExpectedSize, idList.size());
         }
     }
+
+
 
     /**
      * This test verifies that if the value is within the actuator settings, the executeCommand method returns a success message.
