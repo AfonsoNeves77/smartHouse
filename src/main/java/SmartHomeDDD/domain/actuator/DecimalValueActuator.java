@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.actuator;
 
-import SmartHomeDDD.SimHardwareAct;
 import SmartHomeDDD.domain.DomainID;
 import SmartHomeDDD.vo.Settings;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;

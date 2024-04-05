@@ -1,6 +1,6 @@
 package SmartHomeDDDTest.domainTest.actuatorTest;
 
-import SmartHomeDDD.SimHardwareAct;
+import SmartHomeDDD.domain.actuator.SimHardwareAct;
 import SmartHomeDDD.domain.actuator.SwitchActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
@@ -8,8 +8,6 @@ import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

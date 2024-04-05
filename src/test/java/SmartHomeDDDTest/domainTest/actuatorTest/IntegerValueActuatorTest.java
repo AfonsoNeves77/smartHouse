@@ -1,6 +1,6 @@
 package SmartHomeDDDTest.domainTest.actuatorTest;
 
-import SmartHomeDDD.SimHardwareAct;
+import SmartHomeDDD.domain.actuator.SimHardwareAct;
 import SmartHomeDDD.domain.actuator.IntegerValueActuator;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;

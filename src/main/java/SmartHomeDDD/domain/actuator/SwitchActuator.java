@@ -1,11 +1,8 @@
 package SmartHomeDDD.domain.actuator;
 
-import SmartHomeDDD.SimHardwareAct;
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
-import SmartHomeDDD.vo.actuatorVO.ActuatorStatusVO;
 import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
 import java.util.UUID;
