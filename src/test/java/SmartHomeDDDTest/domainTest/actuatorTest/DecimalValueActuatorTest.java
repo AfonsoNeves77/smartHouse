@@ -153,12 +153,11 @@ class DecimalValueActuatorTest {
     }
 
     /**
-     * Verifies that when set value has a lower precision that actuator settings, it is allowed for the command to be executed.
-     * In this case, actuator has a precision of 0.01 and the value required to be set is 7.
+     * Verifies that when set value is equal to the lower limit the command is executed.
      * The message "Value was set" is returned.
      */
     @Test
-    void givenValueWithinActuatorSettings_WhenExecuteCommand_ThenShouldExecuteCommand(){
+    void givenValueEqualToLowerLimit_WhenExecuteCommand_ThenCommandIsExecuted(){
         //Arrange
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
@@ -168,7 +167,74 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
 
-        double value = 7;
+        double value = 6.0;
+        String expected = "Value was set";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            DecimalValueActuator actuator = new DecimalValueActuator(actuatorName, typeId, deviceId, configurations);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(hardware, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    /**
+     * Verifies that when set value is equal to the upper limit the command is executed.
+     * The message "Value was set" is returned.
+     */
+    @Test
+    void givenValueEqualToUpperLimit_WhenExecuteCommand_ThenCommandIsExecuted(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
+        when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.01});
+        SimHardwareAct hardware = mock(SimHardwareAct.class);
+        when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
+
+        double value = 9.0;
+        String expected = "Value was set";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            DecimalValueActuator actuator = new DecimalValueActuator(actuatorName, typeId, deviceId, configurations);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(hardware, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    /**
+     * Verifies that when set value has a lower precision that actuator settings, it is allowed for the command to be executed.
+     * In this case, actuator has a precision of 0.01 and the value required to be set is 7.
+     * The message "Value was set" is returned.
+     */
+    @Test
+    void givenValueWithinActuatorSettings_WhenExecuteCommand_ThenCommandIsExecuted(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
+        when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.01});
+        SimHardwareAct hardware = mock(SimHardwareAct.class);
+        when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
+
+        double value = 7.55;
         String expected = "Value was set";
         int idListExpectedSize = 1;
 

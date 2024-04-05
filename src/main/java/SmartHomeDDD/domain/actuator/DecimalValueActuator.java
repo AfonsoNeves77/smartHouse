@@ -96,7 +96,11 @@ public class DecimalValueActuator implements Actuator {
     private boolean isValueWithinLimits(double value) {
         double lowerLim = decimalSettings.getValue()[0];
         double upperLim = decimalSettings.getValue()[1];
-        return (value >= lowerLim && value <= upperLim);
+        if(value < lowerLim)
+            return false;
+        if(value > upperLim)
+            return false;
+        return true;
     }
 
     /**
