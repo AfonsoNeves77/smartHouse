@@ -255,8 +255,12 @@ public class DeactivateDeviceCTRLTest {
         // Act: Invoking deactivateDevice method with a DeviceDTO representing an already deactivated device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
 
-        // Assert: Verifying that the result is false as expected
+        //Query the device for its status assuring that the created device didn't change it's state
+        boolean state = device.getDeviceStatus().getValue();
+
+        // Assert: Verifying that the result is true as expected
         assertFalse(result);
+        assertFalse(state);
     }
 
     /**
@@ -298,8 +302,11 @@ public class DeactivateDeviceCTRLTest {
 
         // Act: Invoking deactivateDevice method with a DeviceDTO representing an activated device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
+        //Query the device for its status assuring that the created device actually changed it's state
+        boolean state = device.getDeviceStatus().getValue();
 
         // Assert: Verifying that the result is true as expected
         assertTrue(result);
+        assertFalse(state);
     }
 }
