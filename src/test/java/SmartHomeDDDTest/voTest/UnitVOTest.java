@@ -46,5 +46,13 @@ class UnitVOTest {
         assertThrows(IllegalArgumentException.class, () -> new UnitVO(unit));
     }
 
-
+    @Test
+    void givenValidUnit_ThenReturnUnit() {
+        // Given
+        String unit = "Celsius";
+        // When
+        UnitVO unitVO = new UnitVO(unit);
+        // Then
+        assertEquals(unit, unitVO.getValue());
+    }
 }

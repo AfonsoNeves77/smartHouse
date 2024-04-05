@@ -26,6 +26,6 @@ public class UnitVO implements ValueObject<String> {
 
     @Override
     public String getValue() {
-        return null;
+        return unit;
     }
 }
