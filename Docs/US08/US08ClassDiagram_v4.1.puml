@@ -55,9 +55,6 @@ interface Repository<ID extends DomainID, T extends DomainEntity> {
     + save(ent : T) : boolean
 }
 
-interface DomainID<T> {
-     + getId() : T
-}
 
 
 class DeviceRepository {
