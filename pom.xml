@@ -4,8 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>SmartHome</groupId>
-    <artifactId>SmartHome</artifactId>
+    <groupId>org.switch2023</groupId>
+    <artifactId>switch2023project_g4</artifactId>
+    <name>switch-2023 switch-2023-g4</name>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
