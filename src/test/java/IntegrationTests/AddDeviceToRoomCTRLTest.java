@@ -11,6 +11,8 @@ import SmartHomeDDD.repository.DeviceRepository;
 import SmartHomeDDD.repository.RoomRepository;
 import SmartHomeDDD.services.DeviceService;
 import SmartHomeDDD.services.RoomService;
+import SmartHomeDDD.vo.deviceVO.DeviceModelVO;
+import SmartHomeDDD.vo.deviceVO.DeviceNameVO;
 import SmartHomeDDD.vo.houseVO.HouseIDVO;
 import SmartHomeDDD.vo.roomVO.*;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class AddDeviceToRoomCTRLTest {
     /**
      * This test ensures that given correct DTOs, the method addDeviceToRoom() successfully adds a device, returning true.
+     * Also verifies that the device added to the repository corresponds to the correct one by requesting its location (roomId),
+     * name and model. Also verifies that the number of saved devices in the repository corresponds to the expected.
      */
     @Test
     void givenValidData_WhenAddDeviceToRoom_ThenShouldReturnTrue(){
@@ -64,11 +68,29 @@ class AddDeviceToRoomCTRLTest {
 
         AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(roomService, deviceService);
 
+        int expectedDevicesInRepo = 1;
+
+
         // Act
-        boolean result = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
+        // Main operation:
+        boolean operationResult = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
+
+        // get the number of devices in the repository
+        List<Device> deviceList = deviceRepository.findByRoomID(room.getId());
+        int actualDevicesInRepo = deviceList.size();
+
+        // get the device name of the saved Device
+        String devNameResult = deviceList.get(0).getDeviceName().getValue();
+
+        // get the device model of the saved Device
+        String devModelResult = deviceList.get(0).getDeviceModel().getValue();
+
 
         // Assert
-        assertTrue(result);
+        assertTrue(operationResult);
+        assertEquals(expectedDevicesInRepo, actualDevicesInRepo);
+        assertEquals(deviceName, devNameResult);
+        assertEquals(deviceModel, devModelResult);
     }
 
     /**
