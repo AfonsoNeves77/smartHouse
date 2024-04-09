@@ -22,7 +22,7 @@ public class SunTimeCalculator {
         SunTimes sunsetTime;
         try{
             sunsetTime = getSunTimes(date,gpsCoordinates);
-            return sunsetTime.getSet();
+            return sunsetTime.getSet().withZoneSameInstant(ZoneId.of("UTC"));
         } catch (IllegalArgumentException e){
             return null;
         }
@@ -40,7 +40,7 @@ public class SunTimeCalculator {
         SunTimes sunriseTime;
         try{
             sunriseTime = getSunTimes(date,gpsCoordinates);
-            return sunriseTime.getRise();
+            return sunriseTime.getRise().withZoneSameInstant(ZoneId.of("UTC"));
         } catch (IllegalArgumentException e){
             return null;
         }

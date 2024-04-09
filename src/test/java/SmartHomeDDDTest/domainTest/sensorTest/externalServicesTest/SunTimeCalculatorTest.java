@@ -21,7 +21,7 @@ class SunTimeCalculatorTest {
         SunTimeCalculator sunTimeCalculator = new SunTimeCalculator();
         String date = "2024-03-06";
         String coordinates = "41.1579 : -8.6291";
-        String expected = "2024-03-06T18:31:47Z[Europe/Lisbon]";
+        String expected = "2024-03-06T18:31:47Z[UTC]";
         //Act
         ZonedDateTime resultZoneDateTime = sunTimeCalculator.computeSunset(date, coordinates);
         String result = resultZoneDateTime.toString();
@@ -159,7 +159,7 @@ class SunTimeCalculatorTest {
         SunTimeCalculator sunTimeCalculator = new SunTimeCalculator();
         String date = "2024-03-06";
         String coordinates = "41.1579 : -8.6291";
-        String expected = "2024-03-06T07:00:19Z[Europe/Lisbon]";
+        String expected = "2024-03-06T07:00:19Z[UTC]";
         //Act
         ZonedDateTime resultZoneDateTime = sunTimeCalculator.computeSunrise(date, coordinates);
         String result = resultZoneDateTime.toString();
