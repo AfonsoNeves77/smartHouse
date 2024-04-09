@@ -2,50 +2,64 @@
 title <size: 30> US17 Class Diagram
 
 interface Sensor {
-    + getName() : String
-    + getUnit() : String
-    + getLog() : ArrayList<String>
+    + getSensorTypeID() : SensorTypeIDVO;
+    + getDeviceID() : DeviceIDVO;
+    + getSensorName() : SensorNameVO;
 }
 
-interface Value<T> {
+
+interface ValueObject<T> {
     + getValue() : T
-    + getValueAsString() : String
 }
 
-interface ExternalServices {
-
+class SensorNameVO{
+    - sensorName : String
+    + getValue() : String
 }
+
+class DeviceIDVO{
+    - deviceID : UUID
+    + getID() : String
+}
+
+class SensorTypeIDVO{
+    - sensorTypeID : String
+    + getID() : String
+}
+
+class SensorIDVO{
+    - identifier : UUID
+    + getValue() : String
+}
+
 
 class SwitchSensor{
-    - sensorName : String
-    - unit : String
-    - type : String
-    - simHardware : SimHardware
-    - log : ArrayList<Value<Integer>>
+    - sensorName : SensorNameVO
+    - deviceID : DeviceIDVO
+    - sensorType : SensorTypeIDVO
+    - sensorID : SensorIDVO
 
-    + SwitchSensor(sensorName : String, externalServices : ExternalServices)
-    + getReading() : Value<String>
-    + getName() : String
-    + getUnit() : String
-    + getLog() : ArrayList<String>
-    + getType() : String
-    - addValueToLog(value : Value<String>) : void
+    + getReading(simHardware : SimHardware) : ValueObject<Integer>
 }
 
-class SwitchValue {
-    + SwitchValue(reading : String)
+class SwitchValue{
+    - switchValue : String
+
     + getValue() : String
-    + getValueAsString() : String
-    - isReadingValid(reading : String) : boolean
+    - isReadingValid(switchValue : String) : boolean
 }
 
 class SimHardware{
     + getValue() : String
 }
 
-Value <|.. SwitchValue
+ValueObject <|.. SwitchValue
 Sensor <|.. SwitchSensor
-ExternalServices <|.. SimHardware
 SwitchSensor .right.> SwitchValue
 SwitchSensor .left.> SimHardware
+SwitchSensor .down.> SensorNameVO
+SwitchSensor .down.> DeviceIDVO
+SwitchSensor .down.> SensorTypeIDVO
+SwitchSensor .down.> SensorIDVO
+
 @enduml
