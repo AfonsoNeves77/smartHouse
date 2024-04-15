@@ -2,13 +2,12 @@
 
 skinparam ParticipantPadding 50
 autonumber
-title User Story 6 - Main Success Scenario
+title Use Case Get List Of Devices v5.0 - Main Success Scenario
 
 participant ":GetListOfDevicesCTRL" as C
 participant ":RoomMapper" as RM
 participant ":RoomDTO" as RDTO
 participant ":RoomIDVO" as RID
-participant ":RoomService" as RS
 participant ":DeviceService" as DS
 participant ":DeviceRepository" as DR
 participant ":DeviceMapper" as DM
@@ -24,55 +23,42 @@ activate RM
 RM -> RDTO : getId()
 activate RDTO
 
-RDTO --> RM : id
+RDTO --> RM : roomID
 deactivate RDTO
 
-RM -> RID ** : create(id)
+RM -> RID ** : create(roomID)
 
 RM --> C : roomIDVO
 deactivate RM
 
-C -> RS : isPresent(roomIDVO)
-activate RS
-
-RS --> C : false
-deactivate RS
-
 C -> DS : getListOfDevicesInARoom(roomIDVO)
 activate DS
+
+
 
 DS -> DR : findByRoomId(roomIDVO)
 activate DR
 
-DR -> DR : clone(listOfDevices)
-activate DR
-deactivate DR
-
-DR --> DS : clonedListOfDevices
-
+DR --> DS : deviceList
 deactivate DR
 
 
-
-DS --> C : clonedListOfDevices
-
-deactivate DS
-
-C -> DM : domainToDTO(clonedListOfDevices)
+DS -> DM : domainToDTO(deviceList)
 
 activate DM
-loop for each device in cloned device list
-DM -> DM : domainToDTO(clonedListOfDevices)
+loop for each device in device list
+DM -> DM : domainToDTO(deviceList)
 activate DM
 deactivate DM
 
 end loop
-DM --> C : deviceDTOList
+DM --> DS : deviceDTOList
 deactivate DM
 
+DS --> C : deviceDTOList
+deactivate DS
 
 [o<-- C : deviceDTOList
-
 deactivate C
 
 
