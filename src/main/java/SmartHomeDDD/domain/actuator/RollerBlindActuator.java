@@ -1,6 +1,5 @@
 package SmartHomeDDD.domain.actuator;
 
-import SmartHomeDDD.domain.DomainEntity;
 import SmartHomeDDD.vo.actuatorType.ActuatorTypeIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorIDVO;
 import SmartHomeDDD.vo.actuatorVO.ActuatorNameVO;
@@ -8,11 +7,11 @@ import SmartHomeDDD.vo.deviceVO.DeviceIDVO;
 
 import java.util.UUID;
 
-public class RollerBlindActuator implements DomainEntity, Actuator{
+public class RollerBlindActuator implements Actuator {
 
     private final ActuatorIDVO actuatorID;
-    private ActuatorTypeIDVO actuatorTypeID;
-    private DeviceIDVO deviceIDVO;
+    private final ActuatorTypeIDVO actuatorTypeID;
+    private final DeviceIDVO deviceIDVO;
     private ActuatorNameVO actuatorName;
 
     /**
