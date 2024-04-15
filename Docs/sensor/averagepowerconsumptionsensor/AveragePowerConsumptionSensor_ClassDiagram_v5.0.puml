@@ -1,18 +1,18 @@
 @startuml
-title <size: 30> US25 Class Diagram
+title <size: 30> AveragePowerConsumptionSensor Class Diagram v5.0
+
+note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
 
 skinparam linetype ortho
 
 interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO
     + getDeviceID() : DeviceIDVO
-    + getSensorName() : SensorNameVO
 }
 
 class SensorIDVO {
     - indentifier : UUID
     + SensorIDVO(identifier : UUID) : SensorIDVO
-    + getID() : String
 }
 
 class SensorNameVO {
@@ -24,13 +24,11 @@ class SensorNameVO {
 class SensorTypeIDVO {
     - sensorTypeID : String
     + SensorTypeIDVO(sensorTypeID : String) : SensorTypeIDVO
-    + getID() : String
 }
 
 class DeviceIDVO {
     - deviceID : UUID
     + DeviceIDVO(deviceID : UUID) : DeviceIDVO
-    + getID() : String
 }
 
 interface DomainID {
@@ -48,21 +46,20 @@ class AveragePowerConsumptionSensor {
     - deviceID : DeviceIDVO
     + AveragePowerConsumptionSensor(sensorName : SensorNameVO,\n deviceID : DeviceIDVO,\n sensorTypeID : SensorTypeIDVO) : AveragePowerConsumptionSensor
     + getReading(initialDate : String,\n finalDate : String,\n simHardware : SimHardware) : ValueObject<Integer>
-    + getSensorName() : SensorNameVO
-    + getSensorTypeID() : SensorTypeIDVO
-    + getDeviceID() : DeviceIDVO
-    + getId() : DomainID
 }
 
 class AveragePowerConsumptionValue {
-    - averagePowerConsumptionValue : int
+    - averagePowerConsumption : int
     + AveragePowerConsumptionValue(reading : String)\n : AveragePowerConsumptionValue
     + getValue() : Integer
 }
 
 class SimHardware {
-    + getValue() : String
     + getValue(initialDate : String, finalDate : String) : String
+}
+
+interface SensorExternalServices {
++ getValue(initialDate : String, finalDate : String) : String
 }
 
 interface DomainEntity{
@@ -82,5 +79,6 @@ AveragePowerConsumptionSensor -left..> AveragePowerConsumptionValue : <<creates>
 AveragePowerConsumptionSensor -right..> SimHardware : <<uses>>
 AveragePowerConsumptionSensor -up..|> Sensor
 Sensor -right--|>DomainEntity
+SimHardware -up.|> SensorExternalServices
 
 @enduml
