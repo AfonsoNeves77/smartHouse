@@ -1,8 +1,14 @@
 @startuml
-title <size: 30> US24 Class Diagram
+title <size: 30> Power Consumption Sensor - Class Diagram
+
+skinparam linetype ortho
+
+note "<b>Only methods related to Power \n<b>Consumption Sensor are represented" as 1
 
 interface Sensor {
-
+    +getSensorTypeID() : SensorTypeIDVO
+    +getSensorName() : SensorNameVO
+    +getDeviceID() : DeviceIDVO
 }
 
 interface DomainEntity{
@@ -24,17 +30,13 @@ class PowerConsumptionSensor{
     - deviceID : DeviceIDVO
 
     + PowerConsumptionSensor(sensorName : SensorNameVO,deviceID : DeviceIDVO,sensorTypeID : SensorTypeIDVO)
-    + getID() : SensorIDVO
-    + getSensorName() : SensorNameVO
-    + getSensorTypeID() : SensorTypeIDVO
-    + getDeviceID() : DeviceIDVO
     + getPowerConsumption(simHardware : SimHardware) : ValueObject<Integer>
 }
 
 class PowerConsumptionValue{
-    - powerConsumptionValue : int
+    - powerConsumption : int
 
-    + PowerConsumptionValue(powerConsumptionValue : int)
+    + PowerConsumptionValue(powerConsumption : int)
     + getValue() : Integer
 }
 
@@ -67,14 +69,19 @@ class DeviceIDVO{
     + getID() : String
 }
 
+interface SensorExternalService{
+    + getValue() : String
+}
 
-DomainEntity <|.. PowerConsumptionSensor
-Sensor <|.. PowerConsumptionSensor
-SimHardware <.. PowerConsumptionSensor
+
+Sensor --|> DomainEntity
+Sensor <|..right PowerConsumptionSensor
+SimHardware <..up PowerConsumptionSensor
+SimHardware ..|> SensorExternalService
 
 SensorNameVO <.. PowerConsumptionSensor
-SensorIDVO *-- PowerConsumptionSensor
-PowerConsumptionValue *--right PowerConsumptionSensor
+SensorIDVO --* PowerConsumptionSensor
+PowerConsumptionValue --left* PowerConsumptionSensor
 SensorTypeIDVO <.. PowerConsumptionSensor
 DeviceIDVO <.. PowerConsumptionSensor
 
