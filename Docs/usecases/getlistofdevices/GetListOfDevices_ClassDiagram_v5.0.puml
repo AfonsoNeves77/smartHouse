@@ -42,7 +42,7 @@ class MemRoomRepository <<Repository>>{
 }
 
 
-class V1DeviceService <<Service>>{
+class DeviceServiceImpl <<Service>>{
      - roomRepository : RoomRepository
      - factoryDevice : DeviceFactory
      - deviceRepository : DeviceRepository
@@ -83,10 +83,10 @@ interface DeviceService{
  RoomMapper ..> RoomDTO
  RoomDTO ..> RoomIDVO
 
- GetListOfDevicesCTRL ..> V1DeviceService
- V1DeviceService ..> MemDeviceRepository
- V1DeviceService ..> MemRoomRepository
- V1DeviceService ..|> DeviceService
+ GetListOfDevicesCTRL ..> DeviceServiceImpl
+ DeviceServiceImpl ..> MemDeviceRepository
+ DeviceServiceImpl ..> MemRoomRepository
+ DeviceServiceImpl ..|> DeviceService
 
  GetListOfDevicesCTRL ..> DeviceMapper
 
