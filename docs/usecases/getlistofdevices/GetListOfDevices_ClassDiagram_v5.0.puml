@@ -1,0 +1,98 @@
+@startuml
+        title <size: 30> Use Case: Get List of Devices v5.0
+
+note "<b>Only methods related to the ´get list of devices' are represented" as N1
+ skinparam linetype ortho
+
+
+class GetListOfDevicesCTRL {
+     - deviceService : DeviceService
+
+     + GetListOfDevicesCTRL(deviceService : DeviceService)
+     + getListOfDevices(roomDTO : RoomDTO) : List<DeviceDTO>
+}
+
+class RoomMapper{
+     - ERRORMESSAGE : String
+
+     - RoomMapper()
+     + createRoomIDVO(roomDTO : RoomDTO) : RoomIDVO
+}
+
+class RoomDTO{
+     - id : String
+     - roomName :String
+     - floor : int
+     - roomHeight : double
+     - roomWidth : double
+     - roomLength : double
+     - houseID : String
+}
+
+class RoomIDVO {
+     - identifier : UUID
+
+     + RoomIDVO(identifier : UUID)
+}
+
+class MemRoomRepository <<Repository>>{
+     - data : LinkedHashMap<RoomIDVO, Room>
+
+     + findByID(roomID : RoomIDVO) : Room
+}
+
+
+class DeviceServiceImpl <<Service>>{
+     - roomRepository : RoomRepository
+     - factoryDevice : DeviceFactory
+     - deviceRepository : DeviceRepository
+
+     + V1DeviceService(roomRepository : RoomRepository, factoryDevice : DeviceFactory, deviceRepository : DeviceRepository)
+     + getListOfDevicesInARoom(roomIDVO : RoomIDVO) : List<Device>
+}
+
+class MemDeviceRepository <<Repository>>{
+     - data : LinkedHashMap<DeviceIDVO, Device>
+
+     + findByRoomID(roomID : RoomIDVO) : List<Device>
+}
+
+class DeviceMapper {
+     - ERRORMESSAGE : String
+
+     - DeviceMapper()
+     + domainToDTO(deviceList : List<Device>) : List<DeviceDTO>
+}
+
+interface RoomRepository{
+}
+
+interface DeviceRepository{
+      + findByRoomId(roomID : RoomIDVO ) : List<Device>
+}
+
+interface Repository{
+     + findByID(id : ID) : T
+}
+
+interface DeviceService{
+     + getListOfDevicesInARoom(roomIDVO : RoomIDVO) : List<Device>
+}
+
+ GetListOfDevicesCTRL ..> RoomMapper
+ RoomMapper ..> RoomDTO
+ RoomDTO ..> RoomIDVO
+
+ GetListOfDevicesCTRL ..> DeviceServiceImpl
+ DeviceServiceImpl ..> MemDeviceRepository
+ DeviceServiceImpl ..> MemRoomRepository
+ DeviceServiceImpl ..|> DeviceService
+
+ GetListOfDevicesCTRL ..> DeviceMapper
+
+ DeviceRepository <|..up MemDeviceRepository
+ RoomRepository <|..up MemRoomRepository
+ Repository <|--up RoomRepository
+ Repository <|--up DeviceRepository
+
+ @enduml

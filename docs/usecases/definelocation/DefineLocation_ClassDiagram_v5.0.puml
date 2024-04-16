@@ -1,0 +1,185 @@
+@startuml
+
+title <size: 30> Use Case: Define Location v5.0
+
+note "<b>Only methods related to 'define \n<b>location' use case are represented" as N1
+
+skinparam linetype ortho
+
+class House <<Entity>> <<Root>>{
+- houseID : HouseIDVO
+- location : LocationVO
++ House(locationVO : LocationVO)
++ configureLocation(location : LocationVO) : boolean
+}
+
+interface DomainEntity {
++ getId() : DomainID
+}
+
+class HouseIDVO {
+- identifier : UUID
++ HouseIDVO(identifier : UUID)
+}
+
+interface DomainID {
++ getID() : String
+}
+
+class HouseMapper {
+{static} + dtoToDomain(locationDTO : LocationDTO) : LocationVO
+}
+
+class LocationDTO {
+- door : String
+- street : String
+- city : String
+- country : String
+- postalCode : String
+- latitude : double
+- longitude : double
++ LocationDTO(door : String, street : String,\n city : String, country : String,\n postalCode : String, latitude : double,\n longitude : double)
++ getDoor() : String
++ getStreet() : String
++ getCity() : String
++ getCountry() : String
++ getPostalCode() : String
++ getLatitude() : double
++ getLongitude() : double
+}
+
+interface ValueObject<T> {
++ getValue() : T
+}
+
+class LocationVO {
+- addressVO : AddressVO
+- gpsVO : GpsVO
++ LocationVO(addressVO : AddressVO, gpsVO : GpsVO)
+}
+
+class GpsVO {
+- latitude : LatitudeVO
+- longitude : LongitudeVO
++ GpsVO(latitude : LatitudeVO, longitude : LongitudeVO)
+}
+
+class LatitudeVO {
+- latitudeValue : double
++ LatitudeVO(latitudeValue : double)
+}
+
+class LongitudeVO {
+- longitudeValue : double
++ LongitudeVO(longitudeValue : double)
+}
+
+class AddressVO {
+- doorVO : DoorVO
+- streetVO : StreetVO
+- cityVO : CityVO
+- countryVO : CountryVO
+- postalCodeVO : PostalCodeVO
++ AddressVO(doorVO : DoorVO, streetVO : StreetVO,\n cityVO : CityVO, countryVO : CountryVO,\n postalCodeVO : PostalCodeVO)
+}
+
+class DoorVO {
+- door : String
++ DoorVO(door : String)
+}
+
+class StreetVO {
+- street : String
++ StreetVO(street : String)
+}
+
+class CityVO {
+- city : String
++ CityVO(city : String)
+}
+
+class CountryVO {
+- country : String
++ CountryVO(country : String)
+}
+
+class PostalCodeVO {
+- postalCode : String
++ PostalCode(postalCode : String)
+}
+
+class HouseRepositoryMem {
+    - DATA : LinkedHashMap<HouseIDVO, House>
+    + getFirstHouse() : House
+}
+
+interface HouseRepository {
++ getFirstHouse() : House
+}
+
+class HouseServiceImpl {
+- houseRepository : HouseRepository
+- houseFactory : HouseFactory
++ HouseServiceImpl(houseRepository : HouseRepository, houseFactory : HouseFactoryImpl)
++ updateLocation(locationVO : LocationVO) : boolean
+}
+
+interface HouseService {
++ updateLocation(locationVO : LocationVO) : boolean
+}
+
+class HouseFactoryImpl {
++ createHouse(locationVO : LocationVO) : House
+}
+
+interface HouseFactory {
++ createHouse(locationVO : LocationVO) : House
+}
+
+class ConfigureLocationCTRL {
+- houseService : HouseService
++ ConfigureLocationCTRL(houseService : HouseService)
++ updateLocation(locationDTO : LocationDTO) : boolean
+}
+
+interface Repository <ID extends DomainID, T extends DomainEntity> {
++ save(entity : T) : boolean
++ findAll() : Iterable<T>
++ findById(id : ID) : T
++ isPresent(id : ID) : boolean
+}
+
+ConfigureLocationCTRL -right-> HouseServiceImpl : <<uses>>
+ConfigureLocationCTRL -left.> HouseMapper : <<uses>>
+HouseMapper -left.> LocationDTO : <<uses>>
+HouseServiceImpl <.-up HouseFactoryImpl : <<uses>>
+HouseService <|.-down HouseServiceImpl
+HouseFactoryImpl -left.|> HouseFactory
+HouseServiceImpl -down.> HouseRepositoryMem : <<uses>>
+HouseRepositoryMem -right.|> HouseRepository
+HouseRepository -right-|> Repository
+Repository -down-|> DomainID
+Repository -down-|> DomainEntity
+HouseRepositoryMem o--down House : <<has-a>>
+House *--down HouseIDVO : <<has-a>>
+HouseIDVO -down.|> DomainID
+House -right.|> DomainEntity
+House -left-o LocationVO : <<has-a>>
+LocationVO *--left AddressVO : <<has-a>>
+LocationVO *--down GpsVO : <<has-a>>
+DoorVO -right-* AddressVO : <<has-a>>
+StreetVO -up-* AddressVO : <<has-a>>
+CityVO -up-* AddressVO : <<has-a>>
+CountryVO -up-* AddressVO : <<has-a>>
+PostalCodeVO -up-* AddressVO : <<has-a>>
+LatitudeVO o--left GpsVO : <<has-a>>
+LongitudeVO o--up GpsVO : <<has-a>>
+CityVO -down..|> ValueObject
+CountryVO -down..|> ValueObject
+PostalCodeVO -down..|> ValueObject
+StreetVO -down..|> ValueObject
+DoorVO -down..|> ValueObject
+LongitudeVO -down.|> ValueObject
+LatitudeVO -down..|> ValueObject
+
+@enduml

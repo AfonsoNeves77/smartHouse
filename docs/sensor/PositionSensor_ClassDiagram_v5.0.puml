@@ -1,0 +1,72 @@
+Position Sensor Class Diagram
+
+@startuml
+title <size: 30> Position Sensor Class Diagram
+
+interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO;
+    + getDeviceID() : DeviceIDVO;
+    + getSensorName() : SensorNameVO;
+}
+
+interface SensorExternalServices {
+    + getValue() : String
+}
+
+
+interface ValueObject<T> {
+    + getValue() : T
+}
+
+class SensorNameVO{
+    - sensorName : String
+    + getValue() : String
+}
+
+class DeviceIDVO{
+    - deviceID : UUID
+    + getID : String
+}
+
+class SensorTypeIDVO{
+    - sensorTypeID : String
+    + getID() : String
+}
+
+class SensorIDVO{
+    - identifier : UUID
+    + getValue() : String
+}
+
+
+class PositionSensor{
+    - sensorName : SensorNameVO
+    - deviceID : DeviceIDVO
+    - sensorType : SensorTypeIDVO
+    - sensorID : SensorIDVO
+
+    + getReading(simHardware : SensorExternalServices) : ValueObject<Integer>
+}
+
+class PositionValue{
+    - position : int
+
+    + getValue() : Integer
+    - isReadingValid(positionValue : int) : boolean
+}
+
+class SimHardware{
+    + getValue() : String
+}
+
+ValueObject <|.. PositionValue
+Sensor <|.. PositionSensor
+SensorExternalServices <|.. SimHardware
+PositionSensor .right.> PositionValue
+PositionSensor .left.> SimHardware
+PositionSensor "1" *--down "1" SensorNameVO
+PositionSensor "*" *--down "1" DeviceIDVO
+PositionSensor "1" *--down "1" SensorTypeIDVO
+PositionSensor "1" *--down "1" SensorIDVO
+
+@enduml

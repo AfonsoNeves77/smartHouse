@@ -1,0 +1,47 @@
+Add Room Sequence Diagram
+
+@startuml
+autonumber
+title Add Room Use Case - Main Success Scenario
+participant ":AddRoomCTRL" as C
+participant ":RoomMapper" as Rm
+participant ":RoomServiceImpl" as Rs
+participant ":HouseRepositoryMem" as Hr
+participant ":RoomFactoryImpl" as fR
+participant "room : Room" as R
+participant ":RoomRepositoryMem" as rR
+skinparam ParticipantPadding 50
+
+[o-> C : addRoom(roomDTO)
+activate C
+C -> Rm : roomNameVO = createRoomNameVO(roomDTO)
+activate Rm
+C -> Rm : roomFloorVO = createRoomFloorVO(roomDTO)
+C -> Rm : roomDimensionsVO = createRoomDimensionsVO(roomDTO)
+deactivate Rm
+C -> Rs : addRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO)
+
+activate Rs
+Rs -> Hr : houseIDVO = getFirstHouseIDVO()
+
+
+Rs -> fR : createRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO, houseIDVO)
+
+activate fR
+fR -> R** : newRoom(roomNameVO, roomFloorVO, \nroomDimensionsVO, houseIDVO)
+
+deactivate fR
+
+
+
+
+Rs -> rR : save(room)
+deactivate Rs
+activate rR
+C <-- rR : true
+deactivate rR
+[o<-- C : Room Added!
+deactivate C
+
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+skinparam ParticipantPadding 50
+    title <size:30> Use Case - Get List of Sensor Types v5.0 - Main Success Scenario
+    autonumber
+
+participant ":AddSensorToDeviceCTRL" as C
+participant ":SensorTypeServiceImpl" as STS
+participant ":SensorTypeRepositoryMem" as STR
+participant ":SensorTypeMapper" as STM
+
+
+[o-> C : getListOfSensorTypes()
+activate C
+C -> STS : getListOfSensorTypes()
+activate STS
+STS -> STR : findAll()
+activate STR
+STR --> STS : sensorTypeList
+deactivate STR
+loop for each sensorType in sensorTypeList
+    STS -> STS : listOfSensorTypes.add(sensorType)
+    activate STS
+    deactivate STS
+    end
+STS --> C : listOfSensorTypes
+deactivate STS
+C -> STM : domainToDTO(listOfSensorTypes)
+activate STM
+loop for each sensorType in listOfSensorTypes
+    STM -> STM : SensorTypeDTO = convertSensorTypeToDTO(sensorType)
+    activate STM
+    deactivate STM
+    STM -> STM : sensorTypeDTOList.add(SensorTypeDTO)
+    activate STM
+    deactivate STM
+end
+STM --> C : sensorTypeDTOList
+deactivate STM
+[o<-- C : sensorTypeDTOList
+deactivate C
+@enduml
