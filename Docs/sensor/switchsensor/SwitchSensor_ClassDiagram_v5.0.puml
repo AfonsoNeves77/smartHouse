@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US17 Class Diagram
+title <size: 30> Switch Sensor Class Diagram
 
 interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO;
@@ -53,6 +53,10 @@ class SimHardware{
     + getValue() : String
 }
 
+interface SensorExternalService {
++getValue() : String
+}
+
 ValueObject <|.. SwitchValue
 Sensor <|.. SwitchSensor
 SwitchSensor .right.> SwitchValue
@@ -61,5 +65,6 @@ SwitchSensor .down.> SensorNameVO
 SwitchSensor .down.> DeviceIDVO
 SwitchSensor .down.> SensorTypeIDVO
 SwitchSensor .down.> SensorIDVO
+SimHardware ..|> SensorExternalService
 
 @enduml

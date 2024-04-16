@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US26 Class Diagram
+title <size: 30> EnergyConsumptionSensor Class Diagram v5.0
 
 skinparam linetype ortho
 
@@ -59,6 +59,10 @@ class SensorNameVO{
     + getValue() : String
 }
 
+interface SensorExternalServices{
+     + getValue() : String
+}
+
 class SensorIDVO{
     - identifier : UUID
     + SensorIDVO(identifier : UUID)
@@ -84,6 +88,7 @@ SimHardware <.. EnergyConsumptionSensor : <<uses>>
 
 SensorNameVO <.. EnergyConsumptionSensor : <<has>>
 SensorIDVO --* EnergyConsumptionSensor
+SensorExternalServices <|..down SimHardware
 EnergyConsumptionValue <..right EnergyConsumptionSensor : <<creates>>
 SensorTypeIDVO <.. EnergyConsumptionSensor : <<has>>
 DeviceIDVO <.. EnergyConsumptionSensor : <<has>>
