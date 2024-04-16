@@ -1,0 +1,120 @@
+@startuml
+title <size: 30> US08 Class Diagram
+note "<b>Only methods related to\n<b>US08 are represented" as N1
+skinparam linetype ortho
+
+class DeactivateDeviceCTRL {
+    - deviceService : DeviceService
+    + DeactivateDeviceCTRL(DeviceService)
+    + deactivateDevice(DeviceDTO) : boolean
+}
+
+class DeviceDTOMapper {
+    + DeviceDTOMapper()
+    + getDeviceIDVO(DeviceDTO) : DeviceIDVO
+    + domainToDTO(List<Device>) : List<DeviceDTO>
+}
+
+class DeviceDTO{
+- String deviceID
+- String deviceName
+- String deviceModel
+- String deviceStatus
+- String roomID
+
++ DeviceDTO(Device)
++ getDeviceID() : String
++ getDeviceName() : String
++ getDeviceModel() : String
++ getDeviceStatus() : String
++ getDeviceRoomID() : String
+}
+
+interface DomainID{
+    + getID() : String
+}
+
+class DeviceIDVO {
+    + DeviceIDVO(String)
+    + getID() : String
+}
+
+class DeviceService {
+    - factoryDevice : FactoryDevice
+    - repositoryDevice : RepositoryDevice
+   + DeviceService(FactoryDevice,RepositoryDevice)
+   + deactivateDevice(DeviceIDVO) : boolean
+   - isActive(Device) : boolean
+}
+
+
+interface Repository<ID extends DomainID, T extends DomainEntity> {
+    + findAll() : List<T>
+    + findByID(id : ID) : T
+    + isPresent(id : ID) : boolean
+    + save(ent : T) : boolean
+}
+
+
+
+class DeviceRepository {
+     - deviceIdAndDeviceMap : Map<DeviceID,Device>
+     + findAll() : List<Device>
+     + findByID(deviceID : DeviceIDVO) : Device
+     + findByRoomID(roomId : RoomID) : List<Device>
+     + isPresent(deviceID : DeviceID) : boolean
+     + save(device : Device) : boolean
+}
+
+interface ValueObject<T> {
+     + getValue() : T
+}
+
+class DeviceStatusVO {
+    - status : boolean
+    + DeviceStatusVO(status : boolean)
+    + getValue() : Boolean
+
+}
+
+interface DomainEntity {
+     + getId() : DomainID
+}
+
+class Device {
+   - deviceID : DeviceIDVO
+   - roomID : RoomIDVO
+   - deviceName : DeviceNameVO
+   - model : DeviceModelVO
+   - deviceState : DeviceStatusVO
+   + Device(roomID : RoomIDVO, deviceName : DeviceNameVO, model : DeviceModelVO)
+   + deactivateDevice() : boolean
+}
+
+
+
+DeactivateDeviceCTRL ..> DeviceService
+DeactivateDeviceCTRL ..> DeviceDTOMapper
+
+DeviceDTOMapper ..> DeviceDTO
+
+DeviceService ..> DeviceRepository
+
+DomainID <|.. DeviceIDVO
+
+
+DeviceRepository o-- Device
+
+
+Device ..left|> DomainEntity
+
+Device *-- DeviceIDVO
+Device *-- DeviceStatusVO
+
+Repository <|.. DeviceRepository
+
+ValueObject <|.. DeviceStatusVO
+
+
+
+@enduml

@@ -1,0 +1,147 @@
+@startuml
+
+title <size: 30> US07 Class Diagram
+note "<b>Only methods related to\n<b>US07 are represented" as N1
+skinparam linetype ortho
+
+       AddSensorToDeviceCTRL ..> DeviceService
+       AddSensorToDeviceCTRL ..> SensorTypeService
+       AddSensorToDeviceCTRL ..> SensorMapper
+       AddSensorToDeviceCTRL ..> SensorTypeMapper
+       AddSensorToDeviceCTRL ..> DeviceMapper
+       AddSensorToDeviceCTRL ..> SensorService
+       SensorService ..> SensorRepository
+       SensorService ..> SensorFactory
+       SensorTypeService ..> SensorTypeRepository
+       SensorFactory -- Sensor : creates >
+       DeviceMapper ..> DeviceDTO
+         DeviceMapper -- DeviceIDVO : creates >
+       SensorMapper ..> SensorDTO
+       SensorMapper -- SensorNameVO : creates >
+       SensorTypeMapper ..> SensorTypeDTO
+         SensorTypeMapper -- SensorTypeIDVO : creates >
+       DeviceService ..> DeviceRepository
+       DeviceRepository ..|> Repository
+       SensorRepository ..|> Repository
+       SensorTypeRepository ..|> Repository
+
+
+    class AddSensorToDeviceCTRL{
+        -sensorService: SensorService
+        -sensorTypeService: SensorTypeService
+        -deviceService: DeviceService
+        +AddSensorToDeviceCTRL(sensorService, sensorTypeService, deviceService)
+        +getListOfSensorTypes(): List<SensorTypeDTO>
+        +addSensorToDevice(deviceDTO, sensorDTO, sensorTypeDTO): boolean
+    }
+
+    class SensorTypeService{
+        -sensorTypeRepository: SensorTypeRepository
+        -sensorTypeFactory: SensorTypeFactory
+        +SensorTypeService(sensorTypeRepository, sensorTypeFactory)
+        +getListOfSensorTypes(): Iterable<SensorType>
+    }
+
+    class SensorTypeRepository{
+        -DATA: Map<SensorTypeIDVO, SensorType>
+        +findAll(): Iterable<SensorType>
+    }
+
+    class SensorService{
+        -sensorRepository: SensorRepository
+        -sensorFactory: SensorFactory
+        +SensorService(sensorRepository, sensorFactory)
+        +createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): Sensor
+        +save(sensor): boolean
+    }
+
+    class SensorRepository{
+        -sensorMap : Map<SensorIDVO, Sensor>
+        +save(sensor): boolean
+    }
+
+    class SensorFactory{
+        -configuration: Configuration
+        +createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): Sensor
+    }
+
+    class SensorMapper{
+        +SensorMapper()
+        +createSensorNameVO(sensorDTO): SensorNameVO
+    }
+
+    class SensorTypeMapper{
+        +SensorTypeMapper()
+        +createSensorTypeIDVO(sensorTypeDTO): SensorTypeIDVO
+        +domainToDTO(listOfSensorTypes): List<SensorTypeDTO>
+    }
+
+    class DeviceMapper{
+        +DeviceMapper()
+        +createDeviceIDVO(deviceDTO): DeviceIDVO
+    }
+
+    class DeviceService{
+        -deviceRepository: DeviceRepository
+        -deviceFactory: DeviceFactory
+        +DeviceService(deviceRepository, deviceFactory)
+        +isActive(deviceIDVO): boolean
+    }
+
+    class DeviceRepository{
+        -DATA: Map<DeviceIDVO, Device>
+        +findById(deviceIDVO): Device
+    }
+
+    class SensorDTO{
+        -sensorName: String
+        -sensorID: String
+        -deviceID: String
+        -sensorTypeID: String
+        +getSensorName(): String
+    }
+
+    class SensorTypeDTO{
+        -sensorTypeID: String
+        -sensorUnit : String
+        +getSensorTypeID(): String
+    }
+
+    class DeviceDTO{
+        -deviceID: String
+        -deviceName: String
+        -deviceModel: String
+        -roomID: String
+        -deviceStatus: boolean
+        +getDeviceID(): String
+    }
+
+    class SensorNameVO{
+        -sensorName: String
+        +SensorNameVO(sensorName)
+    }
+
+    class SensorTypeIDVO{
+        -sensorTypeID: String
+        +SensorTypeIDVO(sensorTypeID)
+    }
+
+    class DeviceIDVO{
+        -deviceID: UUID
+        +DeviceIDVO(deviceID)
+    }
+
+    interface Repository{
+        + findAll() : List<T>
+        + findByID(id : ID) : T
+        + isPresent(id : ID) : boolean
+        + save(ent : T) : boolean
+    }
+
+
+    interface Sensor{
+
+    }
+
+
+@enduml

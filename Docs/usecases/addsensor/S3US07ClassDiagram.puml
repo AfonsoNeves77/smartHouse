@@ -1,0 +1,113 @@
+@startuml
+title <size: 30> US07 Class Diagram
+skinparam linetype ortho
+
+note "<b>Only methods related to\n<b>US07 are represented" as 1
+class AddSensorToDeviceCTRL {
+    - house : House
+    - commonListOfRooms : CommonListOfRooms
+    - commonListOfDevices : CommonListOfDevices
+    - catalogue : SensorCatalogue
+    - room : Room
+
+    + getListOfRooms() : List<RoomDTO>
+    + getListOfDevices() : List<DeviceDTO>
+    + getListOfSensorTypes() : List<String>
+    + addSensorToDevice(sensorName : String, sensorType : String, deviceName : String, externalServices : ExternalServices) : boolean
+}
+
+class ListOfSensors {
+    - listOfSensors : ArrayList<Sensor>
+
+    + addSensor(sensorName : String, sensorType : String, sensorCatalogue : SensorCatalogue, externalServices : ExternalServices)
+    - isASensorInList(sensorName : String) : boolean
+    - findSensor(sensorName : String) : Sensor
+
+}
+
+class SensorCatalogue {
+    - listOfInstantiableSensors : List<String>
+
+    - areConstructorParametersValid(configuration : Configuration) : boolean
+    - areConstructorParametersValid(filePath : String) : boolean
+    + getListOfInstantiableSensors() : List<String>
+    + createSensor(sensorName : String, sensorType : String, externalServices : ExternalServices) : Sensor
+
+
+}
+
+interface Sensor {
+
+    + getName() : String
+
+}
+
+class CommonListOfRooms {
+    - house : House
+    - roomDTOAndRoomMap : LinkedHashMap<RoomDTO, Room>
+    + getListOfRooms() : List<RoomDTO>
+    - truncateList(roomDTOAndRoomMap : Map<RoomDTO, Room>) : List<RoomDTO>
+    + getRoomByName(roomName : String) : Room
+    - refreshMap() : void
+}
+
+class CommonListOfDevices {
+    - house : House
+    - deviceDTOAndDeviceMap : LinkedHashMap<DeviceDTO, Device>
+    + getListOfDevices(room : Room) : List<DeviceDTO>
+    - refreshMap() : void
+    - truncateList(deviceDTOAndDeviceMap : Map<DeviceDTO, Device>) : List<DeviceDTO>
+    + getDeviceByName(room : Room, deviceName : String) : Device
+}
+
+class RoomDTOMapper {
+    + getRoomDTOList(listOfRooms : List<Room>) : LinkedHashMap<RoomDTO, Room>
+    + domainToDTO(room : Room) : RoomDTO
+}
+
+class RoomDTO{
+           - roomName : String
+           - houseFloor : int
+           - roomWidth : double
+           - roomLength : double
+           - roomHeight : double
+       }
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - location : String
+    - status : boolean
+    - listOfSensors : ListOfSensors
+    - listOfActuators : ListOfActuators
+    - deviceFunctionalities : List<String>
+    - areDeviceParametersValid(deviceName : String, deviceModel : String, deviceLocation : String) : boolean
+    + addSensor(sensorName : String, sensorType : String, catalogue : SensorCatalogue , externalServices : ExternalServices) : boolean
+
+}
+
+class DeviceDTOMapper {
+    + domainToDTO(deviceList : List<Device>) : ArrayList<DeviceDTO>
+    + getDeviceDTOList(listOfDevices : List<Device>) : LinkedHashMap<DeviceDTO, Device>
+
+}
+
+class DeviceDTO{
+           - deviceName : String
+           - deviceModel : String
+           - location : String
+           - status : boolean
+           }
+
+       AddSensorToDeviceCTRL ..> CommonListOfRooms
+       AddSensorToDeviceCTRL ..> Device
+       Device  "1" *-- "1" ListOfSensors
+       ListOfSensors ..> SensorCatalogue
+       SensorCatalogue -- Sensor : creates >
+       CommonListOfRooms ..> RoomDTOMapper
+       AddSensorToDeviceCTRL..> CommonListOfDevices
+       CommonListOfDevices ..> DeviceDTOMapper
+       DeviceDTOMapper ..> DeviceDTO
+       RoomDTOMapper ..> RoomDTO
+
+@enduml

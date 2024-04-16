@@ -1,0 +1,42 @@
+@startuml
+skinparam ParticipantPadding 50
+    title User Story 7: Main Success Scenario
+    autonumber
+
+participant ":AddSensorToDeviceCTRL" as C
+participant ":SensorTypeService" as STS
+participant ":SensorTypeRepository" as STR
+participant ":SensorTypeMapper" as STM
+
+
+
+
+[o-> C : getListOfSensorTypes()
+activate C
+C -> STS : getListOfSensorTypes()
+activate STS
+STS -> STR : findAll()
+activate STR
+STR --> STS : sensorTypeList
+deactivate STR
+loop for each sensorType in sensorTypeList
+    STS -> STS : listOfSensorTypes.add(sensorType)
+    activate STS
+    deactivate STS
+    end
+STS --> C : listOfSensorTypes
+deactivate STS
+C -> STM : domainToDTO(listOfSensorTypes)
+activate STM
+loop for each sensorType in listOfSensorTypes
+    STM -> STM : SensorTypeDTO = domainToDTO(sensorType)
+    activate STM
+    deactivate STM
+    STM -> STM : sensorTypeDTOList.add(SensorTypeDTO)
+    activate STM
+    deactivate STM
+end
+STM --> C : sensorTypeDTOList
+deactivate STM
+[o<-- C : sensorTypeDTOList
+@enduml

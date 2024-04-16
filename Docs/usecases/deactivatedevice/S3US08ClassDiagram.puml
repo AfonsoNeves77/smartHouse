@@ -1,0 +1,101 @@
+@startuml
+title <size: 30> US08 Class Diagram
+skinparam linetype ortho
+
+note "<b>Only methods related to\n<b>US08 are represented" as 1
+class DeactivateDeviceCTRL {
+    - house : House
+    - commonListOfDevices : CommonListOfDevices
+    - commonListOfRooms : CommonListOfRooms
+    - room : Room
+    + getListOfRooms() : List<RoomDTO>
+    + getListOfDevices(roomName : String) : List<DeviceDTO>
+    + deactivateDevice(deviceName : String) : boolean
+}
+
+class CommonListOfRooms {
+    - house : House
+    + getListOfRooms() : List<Room>
+    - refreshMap() : void
+}
+
+class CommonListOfDevices {
+    - house : House
+    - deviceDTOAndDeviceMap : LinkedHashMap<DeviceDTO, Device>
+    + getListOfDevices(room : Room) : List<DeviceDTO>
+    - refreshMap() : void
+    - truncateList(deviceDTOAndDeviceMap : Map<DeviceDTO, Device>) : List<DeviceDTO>
+    + getDeviceByName(room : Room, deviceName : String) : Device
+}
+
+class House {
+    - listOfRooms : ListOfRooms
+    + getListOfRooms() : List<Room>
+}
+
+class Room {
+    - deviceList : ListOfDevices
+    + getListOfDevices() : List<Device>
+}
+
+class ListOfRooms {
+    - roomList : ArrayList<Room>
+    + getRoomList() : List<Room>
+    + getRoomByName(roomName : String) : Room
+}
+
+class RoomDTOMapper {
+    + dtoToDomain (roomDTO : RoomDTO) : Room
+    + getRoomDTOList(listOfRooms : List<Room>) : LinkedHashMap<RoomDTO, Room>
+    + domainToDTO(room : Room) : RoomDTO
+}
+
+class RoomDTO {
+    - roomName : String
+    - houseFloor : int
+    - roomWidth : double
+    - roomLength : double
+    - roomHeight : double
+}
+
+class ListOfDevices {
+    - listOfDevices : ArrayList<Device>
+}
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - location : String
+    - status : boolean
+    - listOfSensors : ListOfSensors
+    - listOfActuators : ListOfActuators
+    - deviceFunctionalities : List<String>
+    + deactivateDevice() : boolean
+}
+
+class DeviceDTOMapper {
+    + domainToDTO(list : ArrayList<Device>) : ArrayList<DeviceDTO>
+    + getDeviceDTOList(listOfDevices : List<Device>) : LinkedHashMap<DeviceDTO, Device>
+
+}
+
+class DeviceDTO {
+    - deviceName : String
+    - deviceModel : String
+    - location : String
+    - status : boolean
+}
+
+DeactivateDeviceCTRL ..> CommonListOfRooms
+CommonListOfRooms -.> House
+House "1" *-- "1" ListOfRooms
+CommonListOfRooms -left..> RoomDTOMapper
+RoomDTOMapper ..> RoomDTO
+CommonListOfDevices  ..>  Room
+Room "1" *-- "1" ListOfDevices
+ListOfDevices "1" *-- "*" Device
+DeactivateDeviceCTRL ..> CommonListOfDevices
+CommonListOfDevices -right..> DeviceDTOMapper
+DeviceDTOMapper ..> DeviceDTO
+
+@enduml

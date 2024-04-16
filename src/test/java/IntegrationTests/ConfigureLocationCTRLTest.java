@@ -1,11 +1,12 @@
 package IntegrationTests;
 
-import SmartHomeDDD.controller.ConfigureLocationCTRL;
-import SmartHomeDDD.domain.house.HouseFactory;
-import SmartHomeDDD.dto.LocationDTO;
-import SmartHomeDDD.repository.HouseRepository;
-import SmartHomeDDD.services.HouseService;
-import SmartHomeDDD.vo.houseVO.*;
+import smarthome.controller.ConfigureLocationCTRL;
+import smarthome.domain.house.House;
+import smarthome.domain.house.HouseFactoryImpl;
+import smarthome.dto.LocationDTO;
+import smarthome.repository.HouseRepositoryMem;
+import smarthome.services.HouseServiceImpl;
+import smarthome.vo.housevo.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,15 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for the ConfigureLocationCTRL class
  */
 
-public class ConfigureLocationCTRLTest {
+class ConfigureLocationCTRLTest {
 
-    private HouseRepository houseRepository;
-    private HouseFactory houseFactory;
-    private HouseService houseService;
-    private String door, street, city, country, postalCode;
-    private double latitude, longitude;
-    private LocationDTO locationDTO;
-
+    private HouseRepositoryMem houseRepositoryMem;
+    private HouseServiceImpl houseServiceImpl;
     /**
      * Method that initializes the house repository, house factory, house service, door, street, city, country,
      * postal code, latitude, longitude and location data transfer object
@@ -31,17 +27,9 @@ public class ConfigureLocationCTRLTest {
 
     @BeforeEach
     void setUp() {
-        houseRepository = new HouseRepository();
-        houseFactory = new HouseFactory();
-        houseService = new HouseService(houseRepository, houseFactory);
-        door = "1";
-        street = "Street";
-        city = "City";
-        country = "Portugal";
-        postalCode = "PT-1234-567";
-        latitude = 77.777;
-        longitude = -89.999;
-        locationDTO = new LocationDTO(door, street, city, country, postalCode, latitude, longitude);
+        houseRepositoryMem = new HouseRepositoryMem();
+        HouseFactoryImpl houseFactoryImpl = new HouseFactoryImpl();
+        houseServiceImpl = new HouseServiceImpl(houseRepositoryMem, houseFactoryImpl);
     }
 
     /**
@@ -52,9 +40,9 @@ public class ConfigureLocationCTRLTest {
     @Test
     void givenNullHouseService_whenCreateConfigureLocationCTRL_thenThrowIllegalArgumentException() {
 //        Arrange
-        houseService = null;
+        houseServiceImpl = null;
 //        Act + Assert
-        assertThrows(IllegalArgumentException.class, () -> new ConfigureLocationCTRL(houseService));
+        assertThrows(IllegalArgumentException.class, () -> new ConfigureLocationCTRL(houseServiceImpl));
     }
 
     /**
@@ -65,54 +53,72 @@ public class ConfigureLocationCTRLTest {
     @Test
     void givenNullLocationDTO_whenUpdateLocation_thenReturnFalse() {
 //        Arrange
-        locationDTO = null;
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
-        boolean result = configureLocationCTRL.updateLocation(locationDTO);
+        boolean result = configureLocationCTRL.updateLocation(null);
 //        Assert
         assertFalse(result);
     }
 
     /**
-     * Method that tests the update of the location of the house
-     * The test checks if the location data transfer object is valid and returns true
-     * First, it creates all the necessary value objects to create a location value object
-     * Then, it creates a location value object and a house by calling the createNewHouse method on house service
-     * Finally, it creates a ConfigureLocationCTRL object and calls the updateLocation method with the location data transfer object
+     * Test method to verify that when a valid LocationDTO is provided to update a location,
+     * the updateLocation method in the ConfigureLocationCTRL returns true,
+     * indicating a successful update of the house's location.
+     * This test also verifies that the updated location values match the expected values.
      */
-
     @Test
     void givenValidLocationDTO_whenUpdateLocation_thenReturnTrue() {
 //        Arrange
-        String doorNumber = "2";
-        String streetName = "Street2";
-        String cityName = "City2";
-        String countryName = "France";
-        String postalCodeName = "FR-1234-567";
+        String expectedDoorNumber = "2";
+        String expectedStreetName = "Street2";
+        String expectedCityName = "City2";
+        String expectedCountryName = "France";
+        String expectedPostalCodeName = "FR-1234-567";
 
-        DoorVO door = new DoorVO(doorNumber);
-        StreetVO street = new StreetVO(streetName);
-        CityVO city = new CityVO(cityName);
-        CountryVO country = new CountryVO(countryName);
-        PostalCodeVO postalCode = new PostalCodeVO(postalCodeName);
+        DoorVO door = new DoorVO(expectedDoorNumber);
+        StreetVO street = new StreetVO(expectedStreetName);
+        CityVO city = new CityVO(expectedCityName);
+        CountryVO country = new CountryVO(expectedCountryName);
+        PostalCodeVO postalCode = new PostalCodeVO(expectedPostalCodeName);
         AddressVO addressVO = new AddressVO(door, street, city, country, postalCode);
 
-        double latitudeValue = 77.777;
-        double longitudeValue = -89.999;
+        double expectedLatitudeValue = 77.777;
+        double expectedLongitudeValue = -89.999;
 
-        LatitudeVO latitude = new LatitudeVO(latitudeValue);
-        LongitudeVO longitude = new LongitudeVO(longitudeValue);
+        LatitudeVO latitude = new LatitudeVO(expectedLatitudeValue);
+        LongitudeVO longitude = new LongitudeVO(expectedLongitudeValue);
         GpsVO gpsVO = new GpsVO(latitude, longitude);
 
         LocationVO locationVO = new LocationVO(addressVO, gpsVO);
 
-        houseService.createNewHouse(locationVO);
+        LocationDTO locationDTO1 = new LocationDTO(expectedDoorNumber,expectedStreetName,expectedCityName,expectedCountryName,expectedPostalCodeName,expectedLatitudeValue,expectedLongitudeValue);
 
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        houseServiceImpl.addHouse(locationVO);
+
+        House house = houseRepositoryMem.getFirstHouse();
+
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
+
+        LocationVO resultLocation = house.getLocation();
 //        Act
-        boolean result = configureLocationCTRL.updateLocation(locationDTO);
+        boolean result = configureLocationCTRL.updateLocation(locationDTO1);
+        String resultDoorNumber = resultLocation.getDoor();
+        String resultStreetName = resultLocation.getStreet();
+        String resultCountry = resultLocation.getCountry();
+        String resultCity = resultLocation.getCity();
+        String resultPostalCode = resultLocation.getPostalCode();
+        double resultLatitude = resultLocation.getLatitude();
+        double resultLongitude = resultLocation.getLongitude();
+
 //        Assert
         assertTrue(result);
+        assertEquals(expectedDoorNumber,resultDoorNumber);
+        assertEquals(expectedStreetName,resultStreetName);
+        assertEquals(expectedCountryName,resultCountry);
+        assertEquals(expectedCityName,resultCity);
+        assertEquals(expectedPostalCodeName,resultPostalCode);
+        assertEquals(expectedLatitudeValue,resultLatitude);
+        assertEquals(expectedLongitudeValue,resultLongitude);
     }
 
     /**
@@ -123,15 +129,14 @@ public class ConfigureLocationCTRLTest {
     @Test
     void givenNullDoorNumber_whenUpdateLocation_thenReturnFalse() {
 //        Arrange
-        String doorNumber = null;
         String streetName = "Street2";
         String cityName = "City2";
         String countryName = "France";
         String postalCodeName = "FR-1234-567";
         double latitudeValue = 77.777;
         double longitudeValue = -89.999;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(null, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -147,14 +152,13 @@ public class ConfigureLocationCTRLTest {
     void givenNullStreetName_whenUpdateLocation_thenReturnFalse() {
 //        Arrange
         String doorNumber = "2";
-        String streetName = null;
         String cityName = "City2";
         String countryName = "France";
         String postalCodeName = "FR-1234-567";
         double latitudeValue = 77.777;
         double longitudeValue = -89.999;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, null, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -171,13 +175,12 @@ public class ConfigureLocationCTRLTest {
 //        Arrange
         String doorNumber = "2";
         String streetName = "Street2";
-        String cityName = null;
         String countryName = "France";
         String postalCodeName = "FR-1234-567";
         double latitudeValue = 77.777;
         double longitudeValue = -89.999;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, null, countryName, postalCodeName, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -195,12 +198,11 @@ public class ConfigureLocationCTRLTest {
         String doorNumber = "2";
         String streetName = "Street2";
         String cityName = "City2";
-        String countryName = null;
         String postalCodeName = "FR-1234-567";
         double latitudeValue = 77.777;
         double longitudeValue = -89.999;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, null, postalCodeName, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -219,11 +221,10 @@ public class ConfigureLocationCTRLTest {
         String streetName = "Street2";
         String cityName = "City2";
         String countryName = "France";
-        String postalCodeName = null;
         double latitudeValue = 77.777;
         double longitudeValue = -89.999;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, null, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -246,7 +247,7 @@ public class ConfigureLocationCTRLTest {
         double latitudeValue = -100.54321;
         double longitudeValue = -89.999;
         LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -269,7 +270,7 @@ public class ConfigureLocationCTRLTest {
         double latitudeValue = 77.777;
         double longitudeValue = -200.54321;
         LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert
@@ -284,15 +285,10 @@ public class ConfigureLocationCTRLTest {
     @Test
     void givenLocationDTOWithAllNullOrInvalidValues_whenUpdateLocation_thenReturnFalse() {
 //        Arrange
-        String doorNumber = null;
-        String streetName = null;
-        String cityName = null;
-        String countryName = null;
-        String postalCodeName = null;
         double latitudeValue = -100.54321;
         double longitudeValue = -200.54321;
-        LocationDTO secondLocationDTO = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, latitudeValue, longitudeValue);
-        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
+        LocationDTO secondLocationDTO = new LocationDTO(null, null, null, null, null, latitudeValue, longitudeValue);
+        ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseServiceImpl);
 //        Act
         boolean result = configureLocationCTRL.updateLocation(secondLocationDTO);
 //        Assert

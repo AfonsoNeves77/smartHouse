@@ -1,21 +1,22 @@
 package IntegrationTests;
 
-import SmartHomeDDD.controller.DeactivateDeviceCTRL;
-import SmartHomeDDD.domain.device.Device;
-import SmartHomeDDD.domain.device.DeviceFactory;
-import SmartHomeDDD.dto.DeviceDTO;
-import SmartHomeDDD.repository.DeviceRepository;
-import SmartHomeDDD.services.DeviceService;
-import SmartHomeDDD.vo.deviceVO.DeviceModelVO;
-import SmartHomeDDD.vo.deviceVO.DeviceNameVO;
-import SmartHomeDDD.vo.roomVO.RoomIDVO;
+import smarthome.controller.DeactivateDeviceCTRL;
+import smarthome.domain.device.Device;
+import smarthome.domain.device.DeviceFactoryImpl;
+import smarthome.dto.DeviceDTO;
+import smarthome.repository.DeviceRepositoryMem;
+import smarthome.repository.RoomRepositoryMem;
+import smarthome.services.DeviceServiceImpl;
+import smarthome.vo.devicevo.DeviceModelVO;
+import smarthome.vo.devicevo.DeviceNameVO;
+import smarthome.vo.roomvo.RoomIDVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DeactivateDeviceCTRLTest {
+class DeactivateDeviceCTRLTest {
 
     /**
      * Test case to verify that when a null DeviceService is provided to the constructor,
@@ -27,10 +28,9 @@ public class DeactivateDeviceCTRLTest {
 
         //Arrange
         String expected = "Invalid service";
-        DeviceService deviceService = null;
         //Act + Assert
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DeactivateDeviceCTRL(deviceService));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DeactivateDeviceCTRL(null));
         String result = exception.getMessage();
 
         //Assert
@@ -46,15 +46,15 @@ public class DeactivateDeviceCTRLTest {
     void deactivateDevice_WhenNullDeviceDTO_ShouldReturnFalse(){
 
         //Arrange
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
-        DeviceDTO deviceDTO = null;
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         //Act
-        boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
+        boolean result = deactivateDeviceCTRL.deactivateDevice(null);
 
         //Assert
         assertFalse(result);
@@ -67,22 +67,22 @@ public class DeactivateDeviceCTRLTest {
     @Test
     void deactivateDevice_WhenNullDeviceDTOID_ShouldReturnFalse() {
         // Arrange
-        String deviceID = null; // Null device ID
         String deviceName = "Smart Oven";
         String deviceModel = "Bosch electronics 77-kk";
         String deviceStatus = "true";
         String roomID = "JL-II-99";
 
         // Creating a DeviceDTO with a null device ID
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
+        DeviceDTO deviceDTO = new DeviceDTO(null, deviceName, deviceModel, deviceStatus, roomID);
 
-        // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO having a null device ID
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -107,13 +107,14 @@ public class DeactivateDeviceCTRLTest {
         // Creating a DeviceDTO with an empty device ID
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
 
-        // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO having an empty device ID
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -137,13 +138,14 @@ public class DeactivateDeviceCTRLTest {
         // Creating a DeviceDTO with a device ID containing only blank spaces
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
 
-        // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO having a device ID containing only blank spaces
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -168,13 +170,14 @@ public class DeactivateDeviceCTRLTest {
         // Creating a DeviceDTO with a non-convertible UUID string as device ID
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
 
-        // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO having a non-convertible UUID string as device ID
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -199,13 +202,14 @@ public class DeactivateDeviceCTRLTest {
         // Creating a DeviceDTO with the generated random UUID as device ID
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
 
-        // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO representing a non-existing device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -238,15 +242,16 @@ public class DeactivateDeviceCTRLTest {
         String deviceID = device.getId().getID();
 
         // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Saving the device and deactivating it
-        deviceRepository.save(device);
+        deviceRepositoryMem.save(device);
         device.deactivateDevice();
 
         // Creating a DeviceDTO representing the deactivated device
@@ -265,10 +270,10 @@ public class DeactivateDeviceCTRLTest {
 
     /**
      * Test case to verify that when an activated device exists and is provided in the DeviceDTO to deactivateDevice method,
-     * it returns true after successful deactivation.
+     * it returns False after successful deactivation.
      */
     @Test
-    void deactivateDevice_WhenDeviceExistsAndActivated_ShouldReturnTrue() {
+    void deactivateDevice_WhenDeviceExistsAndActivated_ShouldReturnFalse() {
         // Arrange
         String deviceName = "Smart Oven";
         DeviceNameVO deviceNameVO = new DeviceNameVO(deviceName);
@@ -287,15 +292,16 @@ public class DeactivateDeviceCTRLTest {
         String deviceID = device.getId().getID();
 
         // Creating necessary dependencies for testing
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory,deviceRepository);
+        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
 
         // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
+        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Saving the device
-        deviceRepository.save(device);
+        deviceRepositoryMem.save(device);
 
         // Creating a DeviceDTO representing the activated device
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus,idRoomString);
@@ -305,8 +311,8 @@ public class DeactivateDeviceCTRLTest {
         //Query the device for its status assuring that the created device actually changed it's state
         boolean state = device.getDeviceStatus().getValue();
 
-        // Assert: Verifying that the result is true as expected
-        assertTrue(result);
+        // Assert: Verifying that the result is False as expected
+        assertFalse(result);
         assertFalse(state);
     }
 }

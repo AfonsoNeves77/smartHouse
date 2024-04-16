@@ -1,199 +1,148 @@
 package IntegrationTests;
 
-import SmartHomeDDD.controller.GetListOfDevicesCTRL;
-import SmartHomeDDD.domain.device.Device;
-import SmartHomeDDD.domain.device.DeviceFactory;
-import SmartHomeDDD.domain.room.Room;
-import SmartHomeDDD.domain.room.RoomFactory;
-import SmartHomeDDD.dto.DeviceDTO;
-import SmartHomeDDD.dto.RoomDTO;
-import SmartHomeDDD.repository.DeviceRepository;
-import SmartHomeDDD.repository.RoomRepository;
-import SmartHomeDDD.services.DeviceService;
-import SmartHomeDDD.services.RoomService;
-import SmartHomeDDD.vo.deviceVO.DeviceModelVO;
-import SmartHomeDDD.vo.deviceVO.DeviceNameVO;
-import SmartHomeDDD.vo.houseVO.HouseIDVO;
-import SmartHomeDDD.vo.roomVO.*;
+import smarthome.controller.GetListOfDevicesCTRL;
+import smarthome.domain.device.Device;
+import smarthome.domain.device.DeviceFactoryImpl;
+import smarthome.domain.room.Room;
+import smarthome.domain.room.RoomFactoryImpl;
+import smarthome.dto.DeviceDTO;
+import smarthome.dto.RoomDTO;
+import smarthome.repository.DeviceRepositoryMem;
+import smarthome.repository.RoomRepositoryMem;
+import smarthome.services.DeviceServiceImpl;
+import smarthome.vo.devicevo.DeviceModelVO;
+import smarthome.vo.devicevo.DeviceNameVO;
+import smarthome.vo.housevo.HouseIDVO;
+import smarthome.vo.roomvo.*;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetListOfDevicesCTRLTest {
 
     /**
-     * Test for the constructor of GetListOfDevicesCTRL.
-     * When the RoomService is null, it should throw an IllegalArgumentException.
-     * A room service is declared null.
-     * Then, a device service is created injected with both device factory and device repository.
-     * An expected message is declared.
-     * An exception is thrown when the constructor is called.
-     * The result is the message of the exception, which should be the same as the expected message.
+     * Test case to verify that when the RoomService parameter is null,
+     * creating a GetListOfDevicesCTRL controller throws an IllegalArgumentException
+     * with the expected error message.
+     * The test arranges for a null RoomService, then tries to create a
+     * GetListOfDevicesCTRL controller with this null parameter. It expects
+     * an IllegalArgumentException to be thrown with the message "Invalid parameters."
+     * @throws IllegalArgumentException if RoomService parameter is null
      */
     @Test
     void whenRoomServiceIsNull_thenThrowsIllegalArgumentException(){
         //Arrange
-
-        RoomService roomService = null;
-
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
         String expected = "Invalid parameters.";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new GetListOfDevicesCTRL(roomService, deviceService);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            new GetListOfDevicesCTRL(null));
         String result = exception.getMessage();
+
         //Assert
         assertEquals(expected, result);
     }
 
     /**
-     * Test for the constructor of GetListOfDevicesCTRL.
-     * When the DeviceService is null, it should throw an IllegalArgumentException.
-     * A device service is declared null.
-     * Then, a room service is created injected with both room factory and room repository.
-     * An expected message is declared.
-     * An exception is thrown when the constructor is called.
-     * The result is the message of the exception, which should be the same as the expected message.
-     */
-    @Test
-    void whenDeviceServiceIsNull_thenThrowsIllegalArgumentException(){
-        //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
-
-        DeviceService deviceService = null;
-
-        String expected = "Invalid parameters.";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new GetListOfDevicesCTRL(roomService, deviceService);
-        });
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test for the constructor of GetListOfDevicesCTRL.
-     * When the parameters are valid, it should return an object.
-     * A room service is created injected with both room factory and room repository.
-     * A device service is created injected with both device factory and device repository.
-     * The constructor is called with the room service and device service.
-     * The result is the object created, which should not be null.
+     * Test case to verify that when valid parameters are provided,
+     * creating a GetListOfDevicesCTRL controller with the specified
+     * DeviceService returns a non-null object.
+     * The test sets up a memory repository, device repository, factory,
+     * and service for devices. It then creates a GetListOfDevicesCTRL
+     * controller with the device service. The test asserts that the
+     * controller object is not null, indicating successful instantiation.
      */
     @Test
     void whenParametersValid_thenReturnsObject(){
         //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
-
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
+        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        DeviceRepositoryMem deviceRepository = new DeviceRepositoryMem();
+        DeviceFactoryImpl deviceFactory = new DeviceFactoryImpl();
+        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryMem,deviceFactory,deviceRepository);
 
         //Act
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(roomService, deviceService);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
         //Assert
         assertNotNull(getListOfDevicesCTRL);
     }
 
     /**
-     * Test for the method getListOfDevices.
-     * When the room does not exist, it should return an empty list.
-     * A room service is created, injected with both room factory and room repository.
-     * A device service is created, injected with both device factory and device repository.
-     * A room DTO is created with a room ID that does not exist in the repository.
-     * A GetListOfDevicesCTRL is created with the room service and device service.
-     * The method getListOfDevices is called with the room DTO.
-     * The result is the list of devices, which should be empty.
+     * Test case to verify that when a room does not exist (not found),
+     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
+     * with a RoomDTO representing that room returns an empty list of DeviceDTO.
+     * The test sets up a RoomDTO for a room that does not exist in the memory repository,
+     * then creates a new GetListOfDevicesCTRL controller with a DeviceService.
+     * When calling getListOfDevices() with the non-existent room, it asserts
+     * that the returned list of DeviceDTO objects is empty.
      */
     @Test
-    void whenRoomDoesNotExist_thenReturnsAnEmptyList() throws InstantiationException {
+    void whenRoomDoesNotExist_thenReturnsAnEmptyList() {
         //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
+        RoomDTO roomDTO = new RoomDTO(UUID.randomUUID().toString(),"room1",2,3,3,2,UUID.randomUUID().toString());
 
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
+        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        DeviceRepositoryMem deviceRepository = new DeviceRepositoryMem();
+        DeviceFactoryImpl deviceFactory = new DeviceFactoryImpl();
+        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryMem,deviceFactory,deviceRepository);
 
-        String roomName1 = "room1";
-        int roomFloor1 = 1;
-        double roomWidth1 = 10.0;
-        double roomLength1 = 10.0;
-        double roomHeight1 = 10.0;
-        String roomID1 = "123e4567-e89b-12d3-a456-426614174001";
-        String houseIDVO1 = "123e4567-e89b-12d3-a456-426614174000";
-        RoomDTO roomDTO = new RoomDTO(roomID1,roomName1,roomFloor1,roomHeight1,roomLength1,roomWidth1,houseIDVO1);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(roomService, deviceService);
-
+        List<DeviceDTO> expected = new ArrayList<>();
         //Act
-        List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
+        List<DeviceDTO> result = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Assert
-        assertTrue(deviceDTOList.isEmpty());
+        assertEquals(expected,result);
     }
 
     /**
-     * Test for the method getListOfDevices.
-     * When the room has no devices, it should return an empty list.
-     * A room service is created, injected with both room factory and room repository.
-     * A device service is created, injected with both device factory and device repository.
-     * A room is created and saved in the repository.
-     * A room DTO is created with the room ID of the room created.
-     * A GetListOfDevicesCTRL is created with the room service and device service.
-     * The method getListOfDevices is called with the room DTO.
-     * The result is the list of devices, which should be empty.
-     * @throws InstantiationException
+     * Test case to verify that when a room has no devices,
+     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
+     * with the RoomDTO representing that room returns an empty list of DeviceDTO.
+     * The test sets up a room with specific dimensions and properties but no devices,
+     * then creates a GetListOfDevicesCTRL controller with a DeviceService.
+     * When calling getListOfDevices() with this room, it asserts that the returned
+     * list of DeviceDTO objects is empty.
      */
     @Test
-    void ifRoomHasNoDevices_whenGetListOfDevicesIsCalled_thenReturnsEmptyList() throws InstantiationException {
+    void ifRoomHasNoDevices_whenGetListOfDevicesIsCalled_thenReturnsEmptyList() {
         //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
+        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
 
-        RoomWidthVO roomWidthVO = new RoomWidthVO(10.0);
-        RoomLengthVO roomLengthVO = new RoomLengthVO(10.0);
-        RoomHeightVO roomHeightVO = new RoomHeightVO(10.0);
+        double roomWidth = 10.0;
+        RoomWidthVO roomWidthVO = new RoomWidthVO(roomWidth);
+        double roomLength = 10.0;
+        RoomLengthVO roomLengthVO = new RoomLengthVO(roomLength);
+        double roomHeight = 10.0;
+        RoomHeightVO roomHeightVO = new RoomHeightVO(roomHeight);
         RoomDimensionsVO roomDimensionsVO = new RoomDimensionsVO(roomLengthVO, roomWidthVO, roomHeightVO);
 
-        RoomNameVO roomNameVO = new RoomNameVO("room1");
-        RoomFloorVO roomFloorVO = new RoomFloorVO(1);
+        String roomName = "room1";
+        RoomNameVO roomNameVO = new RoomNameVO(roomName);
+        int roomFloor = 1;
+        RoomFloorVO roomFloorVO = new RoomFloorVO(roomFloor);
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
 
-        Room room = roomFactory.createRoom(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepository.save(room);
+        Room room = new Room (roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
+        roomRepositoryMem.save(room);
 
-
-        String roomName = "room1";
-        int roomFloor = 1;
-        double roomWidth = 10.0;
-        double roomLength = 10.0;
-        double roomHeight = 10.0;
         String roomID = room.getId().getID();
         String houseIDVO = "124e4567-e89b-12d3-a456-426614174000";
+
         RoomDTO roomDTO = new RoomDTO(roomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
 
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(roomService, deviceService);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
 
         //Act
 
@@ -204,24 +153,21 @@ class GetListOfDevicesCTRLTest {
     }
 
     /**
-     * Test for the method getListOfDevices.
-     * When the room has one device, it should return a list with one device.
-     * A room service is created, injected with both room factory and room repository.
-     * A device service is created, injected with both device factory and device repository.
-     * A room is created and saved in the repository.
-     * A device is created and saved in the repository.
-     * A room DTO is created with the room ID of the room created.
-     * A GetListOfDevicesCTRL is created with the room service and device service.
-     * The method getListOfDevices is called with the room DTO.
-     * The result is the list of devices, which should have one device.
-     * @throws InstantiationException
+     * Test case to verify that when a room has one device,
+     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
+     * with the RoomDTO representing that room returns a list containing
+     * the DeviceDTO for that device.
+     * The test sets up a room with specific dimensions and properties,
+     * then adds a single device to that room. It creates a GetListOfDevicesCTRL
+     * controller with a DeviceService. When calling getListOfDevices() with
+     * the room, it asserts that the returned list of DeviceDTO objects contains
+     * the details of the device added to the room.
      */
     @Test
-    void ifRoomHasOneDevice_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() throws InstantiationException {
+    void ifRoomHasOneDevice_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() {
         //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
+        RoomFactoryImpl roomFactoryImpl = new RoomFactoryImpl();
+        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
 
         RoomWidthVO roomWidthVO = new RoomWidthVO(10.0);
         RoomLengthVO roomLengthVO = new RoomLengthVO(10.0);
@@ -232,8 +178,8 @@ class GetListOfDevicesCTRLTest {
         RoomFloorVO roomFloorVO = new RoomFloorVO(1);
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
 
-        Room room = roomFactory.createRoom(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepository.save(room);
+        Room room = roomFactoryImpl.createRoom(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
+        roomRepositoryMem.save(room);
 
 
         String roomName = "room1";
@@ -241,56 +187,61 @@ class GetListOfDevicesCTRLTest {
         double roomWidth = 10.0;
         double roomLength = 10.0;
         double roomHeight = 10.0;
-        String roomID = room.getId().getID();
+        String expectedRoomID = room.getId().getID();
         String houseIDVO = "124e4567-e89b-12d3-a456-426614174000";
-        RoomDTO roomDTO = new RoomDTO(roomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
+        RoomDTO roomDTO = new RoomDTO(expectedRoomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
 
-        RoomIDVO roomIDVO = new RoomIDVO(UUID.fromString(roomID));
+        RoomIDVO roomIDVO = room.getId();
 
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Fridge");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("123QWE");
+        String expectedDeviceName = "Fridge";
+        DeviceNameVO deviceNameVO = new DeviceNameVO(expectedDeviceName);
+        String expectedDeviceModel = "123QWE";
+        DeviceModelVO deviceModelVO = new DeviceModelVO(expectedDeviceModel);
 
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
 
-        Device device = deviceFactory.createDevice(deviceNameVO, deviceModelVO, roomIDVO);
-        deviceRepository.save(device);
+        Device device = deviceFactoryImpl.createDevice(deviceNameVO, deviceModelVO, roomIDVO);
+        deviceRepositoryMem.save(device);
 
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(roomService, deviceService);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
 
-        String expected = "Fridge";
         int expectedSize = 1;
+        List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Act
-        List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
-        String result = deviceDTOList.get(0).getDeviceName();
+        String resultName = deviceDTOList.get(0).getDeviceName();
+        String resultModel = deviceDTOList.get(0).getDeviceModel();
+        String resultRoomID = deviceDTOList.get(0).getRoomID();
+        int resultSize = deviceDTOList.size();
+        String resultStatus = deviceDTOList.get(0).getDeviceStatus();
 
         //Assert
-        assertEquals(expected, result);
-        assertEquals(expectedSize, deviceDTOList.size());
+        assertEquals(expectedDeviceName, resultName);
+        assertEquals(expectedDeviceModel, resultModel);
+        assertEquals(expectedRoomID, resultRoomID);
+        assertEquals(expectedSize, resultSize);
+        assertEquals("true", resultStatus);
         }
 
     /**
-     * Test for the method getListOfDevices.
-     * When the room has two devices, it should return a list with two devices.
-     * A room service is created, injected with both room factory and room repository.
-     * A device service is created, injected with both device factory and device repository.
-     * A room is created and saved in the repository.
-     * Two devices are created and saved in the repository.
-     * A room DTO is created with the room ID of the room created.
-     * A GetListOfDevicesCTRL is created with the room service and device service.
-     * The method getListOfDevices is called with the room DTO.
-     * The result is the list of devices, which should have two devices.
-     * @throws InstantiationException
+     * Test case to verify that when a room has two devices,
+     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
+     * with the RoomDTO representing that room returns a list containing
+     * the DeviceDTOs for both devices.
+     * The test sets up a room with specific dimensions and properties,
+     * then adds two devices to that room. It creates a GetListOfDevicesCTRL
+     * controller with a DeviceService. When calling getListOfDevices() with
+     * the room, it asserts that the returned list of DeviceDTO objects contains
+     * the details of both devices added to the room, including device names,
+     * models, statuses, and IDs.
      */
     @Test
-    void ifRoomHasTwoDevices_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() throws InstantiationException {
+    void ifRoomHasTwoDevices_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() {
         //Arrange
-        RoomFactory roomFactory = new RoomFactory();
-        RoomRepository roomRepository = new RoomRepository();
-        RoomService roomService = new RoomService(roomRepository, roomFactory);
+        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
 
         RoomWidthVO roomWidthVO = new RoomWidthVO(10.0);
         RoomLengthVO roomLengthVO = new RoomLengthVO(10.0);
@@ -301,9 +252,8 @@ class GetListOfDevicesCTRLTest {
         RoomFloorVO roomFloorVO = new RoomFloorVO(1);
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
 
-        Room room = roomFactory.createRoom(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepository.save(room);
-
+        Room room =  new Room(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
+        roomRepositoryMem.save(room);
 
         String roomName = "quarto";
         int roomFloor = 1;
@@ -316,36 +266,56 @@ class GetListOfDevicesCTRLTest {
 
         RoomIDVO roomIDVO = new RoomIDVO(UUID.fromString(roomID));
 
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Fridge");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("123QWE");
+        String expectedName1 = "Fridge";
+        DeviceNameVO deviceName1VO = new DeviceNameVO(expectedName1);
+        String expectedModel1 = "123QWE";
+        DeviceModelVO deviceModel1VO = new DeviceModelVO(expectedModel1);
 
-        DeviceNameVO deviceNameVO2 = new DeviceNameVO("AirConditioner");
-        DeviceModelVO deviceModelVO2 = new DeviceModelVO("456QWE");
+        String expectedName2 = "AirConditioner";
+        DeviceNameVO deviceNameVO2 = new DeviceNameVO(expectedName2);
+        String expectedModel2 = "456QWE";
+        DeviceModelVO deviceModelVO2 = new DeviceModelVO(expectedModel2);
 
-        DeviceFactory deviceFactory = new DeviceFactory();
-        DeviceRepository deviceRepository = new DeviceRepository();
+        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
+        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
 
-        Device device = deviceFactory.createDevice(deviceNameVO, deviceModelVO, roomIDVO);
-        Device device2 = deviceFactory.createDevice(deviceNameVO2,deviceModelVO2,roomIDVO);
-        deviceRepository.save(device);
-        deviceRepository.save(device2);
+        Device device = new Device(deviceName1VO, deviceModel1VO, roomIDVO);
+        Device device2 = new Device(deviceNameVO2,deviceModelVO2,roomIDVO);
+        deviceRepositoryMem.save(device);
+        deviceRepositoryMem.save(device2);
 
-        DeviceService deviceService = new DeviceService(deviceFactory, deviceRepository);
+        String expectedID1 = device.getId().getID();
+        String expectedID2 = device2.getId().getID();
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(roomService, deviceService);
+        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
 
-        String expected = "Fridge";
-        String expected2 = "AirConditioner";
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
+
         int expectedSize = 2;
 
         //Act
         List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
-        String result = deviceDTOList.get(0).getDeviceName();
-        String result2 = deviceDTOList.get(1).getDeviceName();
+        String resultName = deviceDTOList.get(0).getDeviceName();
+        String resultModel = deviceDTOList.get(0).getDeviceModel();
+        String resultStatus = deviceDTOList.get(0).getDeviceStatus();
+        String resultDeviceID = deviceDTOList.get(0).getDeviceID();
+
+        String resultName2 = deviceDTOList.get(1).getDeviceName();
+        String resultModel2 = deviceDTOList.get(1).getDeviceModel();
+        String resultStatus2 = deviceDTOList.get(1).getDeviceStatus();
+        String resultDeviceID2 = deviceDTOList.get(1).getDeviceID();
 
         //Assert
-        assertEquals(expected, result);
-        assertEquals(expected2, result2);
+        assertEquals(expectedName1, resultName);
+        assertEquals(expectedModel1, resultModel);
+        assertEquals("true", resultStatus);
+        assertEquals(expectedID1, resultDeviceID);
+
+        assertEquals(expectedName2, resultName2);
+        assertEquals(expectedModel2, resultModel2);
+        assertEquals("true", resultStatus2);
+        assertEquals(expectedID2, resultDeviceID2);
+
         assertEquals(expectedSize, deviceDTOList.size());
     }
 }
