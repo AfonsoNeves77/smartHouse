@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US10 Class Diagram
+title <size: 30> TemperatureSensor Class Diagram v5.0
 
 skinparam linetype ortho
 
@@ -23,6 +23,10 @@ interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO
     + getDeviceID() : DeviceIDVO
     + getSensorName() : SensorNameVO
+}
+
+interface SensorExternalServices{
+     + getValue() : String
 }
 
 class TemperatureSensor{
@@ -81,6 +85,7 @@ Sensor <|.. TemperatureSensor
 SimHardware <.. TemperatureSensor : <<uses>>
 
 SensorNameVO <.. TemperatureSensor : <<has>>
+SensorExternalServices <|..down SimHardware
 SensorIDVO --* TemperatureSensor
 TemperatureValue <..right TemperatureSensor : <<creates>>
 SensorTypeIDVO <.. TemperatureSensor : <<has>>
