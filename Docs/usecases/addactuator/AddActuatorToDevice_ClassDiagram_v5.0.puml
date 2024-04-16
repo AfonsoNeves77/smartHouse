@@ -1,26 +1,25 @@
 @startuml
 
-title <size: 30> US07 Class Diagram
-note "<b>Only methods related to\n<b>US12 are represented" as N1
+title <size: 30> Add Actuator to Device Class Diagram
+note "<b>Only methods related to\n<b>Add Actuator to Device are represented" as N1
 skinparam linetype ortho
 
-       AddActuatorToDeviceCTRL ..> DeviceService
-       AddActuatorToDeviceCTRL ..> ActuatorTypeService
        AddActuatorToDeviceCTRL ..> ActuatorMapper
        AddActuatorToDeviceCTRL ..> ActuatorTypeMapper
        AddActuatorToDeviceCTRL ..> DeviceMapper
-       AddActuatorToDeviceCTRL ..> ActuatorService
-       ActuatorService ..> ActuatorRepository
-       ActuatorService ..> ActuatorFactory
-       ActuatorTypeService ..> ActuatorTypeRepository
-       ActuatorFactory -- Actuator : creates >
+       AddActuatorToDeviceCTRL ..> ActuatorServiceImpl
+       ActuatorServiceImpl ..> ActuatorFactoryImpl
+       ActuatorServiceImpl ..> ActuatorTypeRepositoryMem
+       ActuatorServiceImpl ..> ActuatorRepositoryMem
+       ActuatorServiceImpl ..> DeviceRepositoryMem
+       ActuatorServiceImpl ..> Device
+       ActuatorFactoryImpl -- Actuator : creates >
        DeviceMapper ..> DeviceDTO
        DeviceMapper -- DeviceIDVO : creates >
        ActuatorMapper ..> ActuatorDTO
        ActuatorMapper -- ActuatorNameVO : creates >
        ActuatorTypeMapper ..> ActuatorTypeDTO
        ActuatorTypeMapper -- ActuatorTypeIDVO : creates >
-       DeviceService ..> DeviceRepository
        DeviceRepository ..|> Repository
        ActuatorRepository ..|> Repository
        ActuatorTypeRepository ..|> Repository
@@ -31,44 +30,43 @@ skinparam linetype ortho
        ActuatorNameVO ..|> ValueObject
        ActuatorTypeIDVO ..|> ValueObject
        DeviceIDVO ..|> ValueObject
+       ActuatorTypeRepositoryMem ..|> ActuatorTypeRepository
+       ActuatorServiceImpl ..|> ActuatorService
+       ActuatorRepositoryMem ..|> ActuatorRepository
+       DeviceRepositoryMem ..|> DeviceRepository
+       ActuatorFactoryImpl ..|> ActuatorFactory
+
 
 
 
     class AddActuatorToDeviceCTRL{
         -actuatorService: ActuatorService
-        -actuatorTypeService: ActuatorTypeService
-        -deviceService: DeviceService
-        +AddActuatorToDeviceCTRL(actuatorService, actuatorTypeService, deviceService)
-        +getListOfActuatorTypes(): List<ActuatorTypeDTO>
+        +AddActuatorToDeviceCTRL(actuatorService)
         +addActuatorToDevice(sensorDTO, sensorTypeDTO, deviceDTO): boolean
     }
 
-    class ActuatorTypeService{
-        -actuatorTypeRepository: ActuatorTypeRepository
-        -actuatorTypeFactory: ActuatorTypeFactory
-        +ActuatorTypeService(actuatorTypeRepository, actuatorTypeFactory)
-        +getListOfActuatorTypes(): Iterable<ActuatorType>
-    }
 
-    class ActuatorTypeRepository{
+
+    class ActuatorTypeRepositoryMem{
         -actuatorTypes: Map<ActuatorTypeIDVO, ActuatorType>
         +findAll(): Iterable<ActuatorType>
     }
 
-    class ActuatorService{
+    class ActuatorServiceImpl{
         -actuatorRepository: ActuatorRepository
         -actuatorFactory: ActuatorFactory
-        +ActuatorService(actuatorFactory, actuatorRepository)
-        +createActuator(actuatorNameVO, deviceIDVO, actuatorTypeIDVO): Actuator
-        +saveActuator(actuator: Actuator): boolean
+        -actuatorTypeRepository: ActuatorTypeRepository
+        -deviceRepository: DeviceRepository
+        +ActuatorService(actuatorFactory, actuatorRepository, actuatorTypeRepository, deviceRepository)
+        +addActuator(actuatorNameVO, deviceIDVO, actuatorTypeIDVO): boolean
     }
 
-    class ActuatorRepository{
+    class ActuatorRepositoryMem{
         -actuatorMap : Map<ActuatorIDVO, Actuator>
         +save(actuator : Actuator): boolean
     }
 
-    class ActuatorFactory{
+    class ActuatorFactoryImpl{
         -filePath: String
         -configuration: Configuration
         +createActuator(actuatorNameVO, actuatorTypeIDVO, deviceIDVO): Sensor
@@ -90,14 +88,17 @@ skinparam linetype ortho
         +createDeviceIDVO(deviceDTO): DeviceIDVO
     }
 
-    class DeviceService{
-        -deviceRepository: DeviceRepository
-        -deviceFactory: DeviceFactory
-        +DeviceService(deviceRepository, deviceFactory)
-        +isActive(deviceIDVO): boolean
+    class Device {
+        -deviceName: DeviceNameVO
+        -deviceModel: DeviceModelVO
+        -roomID: RoomIDVO
+        -deviceStatus: DeviceStatusVO
+        -deviceID: DeviceIDVO
+        +Device(deviceID, deviceName, deviceModel, roomID, deviceStatus)
+        +isActive(device): boolean
     }
 
-    class DeviceRepository{
+    class DeviceRepositoryMem{
         -DATA: Map<DeviceIDVO, Device>
         +findById(deviceIDVO): Device
     }
@@ -174,8 +175,24 @@ skinparam linetype ortho
     interface ValueObject{
     getValue(): T
     }
+    interface ActuatorTypeRepository{
 
+                }
 
+interface ActuatorService{
+    +addActuator(actuatorNameVO, deviceIDVO, actuatorTypeIDVO): boolean
+}
 
+  interface ActuatorRepository{
+
+                }
+
+                  interface DeviceRepository{
+
+                                }
+
+   interface ActuatorFactory {
+    +createActuator(actuatorNameVO, actuatorTypeIDVO, deviceIDVO): Actuator
+    }
 
 @enduml
