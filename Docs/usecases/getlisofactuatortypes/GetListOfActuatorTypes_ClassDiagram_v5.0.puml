@@ -1,0 +1,59 @@
+@startuml
+title <size: 30> Get List of Actuator Types Class Diagram
+note "<b>Only methods related to\n<b>Get List of Actuator Types are represented" as N1
+skinparam linetype ortho
+
+GetListOfActuatorTypesCTRL ..> ActuatorTypeMapper
+GetListOfActuatorTypesCTRL ..> ActuatorTypeServiceImpl
+GetListOfActuatorTypesCTRL ..> ActuatorTypeDTO
+ActuatorTypeServiceImpl ..> ActuatorTypeRepositoryMem
+ActuatorTypeMapper ..> ActuatorTypeDTO : creates >
+ActuatorTypeRepositoryMem ..|> ActuatorTypeRepository
+ActuatorTypeRepository ..|> Repository
+ActuatorTypeServiceImpl ..> ActuatorTypeService
+
+class GetListOfActuatorTypesCTRL {
+    -actuatorTypeService: ActuatorTypeService
+    +GetListOfActuatorTypesCTRL(actuatorTypeService)
+    +getListOfActuatorTypes(): Iterable<ActuatorType>
+}
+class ActuatorTypeServiceImpl{
+        -actuatorTypeRepository: ActuatorTypeRepository
+        -actuatorTypeFactory: ActuatorTypeFactory
+        +ActuatorTypeService(actuatorTypeRepository, actuatorTypeFactory)
+        +getListOfActuatorTypes(): Iterable<ActuatorType>
+    }
+
+    class ActuatorTypeRepositoryMem{
+        -actuatorTypes: Map<ActuatorTypeIDVO, ActuatorType>
+        +findAll(): Iterable<ActuatorType>
+    }
+
+      class ActuatorTypeDTO{
+            -actuatorTypeID: String
+            +getActuatorTypeID(): String
+        }
+
+          interface Repository{
+                + findAll() : List<T>
+                + findByID(id : ID) : T
+                + isPresent(id : ID) : boolean
+                + save(ent : T) : boolean
+            }
+
+              interface ActuatorTypeRepository{
+
+                }
+                class ActuatorTypeMapper{
+                        +ActuatorTypeMapper()
+                        +domainToDTO(actuatorTypeList): List<ActuatorTypeDTO>
+                        +createActuatorTypeIDVO(actuatorTypeDTO): ActuatorTypeIDVO
+                    }
+
+                    interface ActuatorTypeService{
+                        -actuatorTypeRepository: ActuatorTypeRepository
+                                -actuatorTypeFactory: ActuatorTypeFactory
+                                +ActuatorTypeService(actuatorTypeRepository, actuatorTypeFactory)
+                                +getListOfActuatorTypes(): List<ActuatorTypeDTO>
+                    }
+@enduml
