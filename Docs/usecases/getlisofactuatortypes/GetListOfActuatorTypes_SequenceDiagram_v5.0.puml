@@ -1,0 +1,37 @@
+@startuml
+skinparam ParticipantPadding 50
+    title Get List of Actuator Types: Main Success Scenario
+    autonumber
+
+participant ":AddActuatorToDeviceCTRL" as C
+participant ":ActuatorTypeServiceImpl" as ATS
+participant ":ActuatorTypeRepositoryMem" as ATR
+participant ":ActuatorTypeMapper" as ATM
+
+
+[o-> C : actuatorTypeDTOList : getListOfActuatorTypes()
+activate C
+C -> ATS : listOfActuatorTypes : getListOfActuatorTypes()
+activate ATS
+ATS -> ATR : actuatorTypeList : findAll()
+activate ATR
+deactivate ATR
+loop for each actuatorType in actuatorTypeList
+ATS -> ATS : listOfActuatorType.add(actuatorType)
+activate ATS
+deactivate ATS
+end
+deactivate ATS
+
+C -> ATM : actuatorTypeDTOList : domainToDTO(actuatorTypeList)
+activate ATM
+loop for each actuatorType in clonedListOfSensorTypes
+    ATM -> ATM : ActuatorTypeDTO = domainToDTO(actuatorType)
+    activate ATM
+    deactivate ATM
+    ATM -> ATM : actuatorTypeDTOList.add(SensorTypeDTO)
+    activate ATM
+    deactivate ATM
+end
+deactivate ATM
+@enduml
