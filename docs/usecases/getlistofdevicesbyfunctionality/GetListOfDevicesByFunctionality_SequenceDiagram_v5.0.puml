@@ -1,0 +1,52 @@
+@startuml
+
+title Use Case: Get devices by functionality - v5.0
+
+autonumber
+
+participant ":GetDevicesByFunctionalityCTRL" as C
+participant ":QueryService" as QS
+participant ":SensorRepo" as SR
+participant "sensor:Sensor" as S
+
+participant ":ActuatorRepo" as AR
+participant "actuator : Actuator" as A
+
+participant ":DeviceRepo" as DR
+participant ":DeviceDTOMapper" as DM
+
+'1
+    [o-> C : getListOfDevicesByFuncionality()
+    activate C
+
+    C -> QS : getListOfDevicesByFunctionality()
+    activate QS
+    QS -> SR : findall() : List<Sensor>
+loop for all Sensors
+    QS -> S : str_ID : getSensorTypeID().getID()
+    activate S
+    QS -> S : DeviceIDVO : getDeviceID()
+    deactivate S
+end loop
+    QS -> AR : findall() : List<Actuator>
+loop for all Actuators
+    QS -> A : str_ID : getSensorTypeID().getID()
+    activate A
+    QS -> A : DeviceIDVO : getDeviceID()
+    deactivate A
+end loop
+loop for all Devices
+    QS -> DR : Device : findById(DeviceIDVO)
+end loop
+    QS --> C : sensorTypeIDstrToDeviceMap
+    deactivate QS
+
+note right of C: domainToDTO method abstracted for visibility.
+    C -> DM : sensorTypeIDstrToDeviceDTOMap = domainToDTO(sensorTypeIDstrToDeviceMap)
+    
+    [o<-- C : sensorTypeIDstrToDeviceDTOMap
+    deactivate C
+
+
+
+@enduml
