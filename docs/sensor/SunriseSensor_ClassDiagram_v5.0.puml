@@ -1,8 +1,11 @@
 @startuml
-title <size: 30> US20 Class Diagram - v4.0
+title <size: 30> US20 Class Diagram - v5.0
 
 
 interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO;
+    + getDeviceID() : DeviceIDVO;
+    + getSensorName() : SensorNameVO;
 }
 
 interface DomainEntity {
@@ -16,6 +19,10 @@ interface DomainID {
 interface ValueObject<T> {
     + getValue() : T
 }
+
+interface SunTimeServices {
+    + computeSunrise(date : String, gpsCoordinates : String) : ZonedDateTime;
+    }
 
 class SunriseSensor{
     + SunriseSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
@@ -64,17 +71,20 @@ class DeviceIDVO {
     + getID() : String
 }
 
-DomainEntity <|.. SunriseSensor
+
+
+DomainEntity <|.. Sensor
 Sensor <|.. SunriseSensor
 SunTimeCalculator <|.. SunriseSensor
+SunTimeServices <|.. SunTimeCalculator
 
-SensorNameVO <.. SunriseSensor
-SensorIDVO *-- SunriseSensor
-SunTimeValue *--right SunriseSensor
-SensorTypeIDVO <.. SunriseSensor
-DeviceIDVO <.. SunriseSensor
+SensorNameVO <-- SunriseSensor
+SensorIDVO -- SunriseSensor
+SunTimeValue --right SunriseSensor
+SensorTypeIDVO <-- SunriseSensor
+DeviceIDVO <-- SunriseSensor
 
-ValueObject <.. SensorNameVO
+ValueObject <|.. SensorNameVO
 DomainID <|.. SensorIDVO
 DomainID <|.. SensorTypeIDVO
 DomainID <|.. DeviceIDVO
