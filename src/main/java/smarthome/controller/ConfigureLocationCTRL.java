@@ -1,9 +1,9 @@
 package smarthome.controller;
 
-import smarthome.dto.LocationDTO;
+import smarthome.mapper.dto.LocationDTO;
 import smarthome.mapper.HouseMapper;
-import smarthome.services.HouseService;
-import smarthome.vo.housevo.LocationVO;
+import smarthome.service.HouseService;
+import smarthome.domain.vo.housevo.LocationVO;
 
 /**
  * Controller class for the Configure Location use case

@@ -3,9 +3,9 @@ package IntegrationTests;
 import org.junit.jupiter.api.Test;
 import smarthome.controller.GetListOfSensorTypesCTRL;
 import smarthome.domain.sensortype.SensorTypeFactoryImpl;
-import smarthome.dto.SensorTypeDTO;
-import smarthome.repository.SensorTypeRepositoryMem;
-import smarthome.services.SensorTypeServiceImpl;
+import smarthome.mapper.dto.SensorTypeDTO;
+import smarthome.persistence.mem.SensorTypeRepositoryMem;
+import smarthome.service.SensorTypeServiceImpl;
 
 import java.util.List;
 

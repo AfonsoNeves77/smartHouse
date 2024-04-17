@@ -2,7 +2,7 @@ package SmartHomeTest.domainTest.actuatorTypeTest;
 
 import smarthome.domain.actuatortype.ActuatorType;
 import smarthome.domain.actuatortype.ActuatorTypeFactoryImpl;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,9 +1,9 @@
 package smarthome.domain.actuator;
 
-import smarthome.vo.actuatorvo.Settings;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.vo.actuatorvo.ActuatorNameVO;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;

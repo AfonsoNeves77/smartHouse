@@ -2,7 +2,7 @@ package SmartHomeTest.domainTest.houseTest;
 
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactoryImpl;
-import smarthome.vo.housevo.LocationVO;
+import smarthome.domain.vo.housevo.LocationVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

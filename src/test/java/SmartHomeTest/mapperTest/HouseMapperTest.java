@@ -1,7 +1,7 @@
 package SmartHomeTest.mapperTest;
 
-import smarthome.dto.LocationDTO;
-import smarthome.vo.housevo.LocationVO;
+import smarthome.mapper.dto.LocationDTO;
+import smarthome.domain.vo.housevo.LocationVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

@@ -1,10 +1,10 @@
 package smarthome.mapper;
 
 import smarthome.domain.device.Device;
-import smarthome.dto.DeviceDTO;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
 
 import java.util.*;
 

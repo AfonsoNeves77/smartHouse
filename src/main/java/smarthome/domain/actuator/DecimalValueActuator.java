@@ -2,12 +2,12 @@ package smarthome.domain.actuator;
 
 import smarthome.domain.DomainID;
 import smarthome.domain.actuator.externalservice.ActuatorExternalService;
-import smarthome.vo.actuatorvo.Settings;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.vo.actuatorvo.ActuatorIDVO;
-import smarthome.vo.actuatorvo.ActuatorNameVO;
-import smarthome.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
 

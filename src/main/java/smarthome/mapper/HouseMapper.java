@@ -1,7 +1,7 @@
 package smarthome.mapper;
 
-import smarthome.dto.LocationDTO;
-import smarthome.vo.housevo.*;
+import smarthome.domain.vo.housevo.*;
+import smarthome.mapper.dto.LocationDTO;
 
 public class HouseMapper {
 

@@ -3,10 +3,10 @@ package IntegrationTests;
 import smarthome.controller.ConfigureLocationCTRL;
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactoryImpl;
-import smarthome.dto.LocationDTO;
-import smarthome.repository.HouseRepositoryMem;
-import smarthome.services.HouseServiceImpl;
-import smarthome.vo.housevo.*;
+import smarthome.domain.vo.housevo.*;
+import smarthome.mapper.dto.LocationDTO;
+import smarthome.persistence.mem.HouseRepositoryMem;
+import smarthome.service.HouseServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

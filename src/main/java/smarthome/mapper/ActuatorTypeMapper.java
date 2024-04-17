@@ -1,8 +1,8 @@
 package smarthome.mapper;
 
 import smarthome.domain.actuatortype.ActuatorType;
-import smarthome.dto.ActuatorTypeDTO;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.mapper.dto.ActuatorTypeDTO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 
 import java.util.ArrayList;
 import java.util.List;

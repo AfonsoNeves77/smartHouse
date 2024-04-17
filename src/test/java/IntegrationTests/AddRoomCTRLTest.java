@@ -4,12 +4,12 @@ import smarthome.controller.AddRoomCTRL;
 import smarthome.domain.house.HouseFactoryImpl;
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactoryImpl;
-import smarthome.dto.RoomDTO;
-import smarthome.repository.HouseRepositoryMem;
-import smarthome.repository.RoomRepositoryMem;
-import smarthome.services.HouseServiceImpl;
-import smarthome.services.RoomServiceImpl;
-import smarthome.vo.housevo.*;
+import smarthome.domain.vo.housevo.*;
+import smarthome.mapper.dto.RoomDTO;
+import smarthome.persistence.mem.HouseRepositoryMem;
+import smarthome.persistence.mem.RoomRepositoryMem;
+import smarthome.service.HouseServiceImpl;
+import smarthome.service.RoomServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

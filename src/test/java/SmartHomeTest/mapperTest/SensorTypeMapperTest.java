@@ -1,10 +1,10 @@
 package SmartHomeTest.mapperTest;
 
 import smarthome.domain.sensortype.SensorType;
-import smarthome.dto.SensorTypeDTO;
+import smarthome.mapper.dto.SensorTypeDTO;
 import smarthome.mapper.SensorTypeMapper;
-import smarthome.vo.sensortype.UnitVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensortype.UnitVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

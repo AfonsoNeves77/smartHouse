@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 public interface SensorFactory {
     Sensor createSensor (SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID);

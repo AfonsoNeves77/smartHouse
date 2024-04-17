@@ -1,9 +1,9 @@
 package smarthome.controller;
 
 import smarthome.domain.room.Room;
-import smarthome.dto.RoomDTO;
+import smarthome.mapper.dto.RoomDTO;
 import smarthome.mapper.RoomMapper;
-import smarthome.services.RoomService;
+import smarthome.service.RoomService;
 
 import java.util.List;
 

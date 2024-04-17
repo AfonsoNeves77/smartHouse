@@ -1,6 +1,6 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.vo.ValueObject;
+import smarthome.domain.vo.ValueObject;
 
 public class SwitchValue implements ValueObject<String> {
     private final String switchValue;

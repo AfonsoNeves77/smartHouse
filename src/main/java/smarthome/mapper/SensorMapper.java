@@ -1,8 +1,8 @@
 package smarthome.mapper;
 
 
-import smarthome.dto.SensorDTO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.mapper.dto.SensorDTO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 public class SensorMapper {
 

@@ -1,8 +1,8 @@
 package smarthome.domain.house;
 
 import smarthome.domain.DomainEntity;
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.housevo.LocationVO;
+import smarthome.domain.vo.housevo.HouseIDVO;
+import smarthome.domain.vo.housevo.LocationVO;
 
 import java.util.UUID;
 

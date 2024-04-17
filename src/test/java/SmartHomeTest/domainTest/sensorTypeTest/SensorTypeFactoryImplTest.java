@@ -2,8 +2,8 @@ package SmartHomeTest.domainTest.sensorTypeTest;
 
 import smarthome.domain.sensortype.SensorType;
 import smarthome.domain.sensortype.SensorTypeFactoryImpl;
-import smarthome.vo.sensortype.UnitVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensortype.UnitVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
 

@@ -2,12 +2,12 @@ package SmartHomeTest.domainTest.actuatorTest;
 
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactoryImpl;
-import smarthome.vo.actuatorvo.Settings;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.vo.actuatorvo.ActuatorNameVO;
-import smarthome.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.vo.actuatorvo.IntegerSettingsVO;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
+import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
 

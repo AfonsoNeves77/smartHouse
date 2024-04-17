@@ -1,9 +1,9 @@
 package smarthome.mapper;
 
 import smarthome.domain.room.Room;
-import smarthome.dto.RoomDTO;
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.roomvo.*;
+import smarthome.domain.vo.roomvo.*;
+import smarthome.mapper.dto.RoomDTO;
+import smarthome.domain.vo.housevo.HouseIDVO;
 
 import java.util.ArrayList;
 import java.util.List;

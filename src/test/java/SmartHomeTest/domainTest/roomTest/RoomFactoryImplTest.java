@@ -2,10 +2,10 @@ package SmartHomeTest.domainTest.roomTest;
 
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactoryImpl;
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.roomvo.RoomDimensionsVO;
-import smarthome.vo.roomvo.RoomFloorVO;
-import smarthome.vo.roomvo.RoomNameVO;
+import smarthome.domain.vo.housevo.HouseIDVO;
+import smarthome.domain.vo.roomvo.RoomDimensionsVO;
+import smarthome.domain.vo.roomvo.RoomFloorVO;
+import smarthome.domain.vo.roomvo.RoomNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

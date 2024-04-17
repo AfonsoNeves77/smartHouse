@@ -1,9 +1,9 @@
 package smarthome.controller;
 
 import smarthome.domain.actuatortype.ActuatorType;
-import smarthome.dto.ActuatorTypeDTO;
+import smarthome.mapper.dto.ActuatorTypeDTO;
 import smarthome.mapper.ActuatorTypeMapper;
-import smarthome.services.ActuatorTypeService;
+import smarthome.service.ActuatorTypeService;
 
 import java.util.List;
 

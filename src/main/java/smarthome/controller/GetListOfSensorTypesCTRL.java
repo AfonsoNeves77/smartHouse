@@ -1,9 +1,9 @@
 package smarthome.controller;
 
 import smarthome.domain.sensortype.SensorType;
-import smarthome.dto.SensorTypeDTO;
+import smarthome.mapper.dto.SensorTypeDTO;
 import smarthome.mapper.SensorTypeMapper;
-import smarthome.services.SensorTypeService;
+import smarthome.service.SensorTypeService;
 
 import java.util.List;
 

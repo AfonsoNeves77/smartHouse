@@ -1,15 +1,15 @@
 package smarthome.controller;
 
-import smarthome.dto.DeviceDTO;
-import smarthome.dto.SensorDTO;
-import smarthome.dto.SensorTypeDTO;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.mapper.dto.SensorDTO;
+import smarthome.mapper.dto.SensorTypeDTO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.SensorMapper;
 import smarthome.mapper.SensorTypeMapper;
-import smarthome.services.SensorService;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.service.SensorService;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 public class AddSensorToDeviceCTRL {
     private final SensorService sensorService;

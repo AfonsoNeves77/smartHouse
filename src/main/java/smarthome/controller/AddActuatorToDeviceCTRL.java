@@ -1,16 +1,16 @@
 package smarthome.controller;
 
-import smarthome.dto.ActuatorDTO;
-import smarthome.dto.ActuatorTypeDTO;
-import smarthome.dto.DeviceDTO;
+import smarthome.mapper.dto.ActuatorDTO;
+import smarthome.mapper.dto.ActuatorTypeDTO;
+import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.ActuatorMapper;
 import smarthome.mapper.ActuatorTypeMapper;
 import smarthome.mapper.DeviceMapper;
-import smarthome.services.ActuatorService;
-import smarthome.vo.actuatorvo.Settings;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.vo.actuatorvo.ActuatorNameVO;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.service.ActuatorService;
+import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 
 import static java.util.Objects.isNull;

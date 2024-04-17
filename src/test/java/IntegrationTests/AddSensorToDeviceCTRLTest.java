@@ -6,20 +6,20 @@ import smarthome.domain.device.Device;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactoryImpl;
 import smarthome.domain.sensortype.SensorTypeFactoryImpl;
-import smarthome.dto.DeviceDTO;
-import smarthome.dto.SensorDTO;
-import smarthome.dto.SensorTypeDTO;
-import smarthome.repository.DeviceRepositoryMem;
-import smarthome.repository.SensorRepositoryMem;
-import smarthome.repository.SensorTypeRepositoryMem;
-import smarthome.services.SensorTypeService;
-import smarthome.services.SensorServiceImpl;
-import smarthome.services.SensorTypeServiceImpl;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.devicevo.DeviceStatusVO;
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
-import smarthome.vo.roomvo.*;
+import smarthome.domain.vo.roomvo.RoomIDVO;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.mapper.dto.SensorDTO;
+import smarthome.mapper.dto.SensorTypeDTO;
+import smarthome.persistence.mem.DeviceRepositoryMem;
+import smarthome.persistence.mem.SensorRepositoryMem;
+import smarthome.persistence.mem.SensorTypeRepositoryMem;
+import smarthome.service.SensorTypeService;
+import smarthome.service.SensorServiceImpl;
+import smarthome.service.SensorTypeServiceImpl;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.devicevo.DeviceStatusVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -81,7 +81,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -159,7 +159,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -237,7 +237,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -315,7 +315,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -393,7 +393,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -471,7 +471,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -548,7 +548,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -626,7 +626,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -704,7 +704,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -782,7 +782,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -860,7 +860,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -938,7 +938,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -1015,7 +1015,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
         //Device deactivation
@@ -1143,7 +1143,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 
@@ -1210,7 +1210,7 @@ class AddSensorToDeviceCTRLTest {
         //Creation of device's value objects and the device + addition to repository
         DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
         DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new smarthome.vo.roomvo.RoomIDVO(UUID.randomUUID());
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
         Device device = new Device(deviceNameVO, deviceModelVO, roomID);
         deviceRepositoryMem.save(device);
 

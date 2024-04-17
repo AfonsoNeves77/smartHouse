@@ -1,9 +1,9 @@
 package SmartHomeTest.mapperTest;
 
 import smarthome.domain.actuatortype.ActuatorType;
-import smarthome.dto.ActuatorTypeDTO;
+import smarthome.mapper.dto.ActuatorTypeDTO;
 import smarthome.mapper.ActuatorTypeMapper;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

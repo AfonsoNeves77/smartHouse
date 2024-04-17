@@ -1,7 +1,7 @@
 package smarthome.domain.actuatortype;
 
 import smarthome.domain.DomainEntity;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 
 public class ActuatorType implements DomainEntity {
 

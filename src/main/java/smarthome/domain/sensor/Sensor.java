@@ -1,9 +1,9 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.DomainEntity;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 public interface Sensor extends DomainEntity {
     SensorTypeIDVO getSensorTypeID();

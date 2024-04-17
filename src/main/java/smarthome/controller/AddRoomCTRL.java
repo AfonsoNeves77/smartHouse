@@ -1,11 +1,11 @@
 package smarthome.controller;
 
-import smarthome.dto.RoomDTO;
+import smarthome.mapper.dto.RoomDTO;
 import smarthome.mapper.RoomMapper;
-import smarthome.services.RoomService;
-import smarthome.vo.roomvo.RoomDimensionsVO;
-import smarthome.vo.roomvo.RoomFloorVO;
-import smarthome.vo.roomvo.RoomNameVO;
+import smarthome.service.RoomService;
+import smarthome.domain.vo.roomvo.RoomDimensionsVO;
+import smarthome.domain.vo.roomvo.RoomFloorVO;
+import smarthome.domain.vo.roomvo.RoomNameVO;
 
 
 /**

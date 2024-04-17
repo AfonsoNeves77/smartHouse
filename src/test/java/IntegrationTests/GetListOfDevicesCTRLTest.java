@@ -5,22 +5,21 @@ import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactoryImpl;
-import smarthome.dto.DeviceDTO;
-import smarthome.dto.RoomDTO;
-import smarthome.repository.DeviceRepositoryMem;
-import smarthome.repository.RoomRepositoryMem;
-import smarthome.services.DeviceServiceImpl;
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.roomvo.*;
+import smarthome.domain.vo.roomvo.*;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.mapper.dto.RoomDTO;
+import smarthome.persistence.mem.DeviceRepositoryMem;
+import smarthome.persistence.mem.RoomRepositoryMem;
+import smarthome.service.DeviceServiceImpl;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.housevo.HouseIDVO;
 import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 

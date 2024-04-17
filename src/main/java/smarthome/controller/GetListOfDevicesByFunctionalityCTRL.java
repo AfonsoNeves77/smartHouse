@@ -1,9 +1,9 @@
 package smarthome.controller;
 
 import smarthome.domain.device.Device;
-import smarthome.dto.DeviceDTO;
+import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.DeviceMapper;
-import smarthome.services.QueryService;
+import smarthome.service.QueryService;
 
 import java.util.LinkedHashMap;
 import java.util.List;

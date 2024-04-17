@@ -1,9 +1,9 @@
 package IntegrationTests;
 
 import smarthome.controller.GetListOfActuatorTypesCTRL;
-import smarthome.dto.ActuatorTypeDTO;
-import smarthome.repository.ActuatorTypeRepositoryMem;
-import smarthome.services.ActuatorTypeServiceImpl;
+import smarthome.mapper.dto.ActuatorTypeDTO;
+import smarthome.persistence.mem.ActuatorTypeRepositoryMem;
+import smarthome.service.ActuatorTypeServiceImpl;
 import smarthome.domain.actuatortype.ActuatorTypeFactoryImpl;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;

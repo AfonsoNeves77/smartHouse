@@ -2,9 +2,9 @@ package SmartHomeTest.domainTest.deviceTest;
 
 import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactoryImpl;
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
-import smarthome.vo.roomvo.RoomIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

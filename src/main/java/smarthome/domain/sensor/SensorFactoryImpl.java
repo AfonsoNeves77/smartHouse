@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;

@@ -2,10 +2,10 @@ package SmartHomeTest.domainTest.actuatorTest;
 
 import smarthome.domain.actuator.externalservice.SimHardwareAct;
 import smarthome.domain.actuator.RollerBlindActuator;
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.vo.actuatorvo.ActuatorIDVO;
-import smarthome.vo.actuatorvo.ActuatorNameVO;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

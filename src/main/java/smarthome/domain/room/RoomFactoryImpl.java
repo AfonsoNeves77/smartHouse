@@ -1,9 +1,9 @@
 package smarthome.domain.room;
 
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.roomvo.RoomDimensionsVO;
-import smarthome.vo.roomvo.RoomFloorVO;
-import smarthome.vo.roomvo.RoomNameVO;
+import smarthome.domain.vo.housevo.HouseIDVO;
+import smarthome.domain.vo.roomvo.RoomDimensionsVO;
+import smarthome.domain.vo.roomvo.RoomFloorVO;
+import smarthome.domain.vo.roomvo.RoomNameVO;
 
 public class RoomFactoryImpl implements RoomFactory{
 

@@ -1,7 +1,7 @@
 package smarthome.domain.sensortype;
 
-import smarthome.vo.sensortype.UnitVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensortype.UnitVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
 public interface SensorTypeFactory {
     SensorType createSensorType(SensorTypeIDVO sensorTypeIDVO, UnitVO unitVO);

@@ -1,8 +1,8 @@
 package smarthome.domain.device;
 
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
-import smarthome.vo.roomvo.RoomIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 
 public class DeviceFactoryImpl implements DeviceFactory{
 

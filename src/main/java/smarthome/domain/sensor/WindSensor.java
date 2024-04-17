@@ -2,11 +2,11 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
 import smarthome.domain.sensor.values.WindValue;
-import smarthome.vo.ValueObject;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.ValueObject;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import java.util.UUID;
 

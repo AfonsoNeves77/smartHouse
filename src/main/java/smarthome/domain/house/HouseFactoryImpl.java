@@ -1,6 +1,6 @@
 package smarthome.domain.house;
 
-import smarthome.vo.housevo.LocationVO;
+import smarthome.domain.vo.housevo.LocationVO;
 
 /**
  * Factory class for the House Entity.

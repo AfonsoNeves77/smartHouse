@@ -1,8 +1,8 @@
 package smarthome.mapper;
 
 import smarthome.domain.sensortype.SensorType;
-import smarthome.dto.SensorTypeDTO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.mapper.dto.SensorTypeDTO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
 import java.util.ArrayList;
 import java.util.List;

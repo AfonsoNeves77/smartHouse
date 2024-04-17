@@ -1,12 +1,12 @@
 package smarthome.controller;
 
 import smarthome.domain.device.Device;
-import smarthome.dto.DeviceDTO;
-import smarthome.dto.RoomDTO;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.mapper.dto.RoomDTO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.RoomMapper;
-import smarthome.services.DeviceService;
-import smarthome.vo.roomvo.RoomIDVO;
+import smarthome.service.DeviceService;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 
 import java.util.ArrayList;
 import java.util.List;

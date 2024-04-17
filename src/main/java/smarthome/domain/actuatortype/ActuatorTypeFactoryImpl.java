@@ -1,7 +1,7 @@
 package smarthome.domain.actuatortype;
 
 
-import smarthome.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 
 public class ActuatorTypeFactoryImpl implements ActuatorTypeFactory{
     /**

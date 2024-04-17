@@ -5,10 +5,10 @@ package SmartHomeTest.domainTest.sensorTest;
 import smarthome.domain.sensor.HumiditySensor;
 import smarthome.domain.sensor.externalservices.SimHardware;
 import smarthome.domain.sensor.values.HumidityValue;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

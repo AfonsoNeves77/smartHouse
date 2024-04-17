@@ -1,9 +1,9 @@
 package SmartHomeTest.domainTest.sensorTest;
 
 import smarthome.domain.sensor.*;
-import smarthome.vo.devicevo.DeviceIDVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

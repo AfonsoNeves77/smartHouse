@@ -1,8 +1,8 @@
 package SmartHomeTest.mapperTest;
 
-import smarthome.dto.SensorDTO;
+import smarthome.mapper.dto.SensorDTO;
 import smarthome.mapper.SensorMapper;
-import smarthome.vo.sensorvo.SensorNameVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 

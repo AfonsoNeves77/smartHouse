@@ -1,8 +1,8 @@
 package smarthome.domain.sensortype;
 
 import smarthome.domain.DomainEntity;
-import smarthome.vo.sensortype.UnitVO;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensortype.UnitVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
 /**
  * Represents a Type of Sensor.

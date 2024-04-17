@@ -3,12 +3,12 @@ package IntegrationTests;
 import smarthome.controller.GetListOfRoomsCTRL;
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactoryImpl;
-import smarthome.dto.RoomDTO;
-import smarthome.repository.HouseRepositoryMem;
-import smarthome.repository.RoomRepositoryMem;
-import smarthome.services.RoomServiceImpl;
-import smarthome.vo.housevo.HouseIDVO;
-import smarthome.vo.roomvo.*;
+import smarthome.domain.vo.roomvo.*;
+import smarthome.mapper.dto.RoomDTO;
+import smarthome.persistence.mem.HouseRepositoryMem;
+import smarthome.persistence.mem.RoomRepositoryMem;
+import smarthome.service.RoomServiceImpl;
+import smarthome.domain.vo.housevo.HouseIDVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

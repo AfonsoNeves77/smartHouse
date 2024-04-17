@@ -2,9 +2,9 @@ package SmartHomeTest.domainTest.sensorTypeTest;
 
 import smarthome.domain.DomainID;
 import smarthome.domain.sensortype.SensorType;
-import smarthome.vo.sensortype.UnitVO;
-import smarthome.vo.ValueObject;
-import smarthome.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensortype.UnitVO;
+import smarthome.domain.vo.ValueObject;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

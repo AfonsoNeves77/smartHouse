@@ -1,13 +1,13 @@
 package smarthome.controller;
 
-import smarthome.dto.DeviceDTO;
-import smarthome.dto.RoomDTO;
+import smarthome.mapper.dto.DeviceDTO;
+import smarthome.mapper.dto.RoomDTO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.RoomMapper;
-import smarthome.services.DeviceService;
-import smarthome.vo.devicevo.DeviceModelVO;
-import smarthome.vo.devicevo.DeviceNameVO;
-import smarthome.vo.roomvo.RoomIDVO;
+import smarthome.service.DeviceService;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 
 public class AddDeviceToRoomCTRL {
     private final DeviceService deviceService;

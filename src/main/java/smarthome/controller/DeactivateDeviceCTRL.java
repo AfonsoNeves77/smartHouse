@@ -1,9 +1,9 @@
 package smarthome.controller;
 
-import smarthome.dto.DeviceDTO;
+import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.DeviceMapper;
-import smarthome.services.DeviceService;
-import smarthome.vo.devicevo.DeviceIDVO;
+import smarthome.service.DeviceService;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 /**
  * The DeactivateDeviceCTRL class represents a controller responsible for deactivating devices.

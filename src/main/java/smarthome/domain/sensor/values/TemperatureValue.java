@@ -1,7 +1,7 @@
 package smarthome.domain.sensor.values;
 import static java.lang.Double.parseDouble;
 
-import smarthome.vo.ValueObject;
+import smarthome.domain.vo.ValueObject;
 
     public class TemperatureValue implements ValueObject<Double> {
         private final double primitiveValue;
