@@ -40,6 +40,24 @@ public class SunriseSensor implements Sensor {
     }
 
     /**
+     * Constructs an instance of SunriseSensor with the provided sensor information.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * This constructor initializes a SunriseSensor with the provided SensorID, SensorName, DeviceID, and SensorTypeID,
+     * retrieved from the database.
+     *
+     * @param sensorID     The ID of the SunriseSensor.
+     * @param sensorName   The name of the SunriseSensor.
+     * @param deviceID     The ID of the device to which the SunriseSensor is attached.
+     * @param sensorTypeID The type ID of the SunriseSensor.
+     */
+    public SunriseSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
+
+    /**
      * Retrieves the sunrise time for the specified date and GPS location.
      * This method calls the computeSunrise method of the provided SunTimeServices to calculate the sunrise time
      * based on the given date and GPS location.

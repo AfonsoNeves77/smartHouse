@@ -34,6 +34,24 @@ public class TemperatureSensor implements Sensor{
         this.deviceID = deviceID;
     }
 
+
+    /**
+     * Constructor for the TemperatureSensorTP class.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     the ID of the sensor
+     * @param name         the name of the sensor
+     * @param deviceID     the ID of the device
+     * @param sensorTypeID the type of the sensor
+     */
+    public TemperatureSensor(SensorIDVO sensorID, SensorNameVO name, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.temperatureSensorID = sensorID;
+        this.name = name;
+        this.sensorTypeID = sensorTypeID;
+        this.deviceID = deviceID;
+    }
+
     /**
      * Validates the parameters of the constructor.
      * @param name Name of the sensor.

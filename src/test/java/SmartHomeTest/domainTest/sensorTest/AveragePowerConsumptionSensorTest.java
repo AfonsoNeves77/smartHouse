@@ -76,6 +76,26 @@ class AveragePowerConsumptionSensorTest {
         assertEquals(expected, result);
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+//        Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+//        Act
+        AveragePowerConsumptionSensor averagePowerConsumptionSensor = new AveragePowerConsumptionSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+//        Assert
+        assertEquals(sensorIDDouble, averagePowerConsumptionSensor.getId());
+        assertEquals(sensorNameDouble, averagePowerConsumptionSensor.getSensorName());
+        assertEquals(deviceIDDouble, averagePowerConsumptionSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, averagePowerConsumptionSensor.getSensorTypeID());
+    }
+
     /**
      * Test to check if the getReading method throws an exception when the SimHardware is null
      */

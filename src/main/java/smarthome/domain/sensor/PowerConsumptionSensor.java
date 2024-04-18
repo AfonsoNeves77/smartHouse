@@ -39,6 +39,24 @@ public class PowerConsumptionSensor implements Sensor {
 
 
     /**
+     * Constructor for PowerConsumptionSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     Sensor ID
+     * @param sensorName   Sensor Name
+     * @param deviceID     Device ID
+     * @param sensorTypeID SensorType ID
+     */
+    public PowerConsumptionSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
+
+
+    /**
      * Simple getter method, implemented from EntityDomain interface
      * @return The encapsulated VO for SensorID;
      */

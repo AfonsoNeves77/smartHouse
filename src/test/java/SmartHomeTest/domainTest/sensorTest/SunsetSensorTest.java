@@ -77,6 +77,26 @@ class SunsetSensorTest {
         assertEquals(expected, result);
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        SunsetSensor sunsetSensor = new SunsetSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, sunsetSensor.getId());
+        assertEquals(sensorNameDouble, sunsetSensor.getSensorName());
+        assertEquals(deviceIDDouble, sunsetSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, sunsetSensor.getSensorTypeID());
+    }
+
     /**
      * This test ensures that the method getSunsetTime throws an IllegalArgumentException when given a null SunTimeCalculator.
      * It also ensures that the method creates a new instance of SensorIDVO.

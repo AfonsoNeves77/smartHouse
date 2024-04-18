@@ -94,6 +94,26 @@ class EnergyConsumptionSensorTest {
         }
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        EnergyConsumptionSensor energyConsumptionSensor = new EnergyConsumptionSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, energyConsumptionSensor.getId());
+        assertEquals(sensorNameDouble, energyConsumptionSensor.getSensorName());
+        assertEquals(deviceIDDouble, energyConsumptionSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, energyConsumptionSensor.getSensorTypeID());
+    }
+
     /**
      * Test for EnergyConsumptionSensor.
      * Given a valid SensorNameVO, DeviceIDVO, and SensorTypeIDVO,

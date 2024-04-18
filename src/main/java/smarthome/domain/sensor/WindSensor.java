@@ -39,6 +39,24 @@ public class WindSensor implements Sensor {
         this.deviceIDVO = deviceIDVO;
     }
 
+
+    /**
+     * Constructs a WindSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorIDVO     The sensor ID value object of the sensor.
+     * @param nameVO         The name value object of the sensor.
+     * @param deviceIDVO     The device ID value object of the sensor.
+     * @param sensorTypeIDVO The sensor type ID value object of the sensor.
+     */
+    public WindSensor(SensorIDVO sensorIDVO, SensorNameVO nameVO, DeviceIDVO deviceIDVO, SensorTypeIDVO sensorTypeIDVO) {
+        this.sensorIDVO = sensorIDVO;
+        this.nameVO = nameVO;
+        this.sensorTypeIDVO = sensorTypeIDVO;
+        this.deviceIDVO = deviceIDVO;
+    }
+
     private boolean parametersAreValid(SensorNameVO nameVO, DeviceIDVO deviceIDVO, SensorTypeIDVO sensorTypeIDVO) {
         return nameVO != null && deviceIDVO != null && sensorTypeIDVO != null;
     }

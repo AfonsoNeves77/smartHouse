@@ -101,6 +101,25 @@ class SunriseSensorTest {
     }
 
     /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        SunriseSensor sunriseSensor = new SunriseSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, sunriseSensor.getId());
+        assertEquals(sensorNameDouble, sunriseSensor.getSensorName());
+        assertEquals(deviceIDDouble, sunriseSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, sunriseSensor.getSensorTypeID());
+    }
+
+    /**
      * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
      * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
      * does not get to be created as it does not reach that stage.

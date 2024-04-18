@@ -98,6 +98,26 @@ class DewPointSensorTest {
         }
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        DewPointSensor dewPointSensor = new DewPointSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, dewPointSensor.getId());
+        assertEquals(sensorNameDouble, dewPointSensor.getSensorName());
+        assertEquals(deviceIDDouble, dewPointSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, dewPointSensor.getSensorTypeID());
+    }
+
     /**
      * This test ensures the encapsulated VO's value is accessbile by calling getSensorName() : VO, then calling toString
      * on the same VO;
