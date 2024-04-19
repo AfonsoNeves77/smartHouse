@@ -8,12 +8,12 @@ participant ":ActuatorMapper" as AM
 participant ":ActuatorTypeMapper" as ATM
 participant ":DeviceMapper" as DM
 participant ":ActuatorServiceImpl" as AS
-participant ":ActuatorTypeRepositoryMem" as ATR
-participant ":DeviceRepositoryMem" as DR
+participant ":ActuatorTypeRepository" as ATR
+participant ":DeviceRepository" as DR
 participant ":Device" as D
 participant ":ActuatorFactoryImpl" as AF
 participant "actuator : Actuator" as A
-participant ":ActuatorRepositoryMem" as AR
+participant ":ActuatorRepository" as AR
 
 
 

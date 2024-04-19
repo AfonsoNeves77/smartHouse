@@ -100,6 +100,26 @@ class HumiditySensorTest {
         }
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        HumiditySensor humiditySensor = new HumiditySensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, humiditySensor.getId());
+        assertEquals(sensorNameDouble, humiditySensor.getSensorName());
+        assertEquals(deviceIDDouble, humiditySensor.getDeviceID());
+        assertEquals(sensorTypeDouble, humiditySensor.getSensorTypeID());
+    }
+
     /**
      * This test verifies if the Sensor ID is returned as a String when the getID method is called.
      * First, the parameters are mocked, then the expected value is set to "Test".

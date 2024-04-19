@@ -90,6 +90,26 @@ class TemperatureSensorTest {
         }
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        TemperatureSensor temperatureSensor = new TemperatureSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, temperatureSensor.getId());
+        assertEquals(sensorNameDouble, temperatureSensor.getSensorName());
+        assertEquals(deviceIDDouble, temperatureSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, temperatureSensor.getSensorTypeID());
+    }
+
     /**
      * Test if the constructor returns the correct sensor name.
      */

@@ -36,6 +36,24 @@ public class EnergyConsumptionSensor implements Sensor {
         this.deviceID = deviceID;
     }
 
+
+    /**
+     * Constructor for EnergyConsumptionSensor
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     SensorIDVO
+     * @param name         SensorNameVO
+     * @param deviceID     DeviceIDVO
+     * @param sensorTypeID SensorTypeIDVO
+     */
+    public EnergyConsumptionSensor(SensorIDVO sensorID, SensorNameVO name, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.energyConsumptionSensorID = sensorID;
+        this.name = name;
+        this.sensorTypeID = sensorTypeID;
+        this.deviceID = deviceID;
+    }
+
     /**
      * Method to validate the parameters
      * @param name Sensor name

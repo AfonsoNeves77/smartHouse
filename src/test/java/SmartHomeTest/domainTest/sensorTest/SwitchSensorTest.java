@@ -99,6 +99,25 @@ class SwitchSensorTest {
     }
 
     /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        SwitchSensor switchSensor = new SwitchSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, switchSensor.getId());
+        assertEquals(sensorNameDouble, switchSensor.getSensorName());
+        assertEquals(deviceIDDouble, switchSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, switchSensor.getSensorTypeID());
+    }
+
+    /**
      * This test ensures the encapsulated VO's value is accessbile by calling getSensorName() : VO, then calling toString
      * on the same VO;
      */

@@ -5,9 +5,10 @@ skinparam ParticipantPadding 50
 
 participant ":AddSensorToDeviceCTRL" as C
 participant ":SensorTypeServiceImpl" as STS
-participant ":SensorTypeRepositoryMem" as STR
+participant ":SensorTypeRepositoryJPA" as STR
+database "JPA" as JPA
+participant ":SensorTypeAssembler" as ASS
 participant ":SensorTypeMapper" as STM
-
 
 [o-> C : getListOfSensorTypes()
 activate C
@@ -15,6 +16,14 @@ C -> STS : getListOfSensorTypes()
 activate STS
 STS -> STR : findAll()
 activate STR
+STR -> JPA : query SELECT * FROM SensorTypeDataModel
+activate JPA
+JPA --> STR : listOfSensorTypeDataModel
+deactivate JPA
+STR -> ASS : toDomain(sensorTypeFactory, listOfSensorTypeDataModel)
+activate ASS
+ASS --> STR : sensorTypeList
+deactivate ASS
 STR --> STS : sensorTypeList
 deactivate STR
 loop for each sensorType in sensorTypeList

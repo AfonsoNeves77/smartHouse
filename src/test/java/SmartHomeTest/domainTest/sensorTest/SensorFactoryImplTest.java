@@ -3,6 +3,7 @@ package SmartHomeTest.domainTest.sensorTest;
 import smarthome.domain.sensor.*;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -357,6 +358,67 @@ class SensorFactoryImplTest {
 
     /**
      * Test method to verify the creation of a TemperatureSensor object with valid value objects.
+     * This method tests whether the TemperatureSensor object is correctly created by the SensorFactory class when the
+     * second createSensor method is called with valid SensorIDVO, SensorNameVO, DeviceIDVO, and SensorTypeIDVO instances.
+     * Steps:
+     * 1. Arrange: Double necessary value objects and create an instance of SensorFactory.
+     * 2. Act: Call the second createSensor method of SensorFactory to create a TemperatureSensor object.
+     * 3. Assert: Verify that the created TemperatureSensor object has the expected attributes.
+     */
+
+    @Test
+    void givenValidParameters_createSensorReturnsSensorObject() {
+        // Arrange
+        String path = "sensor.properties";
+        SensorNameVO sensorName = mock(SensorNameVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorIDVO sensorID = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+        when(sensorType.getID()).thenReturn("TemperatureSensor");
+        SensorFactoryImpl factory = new SensorFactoryImpl(path);
+
+        // Act
+        TemperatureSensor sensorResult = (TemperatureSensor) factory.createSensor(sensorID, sensorName, deviceID, sensorType);
+        SensorNameVO resultName = sensorResult.getSensorName();
+        DeviceIDVO resultDeviceID = sensorResult.getDeviceID();
+        SensorTypeIDVO resultSensorTypeID = sensorResult.getSensorTypeID();
+        SensorIDVO resultSensorID = sensorResult.getId();
+
+        // Assert
+        assertEquals(sensorName, resultName);
+        assertEquals(deviceID, resultDeviceID);
+        assertEquals(sensorID, resultSensorID);
+        assertEquals(sensorType, resultSensorTypeID);
+    }
+
+
+    /**
+     * Test method to verify the behavior of the second createSensor method when provided with a non permitted sensor type.
+     * By non permitted we mean, a sensor type that is not present in sensor.properties.
+     * This method tests whether the second createSensor method of SensorFactory returns null when a SensorTypeIDVO
+     * is non permitted.
+     */
+    @Test
+    void givenNonPermittedSensorType_createSensorShouldReturnNull() {
+        //Arrange
+        String path = "sensor.properties";
+        SensorNameVO expectedName = mock(SensorNameVO.class);
+        DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
+        SensorIDVO expectedSensorID = mock(SensorIDVO.class);
+        SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
+        when(expectedSensorTypeID.getID()).thenReturn("RotationSensor");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl(path);
+
+        //Act
+        Sensor sensor = sensorFactoryImpl.createSensor(expectedSensorID, expectedName, expectedDeviceID, expectedSensorTypeID);
+
+        //Assert
+        assertNull(sensor);
+    }
+
+
+    /**
+     * Test method to verify the creation of a TemperatureSensor object with valid value objects.
      * This method tests whether the TemperatureSensor object is correctly created by the SensorFactory class
      * when provided with valid SensorNameVO, DeviceIDVO, and SensorTypeIDVO instances.
      * Steps:
@@ -364,7 +426,6 @@ class SensorFactoryImplTest {
      * 2. Act: Call the createSensor method of SensorFactory to create a TemperatureSensor object.
      * 3. Assert: Verify that the created TemperatureSensor object has the expected attributes.
      */
-
     @Test
     void createTemperatureSensor_WhenValidVOs_shouldReturnCorrectSensor(){
         //Arrange
