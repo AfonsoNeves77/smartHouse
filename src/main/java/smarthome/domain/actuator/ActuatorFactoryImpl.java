@@ -61,12 +61,11 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
 
     /**
      * Creates an Actuator from the Data Model:
-     * 1: Checks input parameters. If any of the parameters are null, an IllegalArgumentException is thrown;
-     * 2: Verifies whether the actuator type chosen exists in the file and has a correct path to its Class. The value
+     * 1: Verifies whether the actuator type chosen exists in the file and has a correct path to its Class. The value
      * obtained from the configuration file is a path that dynamically identifies the intended Class at runtime;
-     * 3: Once the class is identified, its constructor is obtained, and a new instance is created using the entry parameters.;
-     * 4: Attempts to instantiate the actuator and returns it.
-     *
+     * 2: Once the class is identified, its constructor is obtained, and a new instance is created using the entry parameters.;
+     * 3: Attempts to instantiate the actuator and returns it.
+     * Note: Input parameters are not being validated since they are generated from already persisted data.
      * @param actuatorID     Actuator ID
      * @param actuatorName   Actuator name
      * @param actuatorTypeID Actuator type ID
@@ -115,7 +114,6 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
      * Converts the provided parameters into an array of Objects, considering the ActuatorIDVO, ActuatorNameVO, DeviceIDVO, ActuatorTypeVO and Settings.
      * If the Settings parameter is null, only ActuatorIDVO, ActuatorNameVO, ActuatorTypeVO, and DeviceIDVO are included in the array.
      * If settings are not null, the array includes ActuatorIDVO, ActuatorNameVO, ActuatorTypeVO, DeviceIDVO, and the Settings objects.
-     *
      * @param actuatorID     The ActuatorIDVO parameter
      * @param actuatorName   The ActuatorNameVO parameter
      * @param actuatorTypeID The DeviceIDVO parameter
@@ -140,19 +138,37 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
      * After that, it compares the number of parameters and their types against the provided parameters.
      * If a constructor with matching parameter types is found, it returns that constructor.
      * @param classObject The class for which to find the constructor
-     * @param parameters The parameters to match against the constructor's parameter types
+     * @param receivedParameters The parameters to match against the constructor's parameter types
      * @return The matching constructor, if found
      * @throws NoSuchMethodException If no matching constructor is found.
      */
-    private Constructor<?> findMatchingConstructor(Class<?> classObject, Object[] parameters) throws NoSuchMethodException {
+    private Constructor<?> findMatchingConstructor(Class<?> classObject, Object[] receivedParameters) throws NoSuchMethodException {
 
         for (Constructor<?> constructor : classObject.getConstructors()) {
-            Class<?>[] parameterTypes = constructor.getParameterTypes();
+            Class<?>[] constructorParametersTypes = constructor.getParameterTypes();
 
-            if (parameterTypes.length == parameters.length)
+            if (constructorParametersTypes.length == receivedParameters.length &&
+                    matchingParameters(constructorParametersTypes, receivedParameters)) {
                 return constructor;
+            }
         }
+
         throw new NoSuchMethodException("No matching constructor found");
+    }
+
+    /**
+     * Verify if the parameter types of the found actuator constructor match with the received parameter types.
+     * @param constructorParameterTypes Array of Class objects that represent the formal parameter types, in declaration order
+     * @param receivedParameters Array of Objects corresponding to the parameters received in the createActuator() method
+     * @return True if all received parameters match with the found constructor parameter types, false otherwise.
+     */
+    private boolean matchingParameters(Class<?>[] constructorParameterTypes, Object[] receivedParameters){
+        for(int i = 0; i < constructorParameterTypes.length; i++) {
+            if (!constructorParameterTypes[i].isAssignableFrom(receivedParameters[i].getClass())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
