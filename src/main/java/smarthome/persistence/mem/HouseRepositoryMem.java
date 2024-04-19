@@ -86,4 +86,13 @@ public class HouseRepositoryMem implements HouseRepository {
             return iterator.next();
         }
     }
+
+    @Override
+    public boolean update(House entity) {
+        if(entity == null || entity.getId() == null){
+            return false;
+        }
+        data.put(entity.getId(),entity);
+        return true;
+    }
 }

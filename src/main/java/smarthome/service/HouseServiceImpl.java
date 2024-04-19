@@ -56,8 +56,9 @@ public class HouseServiceImpl implements HouseService{
      * It throws an IllegalArgumentException if the LocationVO object is null.
      * It calls the configureLocation method of the House object to update the location.
      * @param locationVO LocationVO object
-     * @return boolean
+     * @return boolean result update operation in repository. True if successful update, false otherwise.
      */
+
     public boolean updateLocation(LocationVO locationVO) {
         if (locationVO == null) {
             throw new IllegalArgumentException("Invalid location");
@@ -66,7 +67,8 @@ public class HouseServiceImpl implements HouseService{
         if (house == null) {
             return false;
         } else {
-            return house.configureLocation(locationVO);
+             house.configureLocation(locationVO);
+             return houseRepository.update(house);
         }
     }
 
