@@ -2,9 +2,10 @@ package SmartHomeTest.mapperTest.assemblerTest;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
-import smarthome.domain.actuator.Actuator;
-import smarthome.domain.actuator.ActuatorFactory;
-import smarthome.domain.actuator.ActuatorFactoryImpl;
+import smarthome.domain.actuator.*;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.*;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.assembler.ActuatorAssembler;
 import smarthome.persistence.jpa.datamodel.ActuatorDataModel;
 
@@ -12,30 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ActuatorAssemblerTest {
 
     /**
-     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to an Integer Actuator object.
+     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a persisted Integer Actuator object.
      * The test creates an ActuatorDataModel object with valid parameters and then converts it to an Integer Actuator object.
-     *
-     * @throws ConfigurationException
-     * @result The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * @throws ConfigurationException If file with actuator properties is not found
      */
     @Test
     void givenValidDataModel_whenToDomain_thenReturnIntegerActuator() throws ConfigurationException {
         //Arrange
         ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
-        String actuatorID = randomUUID().toString();
-        String actuatorName = "actuatorName";
-        String actuatorTypeID = "IntegerValueActuator";
-        String deviceID = randomUUID().toString();
-        String lowerLimit = "1";
-        String upperLimit = "3";
-        String precision = null;
-        ActuatorDataModel dataModel = new ActuatorDataModel(actuatorID, actuatorName, actuatorTypeID, deviceID, lowerLimit, upperLimit, precision);
+        ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("IntegerValueActuator");
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        Settings integerSettings = new IntegerSettingsVO("1", "3");
+        Actuator integerActuator = new IntegerValueActuator(actuatorID, actuatorName, actuatorTypeID, deviceID, integerSettings);
+        ActuatorDataModel dataModel = new ActuatorDataModel(integerActuator);
 
         //Act
         Actuator actuator = ActuatorAssembler.toDomain(actuatorFactory, dataModel);
@@ -51,24 +49,22 @@ class ActuatorAssemblerTest {
     }
 
     /**
-     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a Decimal Actuator object.
+     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a persisted Decimal Actuator object.
      * The test creates an ActuatorDataModel object with valid parameters and then converts it to a Decimal Actuator object.
-     *
-     * @throws ConfigurationException
-     * @result The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * @throws ConfigurationException If file with actuator properties is not found
      */
     @Test
     void givenValidDataModel_whenToDomain_thenReturnDecimalActuator() throws ConfigurationException {
         //Arrange
         ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
-        String actuatorID = randomUUID().toString();
-        String actuatorName = "actuatorName";
-        String actuatorTypeID = "DecimalValueActuator";
-        String deviceID = randomUUID().toString();
-        String lowerLimit = "1.0";
-        String upperLimit = "3.0";
-        String precision = "0.1";
-        ActuatorDataModel dataModel = new ActuatorDataModel(actuatorID, actuatorName, actuatorTypeID, deviceID, lowerLimit, upperLimit, precision);
+        ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("DecimalValueActuator");
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        Settings decimalSettings = new DecimalSettingsVO("1", "3", "0.1");
+        Actuator decimalActuator = new DecimalValueActuator(actuatorID, actuatorName, actuatorTypeID, deviceID, decimalSettings);
+        ActuatorDataModel dataModel = new ActuatorDataModel(decimalActuator);
 
         //Act
         Actuator actuator = ActuatorAssembler.toDomain(actuatorFactory, dataModel);
@@ -84,21 +80,21 @@ class ActuatorAssemblerTest {
     }
 
     /**
-     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a Switch Actuator object.
+     * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a persisted Switch Actuator object.
      * The test creates an ActuatorDataModel object with valid parameters and then converts it to a Switch Actuator object.
-     *
-     * @throws ConfigurationException
-     * @result The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * @throws ConfigurationException If file with actuator properties is not found
      */
     @Test
     void givenValidDataModel_whenToDomain_thenReturnSwitchActuator() throws ConfigurationException {
         //Arrange
         ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
-        String actuatorID = randomUUID().toString();
-        String actuatorName = "actuatorName";
-        String actuatorTypeID = "SwitchActuator";
-        String deviceID = randomUUID().toString();
-        ActuatorDataModel dataModel = new ActuatorDataModel(actuatorID, actuatorName, actuatorTypeID, deviceID, null, null, null);
+        ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("SwitchActuator");
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        Actuator switchActuator = new SwitchActuator(actuatorID, actuatorName, actuatorTypeID, deviceID);
+        ActuatorDataModel dataModel = new ActuatorDataModel(switchActuator);
 
         //Act
         Actuator actuator = ActuatorAssembler.toDomain(actuatorFactory, dataModel);
@@ -115,20 +111,20 @@ class ActuatorAssemblerTest {
 
     /**
      * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a Roller Blind Actuator object.
-     * The test creates an ActuatorDataModel object with valid parameters and then converts it to a Roller Blind Actuator object.
-     *
-     * @throws ConfigurationException
-     * @result The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * The test creates an ActuatorDataModel object with valid parameters and then converts it to a persisted Roller Blind Actuator object.
+     * The Actuator object is created with the same parameters as the ActuatorDataModel object.
+     * @throws ConfigurationException If file with actuator properties is not found
      */
     @Test
     void givenValidDataModel_whenToDomain_thenReturnRollerBlindActuator() throws ConfigurationException {
         //Arrange
         ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
-        String actuatorID = randomUUID().toString();
-        String actuatorName = "actuatorName";
-        String actuatorTypeID = "RollerBlindActuator";
-        String deviceID = randomUUID().toString();
-        ActuatorDataModel dataModel = new ActuatorDataModel(actuatorID, actuatorName, actuatorTypeID, deviceID, null, null, null);
+        ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("RollerBlindActuator");
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        Actuator rollerBlindActuator = new SwitchActuator(actuatorID, actuatorName, actuatorTypeID, deviceID);
+        ActuatorDataModel dataModel = new ActuatorDataModel(rollerBlindActuator);
 
         //Act
         Actuator actuator = ActuatorAssembler.toDomain(actuatorFactory, dataModel);
@@ -147,26 +143,59 @@ class ActuatorAssemblerTest {
      * Test to verify if the ActuatorAssembler can convert a list of ActuatorDataModel objects to a list of Actuator objects.
      * The test creates a list of ActuatorDataModel objects with valid parameters and then converts it to a list of Actuator objects.
      *
-     * @throws ConfigurationException
-     * @result The list of Actuator objects is created with the same parameters as the list of ActuatorDataModel objects.
+     * @throws ConfigurationException If file with actuator properties is not found
      */
     @Test
     void givenListOfDataModels_whenToDomainList_thenReturnListOfActuators() throws ConfigurationException {
         //Arrange
         ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
-        ActuatorDataModel atuator1 = new ActuatorDataModel(randomUUID().toString(), "actuatorName1", "IntegerValueActuator", randomUUID().toString(), "1", "3", null);
-        ActuatorDataModel atuator2 = new ActuatorDataModel(randomUUID().toString(), "actuatorName2", "DecimalValueActuator", randomUUID().toString(), "1.0", "3.0", "0.1");
-        ActuatorDataModel atuator3 = new ActuatorDataModel(randomUUID().toString(), "actuatorName3", "SwitchActuator", randomUUID().toString(), null, null, null);
-        ActuatorDataModel atuator4 = new ActuatorDataModel(randomUUID().toString(), "actuatorName4", "RollerBlindActuator", randomUUID().toString(), null, null, null);
+
+        // Create Integer Actuator
+        ActuatorIDVO first_actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO first_actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO first_actuatorTypeID = new ActuatorTypeIDVO("IntegerValueActuator");
+        DeviceIDVO first_deviceID = new DeviceIDVO(UUID.randomUUID());
+        Settings integerSettings = new IntegerSettingsVO("1", "3");
+        Actuator integerActuator = new IntegerValueActuator(first_actuatorID, first_actuatorName, first_actuatorTypeID, first_deviceID, integerSettings);
+
+        // create Decimal Actuator
+        ActuatorIDVO second_actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO second_actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO second_actuatorTypeID = new ActuatorTypeIDVO("DecimalValueActuator");
+        DeviceIDVO second_deviceID = new DeviceIDVO(UUID.randomUUID());
+        Settings decimalSettings = new DecimalSettingsVO("1", "3", "0.1");
+        Actuator decimalActuator = new DecimalValueActuator(second_actuatorID, second_actuatorName, second_actuatorTypeID, second_deviceID, decimalSettings);
+
+        // create Switch Actuator
+        ActuatorIDVO third_actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO third_actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO third_actuatorTypeID = new ActuatorTypeIDVO("SwitchActuator");
+        DeviceIDVO third_deviceID = new DeviceIDVO(UUID.randomUUID());
+        Actuator switchActuator = new SwitchActuator(third_actuatorID, third_actuatorName, third_actuatorTypeID, third_deviceID);
+
+
+        // create Roller Blind Actuator
+        ActuatorIDVO fourth_actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        ActuatorNameVO fourth_actuatorName = new ActuatorNameVO("actuatorName");
+        ActuatorTypeIDVO fourth_actuatorTypeID = new ActuatorTypeIDVO("RollerBlindActuator");
+        DeviceIDVO fourth_deviceID = new DeviceIDVO(UUID.randomUUID());
+        Actuator rollerBlindActuator = new SwitchActuator(fourth_actuatorID, fourth_actuatorName, fourth_actuatorTypeID, fourth_deviceID);
+
+        // create Data Models of each actuator
+        ActuatorDataModel integerDataModel = new ActuatorDataModel(integerActuator);
+        ActuatorDataModel decimalDataModel = new ActuatorDataModel(decimalActuator);
+        ActuatorDataModel switchDataModel = new ActuatorDataModel(switchActuator);
+        ActuatorDataModel rollerBlindDataModel = new ActuatorDataModel(rollerBlindActuator);
+
+        // create a list of data models
         List<ActuatorDataModel> dataModels = new ArrayList<>();
-        dataModels.add(atuator1);
-        dataModels.add(atuator2);
-        dataModels.add(atuator3);
-        dataModels.add(atuator4);
+        dataModels.add(integerDataModel);
+        dataModels.add(decimalDataModel);
+        dataModels.add(switchDataModel);
+        dataModels.add(rollerBlindDataModel);
 
         //Act
         Iterable<Actuator> actuatorToDomain = ActuatorAssembler.toDomainList(actuatorFactory, dataModels);
-
 
         //Assert
         List<Actuator> result = new ArrayList<>();

@@ -1,8 +1,10 @@
 package smarthome.persistence.jpa.datamodel;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import smarthome.domain.actuator.Actuator;
 
 /**
  * DataModel class for the Actuator entity.
@@ -16,16 +18,23 @@ import jakarta.persistence.Table;
 @Table(name = "actuator")
 public class ActuatorDataModel {
     @Id
+    @Column(name = "id")
     private String actuatorID;
+    @Column(name = "actuator_name")
     private String actuatorName;
+    @Column(name = "actuator_type_id")
     private String actuatorTypeID;
+    @Column(name = "device_id")
     private String deviceID;
+    @Column(name = "lower_limit")
     private String lowerLimit;
+    @Column(name = "upper_limit")
     private String upperLimit;
+    @Column(name = "precision")
     private String precision;
 
     /**
-     * Default constructor.
+     * Default constructor for an ActuatorDataModel.
      */
     public ActuatorDataModel() {
     }
@@ -33,23 +42,17 @@ public class ActuatorDataModel {
     /**
      * Constructor to initialize the ActuatorDataModel object with the provided parameters.
      *
-     * @param actuatorID
-     * @param actuatorName
-     * @param actuatorTypeID
-     * @param deviceID
-     * @param lowerLimit
-     * @param upperLimit
-     * @param precision
+     * @param actuator Actuator to be converted in a data model
      * @result The ActuatorDataModel object is created with the provided parameters.
      */
-    public ActuatorDataModel(String actuatorID, String actuatorName, String actuatorTypeID, String deviceID, String lowerLimit, String upperLimit, String precision) {
-        this.actuatorID = actuatorID;
-        this.actuatorName = actuatorName;
-        this.actuatorTypeID = actuatorTypeID;
-        this.deviceID = deviceID;
-        this.lowerLimit = lowerLimit;
-        this.upperLimit = upperLimit;
-        this.precision = precision;
+    public ActuatorDataModel(Actuator actuator) {
+        this.actuatorID = actuator.getId().getID();
+        this.actuatorName = actuator.getActuatorName().getValue();
+        this.actuatorTypeID = actuator.getActuatorTypeID().getID();
+        this.deviceID = actuator.getDeviceID().getID();
+        this.lowerLimit = actuator.getLowerLimit();
+        this.upperLimit = actuator.getUpperLimit();
+        this.precision = actuator.getPrecision();
     }
 
     /**
