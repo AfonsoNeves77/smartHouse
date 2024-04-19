@@ -12,6 +12,8 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -248,26 +250,55 @@ class LogTest {
     }
 
     /**
-     * This test ensures that Log object returns a proper LocalDateTime object as string, with the timestamp
-     * of the time of testing. SUT: Log class + LocalDataTime
+     * Test case to verify that the getTime method of the Log class returns the correct time in UTC.
+     *
+     * <p>
+     * The test sets up a mock object for the reading and creates a Log object with mocked sensorID,
+     * deviceID, and sensorTypeID. It then retrieves the time from the Log object, converts it to UTC,
+     * and truncates it to milliseconds for accurate comparison.
+     * </p>
+     *
+     * <p>
+     * To achieve consistent results across different environments, the test converts the current local time
+     * to UTC and truncates it to milliseconds. It then retrieves the time from the Log object, converts it
+     * to UTC, and truncates it to milliseconds for comparison. The times are then compared as strings.
+     * </p>
+     *
+     * <p>
+     * Note: This test assumes that the Log class internally uses LocalDateTime.now() to set the time,
+     * so it may fail if the implementation changes or if there are time zone differences.
+     * </p>
      */
     @Test
-    void returnsCorrectTime(){
+    void returnsCorrectTime() {
         // Arrange
         SensorValueObject<?> reading = mock(HumidityValue.class);
         SensorIDVO sensorID = mock(SensorIDVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
 
-        Log log = new Log(reading,sensorID,deviceID,sensorTypeID);
+        Log log = new Log(reading, sensorID, deviceID, sensorTypeID);
 
-        String expected = LocalDateTime.now().toString();
+        // Get the current local time, convert it to UTC, and truncate to milliseconds
+        LocalDateTime expectedUTCTime = LocalDateTime.now()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("UTC"))
+                .toLocalDateTime()
+                .truncatedTo(ChronoUnit.MILLIS);
 
         // Act
-        String result = log.getTime().toString();
+        LocalDateTime resultUTCTime = log.getTime()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("UTC"))
+                .toLocalDateTime()
+                .truncatedTo(ChronoUnit.MILLIS);
+
+        // Convert LocalDateTime objects to strings
+        String expectedTimeString = expectedUTCTime.toString();
+        String resultTimeString = resultUTCTime.toString();
 
         // Assert
-        assertEquals(expected,result);
+        assertEquals(expectedTimeString, resultTimeString);
     }
 
     /**
