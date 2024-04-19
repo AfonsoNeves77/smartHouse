@@ -28,6 +28,27 @@ class HouseTest {
     }
 
     /**
+     * This test verifies that a `House` object can be successfully created with a valid `LocationVO` object and a valid 'HouseIDVO'. The
+     * test creates a House with a mocked `LocationVO` and a mocked 'HouseIDVO', asserting that, when the created house is queried for its location and identity
+     * ,the returned parameters are the same as the ones passed to its constructor.
+     */
+    @Test
+    void createHouse_givenHouseIdAndLocation_ShouldCreateCorrectHouseEntity() {
+        //Arrange
+        LocationVO location = mock(LocationVO.class);
+        HouseIDVO houseIDVO = mock(HouseIDVO.class);
+
+        //Act
+        House house = new House(houseIDVO,location);
+        LocationVO resultLocation = house.getLocation();
+        HouseIDVO resultID = house.getId();
+        //Assert
+        assertEquals(location,resultLocation);
+        assertEquals(houseIDVO,resultID);
+    }
+
+
+    /**
      * This test verifies that the constructor of `HouseEntity` generates a valid `HouseIDVO` object and returns its string
      * representation. The test mocks the construction of `HouseIDVO` to return a specific string ("123") and asserts that
      * the constructed `HouseIDVO` returns the expected string.

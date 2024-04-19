@@ -90,6 +90,26 @@ class PowerConsumptionSensorTest {
 
 
     /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        PowerConsumptionSensor powerConsumptionSensor = new PowerConsumptionSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, powerConsumptionSensor.getId());
+        assertEquals(sensorNameDouble, powerConsumptionSensor.getSensorName());
+        assertEquals(deviceIDDouble, powerConsumptionSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, powerConsumptionSensor.getSensorTypeID());
+    }
+
+
+    /**
      * Test for PowerConsumptionSensor
      * Given a null SimHardware, when getPowerConsumption is called, then an IllegalArgumentException is thrown
      */

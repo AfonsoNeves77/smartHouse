@@ -36,6 +36,23 @@ public class HumiditySensor implements Sensor {
     }
 
     /**
+     * Constructor for humidity sensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     SensorID
+     * @param sensorName   SensorName
+     * @param deviceID     DeviceID
+     * @param sensorTypeID SensorTypeID
+     */
+    public HumiditySensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
+
+    /**
      * This method gets the reading from the external service and returns it as a ValueObject.
      * It first checks if the external service is null, if so throws IllegalArgumentException.
      * Then it gets the reading from the simhardware in String, returning it as a HumidityValue.

@@ -36,6 +36,24 @@ public class SwitchSensor implements Sensor {
         this.deviceIDVO = deviceIDVO;
     }
 
+
+    /**
+     * Constructor for SwitchSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorIDVO     Sensor ID
+     * @param nameVO         Sensor name
+     * @param deviceIDVO     Device ID
+     * @param sensorTypeIDVO SensorType ID
+     */
+    public SwitchSensor(SensorIDVO sensorIDVO, SensorNameVO nameVO, DeviceIDVO deviceIDVO, SensorTypeIDVO sensorTypeIDVO) {
+        this.sensorIDVO = sensorIDVO;
+        this.nameVO = nameVO;
+        this.sensorTypeIDVO = sensorTypeIDVO;
+        this.deviceIDVO = deviceIDVO;
+    }
+
     /**
      * Simple getter method, implemented from EntityDomain interface
      *

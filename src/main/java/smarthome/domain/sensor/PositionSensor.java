@@ -40,6 +40,24 @@ public class PositionSensor implements Sensor {
         }
     }
 
+
+    /**
+     * Constructor for PositionSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID   The ID of the sensor.
+     * @param sensorName The name of the sensor.
+     * @param deviceID   The ID of the device to which the sensor is attached.
+     * @param sensorType The type of the sensor.
+     */
+    public PositionSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorType) {
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorType = sensorType;
+        this.sensorID = sensorID;
+    }
+
     /**
      * Obtains the reading from the sensor. It receives
      * a SimHardware external service (validating it against null).

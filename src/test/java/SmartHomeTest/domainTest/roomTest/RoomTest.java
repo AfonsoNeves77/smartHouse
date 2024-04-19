@@ -217,8 +217,33 @@ class RoomTest {
         assertThrowsWithNullParameter(roomNameDouble, floorDouble,roomDimensionsDouble, null);
     }
 
+    /**
+     * This test verifies that the created Room object parameters are the same as the ones passed to the constructor.
+     * It creates a Room object with mocked RoomIDVO, RoomNameVO, RoomFloorVO, RoomDimensionsVO and HouseIDVO.
+     * It then checks if the Room object created has the same attributes as the mocked objects.
+     */
 
+    @Test
+    void givenCorrectParameters_whenCreatingRoom_shouldReturnAllParameters() {
+//        Arrange
+        RoomIDVO roomID = mock(RoomIDVO.class);
+        RoomNameVO roomName = mock(RoomNameVO.class);
+        RoomFloorVO roomFloor = mock(RoomFloorVO.class);
+        RoomDimensionsVO roomDimensions = mock(RoomDimensionsVO.class);
+        HouseIDVO houseID = mock(HouseIDVO.class);
+//        Act
+        Room room = new Room(roomID, roomName, roomFloor, roomDimensions, houseID);
+//        Assert
+        RoomIDVO roomIDVO = room.getId();
+        RoomNameVO expectedRoomName = room.getRoomName();
+        RoomFloorVO expectedRoomFloor = room.getFloor();
+        RoomDimensionsVO expectedRoomDimensions = room.getRoomDimensions();
+        HouseIDVO expectedHouseID = room.getHouseID();
 
-
-
+        assertEquals(roomID, roomIDVO);
+        assertEquals(roomName, expectedRoomName);
+        assertEquals(roomFloor, expectedRoomFloor);
+        assertEquals(roomDimensions, expectedRoomDimensions);
+        assertEquals(houseID, expectedHouseID);
+    }
 }

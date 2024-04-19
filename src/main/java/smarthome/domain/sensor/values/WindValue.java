@@ -1,7 +1,5 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import static java.lang.Integer.parseInt;
 
 /**
@@ -11,7 +9,7 @@ import static java.lang.Integer.parseInt;
  * that unifies all sensor values.
  */
 
-public class WindValue implements ValueObject<String[]> {
+public class WindValue implements SensorValueObject<String[]> {
 
     private final String windSpeed;
     private final String windDirection;

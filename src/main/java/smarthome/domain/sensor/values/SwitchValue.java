@@ -1,8 +1,7 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
 
-public class SwitchValue implements ValueObject<String> {
+public class SwitchValue implements SensorValueObject<String> {
     private final String switchValue;
 
     public SwitchValue(String value) {

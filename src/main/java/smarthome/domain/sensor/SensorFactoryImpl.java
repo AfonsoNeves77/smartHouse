@@ -2,6 +2,7 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import org.apache.commons.configuration2.Configuration;
@@ -56,6 +57,33 @@ public class SensorFactoryImpl implements SensorFactory{
             }
         }
         return null;
+    }
+
+
+    /**
+     * Creates a Sensor object based on the provided sensor information, including the SensorID.
+     * Context: This method is used when we want to create a sensor object from a sensorDataModel.
+     * This method constructs a Sensor object using reflection based on the provided SensorID, SensorName, DeviceID, and SensorTypeID.
+     * It retrieves the sensor type's class path from the loaded configuration file, dynamically creates an instance
+     * of the specified class using reflection, and returns the created Sensor object.
+     *
+     * @param sensorID     The ID of the sensor.
+     * @param sensorName   The name of the sensor.
+     * @param deviceID     The ID of the device to which the sensor is attached.
+     * @param sensorTypeID The type ID of the sensor.
+     * @return A Sensor object created based on the provided information.
+     */
+    @Override
+    public Sensor createSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        try {
+            String sensorTypePath = this.configuration.getString(sensorTypeID.getID());
+            Class<?> classObj = Class.forName(sensorTypePath);
+            Constructor<?> constructor = classObj.getConstructor(SensorIDVO.class, SensorNameVO.class, DeviceIDVO.class, SensorTypeIDVO.class);
+            return (Sensor) constructor.newInstance(sensorID, sensorName, deviceID, sensorTypeID);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            return null;
+        }
     }
 
     /**

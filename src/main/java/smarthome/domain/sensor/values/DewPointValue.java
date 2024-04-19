@@ -1,10 +1,8 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import static java.lang.Double.parseDouble;
 
-public class DewPointValue implements ValueObject<Double> {
+public class DewPointValue implements SensorValueObject<Double> {
     private final double dewPoint;
     /**
      * Constructor for Dew point value. It receives a dewPointValue in string form and validates it.

@@ -35,6 +35,24 @@ public class SolarIrradianceSensor implements Sensor {
         this.deviceID = deviceID;
     }
 
+
+    /**
+     * Constructor for SolarIrradianceSensor Class.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     the ID of the sensor
+     * @param sensorName   the name of the sensor
+     * @param deviceID     the ID of the device
+     * @param sensorTypeID the type of the sensor
+     */
+    public SolarIrradianceSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.sensorTypeID = sensorTypeID;
+        this.deviceID = deviceID;
+    }
+
     /**
      * Requests the sensor to retrieve its reading
      * @return ValueObject<Integer> containing the reading of the sensor

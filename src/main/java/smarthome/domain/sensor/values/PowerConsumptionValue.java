@@ -1,8 +1,6 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
-public class PowerConsumptionValue implements ValueObject<Integer> {
+public class PowerConsumptionValue implements SensorValueObject<Integer> {
 
     /**
      * The integer value representing the power consumption.

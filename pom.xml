@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -134,6 +134,8 @@
                 <configuration>
                     <excludes>
                         <exclude>**/ui/**/*</exclude>
+                        <exclude>**/ddd/**/*</exclude>
+                        <exclude>**/persistence/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -165,12 +167,26 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-
+                    <targetClasses>
+                        <!-- Example: <param>lapr.project.model.*</param> -->
+                        <param>smarthome.*</param>
+                    </targetClasses>
+                    <excludedClasses>
+                        <param>smarthome.ddd.*</param>
+                        <param>smarthome.persistence.*</param>
+                    </excludedClasses>
+                    <targetTests>
+                        <!-- Example: <param>lapr.project.utils.*</param> -->
+                        <param>smarthome.*</param>
+                    </targetTests>
                     <outputFormats>
                         <outputFormat>XML</outputFormat>
                         <outputFormat>HTML</outputFormat>
                     </outputFormats>
                     <!--<verbose>true</verbose>-->
+                    <features>
+                        <feature>+auto_threads</feature>
+                    </features>
                 </configuration>
 
             </plugin>

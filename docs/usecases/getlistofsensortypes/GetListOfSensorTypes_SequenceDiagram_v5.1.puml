@@ -1,13 +1,12 @@
 @startuml
 skinparam ParticipantPadding 50
-    title <size:30> Use Case - Get List of Sensor Types v5.0 - Main Success Scenario
+    title <size:30> Use Case - Get List of Sensor Types v5.1 - Main Success Scenario
     autonumber
 
 participant ":AddSensorToDeviceCTRL" as C
-participant ":SensorTypeServiceImpl" as STS
-participant ":SensorTypeRepositoryMem" as STR
+participant ":SensorTypeService" as STS
+participant ":SensorTypeRepository" as STR
 participant ":SensorTypeMapper" as STM
-
 
 [o-> C : getListOfSensorTypes()
 activate C

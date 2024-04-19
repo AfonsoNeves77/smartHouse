@@ -1,0 +1,52 @@
+@startuml
+skinparam ParticipantPadding 50
+title Get Reading: Main Success Scenario
+autonumber
+
+participant ":GetReadingController" as GRC
+participant ":GetReadingService" as GRS
+participant ":Sensor" as S
+participant ":SimHardware" as SM
+participant ":Value" as V
+participant ":LogFactory" as LF
+participant ":Log" as L
+participant ":LogRepository" as LR
+participant ":LogDataModel" as LDM
+database ":LogRepositoryJPA" as LRJPA
+
+[o-> GRC : getReading()
+activate GRC
+GRC -> GRS : getReading()
+activate GRS
+GRS -> S : getReading()
+activate S
+S -> SM : getValue()
+activate SM
+SM --> S : value
+deactivate SM
+S -> V** : create value
+V --> S : finalValue
+S --> GRS : finalValue
+deactivate S
+GRS -> LF : createLog(reading, sensorIDVO, deviceIDVO, sensorTypeIDVO)
+activate LF
+LF -> L** : create log
+deactivate LF
+L --> GRS : log
+GRS -> LR : save(log)
+activate LR
+LR -> LDM : create dataModel
+activate LDM
+LDM --> LR : dataModel
+deactivate LDM
+LR -> LRJPA : save(dataModel)
+activate LRJPA
+LRJPA --> LR : finalReading
+deactivate LRJPA
+LR --> GRS : finalReading
+deactivate LR
+GRS --> GRC : finalReading
+deactivate GRS
+[o<-- GRC : finalReading
+deactivate GRC
+@enduml

@@ -81,6 +81,26 @@ class WindSensorTest {
         assertEquals(expected,result);
     }
 
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIdCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        WindSensor windSensor = new WindSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, windSensor.getId());
+        assertEquals(sensorNameDouble, windSensor.getSensorName());
+        assertEquals(deviceIDDouble, windSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, windSensor.getSensorTypeID());
+    }
+
     /**
      * This test verifies that getReading() throws an Illegal Argument Exception if the injected SimHardware object is null.
      * It isolates all WindSensor collaborators until it´s reached the operation that throws the exception with the following

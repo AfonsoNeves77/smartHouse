@@ -293,4 +293,24 @@ class SolarIrradianceSensorTest {
         //Assert
         assertEquals(expected, result);
     }
+
+
+    /**
+     * Test to check if the second constructor creates a sensor when the parameters are valid.
+     */
+    @Test
+    void givenValidParameters_whenCreatingSensor_thenSensorIsCreated() {
+        //Arrange
+        SensorNameVO sensorNameDouble = mock(SensorNameVO.class);
+        SensorTypeIDVO sensorTypeDouble = mock(SensorTypeIDVO.class);
+        DeviceIDVO deviceIDDouble = mock(DeviceIDVO.class);
+        SensorIDVO sensorIDDouble = mock(SensorIDVO.class);
+        //Act
+        SolarIrradianceSensor solarIrradianceSensor = new SolarIrradianceSensor(sensorIDDouble, sensorNameDouble, deviceIDDouble, sensorTypeDouble);
+        //Assert
+        assertEquals(sensorIDDouble, solarIrradianceSensor.getId());
+        assertEquals(sensorNameDouble, solarIrradianceSensor.getSensorName());
+        assertEquals(deviceIDDouble, solarIrradianceSensor.getDeviceID());
+        assertEquals(sensorTypeDouble, solarIrradianceSensor.getSensorTypeID());
+    }
 }

@@ -1,29 +1,31 @@
 @startuml
 skinparam ParticipantPadding 50
-    title Get List of Actuator Types: Main Success Scenario
+    title Use Case: Get List of Actuator Types v5.1 - Main Success Scenario
     autonumber
 
 participant ":AddActuatorToDeviceCTRL" as C
 participant ":ActuatorTypeServiceImpl" as ATS
-participant ":ActuatorTypeRepositoryMem" as ATR
+participant ":ActuatorTypeRepository" as ATR
 participant ":ActuatorTypeMapper" as ATM
 
 
-[o-> C : actuatorTypeDTOList : getListOfActuatorTypes()
+[o-> C : getListOfActuatorTypes()
 activate C
-C -> ATS : listOfActuatorTypes : getListOfActuatorTypes()
+C -> ATS : getListOfActuatorTypes()
 activate ATS
-ATS -> ATR : actuatorTypeList : findAll()
+ATS -> ATR : findAll()
 activate ATR
+ATR --> ATS : listOfActuatorTypes
 deactivate ATR
-loop for each actuatorType in actuatorTypeList
-ATS -> ATS : listOfActuatorType.add(actuatorType)
+loop for each actuatorType in listOfActuatorTypes
+ATS -> ATS : actuatorTypeList = listOfActuatorType.forEach(actuatorType)
 activate ATS
 deactivate ATS
 end
+ATS --> C : actuatorTypeList
 deactivate ATS
 
-C -> ATM : actuatorTypeDTOList : domainToDTO(actuatorTypeList)
+C -> ATM : domainToDTO(actuatorTypeList)
 activate ATM
 loop for each actuatorType in clonedListOfSensorTypes
     ATM -> ATM : ActuatorTypeDTO = domainToDTO(actuatorType)
@@ -33,5 +35,9 @@ loop for each actuatorType in clonedListOfSensorTypes
     activate ATM
     deactivate ATM
 end
+ATM --> C : actuatorTypeDTOList
 deactivate ATM
+
+[o<-- C : actuatorTypeDTOList
+deactivate C
 @enduml

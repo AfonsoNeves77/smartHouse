@@ -40,6 +40,24 @@ public class AveragePowerConsumptionSensor implements Sensor {
         this.sensorID = new SensorIDVO(UUID.randomUUID());
     }
 
+
+    /**
+     * Constructor for the average power consumption sensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     the ID of the sensor
+     * @param sensorName   the name of the sensor
+     * @param deviceID     the ID of the device
+     * @param sensorTypeID the type of the sensor
+     */
+    public AveragePowerConsumptionSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
+
     /**
      * Method to validate if the received parameters are null. It receives a SensorNameVO, SensorTypeIDVO and DeviceIDVO
      * and returns a boolean.

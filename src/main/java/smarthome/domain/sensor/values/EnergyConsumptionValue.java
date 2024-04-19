@@ -1,10 +1,8 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import static java.lang.Integer.parseInt;
 
-public class EnergyConsumptionValue implements ValueObject<Integer> {
+public class EnergyConsumptionValue implements SensorValueObject<Integer> {
     private final int primitiveValue;
 
     /**

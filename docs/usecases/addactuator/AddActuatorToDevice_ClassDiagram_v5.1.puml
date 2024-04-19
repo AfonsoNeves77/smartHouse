@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Add Actuator to Device Class Diagram
+title <size: 30> Use Case: Add Actuator to Device Class Diagram v5.1
 note "<b>Only methods related to\n<b>Add Actuator to Device are represented" as N1
 skinparam linetype ortho
 
@@ -9,20 +9,28 @@ skinparam linetype ortho
        AddActuatorToDeviceCTRL ..> DeviceMapper
        AddActuatorToDeviceCTRL ..> ActuatorServiceImpl
        ActuatorServiceImpl ..> ActuatorFactoryImpl
-       ActuatorServiceImpl ..> ActuatorTypeRepositoryMem
-       ActuatorServiceImpl ..> ActuatorRepositoryMem
-       ActuatorServiceImpl ..> DeviceRepositoryMem
+       ActuatorServiceImpl .up.> ActuatorTypeRepository
+       ActuatorServiceImpl .up.> ActuatorRepository
+       ActuatorServiceImpl .up.> DeviceRepository
        ActuatorServiceImpl ..> Device
-       ActuatorFactoryImpl -- Actuator : creates >
+       ActuatorFactoryImpl -down- SwitchActuator : creates >
+       ActuatorFactoryImpl -down- RollerBlindActuator : creates >
+       ActuatorFactoryImpl -down- IntegerActuator : creates >
+       ActuatorFactoryImpl -down- DecimalActuator : creates >
+       DomainID <|-up- Actuator
+       Actuator <|.up. SwitchActuator
+       Actuator <|.up. RollerBlindActuator
+       Actuator <|.up. IntegerActuator
+       Actuator <|.up. DecimalActuator
        DeviceMapper ..> DeviceDTO
        DeviceMapper -- DeviceIDVO : creates >
-       ActuatorMapper ..> ActuatorDTO
+       ActuatorMapper .right.> ActuatorDTO
        ActuatorMapper -- ActuatorNameVO : creates >
        ActuatorTypeMapper ..> ActuatorTypeDTO
        ActuatorTypeMapper -- ActuatorTypeIDVO : creates >
-       DeviceRepository ..|> Repository
-       ActuatorRepository ..|> Repository
-       ActuatorTypeRepository ..|> Repository
+       DeviceRepository -up-|> Repository
+       ActuatorRepository -up-|> Repository
+       ActuatorTypeRepository -up-|> Repository
        ActuatorMapper -- IntegerSettingsVO : creates >
        ActuatorMapper -- DecimalSettingsVO : creates >
        IntegerSettingsVO ..|> Settings
@@ -30,12 +38,12 @@ skinparam linetype ortho
        ActuatorNameVO ..|> ValueObject
        ActuatorTypeIDVO ..|> ValueObject
        DeviceIDVO ..|> ValueObject
-       ActuatorTypeRepositoryMem ..|> ActuatorTypeRepository
        ActuatorServiceImpl ..|> ActuatorService
        ActuatorRepositoryMem ..|> ActuatorRepository
-       DeviceRepositoryMem ..|> DeviceRepository
-       ActuatorFactoryImpl ..|> ActuatorFactory
-
+       ActuatorRepositoryJPA ..|> ActuatorRepository
+       ActuatorFactoryImpl .up.|> ActuatorFactory
+       ActuatorRepositoryJPA .up.> ActuatorAssembler
+       ActuatorAssembler -up- ActuatorDataModel : create >
 
 
 
@@ -43,13 +51,6 @@ skinparam linetype ortho
         -actuatorService: ActuatorService
         +AddActuatorToDeviceCTRL(actuatorService)
         +addActuatorToDevice(sensorDTO, sensorTypeDTO, deviceDTO): boolean
-    }
-
-
-
-    class ActuatorTypeRepositoryMem{
-        -actuatorTypes: Map<ActuatorTypeIDVO, ActuatorType>
-        +findAll(): Iterable<ActuatorType>
     }
 
     class ActuatorServiceImpl{
@@ -66,10 +67,17 @@ skinparam linetype ortho
         +save(actuator : Actuator): boolean
     }
 
+    class ActuatorRepositoryJPA{
+            -actuatorFactory : ActuatorFactory
+            +save(actuator : Actuator): boolean
+    }
+
+
+
+
     class ActuatorFactoryImpl{
         -filePath: String
         -configuration: Configuration
-        +createActuator(actuatorNameVO, actuatorTypeIDVO, deviceIDVO): Sensor
     }
 
     class ActuatorMapper{
@@ -84,7 +92,6 @@ skinparam linetype ortho
     }
 
     class DeviceMapper{
-        +DeviceMapper()
         +createDeviceIDVO(deviceDTO): DeviceIDVO
     }
 
@@ -96,11 +103,6 @@ skinparam linetype ortho
         -deviceID: DeviceIDVO
         +Device(deviceID, deviceName, deviceModel, roomID, deviceStatus)
         +isActive(device): boolean
-    }
-
-    class DeviceRepositoryMem{
-        -DATA: Map<DeviceIDVO, Device>
-        +findById(deviceIDVO): Device
     }
 
     class ActuatorDTO{
@@ -133,7 +135,7 @@ skinparam linetype ortho
     }
 
     class ActuatorNameVO{
-            -actuatorrName: String
+            -actuatorName: String
             +ActuatorNameVO(actuatorName)
         }
 
@@ -144,7 +146,7 @@ skinparam linetype ortho
 
         class DeviceIDVO{
             -deviceID: UUID
-            +DeviceIDVO(deviceID)
+            +DeviceIDVO(deviceID : UUID)
         }
 
         class IntegerSettingsVO{
@@ -165,7 +167,32 @@ skinparam linetype ortho
 
 
     interface Actuator{
+    +getActuatorTypeID() : ActuatorTypeIDVO
+    +getDeviceID() : DeviceIDVO
+    +getActuatorName() : ActuatorNameVO
+    +getLowerLimit() : String
+    +getUpperLimit() : String
+    +getPrecision() : String
+    }
 
+    interface DomainID{
+    +getID() : DomainID
+    }
+
+    class SwitchActuator{
+    +getID() : ActuatorIDVO
+    }
+
+    class RollerBlindActuator{
+    +getID() : ActuatorIDVO
+    }
+
+    class IntegerActuator {
+    +getID() : ActuatorIDVO
+    }
+
+    class DecimalActuator{
+    +getID() : ActuatorIDVO
     }
 
     interface Settings{
@@ -173,26 +200,28 @@ skinparam linetype ortho
     }
 
     interface ValueObject{
-    getValue(): T
+    +getValue(): T
     }
     interface ActuatorTypeRepository{
 
                 }
 
-interface ActuatorService{
-    +addActuator(actuatorNameVO, deviceIDVO, actuatorTypeIDVO): boolean
-}
+    interface ActuatorService{
+        +addActuator(actuatorNameVO, deviceIDVO, actuatorTypeIDVO): boolean
+    }
 
-  interface ActuatorRepository{
+    interface ActuatorRepository{
 
-                }
+    }
 
-                  interface DeviceRepository{
+    interface DeviceRepository{
 
-                                }
+    }
 
    interface ActuatorFactory {
-    +createActuator(actuatorNameVO, actuatorTypeIDVO, deviceIDVO): Actuator
+    +createActuator(actuatorNameVO, actuatorTypeIDVO, deviceIDVO, settingsVO) : Actuator
+    +createActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO, deviceIDVO, settingsVO) : Actuator
     }
+
 
 @enduml

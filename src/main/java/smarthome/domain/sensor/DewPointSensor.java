@@ -33,6 +33,24 @@ public class DewPointSensor implements Sensor {
         this.sensorTypeID = sensorTypeID;
         this.sensorID = new SensorIDVO(UUID.randomUUID());
     }
+
+
+    /**
+     * Constructor for DewPointSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     Sensor ID
+     * @param sensorName   Sensor name
+     * @param deviceID     Device ID
+     * @param sensorTypeID SensorType ID
+     */
+    public DewPointSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
     /**
      * Obtains the dewPoint value. It receives a SimHardware external service (validating it)
      *

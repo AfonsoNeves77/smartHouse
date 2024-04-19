@@ -39,6 +39,23 @@ public class SunsetSensor implements Sensor {
     }
 
     /**
+     * Constructor for SunsetSensor.
+     * Context: This constructor is used when we want to create a sensor object from a sensorDataModel.
+     * It receives a SensorIDVO, SensorNameVO, DeviceIDVO and SensorTypeIDVO retrieved from the database.
+     *
+     * @param sensorID     Sensor ID
+     * @param sensorName   Sensor name
+     * @param deviceID     Device ID
+     * @param sensorTypeID SensorType ID
+     */
+    public SunsetSensor(SensorIDVO sensorID, SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        this.sensorID = sensorID;
+        this.sensorName = sensorName;
+        this.deviceID = deviceID;
+        this.sensorTypeID = sensorTypeID;
+    }
+
+    /**
      * Method to validate if the received parameters are null. It receives a SensorNameVO, SensorTypeIDVO and DeviceIDVO
      * and returns a boolean.
      *
