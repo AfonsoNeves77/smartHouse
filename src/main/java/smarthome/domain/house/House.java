@@ -23,6 +23,18 @@ public class House  implements DomainEntity {
     }
 
     /**
+     * Constructor for HouseEntity. This constructor should be used when retrieving a house from
+     * persistence that has already an id.
+     * @param houseIDVO The HouseIDVO of the house.
+     * @param locationVO The locationVO of the house.
+     */
+
+    public House(HouseIDVO houseIDVO, LocationVO locationVO) {
+        this.houseID = houseIDVO;
+        this.location = locationVO;
+    }
+
+    /**
      * Configures the location of the house.
      * @param locationVO The location of the house.
      * @return True if the location is valid and was configured, false otherwise.
@@ -43,4 +55,5 @@ public class House  implements DomainEntity {
     public HouseIDVO getId() {
         return this.houseID;
     }
+
 }

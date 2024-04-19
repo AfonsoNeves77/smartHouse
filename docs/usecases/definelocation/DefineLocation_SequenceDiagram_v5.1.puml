@@ -1,0 +1,43 @@
+@startuml
+
+autonumber
+
+title Use Case - Define House Location v5.1 - Main Success Scenario
+
+participant ":ConfigureLocationCTRL" as C
+participant ":HouseMapper" as HM
+participant ":HouseService" as HS
+participant ":HouseRepository" as HR
+participant "house:House" as H
+
+[o-> C : updateLocation(locationDTO)
+activate C
+C -> HM : dtoToDomain(locationDTO)
+activate HM
+HM --> C : LocationVO
+deactivate HM
+C -> HS : updateLocation(locationVO)
+activate HS
+HS -> HR : getFirstHouse()
+activate HR
+HR --> HS : house
+deactivate HR
+HS -> H : configureLocation(locationVO)
+activate H
+H --> HS : **true**
+deactivate H
+HS -> HR : update(house)
+activate HR
+HR -> HR : update(house)
+activate HR
+deactivate HR
+HR --> HS : true
+deactivate HR
+
+
+HS --> C : **true**
+deactivate HS
+
+[o<-- C : **true**
+deactivate C
+@enduml
