@@ -43,7 +43,20 @@ public class DecimalValueActuator implements Actuator {
         this.deviceIDVO = deviceID;
     }
 
+    /**
+     * Constructs a new DecimalValueActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
+     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
+     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     * Tries to cast the settings interface to an DecimalSettingsVO object.
+     */
+    public DecimalValueActuator(ActuatorIDVO actuatorId, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceID, Settings settings) {
 
+        this.actuatorID = actuatorId;
+        this.actuatorName = actuatorName;
+        this.actuatorTypeID = actuatorTypeID;
+        this.deviceIDVO = deviceID;
+        this.decimalSettings = (DecimalSettingsVO) settings;
+    }
     /**
      * Verifies if all the parameters for the actuator's instantiation are valid (not null).
      * @param parameters ActuatorNameVO, ActuatorTypeIDVO, DeviceIDVO and DecimalSettingsVO
@@ -171,9 +184,40 @@ public class DecimalValueActuator implements Actuator {
         return this.actuatorName;
     }
 
+    /**
+     * Method to retrieve the settings of the actuator.
+     *
+     * @return The DecimalSettingsVO of the actuator.
+     */
     public DecimalSettingsVO getDecimalSettings() {
         return this.decimalSettings;
     }
+
+    /**
+     * Method to retrieve the lower limit of the actuator as String.
+     *
+     * @return The lower limit of the actuator as String.
+     */
+    public String getLowerLimit() {
+        return decimalSettings.getValue()[0].toString();
+    }
+
+    /**
+     * Method to retrieve the upper limit of the actuator as String.
+     *
+     * @return The upper limit of the actuator as String.
+     */
+    public String getUpperLimit() {
+        return decimalSettings.getValue()[1].toString();
+    }
+
+    /**
+     * Method to retrieve the precision of the actuator as String.
+     *
+     * @return The precision of the actuator as String.
+     */
+    public String getPrecision() {
+        return decimalSettings.getValue()[2].toString();}
 }
 
 

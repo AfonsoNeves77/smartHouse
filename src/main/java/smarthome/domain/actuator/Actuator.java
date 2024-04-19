@@ -9,4 +9,10 @@ public interface Actuator extends DomainEntity {
     ActuatorTypeIDVO getActuatorTypeID();
     DeviceIDVO getDeviceID();
     ActuatorNameVO getActuatorName();
+
+    String getLowerLimit();
+
+    String getUpperLimit();
+
+    String getPrecision();
 }

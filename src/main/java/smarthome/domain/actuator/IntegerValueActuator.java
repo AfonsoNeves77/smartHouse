@@ -39,6 +39,19 @@ public class IntegerValueActuator implements Actuator {
     }
 
     /**
+     * Constructs a new IntSetRangeActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
+     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
+     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     * Tries to cast the settings interface to an IntegerSettingsVO object.
+     */
+    public IntegerValueActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID, Settings settings) {
+        this.actuatorID = actuatorID;
+        this.actuatorName = actuatorName;
+        this.actuatorType = actuatorType;
+        this.deviceID = deviceID;
+        this.integerSettings = (IntegerSettingsVO) settings;
+    }
+    /**
      * This method executes the command on the actuator.
      * To ensure the upper and lower limits have been already set, hence not null, the method throws an IllegalArgumentException if either are null.
      * However, being both null by default when the actuator is created, verifying if the upperLimit is null is in this case redundant.
@@ -126,7 +139,39 @@ public class IntegerValueActuator implements Actuator {
         return false;
     }
 
+
+    /**
+     * Method to retrieve the settings of the actuator.
+     *
+     * @return The IntegerSettingsVO of the actuator.
+     */
     public IntegerSettingsVO getIntegerSettings() {
         return integerSettings;
     }
+
+    /**
+     * Method to retrieve the lower limit of the actuator as String.
+     *
+     * @return The lower limit of the actuator as String.
+     */
+    public String getLowerLimit() {
+        return this.integerSettings.getValue()[0].toString();
+    }
+
+    /**
+     * Method to retrieve the upper limit of the actuator as String.
+     *
+     * @return The upper limit of the actuator as String.
+     */
+    public String getUpperLimit() {
+        return this.integerSettings.getValue()[1].toString();
+    }
+
+    /**
+     * Method to retrieve the precision of the actuator as String.
+     *
+     * @return null since this actuator does not have a precision.
+     */
+    public String getPrecision() {
+        return null;}
 }

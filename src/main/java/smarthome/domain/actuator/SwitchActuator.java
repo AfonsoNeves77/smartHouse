@@ -42,6 +42,18 @@ public class SwitchActuator implements Actuator {
     }
 
     /**
+     * Constructs a new SwitchActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
+     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
+     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     */
+    public SwitchActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
+        this.actuatorID = actuatorID;
+        this.actuatorName = actuatorName;
+        this.actuatorTypeID = actuatorTypeID;
+        this.deviceIDVO = deviceIDVO;
+    }
+
+    /**
      * Checks if the provided actuator parameters are valid.
      *
      * @param actuatorName   The name of the actuator.
@@ -102,6 +114,33 @@ public class SwitchActuator implements Actuator {
     @Override
     public ActuatorNameVO getActuatorName() {
         return this.actuatorName;
+    }
+
+    /**
+     * Method to retrieve the lower limit of the actuator as String.
+     *
+     * @return null since the SwitchActuator does not have a lower limit.
+     */
+    public String getLowerLimit() {
+        return null;
+    }
+
+    /**
+     * Method to retrieve the upper limit of the actuator as String.
+     *
+     * @return null since the SwitchActuator does not have an upper limit.
+     */
+    public String getUpperLimit() {
+        return null;
+    }
+
+    /**
+     * Method to retrieve the precision of the actuator as String.
+     *
+     * @return null since the SwitchActuator does not have a precision.
+     */
+    public String getPrecision() {
+        return null;
     }
 }
 

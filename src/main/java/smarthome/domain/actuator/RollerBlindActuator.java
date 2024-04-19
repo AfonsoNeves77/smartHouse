@@ -35,7 +35,17 @@ public class RollerBlindActuator implements DomainEntity, Actuator{
         this.actuatorName = actuatorName;
     }
 
-
+    /**
+     * Constructs a new RollerBlindActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
+     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
+     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     */
+    public RollerBlindActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
+        this.actuatorID = actuatorID;
+        this.actuatorTypeID = actuatorTypeID;
+        this.deviceIDVO = deviceIDVO;
+        this.actuatorName = actuatorName;
+    }
     /**
      * Executes the command to move the roller blind to the specified position. The position must be between 0 and 100.
      * @param simHardwareAct The hardware simulator.
@@ -106,5 +116,32 @@ public class RollerBlindActuator implements DomainEntity, Actuator{
     @Override
     public ActuatorNameVO getActuatorName() {
         return this.actuatorName;
+    }
+
+    /**
+     * Method to retrieve the lower limit of the actuator.
+     *
+     * @return null since the RollerBlindActuator does not have a lower limit.
+     */
+    public String getLowerLimit() {
+        return null;
+    }
+
+    /**
+     * Method to retrieve the upper limit of the actuator.
+     *
+     * @return null since the RollerBlindActuator does not have an upper limit.
+     */
+    public String getUpperLimit() {
+        return null;
+    }
+
+    /**
+     * Method to retrieve the precision of the actuator.
+     *
+     * @return null since the RollerBlindActuator does not have a precision.
+     */
+    public String getPrecision() {
+        return null;
     }
 }

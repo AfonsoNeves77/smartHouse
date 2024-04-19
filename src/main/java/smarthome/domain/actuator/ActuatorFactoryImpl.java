@@ -1,5 +1,6 @@
 package smarthome.domain.actuator;
 
+import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
@@ -59,6 +60,38 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
     }
 
     /**
+     * Creates an Actuator from the Data Model:
+     * 1: Checks input parameters. If any of the parameters are null, an IllegalArgumentException is thrown;
+     * 2: Verifies whether the actuator type chosen exists in the file and has a correct path to its Class. The value
+     * obtained from the configuration file is a path that dynamically identifies the intended Class at runtime;
+     * 3: Once the class is identified, its constructor is obtained, and a new instance is created using the entry parameters.;
+     * 4: Attempts to instantiate the actuator and returns it.
+     *
+     * @param actuatorID     Actuator ID
+     * @param actuatorName   Actuator name
+     * @param actuatorTypeID Actuator type ID
+     * @param deviceID       Device ID to link the actuator to
+     * @param settings       Settings for value actuators. May be null in case no range actuators are being added
+     * @return The Actuator object in case of correct instantiation, null if operation does not succeed.
+     */
+    public Actuator createActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceID, Settings settings) {
+        Optional<String> actuatorType = getPath(actuatorTypeID);
+        if (actuatorType.isPresent()) {
+            try {
+                Class<?> classObject = Class.forName(actuatorType.get());
+                Object[] parameters = toObjectArrayFromDataModel(actuatorID, actuatorName, actuatorTypeID, deviceID, settings);
+                Constructor<?> constructor = findMatchingConstructor(classObject, parameters);
+                return (Actuator) constructor.newInstance(parameters);
+
+            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+                     InstantiationException | IllegalAccessException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    /**
      * Converts the provided parameters into an array of Objects, considering the ActuatorNameVO, DeviceIDVO, ActuatorTypeVO and Settings.
      * If the Settings parameter is null, only ActuatorNameVO, ActuatorTypeVO, and DeviceIDVO are included in the array.
      * If settings are not null, the array includes ActuatorNameVO, ActuatorTypeVO, DeviceIDVO, and the Settings objects.
@@ -79,6 +112,28 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
     }
 
     /**
+     * Converts the provided parameters into an array of Objects, considering the ActuatorIDVO, ActuatorNameVO, DeviceIDVO, ActuatorTypeVO and Settings.
+     * If the Settings parameter is null, only ActuatorIDVO, ActuatorNameVO, ActuatorTypeVO, and DeviceIDVO are included in the array.
+     * If settings are not null, the array includes ActuatorIDVO, ActuatorNameVO, ActuatorTypeVO, DeviceIDVO, and the Settings objects.
+     *
+     * @param actuatorID     The ActuatorIDVO parameter
+     * @param actuatorName   The ActuatorNameVO parameter
+     * @param actuatorTypeID The DeviceIDVO parameter
+     * @param deviceID       The ActuatorTypeVO parameter
+     * @param settings       The Settings parameter, which can be null.
+     * @return An array of Objects containing parameters: ActuatorIDVO, ActuatorNameVO, DeviceIDVO, ActuatorTypeVO, and Settings (if provided).
+     */
+    private Object[] toObjectArrayFromDataModel(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceID, Settings settings) {
+        Object[] parameters;
+        if (settings != null) {
+            parameters = new Object[]{actuatorID, actuatorName, actuatorTypeID, deviceID, settings};
+        } else {
+            parameters = new Object[]{actuatorID, actuatorName, actuatorTypeID, deviceID};
+        }
+        return parameters;
+    }
+
+    /**
      * Finds a constructor of the given class that matches the provided parameter types.
      * The function starts by iterating through all constructors of the given class and for each of the class
      * constructors gets the parameter types and saves them into an array.
@@ -90,6 +145,7 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
      * @throws NoSuchMethodException If no matching constructor is found.
      */
     private Constructor<?> findMatchingConstructor(Class<?> classObject, Object[] parameters) throws NoSuchMethodException {
+
         for (Constructor<?> constructor : classObject.getConstructors()) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
 
