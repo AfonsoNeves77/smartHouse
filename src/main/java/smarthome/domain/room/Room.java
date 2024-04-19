@@ -53,6 +53,28 @@ public class Room implements DomainEntity {
         this.roomID = new RoomIDVO(UUID.randomUUID());
     }
 
+    /**
+     * Constructs a room with the specified parameters.
+     * This constructor is used when the room already has an ID. It's main purpose is to be used to create domain
+     * objects from existing data models persisted in a database. No checks are made on the parameters as they
+     * are assumed to be valid because they are coming from the database and when first created as domain objects
+     * all parameters where checked.
+     *
+     * @param roomID         The ID of the room.
+     * @param roomName       The name of the room.
+     * @param floor          The floor on which the room is located.
+     * @param roomDimensions The dimensions of the room.
+     * @param houseID        The ID of the house to which the room belongs.
+     */
+
+    public Room(RoomIDVO roomID, RoomNameVO roomName, RoomFloorVO floor, RoomDimensionsVO roomDimensions, HouseIDVO houseID) {
+        this.roomID = roomID;
+        this.roomName = roomName;
+        this.floor = floor;
+        this.roomDimensions = roomDimensions;
+        this.houseID = houseID;
+    }
+
     private boolean allParametersAreValid(RoomNameVO roomName, RoomFloorVO floor, RoomDimensionsVO roomDimensions, HouseIDVO houseID) {
         return roomName != null && floor != null && roomDimensions != null && houseID != null;
     }

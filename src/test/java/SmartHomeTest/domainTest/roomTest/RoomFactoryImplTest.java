@@ -1,13 +1,15 @@
 package SmartHomeTest.domainTest.roomTest;
 
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 import smarthome.domain.room.Room;
+import smarthome.domain.room.RoomFactory;
 import smarthome.domain.room.RoomFactoryImpl;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
 
 import java.util.List;
 
@@ -95,4 +97,34 @@ class RoomFactoryImplTest {
         assertEquals(expectedHouseId,resultHouseID);
     }
 
+    /**
+     * Tests that when the createRoom method in RoomFactory is called with valid
+     * parameters, then a Room with the passed value objects should be returned.
+     * This test is to check if the Room object created has the correct parameters.
+     */
+
+    @Test
+    void givenCreateRoomWithRoomID_whenCreateHouseIsCalled_thenReturnRoomWithCorrectParameters() {
+//        Arrange
+        RoomIDVO roomID = mock(RoomIDVO.class);
+        RoomNameVO roomName = mock(RoomNameVO.class);
+        RoomFloorVO roomFloor = mock(RoomFloorVO.class);
+        RoomDimensionsVO roomDimensions = mock(RoomDimensionsVO.class);
+        HouseIDVO houseID = mock(HouseIDVO.class);
+        RoomFactory roomFactory = new RoomFactoryImpl();
+//        Act
+        Room room = roomFactory.createRoom(roomID, roomName, roomFloor, roomDimensions, houseID);
+//        Assert
+        RoomIDVO roomIDVO = room.getId();
+        RoomNameVO expectedRoomName = room.getRoomName();
+        RoomFloorVO expectedRoomFloor = room.getFloor();
+        RoomDimensionsVO expectedRoomDimensions = room.getRoomDimensions();
+        HouseIDVO expectedHouseID = room.getHouseID();
+
+        assertEquals(roomID, roomIDVO);
+        assertEquals(roomName, expectedRoomName);
+        assertEquals(roomFloor, expectedRoomFloor);
+        assertEquals(roomDimensions, expectedRoomDimensions);
+        assertEquals(houseID, expectedHouseID);
+    }
 }
