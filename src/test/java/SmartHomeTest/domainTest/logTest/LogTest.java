@@ -38,7 +38,7 @@ class LogTest {
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("Humidity");
         LogIDVO logID = new LogIDVO(UUID.randomUUID());
         LocalDateTime time = LocalDateTime.now();
-        String expected = "Invalid House Entity parameters.";
+        String expected = "Invalid parameters.";
 
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new Log(null,sensorID,deviceID,sensorTypeID));
@@ -76,7 +76,7 @@ class LogTest {
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
         LogIDVO logID = mock(LogIDVO.class);
         LocalDateTime time = mock(LocalDateTime.class);
-        String expected = "Invalid House Entity parameters.";
+        String expected = "Invalid parameters.";
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new Log(null, sensorID, deviceID, sensorTypeID));
         String result1 = exception1.getMessage();

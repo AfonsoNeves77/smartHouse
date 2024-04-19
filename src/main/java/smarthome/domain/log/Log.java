@@ -21,15 +21,16 @@ public class Log implements DomainEntity {
 
     /**
      * Constructs a new Log object with the provided parameters. Usually created right after a reading is obtained.
-     * @param reading the sensor value object representing the reading
-     * @param sensorID the sensor ID object representing the ID of the sensor
-     * @param deviceID the device ID object representing the ID of the device
+     *
+     * @param reading      the sensor value object representing the reading
+     * @param sensorID     the sensor ID object representing the ID of the sensor
+     * @param deviceID     the device ID object representing the ID of the device
      * @param sensorTypeID the sensor type ID object representing the ID of the sensor type
      * @throws IllegalArgumentException if any of the parameters are null
      */
-    public Log(SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID){
-        if (areParamsNull(reading,sensorID,deviceID,sensorTypeID)){
-            throw new IllegalArgumentException("Invalid House Entity parameters.");
+    public Log(SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        if (areParamsNull(reading, sensorID, deviceID, sensorTypeID)) {
+            throw new IllegalArgumentException("Invalid parameters.");
         }
 
         this.logID = new LogIDVO(UUID.randomUUID());
@@ -42,17 +43,18 @@ public class Log implements DomainEntity {
 
     /**
      * Constructs a new Log object with the provided parameters. Usually created after a query to the persistence.
-     * @param logID the log ID object representing the ID of the log
-     * @param time timestamp of the reading
-     * @param reading the sensor value object representing the reading
-     * @param sensorID the sensor ID object representing the ID of the sensor
-     * @param deviceID the device ID object representing the ID of the device
+     *
+     * @param logID        the log ID object representing the ID of the log
+     * @param time         timestamp of the reading
+     * @param reading      the sensor value object representing the reading
+     * @param sensorID     the sensor ID object representing the ID of the sensor
+     * @param deviceID     the device ID object representing the ID of the device
      * @param sensorTypeID the sensor type ID object representing the ID of the sensor type
      * @throws IllegalArgumentException if any of the parameters are null
      */
-    public Log(LogIDVO logID, LocalDateTime time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID){
-        if (areParamsNull(logID,time,reading,sensorID,deviceID,sensorTypeID)){
-            throw new IllegalArgumentException("Invalid House Entity parameters.");
+    public Log(LogIDVO logID, LocalDateTime time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+        if (areParamsNull(logID, time, reading, sensorID, deviceID, sensorTypeID)) {
+            throw new IllegalArgumentException("Invalid parameters.");
         }
 
         this.logID = logID;
@@ -65,6 +67,7 @@ public class Log implements DomainEntity {
 
     /**
      * Retrieves the unique identifier for this Log entry.
+     *
      * @return The LogIDVO representing the unique identifier for this log entry.
      */
     @Override
@@ -74,6 +77,7 @@ public class Log implements DomainEntity {
 
     /**
      * Retrieves the reading value of the sensor.
+     *
      * @return The ValueObject representing the reading value of the sensor.
      */
     public SensorValueObject<?> getReading() {
@@ -82,6 +86,7 @@ public class Log implements DomainEntity {
 
     /**
      * Retrieves the unique identifier for the sensor.
+     *
      * @return The SensorIDVO representing the unique identifier for the sensor.
      */
     public SensorIDVO getSensorID() {
@@ -90,6 +95,7 @@ public class Log implements DomainEntity {
 
     /**
      * Retrieves the unique identifier for the device associated with this log.
+     *
      * @return The DeviceIDVO representing the unique identifier for the device.
      */
     public DeviceIDVO getDeviceID() {
@@ -98,6 +104,7 @@ public class Log implements DomainEntity {
 
     /**
      * Retrieves the unique identifier for the sensor type.
+     *
      * @return The SensorTypeIDVO representing the unique identifier for the sensor type.
      */
     public SensorTypeIDVO getSensorTypeID() {
@@ -106,20 +113,22 @@ public class Log implements DomainEntity {
 
     /**
      * Returns the timestamp representing the time stored in this object.
+     *
      * @return the timestamp representing the time stored in this object.
      */
-    public LocalDateTime getTime(){
+    public LocalDateTime getTime() {
         return this.time;
     }
 
     /**
      * Validates any number of object params against null
+     *
      * @param params Any object param
      * @return True or false
      */
-    private boolean areParamsNull(Object... params){
-        for (Object param : params){
-            if (param == null){
+    private boolean areParamsNull(Object... params) {
+        for (Object param : params) {
+            if (param == null) {
                 return true;
             }
         }
