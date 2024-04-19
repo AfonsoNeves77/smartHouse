@@ -1,14 +1,12 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import static java.lang.Integer.parseInt;
 
 /**
  * Value object for the average power consumption value
  */
 
-public class AveragePowerConsumptionValue implements ValueObject<Integer> {
+public class AveragePowerConsumptionValue implements SensorValueObject<Integer> {
 
     private final int averagePowerConsumption;
 

@@ -1,13 +1,11 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 /**
  * Implementation of the Value interface for representing position values.
  * This class stores an integer value representing a position that has to be between
  * 0 and 100.
  */
-public class PositionValue implements ValueObject<Integer> {
+public class PositionValue implements SensorValueObject<Integer> {
 
     private final int position;
 

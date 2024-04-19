@@ -1,7 +1,5 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import java.time.ZonedDateTime;
 
 /**
@@ -9,7 +7,7 @@ import java.time.ZonedDateTime;
  * This class stores a ZonedDateTime value representing a specific time,
  * typically the sunrise or sunset time.
  */
-public class SunTimeValue implements ValueObject<ZonedDateTime> {
+public class SunTimeValue implements SensorValueObject<ZonedDateTime> {
 
     /**
      * The ZonedDateTime value representing the sun time.

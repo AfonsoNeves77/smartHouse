@@ -1,10 +1,8 @@
 package smarthome.domain.sensor.values;
 
-import smarthome.domain.vo.ValueObject;
-
 import static java.lang.Integer.parseInt;
 
-public class SolarIrradianceValue implements ValueObject<Integer> {
+public class SolarIrradianceValue implements SensorValueObject<Integer> {
 
     private final int primitiveValue;
 
