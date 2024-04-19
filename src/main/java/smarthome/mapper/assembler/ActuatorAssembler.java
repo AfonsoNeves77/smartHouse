@@ -14,24 +14,6 @@ import java.util.UUID;
 public class ActuatorAssembler {
 
     /**
-     * Method to convert an Actuator object to an ActuatorDataModel object.
-     *
-     * @param actuator Actuator object
-     * @return ActuatorDataModel object
-     */
-    public static ActuatorDataModel toDataModel(Actuator actuator) {
-        return new ActuatorDataModel(
-                actuator.getId().getID(),
-                actuator.getActuatorName().getValue(),
-                actuator.getActuatorTypeID().getID(),
-                actuator.getDeviceID().getID(),
-                actuator.getLowerLimit(),
-                actuator.getUpperLimit(),
-                actuator.getPrecision()
-        );
-    }
-
-    /**
      * Method to convert an ActuatorDataModel object to an Actuator object.
      *
      * @param actuatorFactory   ActuatorFactory object
@@ -66,25 +48,11 @@ public class ActuatorAssembler {
      * @param actuatorDataModels List of ActuatorDataModel objects
      * @return List of Actuator objects
      */
-    public static List<Actuator> toDomainList(ActuatorFactory actuatorFactory, List<ActuatorDataModel> actuatorDataModels) {
+    public static Iterable<Actuator> toDomainList(ActuatorFactory actuatorFactory, Iterable<ActuatorDataModel> actuatorDataModels) {
         List<Actuator> actuators = new ArrayList<>();
         for (ActuatorDataModel actuatorDataModel : actuatorDataModels) {
             actuators.add(toDomain(actuatorFactory, actuatorDataModel));
         }
         return actuators;
-    }
-
-    /**
-     * Method to convert a list of Actuator objects to a list of ActuatorDataModel objects.
-     *
-     * @param actuators List of Actuator objects
-     * @return List of ActuatorDataModel objects
-     */
-    public static List<ActuatorDataModel> toDataModelList(List<Actuator> actuators) {
-        List<ActuatorDataModel> actuatorDataModels = new ArrayList<>();
-        for (Actuator actuator : actuators) {
-            actuatorDataModels.add(toDataModel(actuator));
-        }
-        return actuatorDataModels;
     }
 }
