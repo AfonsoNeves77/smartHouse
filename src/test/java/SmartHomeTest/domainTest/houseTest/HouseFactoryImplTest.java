@@ -2,6 +2,7 @@ package SmartHomeTest.domainTest.houseTest;
 
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactoryImpl;
+import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.housevo.LocationVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -75,6 +76,28 @@ class HouseFactoryImplTest {
         //Assert
         assertEquals(expected,result);
     }
+
+    /**
+     * Test that verifies if the house factory creates a House with the provided location and houseID
+     * This test intends to assert the successful creation of a House object with the correct LocationVO and HouseIDVO.
+     */
+
+    @Test
+    void createHouseWithHouseID_HouseShouldContainCorrectParameters() {
+        //Arrange
+        LocationVO expectedLocation = mock(LocationVO.class);
+        HouseIDVO expectedhouseIDVO = mock(HouseIDVO.class);
+        HouseFactoryImpl houseFactoryImpl = new HouseFactoryImpl();
+
+        //Act
+        House house = houseFactoryImpl.createHouse(expectedhouseIDVO,expectedLocation);
+        LocationVO resultLocation = house.getLocation();
+        HouseIDVO resultID = house.getId();
+        //Assert
+        assertEquals(expectedLocation,resultLocation);
+        assertEquals(expectedhouseIDVO,resultID);
+    }
+
 
 
 }
