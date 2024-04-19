@@ -1,6 +1,6 @@
 @startuml
 skinparam ParticipantPadding 50
-    title <size:30> Use Case - Add Sensor to Device v5.0 - Main Success Scenario
+    title <size:30> Use Case - Add Sensor to Device v5.1 - Main Success Scenario
     autonumber
 
 participant ":AddSensorToDeviceCTRL" as C
@@ -9,11 +9,11 @@ participant ":SensorMapper" as SM
 participant ":SensorTypeMapper" as STM
 participant ":DeviceMapper" as DM
 participant ":SensorServiceImpl" as SS
-participant ":SensorTypeRepositoryMem" as STR
-participant ":DeviceRepositoryMem" as DR
+participant ":SensorTypeRepository" as STR
+participant ":DeviceRepository" as DR
 participant ":Device" as D
 participant ":SensorFactoryImpl" as SF
-participant ":SensorRepositoryMem" as SR
+participant ":SensorRepository" as SR
 participant "sensor : Sensor" as S
 
 

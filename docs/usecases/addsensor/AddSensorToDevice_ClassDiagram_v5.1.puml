@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Use Case: Add Sensor to Device v5.0
+title <size: 30> Use Case: Add Sensor to Device v5.1
 note "<b>Only methods related to\n<b>'add sensor to device' use case are represented" as N1
 skinparam linetype ortho
 
@@ -9,29 +9,32 @@ skinparam linetype ortho
        AddSensorToDeviceCTRL ..> SensorTypeMapper
        AddSensorToDeviceCTRL ..> DeviceMapper
        AddSensorToDeviceCTRL ..> SensorServiceImpl
-       SensorServiceImpl ..up|> SensorService
-       SensorServiceImpl ..> SensorRepositoryMem
-       SensorServiceImpl ..left> SensorFactoryImpl
-       SensorServiceImpl ..> DeviceRepositoryMem
-       SensorServiceImpl ..> SensorTypeRepositoryMem
-       SensorServiceImpl ..right> Device
-       SensorFactoryImpl ..up|> SensorFactory
-       SensorFactoryImpl -- Sensor : creates >
+       SensorServiceImpl ..> SensorFactoryImpl
+       SensorServiceImpl .up.> SensorTypeRepository
+       SensorServiceImpl .up.> SensorRepository
+       SensorServiceImpl .up.> DeviceRepository
+       SensorServiceImpl ..> Device
+       SensorFactoryImpl -down- Sensor : creates >
        DeviceMapper ..> DeviceDTO
        DeviceMapper -- DeviceIDVO : creates >
-       SensorMapper ..> SensorDTO
+       SensorMapper .right.> SensorDTO
        SensorMapper -- SensorNameVO : creates >
        SensorTypeMapper ..> SensorTypeDTO
        SensorTypeMapper -- SensorTypeIDVO : creates >
+       DeviceRepository -up-|> Repository
+       SensorRepository -up-|> Repository
+       SensorTypeRepository -up-|> Repository
        DeviceRepositoryMem ..|> DeviceRepository
-       SensorRepositoryMem ..|> SensorRepository
        SensorTypeRepositoryMem ..|> SensorTypeRepository
-       DeviceRepository --|> Repository
-       SensorRepository --|> Repository
-       SensorTypeRepository --|> Repository
        SensorNameVO ..|> ValueObject
        DeviceIDVO ..|> DomainID
        SensorTypeIDVO ..|> DomainID
+       SensorServiceImpl ..|> SensorService
+       SensorRepositoryMem ..|> SensorRepository
+       SensorRepositoryJPA ..|> SensorRepository
+       SensorFactoryImpl .up.|> SensorFactory
+       SensorRepositoryJPA .up.> SensorAssembler
+       SensorAssembler -up- SensorDataModel : creates >
 
 
     class AddSensorToDeviceCTRL{
@@ -40,33 +43,44 @@ skinparam linetype ortho
         +addSensorToDevice(deviceDTO, sensorDTO, sensorTypeDTO): boolean
     }
 
+    class SensorServiceImpl{
+            -sensorRepository: SensorRepository
+            -sensorFactory: SensorFactory
+            -deviceRepository: DeviceRepository
+            -sensorTypeRepository: SensorTypeRepository
+            +ImpSensorService(deviceRepository, sensorRepository, sensorFactory)
+            +addSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): boolean
+    }
+
+    class SensorRepositoryMem{
+            -sensorMap : Map<SensorIDVO, Sensor>
+            +save(sensor : Sensor): boolean
+    }
+
+    class SensorRepositoryJPA{
+        -sensorFactory: SensorFactory
+        -entityManagerFactory: EntityManagerFactory
+        +SensorRepositoryJPA(sensorFactory, entityManagerFactory)
+        +save(sensor): boolean
+    }
+
+
+
+     class SensorFactoryImpl{
+            -configuration: Configuration
+            +createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): Sensor
+     }
+
+     class SensorMapper{
+             +createSensorNameVO(sensorDTO): SensorNameVO
+     }
+
+
     class SensorTypeRepositoryMem{
         -DATA: Map<SensorTypeIDVO, SensorType>
         +isPresent(sensorTypeIDVO): boolean
     }
 
-    class SensorServiceImpl{
-        -sensorRepository: SensorRepository
-        -sensorFactory: SensorFactory
-        -deviceRepository: DeviceRepository
-        -sensorTypeRepository: SensorTypeRepository
-        +ImpSensorService(deviceRepository, sensorRepository, sensorFactory)
-        +addSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): boolean
-    }
-
-    class SensorRepositoryMem{
-        -sensorMap : Map<SensorIDVO, Sensor>
-        +save(sensor): boolean
-    }
-
-    class SensorFactoryImpl{
-        -configuration: Configuration
-        +createSensor(sensorNameVO, deviceIDVO, sensorTypeIDVO): Sensor
-    }
-
-    class SensorMapper{
-        +createSensorNameVO(sensorDTO): SensorNameVO
-    }
 
     class SensorTypeMapper{
         +createSensorTypeIDVO(sensorTypeDTO): SensorTypeIDVO
