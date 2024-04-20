@@ -1,6 +1,6 @@
 package smarthome.domain.actuator;
 
-import smarthome.domain.actuator.externalservice.ActuatorExternalService;
+import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;

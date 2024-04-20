@@ -2,7 +2,7 @@ package smarthome.domain.log;
 
 import smarthome.domain.DomainEntity;
 import smarthome.domain.DomainID;
-import smarthome.domain.sensor.values.SensorValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;

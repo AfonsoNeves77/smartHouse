@@ -1,9 +1,8 @@
 package smarthome.domain.sensor;
 
-
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.SwitchValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SwitchValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -95,15 +94,37 @@ public class SwitchSensor implements Sensor {
     }
 
     /**
-     * Obtains the switch value. It receives a SimHardware external service (validating it)
+     * Retrieves the reading from the specified sensor hardware and returns a SwitchValue object.
+     * This method retrieves the reading from the provided sensor hardware using the SensorExternalServices interface
+     * and returns a SwitchValue object representing the obtained reading. It delegates the creation of the SwitchValue
+     * object to the provided SensorValueFactory.
      *
-     * @param simHardware SimHardware external service
-     * @return SwitchValue object
-     * @throws InstantiationException If value unable to be created
+     * @param simHardware The sensor hardware from which to retrieve the reading.
+     * @param valueFactory The factory responsible for creating SwitchValue objects based on the obtained readings.
+     * @return A SwitchValue object representing the obtained reading.
+     * @throws IllegalArgumentException If either the simHardware or valueFactory parameter is null.
      */
-    public ValueObject<String> getReading(SensorExternalServices simHardware) throws InstantiationException {
-        if (simHardware == null) throw new IllegalArgumentException("Invalid external service");
+
+    public SwitchValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (areParamsNull(simHardware,valueFactory)){
+            throw new IllegalArgumentException("Invalid parameters");
+        }
         String simValue = simHardware.getValue();
-        return new SwitchValue(simValue);
+        return (SwitchValue) valueFactory.createSensorValue(simValue,this.sensorTypeIDVO);
+    }
+
+    /**
+     * This method checks if the parameters are null, being used both in the constructor and in the getReading method.
+     * If any parameters are null, it returns true. Otherwise, it returns false.
+     * @param params Object parameters
+     * @return boolean
+     */
+    private boolean areParamsNull(Object... params){
+        for (Object param : params){
+            if (param == null){
+                return true;
+            }
+        }
+        return false;
     }
 }
