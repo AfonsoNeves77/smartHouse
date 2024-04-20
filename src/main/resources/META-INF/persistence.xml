@@ -11,6 +11,7 @@
         <class>smarthome.persistence.jpa.datamodel.RoomDataModel</class>
         <class>smarthome.persistence.jpa.datamodel.SensorDataModel</class>
         <class>smarthome.persistence.jpa.datamodel.ActuatorDataModel</class>
+        <class>smarthome.persistence.jpa.datamodel.SensorTypeDataModel</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
