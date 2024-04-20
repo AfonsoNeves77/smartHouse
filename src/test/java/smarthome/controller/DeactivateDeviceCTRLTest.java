@@ -91,20 +91,23 @@ class DeactivateDeviceCTRLTest {
     }
 
     /**
-     * Test case to verify that when an empty device ID is provided in the DeviceDTO to deactivateDevice method,
+     * Test case to verify that when an invalid device ID is provided in the DeviceDTO to deactivateDevice method,
      * it returns false.
      */
     @Test
-    void deactivateDevice_WhenEmptyDeviceDTOID_ShouldReturnFalse() {
+    void deactivateDevice_WhenInvalidDeviceID_ShouldReturnFalse() {
         // Arrange
-        String deviceID = ""; // Empty device ID
+        String deviceID1 = ""; // Empty device ID
+        String deviceID2 = "    "; // Device ID with blank spaces
         String deviceName = "Smart Oven";
         String deviceModel = "Bosch electronics 77-kk";
         String deviceStatus = "true";
         String roomID = "JL-II-99";
 
         // Creating a DeviceDTO with an empty device ID
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
+        DeviceDTO deviceDTO1 = new DeviceDTO(deviceID1, deviceName, deviceModel, deviceStatus, roomID);
+        DeviceDTO deviceDTO2 = new DeviceDTO(deviceID2, deviceName, deviceModel, deviceStatus, roomID);
+        DeviceDTO deviceDTO3 = new DeviceDTO(null, deviceName, deviceModel, deviceStatus, roomID);
 
 
         RoomRepositoryMem roomRepository = new RoomRepositoryMem();
@@ -116,42 +119,16 @@ class DeactivateDeviceCTRLTest {
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO having an empty device ID
-        boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
+        boolean result1 = deactivateDeviceCTRL.deactivateDevice(deviceDTO1);
+        boolean result2 = deactivateDeviceCTRL.deactivateDevice(deviceDTO2);
+        boolean result3 = deactivateDeviceCTRL.deactivateDevice(deviceDTO3);
 
         // Assert: Verifying that the result is false as expected
-        assertFalse(result);
+        assertFalse(result1);
+        assertFalse(result2);
+        assertFalse(result3);
     }
-    /**
-     * Test case to verify that when a device ID containing only blank spaces is provided in the DeviceDTO to deactivateDevice method,
-     * it returns false.
-     */
-    @Test
-    void deactivateDevice_WhenEmptyWithBlankSpacesDeviceDTOID_ShouldReturnFalse() {
-        // Arrange
-        String deviceID = "    "; // Device ID with blank spaces
-        String deviceName = "Smart Oven";
-        String deviceModel = "Bosch electronics 77-kk";
-        String deviceStatus = "true";
-        String roomID = "JL-II-99";
 
-        // Creating a DeviceDTO with a device ID containing only blank spaces
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, roomID);
-
-
-        RoomRepositoryMem roomRepository = new RoomRepositoryMem();
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepository, deviceFactoryImpl, deviceRepositoryMem);
-
-        // Creating DeactivateDeviceCTRL instance
-        DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceServiceImpl);
-
-        // Act: Invoking deactivateDevice method with a DeviceDTO having a device ID containing only blank spaces
-        boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
-
-        // Assert: Verifying that the result is false as expected
-        assertFalse(result);
-    }
 
     /**
      * Test case to verify that when a non-convertible UUID string is provided in the DeviceDTO to deactivateDevice method,

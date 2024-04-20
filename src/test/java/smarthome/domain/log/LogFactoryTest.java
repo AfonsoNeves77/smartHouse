@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 
 class LogFactoryTest {
 
@@ -29,12 +28,12 @@ class LogFactoryTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("123");
         String expected = "Invalid parameters.";
+        LogFactoryImpl logFactory = new LogFactoryImpl();
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            LogFactoryImpl logFactory = new LogFactoryImpl();
-            logFactory.createLog(null, sensorID, deviceID, sensorTypeID);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            logFactory.createLog(null, sensorID, deviceID, sensorTypeID));
+
         String result = exception.getMessage();
 
         //Assert
@@ -55,12 +54,13 @@ class LogFactoryTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("123");
         String expected = "Invalid parameters.";
+        LogFactoryImpl logFactory = new LogFactoryImpl();
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            LogFactoryImpl logFactory = new LogFactoryImpl();
-            logFactory.createLog(logID, time, null, sensorID, deviceID, sensorTypeID);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            logFactory.createLog(logID, time, null, sensorID, deviceID, sensorTypeID));
+
+
         String result = exception.getMessage();
 
         //Assert

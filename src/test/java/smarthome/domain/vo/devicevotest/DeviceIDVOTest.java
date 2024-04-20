@@ -73,10 +73,9 @@ class DeviceIDVOTest {
         //Arrange
         UUID deviceIdentifier = UUID.randomUUID();
         DeviceIDVO deviceIDVO = new DeviceIDVO(deviceIdentifier);
-        DeviceIDVO deviceIDVO2 = null;
 
         //Act
-        boolean result = deviceIDVO.equals(deviceIDVO2);
+        boolean result = deviceIDVO.equals(null);
 
         //Assert
         assertFalse(result);

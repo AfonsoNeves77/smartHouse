@@ -12,9 +12,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class GetListOfActuatorTypesCTRLTest {
+class GetListOfActuatorTypesCTRLTest {
     @Test
-    void whenGetListOfActuatorTypes_thenReturnActuatorTypeDTO() throws ConfigurationException, ConfigurationException {
+    void whenGetListOfActuatorTypes_thenReturnActuatorTypeDTO() {
         //Arrange
         String expectedActuatorTypeID1 = "SwitchActuator";
         String expectedActuatorTypeID2 = "RollerBlindActuator";
@@ -39,11 +39,8 @@ public class GetListOfActuatorTypesCTRLTest {
 
     @Test
     void givenNullActuatorTypeService_whenGetListOfActuatorTypes_thenThrowIllegalArgumentException() {
-        //Arrange
-        ActuatorTypeServiceImpl actuatorTypeService = null;
-
         //Act & Assert
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> new GetListOfActuatorTypesCTRL(actuatorTypeService));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> new GetListOfActuatorTypesCTRL(null));
         assertEquals("Invalid service", thrown.getMessage());
     }
 }

@@ -263,71 +263,28 @@ class ActuatorFactoryImplTest {
         //Arrange
         ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
-        when(actuatorTypeID.getID()).thenReturn("xptoActuator");
+
+        ActuatorTypeIDVO actuatorTypeID1 = mock(ActuatorTypeIDVO.class);
+        when(actuatorTypeID1.getID()).thenReturn("xptoActuator");
+
+        ActuatorTypeIDVO actuatorTypeID2 = mock(ActuatorTypeIDVO.class);
+        when(actuatorTypeID2.getID()).thenReturn("HydraulicActuator");
+
+        ActuatorTypeIDVO actuatorTypeID3 = mock(ActuatorTypeIDVO.class);
+        when(actuatorTypeID3.getID()).thenReturn("NuclearActuator");
+
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         Settings settings = mock(Settings.class);
 
         //Act
-        Actuator newActuator = factory.createActuator(actuatorName, actuatorTypeID, deviceID, settings);
+        Actuator newActuator1 = factory.createActuator(actuatorName, actuatorTypeID1, deviceID, settings);
+        Actuator newActuator2 = factory.createActuator(actuatorName, actuatorTypeID2, deviceID, settings);
+        Actuator newActuator3 = factory.createActuator(actuatorName, actuatorTypeID3, deviceID, settings);
 
         //Assert
-        assertNull(newActuator);
-
-    }
-
-    /**
-     * Verifies if actuator type is mentioned in the accessed file containing actuator details and paths. Although actuator type is
-     * mentioned, it has no path associated.
-     * Since its instantiation is not even initialized, so no MockedConstruction is required for this test scenario.
-     * Even if valid parameters for Actuator creation are given, the entire operation fails, due to the above-mentioned.
-     * A double of all injected dependencies is made in order to isolate the ActuatorFactory Class.
-     * @throws ConfigurationException If file path used is invalid (it is encapsulated in the ActuatorFactory Class)
-     */
-    @Test
-    void givenValidParameters_FileDoesNotContainActuatorTypePath_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
-        //Arrange
-
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
-
-        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
-        when(actuatorTypeID.getID()).thenReturn("HydraulicActuator");
-        DeviceIDVO deviceID = mock(DeviceIDVO.class);
-        Settings settings = mock(Settings.class);
-
-        //Act
-        Actuator newActuator = factory.createActuator(actuatorName, actuatorTypeID, deviceID, settings);
-
-        //Assert
-        assertNull(newActuator);
-    }
-
-    /**
-     * Verifies if actuator type is mentioned in the accessed file. Although it has a key and a corresponding path, there
-     * is not found a match to its Class, may be due to incorrect path or Class does not exist. The Actuator is not created.
-     * Since its instantiation is not even initialized, so no MockedConstruction is required for this test scenario.
-     * Even if valid parameters for Actuator creation are given, the entire operation fails, due to the above-mentioned.
-     * A double of all injected dependencies is made in order to isolate the ActuatorFactory Class.
-     * @throws ConfigurationException If file path used is invalid (it is encapsulated in the ActuatorFactory Class)
-     */
-    @Test
-    void givenValidParameters_FileContainsActuatorTypePathButHasNoMatch_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
-        //Arrange
-
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
-
-        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
-        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
-        when(actuatorTypeID.getID()).thenReturn("NuclearActuator");
-        DeviceIDVO deviceID = mock(DeviceIDVO.class);
-        Settings settings = mock(Settings.class);
-
-        //Act
-        Actuator newActuator = factory.createActuator(actuatorName, actuatorTypeID, deviceID, settings);
-
-        //Assert
-        assertNull(newActuator);
+        assertNull(newActuator1);
+        assertNull(newActuator2);
+        assertNull(newActuator3);
     }
 
     /**

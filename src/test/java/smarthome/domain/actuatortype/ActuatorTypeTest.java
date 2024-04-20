@@ -28,12 +28,9 @@ class ActuatorTypeTest {
      */
     @Test
     void givenNullActuatorTypeIDVO_whenCreatingActuatorType_thenThrowIllegalArgumentException() {
-        // Arrange
-        ActuatorTypeIDVO actuatorTypeIDVODouble = null;
-
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-            new ActuatorType(actuatorTypeIDVODouble));
+            new ActuatorType(null));
     }
 
     /**

@@ -10,8 +10,6 @@ import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import java.util.UUID;
 
-import static java.lang.Integer.parseInt;
-
 public class PowerConsumptionSensor implements Sensor {
 
     private SensorNameVO sensorName;

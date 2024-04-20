@@ -9,7 +9,6 @@ import smarthome.domain.actuatortype.ActuatorTypeFactory;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.mapper.assembler.ActuatorTypeAssembler;
 import smarthome.persistence.ActuatorTypeRepository;
-import smarthome.persistence.Repository;
 import smarthome.persistence.jpa.datamodel.ActuatorTypeDataModel;
 
 import java.util.Collections;

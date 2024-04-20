@@ -16,13 +16,12 @@ class SwitchValueTest {
     @Test
     void constructor_throwsInstantiationExceptionIfReadingInvalid() {
         //Arrange
-        String reading1 = null;
         String reading2 = " ";
         String reading3 = "this will fail because it is not On or Off";
         String expected = "Invalid switch value";
 
         //Act
-        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new SwitchValue(reading1));
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new SwitchValue(null));
         String result1 = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, () -> new SwitchValue(reading2));

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class HouseAssembler {
 
-    static public House toDomain(HouseFactory houseFactory, HouseDataModel houseDataModel) {
+    public static House toDomain(HouseFactory houseFactory, HouseDataModel houseDataModel) {
 
         HouseIDVO houseIDVO = new HouseIDVO(UUID.fromString(houseDataModel.getId()));
 
@@ -31,7 +31,7 @@ public class HouseAssembler {
 
     }
 
-    static public Iterable<House> toDomain(HouseFactory houseFactory, Iterable<HouseDataModel> houseDataModelIterable) {
+    public static Iterable<House> toDomain(HouseFactory houseFactory, Iterable<HouseDataModel> houseDataModelIterable) {
 
         List<House> houses = new ArrayList<>();
 

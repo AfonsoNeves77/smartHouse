@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HouseAssemblerTest {
+class HouseAssemblerTest {
 
     /**
      * Test case to verify that the toDomain method of HouseAssembler creates the correct HouseDataModel object.

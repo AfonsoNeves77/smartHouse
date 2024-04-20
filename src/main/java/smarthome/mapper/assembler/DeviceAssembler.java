@@ -31,7 +31,7 @@ public class DeviceAssembler {
      * @param deviceDataModel The DeviceDataModel object to be converted.
      * @return The Device object created.
      */
-    static public Device toDomain(DeviceFactory deviceFactory, DeviceDataModel deviceDataModel)
+    public static Device toDomain(DeviceFactory deviceFactory, DeviceDataModel deviceDataModel)
     {
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceDataModel.getDeviceID()));
         DeviceNameVO deviceNameVO = new DeviceNameVO(deviceDataModel.getDeviceName());
@@ -52,7 +52,7 @@ public class DeviceAssembler {
      * @return The list of Device objects created.
      */
 
-    static public List<Device> toDomainList(DeviceFactory deviceFactory, Iterable<DeviceDataModel> deviceDataModelList) {
+    public static List<Device> toDomainList(DeviceFactory deviceFactory, Iterable<DeviceDataModel> deviceDataModelList) {
 
         List<Device> devices = new ArrayList<>();
         deviceDataModelList.forEach(deviceDataModel -> {

@@ -55,140 +55,73 @@ class DecimalSettingsVOTest {
     }
 
     /**
-     * Verifies that a DecimalSettingsVO cannot be created with a lower limit higher than the upper limit.
+     * Tests the behavior of the DecimalSettingsVO class when instantiated with invalid settings.
+     * <p>
+     * This test verifies that an IllegalArgumentException is thrown when attempting to instantiate a DecimalSettingsVO
+     * object with invalid settings. Eight different scenarios are tested, each representing an invalid combination of
+     * lower limit, upper limit, and precision:
+     * <ul>
+     *     <li>Lower limit greater than upper limit.</li>
+     *     <li>Lower limit equal to upper limit.</li>
+     *     <li>Different limits with precision.</li>
+     *     <li>Precision set to 0.</li>
+     *     <li>Precision set to a negative value.</li>
+     *     <li>Precision set to a value greater than 1.</li>
+     *     <li>Precision set to 1.</li>
+     *     <li>Difference between limits greater than precision.</li>
+     * </ul>
+     * For each scenario, the test checks that an IllegalArgumentException is thrown with the message "Invalid actuator
+     * settings."
+     * </p>
      */
     @Test
-    void givenLowerLimitHigherThanUpper_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
+    void givenGivenInvalidSettings_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
         //Arrange
-        String lowerLimit = "8.5";
-        String upperLimit = "7.8";
-        String precision = "0.1";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        String lowerLimit1 = "8.5"; String upperLimit1 = "7.8"; String precision1 = "0.1"; // Lower Limit > Upper Limit
+        String lowerLimit2 = "8.5"; String upperLimit2 = "8.5"; String precision2 = "0.1"; // Lower Limit = Upper Limit
+        String lowerLimit3 = "6.55"; String upperLimit3 = "7.8"; String precision3 = "0.1"; // Limits != precisions
+        String lowerLimit4 = "6.55"; String upperLimit4 = "7.83"; String precision4 = "0"; // Precision = 0
+        String lowerLimit5 = "6.55"; String upperLimit5 = "7.83"; String precision5 = "-0.02"; // Precision < 0
+        String lowerLimit6 = "6.55"; String upperLimit6 = "7.83"; String precision6 = "1.54"; // Precision > 1
+        String lowerLimit7 = "6.55"; String upperLimit7 = "7.83"; String precision7 = "1"; // Precision = 1
+        String lowerLimit8 = "6.555"; String upperLimit8 = "7.835"; String precision8 = "0.01"; // Dif Limits > precision
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with a lower limit equal to the upper limit.
-     */
-    @Test
-    void givenLowerLimitEqualToUpper_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "8.5";
-        String upperLimit = "8.5";
-        String precision = "0.1";
         String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with lower and upper limits with different precisions.
-     */
-    @Test
-    void givenLimitsWithDifferentPrecisions_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "6.55";
-        String upperLimit = "7.8";
-        String precision = "0.1";
-        String expected = "Invalid actuator settings";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit1, upperLimit1, precision1));
+        String result1 = exception1.getMessage();
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with a precision equal to zero.
-     */
-    @Test
-    void givenPrecisionEqualToZero_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "6.55";
-        String upperLimit = "7.83";
-        String precision = "0";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit2, upperLimit2, precision2));
+        String result2 = exception2.getMessage();
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with a precision lower than zero.
-     */
-    @Test
-    void givenPrecisionLowerThanZero_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "6.55";
-        String upperLimit = "7.83";
-        String precision = "-0.02";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit3, upperLimit3, precision3));
+        String result3 = exception3.getMessage();
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with a precision higher than one.
-     */
-    @Test
-    void givenPrecisionHigherThanOne_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "6.55";
-        String upperLimit = "7.83";
-        String precision = "1.54";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        Exception exception4 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit4, upperLimit4, precision4));
+        String result4 = exception4.getMessage();
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with a precision equal to one.
-     */
-    @Test
-    void givenPrecisionEqualToOne_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
-        //Arrange
-        String lowerLimit = "6.55";
-        String upperLimit = "7.83";
-        String precision = "1";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
-    }
+        Exception exception5 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit5, upperLimit5, precision5));
+        String result5 = exception5.getMessage();
 
-    /**
-     * Verifies that a DecimalSettingsVO cannot be created with if limits are defined with a higher precision than the
-     * defined.
-     */
-    @Test
-    void givenLimitsWithHigherPrecisionThanDefinedPrecision_WhenVOIsInstantiated_ThenShouldThrowIllegalArgumentException(){
+        Exception exception6 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit6, upperLimit6, precision6));
+        String result6 = exception6.getMessage();
+
+        Exception exception7 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit7, upperLimit7, precision7));
+        String result7 = exception7.getMessage();
+
+        Exception exception8 = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit8, upperLimit8, precision8));
+        String result8 = exception8.getMessage();
+
         //Arrange
-        String lowerLimit = "6.555";
-        String upperLimit = "7.835";
-        String precision = "0.01";
-        String expected = "Invalid actuator settings";
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DecimalSettingsVO(lowerLimit, upperLimit, precision));
-        String result = exception.getMessage();
-        //Arrange
-        assertEquals(expected, result);
+        assertEquals(expected, result1); // Lower Limit > Upper Limit
+        assertEquals(expected, result2); // Lower Limit = Upper Limit
+        assertEquals(expected, result3); // Limits != precisions
+        assertEquals(expected, result4); // Precision = 0
+        assertEquals(expected, result5); // Precision < 0
+        assertEquals(expected, result6); // Precision > 1
+        assertEquals(expected, result7); // Precision = 1
+        assertEquals(expected, result8); // Dif Limits > precision
     }
 
     /**

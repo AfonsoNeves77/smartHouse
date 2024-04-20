@@ -9,8 +9,6 @@ import smarthome.mapper.assembler.DeviceAssembler;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.jpa.datamodel.DeviceDataModel;
 
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

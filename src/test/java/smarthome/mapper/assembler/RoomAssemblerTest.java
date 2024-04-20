@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * RoomAssemblerTest is a test class for the RoomAssembler class.
  */
 
-public class RoomAssemblerTest {
+class RoomAssemblerTest {
 
     private String roomID;
     private String roomName;

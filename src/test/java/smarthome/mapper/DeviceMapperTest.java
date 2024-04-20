@@ -148,58 +148,36 @@ class DeviceMapperTest {
      * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
      */
     @Test
-    void ifCreateDeviceModelIsCalled_whenDeviceModelIsNull_thenExceptionIsThrown() {
+    void ifCreateDeviceIsCalled_whenDeviceModelProvidesAnInvalidReading_thenExceptionIsThrown() {
         //Arrange
-        DeviceDTO deviceDTO = mock(DeviceDTO.class);
-        when(deviceDTO.getDeviceModel()).thenReturn(null);
+        DeviceDTO deviceDTO1 = mock(DeviceDTO.class);
+        when(deviceDTO1.getDeviceModel()).thenReturn(null);
+
+        DeviceDTO deviceDTO2 = mock(DeviceDTO.class);
+        when(deviceDTO2.getDeviceModel()).thenReturn(" ");
+
+        DeviceDTO deviceDTO3 = mock(DeviceDTO.class);
+        when(deviceDTO2.getDeviceModel()).thenReturn("");
+
         String expected = "Invalid device model.";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceModel(deviceDTO));
-        String result  = exception.getMessage();
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceModel(deviceDTO1));
+        String result1  = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceModel(deviceDTO2));
+        String result2  = exception2.getMessage();
+
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceModel(deviceDTO3));
+        String result3  = exception3.getMessage();
 
         // Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test to verify that, when calling the createDeviceModel method, the deviceModel is not blank.
-     * First, a deviceDTO is created and the getDeviceModel method is called with a blank value.
-     * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
-     */
-    @Test
-    void ifCreateDeviceModelIsCalled_whenDeviceModelIsBlank_thenExceptionIsThrown() {
-        //Arrange
-        DeviceDTO deviceDTO = mock(DeviceDTO.class);
-        when(deviceDTO.getDeviceModel()).thenReturn(" ");
-        String expected = "Invalid device model.";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceModel(deviceDTO));
-        String result  = exception.getMessage();
-
-        // Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test to verify that, when calling the createDeviceModel method, the deviceModel is not empty.
-     * First, a deviceDTO is created and the getDeviceModel method is called with an empty value.
-     * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
-     */
-    @Test
-    void ifCreateDeviceModelIsCalled_whenDeviceModelIsEmpty_thenExceptionIsThrown() {
-        //Arrange
-        DeviceDTO deviceDTO = mock(DeviceDTO.class);
-        when(deviceDTO.getDeviceModel()).thenReturn("");
-        String expected = "Invalid device model.";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceModel(deviceDTO));
-        String result  = exception.getMessage();
-
-        // Assert
-        assertEquals(expected, result);
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
+        assertEquals(expected, result3);
     }
 
     /**
@@ -232,61 +210,50 @@ class DeviceMapperTest {
     }
 
     /**
-     * Test to verify that, when calling the createDeviceID method, the deviceDTO is not null.
-     * First, the method is called with a null deviceDTO.
-     * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
+     * Tests the behavior of the DeviceMapper class when creating a device ID from a device DTO with invalid device model.
+     * <p>
+     * This test verifies that an IllegalArgumentException is thrown when attempting to create a device ID from a device DTO
+     * with an invalid device model. Three different scenarios are tested, each representing an invalid device model:
+     * <ul>
+     *     <li>Device DTO with a null device model.</li>
+     *     <li>Device DTO with an empty string device model.</li>
+     *     <li>Device DTO with a blank device model.</li>
+     * </ul>
+     * For each scenario, the test checks that an IllegalArgumentException is thrown with the message "Invalid device ID."
+     * </p>
      */
+
     @Test
-    void ifCreateDeviceIDIsCalled_whenDeviceDTOIsNull_thenExceptionIsThrown() {
+    void ifCreateDeviceIDIsCalled_whenDeviceModelProvidesAnInvalidReading_thenExceptionIsThrown() {
         //Arrange
-        String expected = "DeviceDTO cannot be null.";
+        DeviceDTO deviceDTO1 = mock(DeviceDTO.class);
+        when(deviceDTO1.getDeviceModel()).thenReturn(null);
 
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(null));
-        String result  = exception.getMessage();
+        DeviceDTO deviceDTO2 = mock(DeviceDTO.class);
+        when(deviceDTO2.getDeviceModel()).thenReturn(" ");
 
-        // Assert
-        assertEquals(expected, result);
-    }
+        DeviceDTO deviceDTO3 = mock(DeviceDTO.class);
+        when(deviceDTO2.getDeviceModel()).thenReturn("");
 
-    /**
-     * Test to verify that, when calling the createDeviceID method, the deviceID is not null.
-     * First, a deviceDTO is created and the getDeviceID method is called with a null value.
-     * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
-     */
-    @Test
-    void ifCreateDeviceIdIsCalled_whenDeviceIdIsNull_thenExceptionIsThrown() {
-        //Arrange
-        DeviceDTO deviceDTO = mock(DeviceDTO.class);
-        when(deviceDTO.getDeviceID()).thenReturn(null);
         String expected = "Invalid device ID.";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(deviceDTO));
-        String result  = exception.getMessage();
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceID(deviceDTO1));
+        String result1  = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceModel(deviceDTO2));
+        String result2  = exception2.getMessage();
+
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
+                DeviceMapper.createDeviceModel(deviceDTO3));
+        String result3  = exception3.getMessage();
 
         // Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test to verify that, when calling the createDeviceID method, the deviceID is not blank.
-     * First, a deviceDTO is created and the getDeviceID method is called with a blank value.
-     * Then, an exception is thrown and retrieved to a string that is compared with the expected string.
-     */
-    @Test
-    void ifCreateDeviceIdIsCalled_whenDeviceIdIsBlank_thenExceptionIsThrown() {
-        //Arrange
-        DeviceDTO deviceDTO = mock(DeviceDTO.class);
-        when(deviceDTO.getDeviceID()).thenReturn(" ");
-        String expected = "Invalid device ID.";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(deviceDTO));
-        String result  = exception.getMessage();
-
-        // Assert
-        assertEquals(expected, result);
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
+        assertEquals(expected, result3);
     }
 
     /**

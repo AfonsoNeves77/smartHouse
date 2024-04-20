@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * DeviceAssemblerTest is a test class for the RoomAssembler class.
  */
 
-public class DeviceAssemblerTest {
+class DeviceAssemblerTest {
 
     private String deviceID;
     private String deviceName;

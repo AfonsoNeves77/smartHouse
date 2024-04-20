@@ -79,7 +79,6 @@ public class DecimalSettingsVO implements Settings {
      */
     @Override
     public Double[] getValue() {
-        Double[] decimalConfigs = {lowerLimit, upperLimit, precision};
-        return decimalConfigs;
+        return new Double[]{lowerLimit, upperLimit, precision};
     }
 }

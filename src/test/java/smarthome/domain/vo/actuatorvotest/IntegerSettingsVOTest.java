@@ -7,41 +7,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IntegerSettingsVOTest {
 
-
     /**
-     * Test if the lower limit is greater than the upper limit.
-     * When the constructor is called with a lower limit greater than the upper limit, an exception is thrown.
+     * Tests the behavior of the IntegerSettingsVO constructor when provided with invalid limits.
+     * <p>
+     * This test verifies that an IllegalArgumentException is thrown when attempting to create an IntegerSettingsVO object
+     * with invalid limits. Two different scenarios are tested:
+     * <ul>
+     *     <li>Lower limit greater than upper limit.</li>
+     *     <li>Lower limit equal to upper limit.</li>
+     * </ul>
+     * For each scenario, the test checks that an IllegalArgumentException is thrown with the message
+     * "Upper limit can't be less than or equal to lower limit."
+     * </p>
      */
     @Test
-    void ifLowerLimitIsGreaterThanUpperLimit_whenConstructorCalled_thenReturnsException(){
+    void ifLimitsAreInvalid_whenConstructorCalled_thenReturnsException(){
         //Arrange
-        String lowerLimit = "10";
-        String upperLimit = "0";
+        String lowerLimit1 = "10"; String upperLimit1 = "0"; // Lower Limit > Upper Limit
+        String lowerLimit2 = "10"; String upperLimit2 = "10"; // Lower Limit = Upper Limit
+
         String expected = "Upper limit can't be less than or equal to lower limit.";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit, upperLimit));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit1, upperLimit1));
+        String result1 = exception1.getMessage();
 
-    /**
-     * Test if the lower limit is equal to the upper limit.
-     * When the constructor is called with a lower limit equal to the upper limit, an exception is thrown.
-     */
-    @Test
-    void ifLowerLimitIsEqualToUpperLimit_whenConstructorCalled_thenReturnsIllegalArgumentException() {
-        //Arrange
-        String lowerLimit = "10";
-        String upperLimit = "10";
-        String expected = "Upper limit can't be less than or equal to lower limit.";
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit2, upperLimit2));
+        String result2 = exception2.getMessage();
 
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit, upperLimit));
-        String result = exception.getMessage();
         //Assert
-        assertEquals(expected, result);
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
     }
 
     /**
@@ -95,57 +91,40 @@ class IntegerSettingsVOTest {
     }
 
     /**
-     * Test if the lower limit is an invalid string.
-     * When the constructor is called with an invalid string as the lower limit, an exception is thrown.
+     * Tests the behavior of the IntegerSettingsVO constructor when provided with unparseable limits.
+     * <p>
+     * This test verifies that an IllegalArgumentException is thrown when attempting to create an IntegerSettingsVO object
+     * with unparseable limits. Three different scenarios are tested:
+     * <ul>
+     *     <li>Lower limit is unparseable.</li>
+     *     <li>Upper limit is unparseable.</li>
+     *     <li>Both lower and upper limits are unparseable.</li>
+     * </ul>
+     * For each scenario, the test checks that an IllegalArgumentException is thrown with the message
+     * "Invalid actuator settings."
+     * </p>
      */
     @Test
-    void ifLowerLimitIsAnInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
+    void ifUnparseableLimits_whenConstructorCalled_thenReturnsIllegalArgumentException() {
         //Arrange
-        String lowerLimit = "teste";
-        String upperLimit = "10";
+        String lowerLimit1 = "teste"; String upperLimit1 = "10";
+        String lowerLimit2 = "10"; String upperLimit2 = "teste";
+        String lowerLimit3 = "teste"; String upperLimit3 = "outro teste";
+
         String expected = "Invalid actuator settings";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit, upperLimit));
-        String result = exception.getMessage();
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit1, upperLimit1));
+        String result1 = exception1.getMessage();
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit2, upperLimit2));
+        String result2 = exception2.getMessage();
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit3, upperLimit3));
+        String result3 = exception3.getMessage();
+
         //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test if the upper limit is an invalid string.
-     * When the constructor is called with an invalid string as the upper limit, an exception is thrown.
-     */
-    @Test
-    void ifUpperLimitIsAnInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
-        //Arrange
-        String lowerLimit = "10";
-        String upperLimit = "teste";
-        String expected = "Invalid actuator settings";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit, upperLimit));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test if both limits are invalid strings.
-     * When the constructor is called with both limits as invalid strings, an exception is thrown.
-     */
-    @Test
-    void ifBothLimitsInvalidString_whenConstructorCalled_thenReturnsIllegalArgumentException() {
-        //Arrange
-        String lowerLimit = "teste";
-        String upperLimit = "outro teste";
-        String expected = "Invalid actuator settings";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new IntegerSettingsVO(lowerLimit, upperLimit));
-        String result = exception.getMessage();
-        //Assert
-        assertEquals(expected, result);
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
+        assertEquals(expected, result3);
     }
 
     /**
@@ -154,46 +133,17 @@ class IntegerSettingsVOTest {
     @Test
     void whenParametersAreValid_thenObjectIsCreated(){
         //Arrange
-        String lowerLimit = "0";
-        String upperLimit = "10";
+        String lowerLimit1 = "0"; String upperLimit1 = "10";
+        String lowerLimit2 = "-10"; String upperLimit2 = "10";
 
         //Act
-        IntegerSettingsVO integerConfigurationVO = new IntegerSettingsVO(lowerLimit, upperLimit);
+        IntegerSettingsVO integerConfigurationVO1 = new IntegerSettingsVO(lowerLimit1, upperLimit1);
+
+        IntegerSettingsVO integerConfigurationVO2 = new IntegerSettingsVO(lowerLimit2, upperLimit2);
 
         //Assert
-        assertNotNull(integerConfigurationVO);
-    }
-
-    /**
-     * Test if the object is created if the lower limit is negative.
-     */
-    @Test
-    void whenParametersAreValidWithLowerNegative_thenObjectIsCreated(){
-        //Arrange
-        String lowerLimit = "-10";
-        String upperLimit = "10";
-
-        //Act
-        IntegerSettingsVO integerConfigurationVO = new IntegerSettingsVO(lowerLimit, upperLimit);
-
-        //Assert
-        assertNotNull(integerConfigurationVO);
-    }
-
-    /**
-     * Test if the object is created if the both limits are negative.
-     */
-    @Test
-    void whenParametersAreValidWithBothValuesNegative_thenObjectIsCreated(){
-        //Arrange
-        String lowerLimit = "-10";
-        String upperLimit = "-1";
-
-        //Act
-        IntegerSettingsVO integerConfigurationVO = new IntegerSettingsVO(lowerLimit, upperLimit);
-
-        //Assert
-        assertNotNull(integerConfigurationVO);
+        assertNotNull(integerConfigurationVO1);
+        assertNotNull(integerConfigurationVO2);
     }
 
     /**

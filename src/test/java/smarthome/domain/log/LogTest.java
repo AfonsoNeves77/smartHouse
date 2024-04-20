@@ -29,7 +29,7 @@ class LogTest {
      * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
-    void whenGivenANullParameter_throwsIllegalArgumentException() throws InstantiationException {
+    void whenGivenANullParameter_throwsIllegalArgumentException() {
         // Arrange
         SensorValueObject<?> reading = new HumidityValue("70");
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
@@ -105,7 +105,7 @@ class LogTest {
      * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
-    void returnsCorrectSensorID() throws InstantiationException {
+    void returnsCorrectSensorID() {
         // Arrange
         SensorValueObject<?> reading = new HumidityValue("70");
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
@@ -145,7 +145,7 @@ class LogTest {
      * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
-    void returnsCorrectDeviceID() throws InstantiationException {
+    void returnsCorrectDeviceID() {
         // Arrange
         SensorValueObject<?> reading = new HumidityValue("70");
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
@@ -185,7 +185,7 @@ class LogTest {
      * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
-    void returnsCorrectSensorTypeID() throws InstantiationException {
+    void returnsCorrectSensorTypeID() {
         // Arrange
         SensorValueObject<?> reading = new HumidityValue("70");
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
