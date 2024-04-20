@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.PowerConsumptionValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.PowerConsumptionValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -95,20 +95,24 @@ public class PowerConsumptionSensor implements Sensor {
         return deviceID;
     }
 
-
     /**
-     * Obtains the power consumption. It receives a SimHardware external service (validating it against null). Returns a
-     * PowerConsumptionValue object as ValueObject<Integer>
-     * @param simHardware SimHardware external service
-     * @return PowerConsumptionValue object
-     * @throws IllegalArgumentException if the external service is null
+     * Retrieves the power consumption value from the provided sensor hardware using the given value factory.
+     *
+     * <p>This method retrieves the power consumption value from the provided sensor hardware, which simulates
+     * the sensor readings. It uses the specified value factory to create the appropriate sensor value object
+     * based on the simulated value obtained from the hardware.</p>
+     *
+     * @param simHardware The sensor hardware providing the simulated power consumption value.
+     * @param valueFactory The factory responsible for creating the appropriate sensor value object.
+     * @return The power consumption value obtained from the sensor hardware.
+     * @throws IllegalArgumentException If either the simHardware or valueFactory parameter is null.
      */
-    public ValueObject<Integer> getPowerConsumption(SensorExternalServices simHardware) {
-        if (areParamsNull(simHardware)){
-            throw new IllegalArgumentException("Invalid external service");
+    public PowerConsumptionValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null){
+            throw new IllegalArgumentException("Invalid parameters");
         }
-        int powerConsumption = parseInt(simHardware.getValue());
-        return new PowerConsumptionValue(powerConsumption);
+        String simValue = simHardware.getValue();
+        return (PowerConsumptionValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
 

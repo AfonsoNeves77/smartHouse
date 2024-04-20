@@ -2,8 +2,8 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.DomainID;
 import smarthome.domain.sensor.externalservices.SunTimeServices;
-import smarthome.domain.sensor.values.SunTimeValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SunTimeValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
@@ -68,12 +68,12 @@ public class SunriseSensor implements Sensor {
      * @throws IllegalArgumentException if the sunTimeCalculator parameter is null. This exception is thrown to indicate
      * an invalid or missing external service.
      */
-    public ValueObject<ZonedDateTime> getSunriseTime(String date, String gpsLocation, SunTimeServices sunTimeCalculator) {
-        if (areParamsNull(sunTimeCalculator)){
-            throw new IllegalArgumentException("Invalid external service");
+    public SunTimeValue getReading(String date, String gpsLocation, SunTimeServices sunTimeCalculator, SensorValueFactory valueFactory) {
+        if (areParamsNull(date,gpsLocation,sunTimeCalculator,valueFactory)){
+            throw new IllegalArgumentException("Invalid parameters");
         }
-        ZonedDateTime sunriseTime = sunTimeCalculator.computeSunrise(date, gpsLocation);
-        return new SunTimeValue(sunriseTime);
+        ZonedDateTime simValue = sunTimeCalculator.computeSunrise(date,gpsLocation);
+        return (SunTimeValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**

@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.DewPointValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.DewPointValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -56,12 +56,12 @@ public class DewPointSensor implements Sensor {
      *
      * @param simHardware SimHardware external service
      * @return dewPointValue object
-     * @throws InstantiationException If value unable to be created
+     * @throws IllegalArgumentException If value unable to be created
      */
-    public ValueObject<Double> getReading(SensorExternalServices simHardware) throws InstantiationException {
-        if (simHardware == null) throw new IllegalArgumentException("Invalid external service");
+    public DewPointValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null) throw new IllegalArgumentException("Invalid parameters");
         String simValue = simHardware.getValue();
-        return new DewPointValue(simValue);
+        return (DewPointValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**

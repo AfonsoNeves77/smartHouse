@@ -2,8 +2,8 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
 import smarthome.domain.DomainID;
-import smarthome.domain.sensor.values.SolarIrradianceValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SolarIrradianceValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -27,7 +27,7 @@ public class SolarIrradianceSensor implements Sensor {
      * @param sensorTypeID ID Value Object of the sensor type chosen
      */
     public SolarIrradianceSensor(SensorNameVO sensorName, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID){
-        if(!validParameters(sensorName, deviceID, sensorTypeID))
+        if(invalidParameters(sensorName, deviceID, sensorTypeID))
             throw new IllegalArgumentException("Sensor parameters cannot be null");
         this.sensorID = new SensorIDVO(UUID.randomUUID());
         this.sensorName = sensorName;
@@ -54,16 +54,25 @@ public class SolarIrradianceSensor implements Sensor {
     }
 
     /**
-     * Requests the sensor to retrieve its reading
-     * @return ValueObject<Integer> containing the reading of the sensor
-     * @throws IllegalArgumentException If reading hardware is null or reading is invalid (null or wrong number format)
+     * Retrieves the solar irradiance value from the provided sensor hardware using the given value factory.
+     *
+     * <p>
+     * This method retrieves the solar irradiance value from the provided sensor hardware, which simulates
+     * the sensor readings. It uses the specified value factory to create the appropriate sensor value object
+     * based on the simulated value obtained from the hardware.
+     * </p>
+     *
+     * @param simHardware The sensor hardware providing the simulated solar irradiance value.
+     * @param valueFactory The factory responsible for creating the appropriate sensor value object.
+     * @return The solar irradiance value obtained from the sensor hardware.
+     * @throws IllegalArgumentException If either the simHardware or valueFactory parameter is null.
      */
-    public ValueObject<Integer> getReading(SensorExternalServices simHardware) {
-        if(simHardware == null)
-            throw new IllegalArgumentException("Invalid hardware");
-        String reading = simHardware.getValue();
-
-        return new SolarIrradianceValue(reading);
+    public SolarIrradianceValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (invalidParameters(simHardware,valueFactory)){
+            throw new IllegalArgumentException("Invalid parameters");
+        }
+        String simValue = simHardware.getValue();
+        return (SolarIrradianceValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**
@@ -103,16 +112,17 @@ public class SolarIrradianceSensor implements Sensor {
     }
 
     /**
-     * Verifies whether constructor parameters are valid (not null) or not
-     * @param parameters Parameters to validate(sensorName, sensorTypeID, deviceID)
-     * @return True if all parameters are not null, false if any of them is null
+     * Checks if the provided parameters are invalid, i.e., if any of them is null.
+     *
+     * @param parameters The parameters to be checked for nullity.
+     * @return {@code true} if any of the parameters is null, {@code false} otherwise.
      */
-    private boolean validParameters(Object... parameters){
+    private boolean invalidParameters(Object... parameters){
         for(Object param : parameters){
             if(param == null){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

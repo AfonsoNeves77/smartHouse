@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.TemperatureValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -10,7 +10,7 @@ import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import java.util.UUID;
 
-public class TemperatureSensor implements Sensor{
+public class TemperatureSensor implements Sensor {
     private SensorNameVO name;
     private final DeviceIDVO deviceID;
     private final SensorTypeIDVO sensorTypeID;
@@ -19,8 +19,9 @@ public class TemperatureSensor implements Sensor{
 
     /**
      * Constructor for the TemperatureSensorTP class.
-     * @param name Name of the sensor.
-     * @param deviceID ID of the device to which the sensor is connected.
+     *
+     * @param name         Name of the sensor.
+     * @param deviceID     ID of the device to which the sensor is connected.
      * @param sensorTypeID ID of the sensor type.
      */
     public TemperatureSensor(SensorNameVO name, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
@@ -54,8 +55,9 @@ public class TemperatureSensor implements Sensor{
 
     /**
      * Validates the parameters of the constructor.
-     * @param name Name of the sensor.
-     * @param deviceID ID of the device to which the sensor is connected.
+     *
+     * @param name         Name of the sensor.
+     * @param deviceID     ID of the device to which the sensor is connected.
      * @param sensorTypeID ID of the sensor type.
      * @return True if the parameters are valid, false otherwise.
      */
@@ -85,14 +87,15 @@ public class TemperatureSensor implements Sensor{
 
     /**
      * Gets the reading from the hardware.
+     *
      * @param simHardware Hardware from which to get the reading.
      * @return Value of the reading.
      */
-    public ValueObject<Double> getReading(SensorExternalServices simHardware) {
-        if (simHardware == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+    public TemperatureValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null) {
+            throw new IllegalArgumentException("Invalid parameters");
         }
-        String value = simHardware.getValue();
-        return new TemperatureValue(value);
+        String simValue = simHardware.getValue();
+        return (TemperatureValue) valueFactory.createSensorValue(simValue, this.sensorTypeID);
     }
 }

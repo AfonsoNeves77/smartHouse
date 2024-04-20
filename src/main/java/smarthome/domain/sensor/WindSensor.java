@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.WindValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.WindValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -70,14 +70,12 @@ public class WindSensor implements Sensor {
      * @return The wind value object containing the reading.
      * @throws IllegalArgumentException if the simHardware parameter is null.
      */
-    public ValueObject<String[]> getReading(SensorExternalServices simHardware) {
-        if (simHardware == null) {
-            throw new IllegalArgumentException("Invalid SimHardware");
+    public WindValue getReading(SensorExternalServices simHardware,SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null){
+            throw new IllegalArgumentException("Invalid parameters");
         }
-
         String simValue = simHardware.getValue();
-
-        return new WindValue(simValue);
+        return (WindValue) valueFactory.createSensorValue(simValue,this.sensorTypeIDVO);
     }
 
     /**
