@@ -34,6 +34,27 @@ public class Device implements DomainEntity {
             this.deviceStatus = new DeviceStatusVO(true);
             this.deviceID = new DeviceIDVO(UUID.randomUUID());
         }
+        /**
+         * Constructs a Device with the specified parameters.
+        * This constructor is used when the device already has an ID. It's main purpose is to be used to create domain
+        * objects from existing data models persisted in a database. No checks are made on the parameters as they
+        * are assumed to be valid because they are coming from the database and when first created as domain objects
+        * all parameters where checked.
+        *
+        * @param deviceIDVO       The ID of the device.
+        * @param deviceName       The name of the device.
+        * @param deviceModel      The deviceModel of the device.
+        * @param deviceStatusVO   The status of the device, it`s a boolean
+        * @param roomID           The ID of the room to which the device belongs.
+        */
+        public Device(DeviceIDVO deviceIDVO, DeviceNameVO deviceName, DeviceModelVO deviceModel, DeviceStatusVO deviceStatusVO, RoomIDVO roomID) {
+
+             this.deviceName = deviceName;
+             this.deviceModel = deviceModel;
+             this.roomID = roomID;
+             this.deviceStatus = new DeviceStatusVO(true);
+             this.deviceID = deviceIDVO;
+        }
 
         /**
          * Deactivates the device.
@@ -53,10 +74,10 @@ public class Device implements DomainEntity {
          * @param roomID the ID of the room where the device is located
          * @return true if all parameters are valid, false otherwise
          */
-        private boolean allParametersAreValid(DeviceNameVO deviceName, DeviceModelVO deviceModel, RoomIDVO roomID){
-            return deviceName != null && deviceModel != null && roomID != null;
-        }
 
+         private boolean allParametersAreValid( DeviceNameVO deviceName, DeviceModelVO deviceModel, RoomIDVO roomID){
+             return  deviceName != null && deviceModel != null && roomID != null;
+        }
         /**
          * Gets the device's name.
          * @return the device name object (DeviceNameVO)
