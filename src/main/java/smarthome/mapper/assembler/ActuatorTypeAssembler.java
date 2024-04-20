@@ -27,9 +27,10 @@ public class ActuatorTypeAssembler {
      * for the ActuatorType object to be created, the method first instantiates a ActuatorTypeIDVO, necessary for the creation
      * of the ActuatorTYpe, using the getter from the ActuatorTypeDataModel class. Then, it uses the ActuatorTypeFactory to create
      * the ActuatorType object with the ActuatorTypeIDVO, returning the ActuatorType object.
-     * @param actuatorTypeFactory
-     * @param actuatorTypeDataModel
-     * @return
+     *
+     * @param actuatorTypeFactory The ActuatorTypeFactory used to create ActuatorType objects.
+     * @param actuatorTypeDataModel The ActuatorTypeDataModel object to be converted.
+     * @return The ActuatorType object created.
      */
     public static ActuatorType actuatorTypeToDomain(ActuatorTypeFactory actuatorTypeFactory, ActuatorTypeDataModel actuatorTypeDataModel){
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeDataModel.getActuatorTypeID());
@@ -43,9 +44,10 @@ public class ActuatorTypeAssembler {
      * The method first creates an empty list of ActuatorType objects. Then, it iterates over the ActuatorTypeDataModel objects
      * and converts each one to an ActuatorType object using the actuatorTypeToDomain() method. Then, it adds each one of these to
      * the list created previously. Finally, it returns the list of ActuatorType objects.
-     * @param actuatorTypeFactory
-     * @param actuatorTypeDataModelList
-     * @return
+     *
+     * @param actuatorTypeFactory The ActuatorTypeFactory used to create ActuatorType objects.
+     * @param actuatorTypeDataModelList The Iterable of ActuatorTypeDataModel objects to be converted.
+     * @return The list of ActuatorType objects created.
      */
     public static Iterable<ActuatorType> actuatorTypeListToDomain(ActuatorTypeFactory actuatorTypeFactory, Iterable<ActuatorTypeDataModel> actuatorTypeDataModelList) {
         List<ActuatorType> actuatorTypeList = new ArrayList<>();
