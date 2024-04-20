@@ -138,6 +138,41 @@ class DeviceRepositoryMem {
      - validEntity(device : Device) : boolean
 }
 
+class DeviceRepositoryJPA {
+    - deviceFactory : DeviceFactory
+    - entityManagerFactory : EntityManagerFactory
+    + save (device : Device) : boolean
+    + findAll () : Iterable<Device>
+    - getDataModelFromId (deviceIDVO : DeviceIDVO) : Optional <DeviceDataModel>
+    + findByID (id : DeviceIDVO) : Device
+    + isPresent (id : DeviceIDVO) : boolean
+    + updateDevice (device : Device) : boolean
+    - isNull (object : Object) : boolean
+    - getDeviceDataModelFromDeviceId (em : EntityManager, id : DeviceIDVO) : Optional<DeviceDataModel>
+}
+
+
+class DeviceDataModel {
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomIDVO : RoomIDVO
+    + DeviceDataModel (device : Device) : DeviceDataModel
+    + updateFromDomain (device : Device) : boolean
+    + getDeviceID() : String
+    + getDeviceName() : String
+    + getDeviceModel() : String
+    + getDeviceStatus() : String
+    + getRoomIDVO() : RoomIDVO
+
+}
+
+class DeviceAssembler {
+    + toDomain(deviceFactory : DeviceFactory, deviceDataModel : DeviceDataModel) : Device
+    + toDomainList(deviceFactory : DeviceFactory, deviceDataModelList : List<DeviceDataModel>) : List<Device>
+}
+
 interface DeviceRepository {
     + findByRoomID(roomID : RoomIDVO) : List<Device>
 }
@@ -188,8 +223,13 @@ Repository <|-- RoomRepository
 RoomRepository <|.. RoomRepositoryMem
 Repository <|-- DeviceRepository
 DeviceRepository <|.. DeviceRepositoryMem
+DeviceRepository <|.. DeviceRepositoryJPA
 DeviceRepositoryMem "1" o-- "*" Device
 RoomRepositoryMem "1" o--- "*" Room
+
+DeviceRepositoryJPA ..> DeviceAssembler
+DeviceRepositoryJPA -> DeviceDataModel : create >
+
 
 Room ...|> DomainEntity
 Device ...|> DomainEntity

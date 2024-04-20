@@ -50,6 +50,40 @@ class DeviceRepository {
     - data : LinkedHashmap<DeviceIDVO,Device>
     + findByID (DeviceIDVO) : Device
 }
+class DeviceRepositoryJPA {
+    - deviceFactory : DeviceFactory
+    - entityManagerFactory : EntityManagerFactory
+    + save (device : Device) : boolean
+    + findAll () : Iterable<Device>
+    - getDataModelFromId (deviceIDVO : DeviceIDVO) : Optional <DeviceDataModel>
+    + findByID (id : DeviceIDVO) : Device
+    + isPresent (id : DeviceIDVO) : boolean
+    + updateDevice (device : Device) : boolean
+    - isNull (object : Object) : boolean
+    - getDeviceDataModelFromDeviceId (em : EntityManager, id : DeviceIDVO) : Optional<DeviceDataModel>
+}
+
+
+class DeviceDataModel {
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomIDVO : RoomIDVO
+    + DeviceDataModel (device : Device) : DeviceDataModel
+    + updateFromDomain (device : Device) : boolean
+    + getDeviceID() : String
+    + getDeviceName() : String
+    + getDeviceModel() : String
+    + getDeviceStatus() : String
+    + getRoomIDVO() : RoomIDVO
+
+}
+
+class DeviceAssembler {
+    + toDomain(deviceFactory : DeviceFactory, deviceDataModel : DeviceDataModel) : Device
+    + toDomainList(deviceFactory : DeviceFactory, deviceDataModelList : List<DeviceDataModel>) : List<Device>
+}
 
 class Device{
 }
@@ -83,6 +117,9 @@ Actuator -- QueryService
 Repository <.. SensorRepository
 Repository <.. ActuatorRepository
 Repository <.. DeviceRepository
+DeviceRepository <|.. DeviceRepositoryJPA
+DeviceRepositoryJPA ..> DeviceAssembler
+DeviceRepositoryJPA -> DeviceDataModel : create >
 
 DeviceDTO -- DeviceMapper
 

@@ -37,11 +37,49 @@ class DeviceIDVO {
     + DeviceIDVO(String)
 }
 
-class DeviceServiceImpl {
-    - factoryDevice : FactoryDevice
-    - repositoryDevice : RepositoryDevice
-    - roomRepository : RoomRepository
-    + DeviceServiceImpl(FactoryDevice,RepositoryDevice,RoomRepository)
+class DeviceRepositoryMem {
+     - DATA : Map<DeviceIDVO, Device>
+
+     + save(device : Device) : boolean
+     + findAll() : Iterable<Device>
+     + findByID(ID : DeviceIDVO) : Device
+     + isPresent(deviceID : DeviceIDVO) : boolean
+     - validEntity(device : Device) : boolean
+}
+
+class DeviceRepositoryJPA {
+    - deviceFactory : DeviceFactory
+    - entityManagerFactory : EntityManagerFactory
+    + save (device : Device) : boolean
+    + findAll () : Iterable<Device>
+    - getDataModelFromId (deviceIDVO : DeviceIDVO) : Optional <DeviceDataModel>
+    + findByID (id : DeviceIDVO) : Device
+    + isPresent (id : DeviceIDVO) : boolean
+    + updateDevice (device : Device) : boolean
+    - isNull (object : Object) : boolean
+    - getDeviceDataModelFromDeviceId (em : EntityManager, id : DeviceIDVO) : Optional<DeviceDataModel>
+}
+
+
+class DeviceDataModel {
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomIDVO : RoomIDVO
+    + DeviceDataModel (device : Device) : DeviceDataModel
+    + updateFromDomain (device : Device) : boolean
+    + getDeviceID() : String
+    + getDeviceName() : String
+    + getDeviceModel() : String
+    + getDeviceStatus() : String
+    + getRoomIDVO() : RoomIDVO
+
+}
+
+class DeviceAssembler {
+    + toDomain(deviceFactory : DeviceFactory, deviceDataModel : DeviceDataModel) : Device
+    + toDomainList(deviceFactory : DeviceFactory, deviceDataModelList : List<DeviceDataModel>) : List<Device>
 }
 
 interface DeviceService {
@@ -57,11 +95,8 @@ interface Repository<ID extends DomainID, T extends DomainEntity> {
 }
 
 interface DeviceRepository<DeviceIDVO, Device> {
+    + findByRoomID(roomID : RoomIDVO) : List<Device>
 
-}
-class DeviceRepositoryImpl {
-     - deviceIdAndDeviceMap : Map<DeviceID,Device>
-     + findByID(deviceID : DeviceIDVO) : Device
 }
 
 interface ValueObject<T> {
@@ -94,7 +129,7 @@ class Device {
 
 DeactivateDeviceCTRL ..> DeviceService
 DeactivateDeviceCTRL ..> DeviceDTOMapper
-DeviceServiceImpl ..> DeviceRepository
+DeviceServiceImpl ..> DeviceRepositoryMem
 
 DeviceDTOMapper ..> DeviceDTO
 
@@ -102,7 +137,10 @@ DomainID <|..up DeviceIDVO
 
 DeviceRepository o-- Device
 Repository <|.. DeviceRepository
-DeviceRepository <|.. DeviceRepositoryImpl
+DeviceRepository <|.. DeviceRepositoryMem
+DeviceRepository <|.. DeviceRepositoryJPA
+DeviceRepositoryJPA ..> DeviceAssembler
+DeviceRepositoryJPA -> DeviceDataModel : create >
 
 
 Device ..up|> DomainEntity
