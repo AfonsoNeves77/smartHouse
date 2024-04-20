@@ -243,11 +243,11 @@ class DeviceMapperTest {
         String result1  = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
-                DeviceMapper.createDeviceModel(deviceDTO2));
+                DeviceMapper.createDeviceID(deviceDTO2));
         String result2  = exception2.getMessage();
 
         Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
-                DeviceMapper.createDeviceModel(deviceDTO3));
+                DeviceMapper.createDeviceID(deviceDTO3));
         String result3  = exception3.getMessage();
 
         // Assert
