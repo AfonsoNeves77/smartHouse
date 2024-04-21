@@ -64,19 +64,19 @@ public class HouseRepositoryJPA implements HouseRepository {
     /**
      * Retrieves all House entities from the database.
      * It's used a constant JPQL to this operation in QUERY.
-     * @return An Iterable containing all House entities.
+     * @return An Iterable containing all House entities or null if any error that
+     * causes a run time exceptions occurs.
      */
 
     @Override
     public Iterable<House> findAll() {
-        try  {
-            EntityManager em = entityManagerFactory.createEntityManager();
+        try(EntityManager em = entityManagerFactory.createEntityManager())  {
             Query query = em.createQuery(QUERY);
             List<HouseDataModel> houseDataModels = query.getResultList();
 
             return HouseAssembler.toDomain(houseFactory, houseDataModels);
         } catch (RuntimeException e) {
-            return Collections.emptyList();
+            return null;
         }
     }
 
@@ -205,10 +205,12 @@ public class HouseRepositoryJPA implements HouseRepository {
         }
     }
 
+
     /**
-     * Helper method to check if an object is null.
-     * @param object The object to check.
-     * @return True if the object is null, false otherwise.
+     * Verifies if the given object is null. Although is not type-safe, this method is only used when there is
+     * a previous appropriate type checking by the compiler.
+     * @param object Nullable entity
+     * @return true if null, false otherwise
      */
 
     private boolean isNull(Object object){

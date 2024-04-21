@@ -43,12 +43,8 @@ public class HouseServiceImpl implements HouseService{
         if(locationVO == null){
             throw new IllegalArgumentException("Invalid location");
         }
-        try{
-            House house = houseFactory.createHouse(locationVO);
-            return houseRepository.save(house);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        House house = houseFactory.createHouse(locationVO);
+        return houseRepository.save(house);
     }
 
     /**
