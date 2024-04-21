@@ -37,6 +37,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+
+        <spring-boot.version>3.2.4</spring-boot.version>
+
     </properties>
 
     <dependencies>
@@ -103,6 +106,15 @@
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
@@ -189,6 +201,12 @@
                     </features>
                 </configuration>
 
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
 
         </plugins>
