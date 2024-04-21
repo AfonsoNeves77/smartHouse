@@ -42,7 +42,8 @@ public class HouseAssembler {
      * @param houseDataModelIterable   The iterable of HouseDataModel instances to convert.
      * @return                         A collection of converted House domain objects.
      */
-    static public Iterable<House> toDomain(HouseFactory houseFactory, Iterable<HouseDataModel> houseDataModelIterable) {
+    public static Iterable<House> toDomain(HouseFactory houseFactory, Iterable<HouseDataModel> houseDataModelIterable) {
+        
         List<House> houses = new ArrayList<>();
         houseDataModelIterable.forEach(houseDataModel -> {
             House house = toDomain(houseFactory, houseDataModel);

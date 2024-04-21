@@ -1,16 +1,14 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.PositionValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.PositionValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import java.util.UUID;
-
-import static java.lang.Integer.parseInt;
 
 /**
  * PositionSensor is a domain entity that represents a sensor that measures the position/value in a scale.
@@ -59,16 +57,41 @@ public class PositionSensor implements Sensor {
     }
 
     /**
-     * Obtains the reading from the sensor. It receives
-     * a SimHardware external service (validating it against null).
-     * @param simHardware The external service that provides the sensor reading.
-     * @return A PositionValue object as ValueObject<Integer>.
-     * @throws InstantiationException If the external service is null.
+     * Retrieves the position reading using the provided SimHardware and SensorValueFactory.
+     *
+     * <p>
+     * This method retrieves the position reading by querying the SimHardware for the current value and using the
+     * provided SensorValueFactory to create a PositionValue object. It throws an IllegalArgumentException if either the
+     * SimHardware or the SensorValueFactory is null.
+     * </p>
+     *
+     * <p>
+     * The method takes two parameters: simHardware, representing the SimHardware interface for accessing sensor data,
+     * and valueFactory, representing the factory for creating sensor values. It ensures that both parameters are not
+     * null before proceeding.
+     * </p>
+     *
+     * <p>
+     * Upon validation of parameters, the method retrieves the current value from the SimHardware and delegates the
+     * creation of a PositionValue object to the valueFactory. It returns the created PositionValue object.
+     * </p>
+     *
+     * <p>
+     * If either the simHardware or the valueFactory parameter is null, the method throws an IllegalArgumentException
+     * with the message "Invalid parameters".
+     * </p>
+     *
+     * @param simHardware The SimHardware object representing the hardware interface for accessing sensor data.
+     * @param valueFactory The SensorValueFactory object for creating sensor value objects.
+     * @return The PositionValue object representing the current position reading.
+     * @throws IllegalArgumentException if either simHardware or valueFactory is null.
      */
-    public ValueObject<Integer> getReading(SensorExternalServices simHardware) throws InstantiationException {
-        if (simHardware == null) throw new IllegalArgumentException("Invalid external service");
-        int simValue = parseInt(simHardware.getValue());
-        return new PositionValue(simValue);
+    public PositionValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null){
+            throw new IllegalArgumentException("Invalid parameters");
+        }
+        String simValue = simHardware.getValue();
+        return (PositionValue) valueFactory.createSensorValue(simValue,this.sensorType);
     }
 
     /**

@@ -2,7 +2,6 @@ package smarthome.persistence.jpa.datamodel;
 
 import jakarta.persistence.*;
 import smarthome.domain.device.Device;
-import smarthome.domain.vo.roomvo.RoomIDVO;
 
 @Entity
 @Table(name = "Device")
@@ -48,7 +47,7 @@ public class DeviceDataModel {
         this.deviceName = device.getDeviceName().getValue();
         this.deviceModel = device.getDeviceModel().getValue();
         this.deviceStatus = device.getDeviceStatus().getValue();
-        this.roomID = device.getRoomID().getID();;
+        this.roomID = device.getRoomID().getID();
 
         return true;
     }

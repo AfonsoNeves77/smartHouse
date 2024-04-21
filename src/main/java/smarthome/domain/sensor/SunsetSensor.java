@@ -2,8 +2,8 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.DomainID;
 import smarthome.domain.sensor.externalservices.SunTimeServices;
-import smarthome.domain.sensor.values.SunTimeValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SunTimeValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -70,21 +70,30 @@ public class SunsetSensor implements Sensor {
     }
 
     /**
-     * Obtains the sunset time. It receives a data, gps location and SunTimeCalculator external service (validating it
-     * against null). Returns a SunTimeValue object as ValueObject<ZoneDateTime>
+     * Retrieves the sunset time using the provided date, GPS location, and sun time calculator.
+     * This method calculates the sunset time using the provided date, GPS location, and sun time calculator
+     * implementation. It then creates a SunTimeValue object using the specified value factory based on the
+     * calculated sunset time.
+     * The System Under Test (SUT) is the SunriseSensor class. The method takes four parameters: date, GPS location,
+     * sun time calculator, and value factory. It checks if any of these parameters are null and throws an
+     * IllegalArgumentException if any of them are null.
+     * If all parameters are valid, the method computes the sunset time using the provided sun time calculator
+     * implementation and creates a SunTimeValue object using the value factory.
      *
-     * @param date              Date
-     * @param gpsLocation       Geolocation
-     * @param sunTimeCalculator SunTimeCalculator external service
-     * @return SunTimeValue object
+     * @param date The date for which the sunset time is to be calculated.
+     * @param gpsLocation The GPS location (latitude and longitude) used to calculate the sunset time.
+     * @param sunTimeCalculator The sun time calculator implementation used to compute the sunset time.
+     * @param valueFactory The factory responsible for creating the SunTimeValue object.
+     * @return The sunset time obtained using the provided parameters.
+     * @throws IllegalArgumentException If any of the parameters are null.
      */
 
-    public ValueObject<ZonedDateTime> getSunsetTime(String date, String gpsLocation, SunTimeServices sunTimeCalculator) {
-        if (sunTimeCalculator == null) {
-            throw new IllegalArgumentException("Invalid external service");
+    public SunTimeValue getReading(String date, String gpsLocation, SunTimeServices sunTimeCalculator, SensorValueFactory valueFactory) {
+        if (areParamsNull(date,gpsLocation,sunTimeCalculator,valueFactory)){
+            throw new IllegalArgumentException("Invalid parameters");
         }
-        ZonedDateTime sunsetTime = sunTimeCalculator.computeSunset(date, gpsLocation);
-        return new SunTimeValue(sunsetTime);
+        ZonedDateTime simValue = sunTimeCalculator.computeSunset(date,gpsLocation);
+        return (SunTimeValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**
@@ -127,5 +136,19 @@ public class SunsetSensor implements Sensor {
     @Override
     public DomainID getId() {
         return this.sensorID;
+    }
+
+    /**
+     * Validates any number of object params against null
+     * @param params Any object param
+     * @return True or false
+     */
+    private boolean areParamsNull(Object... params){
+        for (Object param : params){
+            if (param == null){
+                return true;
+            }
+        }
+        return false;
     }
 }

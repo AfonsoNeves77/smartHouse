@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.HumidityValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.HumidityValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -53,19 +53,35 @@ public class HumiditySensor implements Sensor {
     }
 
     /**
-     * This method gets the reading from the external service and returns it as a ValueObject.
-     * It first checks if the external service is null, if so throws IllegalArgumentException.
-     * Then it gets the reading from the simhardware in String, returning it as a HumidityValue.
-     * @param simHardware External service that provides the reading.
-     * @return ValueObject with the reading.
-     * @throws InstantiationException If parameters out of bounds.
+     * Retrieves the humidity reading using the provided SimHardware and SensorValueFactory.
+     *
+     * <p>
+     * This method retrieves the humidity reading by querying the SimHardware for the current value and using the provided SensorValueFactory to create a HumidityValue object. It throws an IllegalArgumentException if either the SimHardware or the SensorValueFactory is null.
+     * </p>
+     *
+     * <p>
+     * The method takes two parameters: simHardware, representing the SimHardware interface for accessing sensor data, and valueFactory, representing the factory for creating sensor values. It ensures that both parameters are not null before proceeding.
+     * </p>
+     *
+     * <p>
+     * Upon validation of parameters, the method retrieves the current value from the SimHardware and delegates the creation of a HumidityValue object to the valueFactory. It returns the created HumidityValue object.
+     * </p>
+     *
+     * <p>
+     * If either the simHardware or the valueFactory parameter is null, the method throws an IllegalArgumentException with the message "Invalid parameters".
+     * </p>
+     *
+     * @param simHardware The SimHardware object representing the hardware interface for accessing sensor data.
+     * @param valueFactory The SensorValueFactory object for creating sensor value objects.
+     * @return The HumidityValue object representing the current humidity reading.
+     * @throws IllegalArgumentException if either simHardware or valueFactory is null.
      */
-    public ValueObject<Integer> getReading(SensorExternalServices simHardware) throws InstantiationException {
-        if(areParamsNull(simHardware)){
-            throw new IllegalArgumentException("Invalid external service");
+    public HumidityValue getReading(SensorExternalServices simHardware, SensorValueFactory valueFactory) {
+        if (simHardware == null || valueFactory == null){
+            throw new IllegalArgumentException("Invalid parameters");
         }
         String simValue = simHardware.getValue();
-        return new HumidityValue(simValue);
+        return (HumidityValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**
@@ -106,7 +122,7 @@ public class HumiditySensor implements Sensor {
 
     /**
      * This method checks if the parameters are null, being used both in the constructor and in the getReading method.
-     * If any parametera are null, it returns true. Otherwise, it returns false.
+     * If any parameters are null, it returns true. Otherwise, it returns false.
      * @param params Object parameters
      * @return boolean
      */

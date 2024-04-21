@@ -2,8 +2,8 @@ package smarthome.domain.sensor;
 
 import smarthome.domain.DomainID;
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.AveragePowerConsumptionValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.AveragePowerConsumptionValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -73,24 +73,42 @@ public class AveragePowerConsumptionSensor implements Sensor {
     }
 
     /**
-     * Obtains the average power consumption reading. It receives an initial date, a final date and a SimHardware external
-     * service (validating it against null). Returns an AveragePowerConsumptionValue object as ValueObject<Integer>
+     * Retrieves a sensor reading within the specified time range using simulated hardware and a factory for creating sensor values.
      *
-     * @param initialDate Initial date
-     * @param finalDate   Final date
-     * @param simHardware SimHardware external service
-     * @return AveragePowerConsumptionValue object
+     * <p>
+     * This method retrieves a sensor reading within the time range defined by the initial and final dates provided as parameters.
+     * It utilizes simulated hardware to obtain the sensor value for the specified time range.
+     * The sensor value is then used to create a SensorValueObject using the provided value factory.
+     * </p>
+     *
+     * <p>
+     * If the initial or final dates are not valid, an IllegalArgumentException is thrown with the message "Invalid date".
+     * Additionally, if the simulated hardware reference is null, an IllegalArgumentException is thrown with the message "Invalid external service".
+     * </p>
+     *
+     * <p>
+     * If there are any issues with casting or value creation during the creation of the SensorValueObject by the factory,
+     * the factory returns null, and this method returns null as well.
+     * </p>
+     *
+     * @param initialDate The initial date of the time range for retrieving the sensor reading.
+     * @param finalDate   The final date of the time range for retrieving the sensor reading.
+     * @param simHardware The simulated hardware providing the sensor values.
+     * @param valueFactory The factory for creating SensorValueObjects.
+     * @return A SensorValueObject containing the sensor reading within the specified time range, or null if any issues occur during value creation.
+     * @throws IllegalArgumentException If the initial or final dates are invalid, or if the simulated hardware reference is null.
      */
-
-    public ValueObject<Integer> getReading(String initialDate, String finalDate, SensorExternalServices simHardware) {
+    public AveragePowerConsumptionValue getReading(String initialDate, String finalDate, SensorExternalServices simHardware, SensorValueFactory valueFactory) {
         if (!validateDate(initialDate, finalDate)) {
             throw new IllegalArgumentException("Invalid date");
         }
-        if (simHardware == null) {
-            throw new IllegalArgumentException("Invalid external service");
+        if (simHardware == null || valueFactory == null) {
+            throw new IllegalArgumentException("Invalid parameters");
         }
         String simValue = simHardware.getValue(initialDate, finalDate);
-        return new AveragePowerConsumptionValue(simValue);
+
+        // If there is any issues with casting or value creation, the factory returns null
+        return (AveragePowerConsumptionValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**

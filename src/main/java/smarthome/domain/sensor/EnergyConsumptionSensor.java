@@ -1,8 +1,8 @@
 package smarthome.domain.sensor;
 
 import smarthome.domain.sensor.externalservices.SensorExternalServices;
-import smarthome.domain.sensor.values.EnergyConsumptionValue;
-import smarthome.domain.vo.ValueObject;
+import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -92,17 +92,19 @@ public class EnergyConsumptionSensor implements Sensor {
      * @param finalDate Final date
      * @param simHardware External Service
      * @return ValueObject<Integer>
-     * @throws InstantiationException if reading invalid
+     * @throws IllegalArgumentException if reading or factory invalid
      */
-    public ValueObject<Integer> getReading(String initialDate, String finalDate, SensorExternalServices simHardware) throws InstantiationException {
+    public EnergyConsumptionValue getReading(String initialDate, String finalDate, SensorExternalServices simHardware, SensorValueFactory valueFactory) {
         if (!validateDates(initialDate, finalDate)) {
             throw new IllegalArgumentException("Invalid date");
         }
-        if (simHardware == null) {
-            throw new IllegalArgumentException("Invalid external service");
+        if (simHardware == null || valueFactory == null) {
+            throw new IllegalArgumentException("Invalid parameters");
         }
         String simValue = simHardware.getValue(initialDate, finalDate);
-        return new EnergyConsumptionValue(simValue);
+
+        // If there is any issues with casting or value creation, the factory returns null
+        return (EnergyConsumptionValue) valueFactory.createSensorValue(simValue,this.sensorTypeID);
     }
 
     /**
