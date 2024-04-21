@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import smarthome.domain.log.Log;
 
+import java.time.LocalDateTime;
+
 /**
  * LogDataModel is a class that mirrors the Log entity within the database.
  * It serves as a means to persist Log objects in the database.
@@ -18,7 +20,7 @@ public class LogDataModel {
     @Column(name = "id")
     private String logID;
     @Column(name = "time")
-    private String time;
+    private LocalDateTime time;
     @Column(name = "reading")
     private String reading;
     @Column(name = "sensor_id")
@@ -42,12 +44,12 @@ public class LogDataModel {
      * @param log The Log instance that serves as the basis for the LogDataModel creation.
      */
     public LogDataModel(Log log) {
-        this.logID = log.getId().toString();
-        this.time = log.getTime().toString();
-        this.reading = log.getReading().toString();
-        this.sensorID = log.getSensorID().toString();
-        this.deviceID = log.getDeviceID().toString();
-        this.sensorTypeID = log.getSensorTypeID().toString();
+        this.logID = log.getId().getID();
+        this.time = log.getTime();
+        this.reading = log.getReading().getValue().toString();
+        this.sensorID = log.getSensorID().getID();
+        this.deviceID = log.getDeviceID().getID();
+        this.sensorTypeID = log.getSensorTypeID().getID();
     }
 
     /**
@@ -60,7 +62,7 @@ public class LogDataModel {
     /**
      * Getter to obtain the time attribute.
      */
-    public String getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
