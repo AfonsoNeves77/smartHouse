@@ -92,6 +92,16 @@ interface ActuatorTypeFactory{
     +createActuatorType(actuatorTypeIDVO : ActuatorTypeIDVO) : ActuatorType
 }
 
+class ActuatorTypeRepositorySpringData {
+    -actuatorTypeFactory : ActuatorTypeFactory
+    -iActuatorTypeRepositorySpringData : IActuatorTypeRepositorySpringData
+
+    +findAll() : Iterable<ActuatorType>
+}
+
+interface IActuatorTypeRepositorySpringData {
+}
+
 
 GetListOfActuatorTypesCTRL ..> ActuatorTypeService
 
@@ -107,12 +117,18 @@ ActuatorTypeRepository -left-|> Repository
 
 ActuatorTypeRepositoryMem .left.|> ActuatorTypeRepository
 ActuatorTypeRepositoryJPA .up.|> ActuatorTypeRepository
+ActuatorTypeRepositorySpringData .up.|> ActuatorTypeRepository
 
+ActuatorTypeRepositorySpringData .right.> IActuatorTypeRepositorySpringData
+
+ActuatorTypeRepositorySpringData ..> ActuatorTypeAssembler
 ActuatorTypeRepositoryJPA ..> ActuatorTypeAssembler
 ActuatorTypeFactory .right.> ActuatorTypeAssembler
 
 ActuatorTypeFactoryImpl ..|> ActuatorTypeFactory
 ActuatorTypeFactoryImpl .up.> ActuatorType : creates >
+
+ActuatorTypeRepositorySpringData ..> ActuatorTypeDataModel
 ActuatorTypeRepositoryJPA ..> ActuatorTypeDataModel
 ActuatorTypeAssembler .right.> ActuatorTypeDataModel
 
