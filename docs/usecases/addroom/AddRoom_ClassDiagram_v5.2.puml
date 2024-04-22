@@ -98,7 +98,7 @@ interface RoomFactory {
     + createRoom (roomName : RoomNameVO, roomFloor : RoomFloorVO, \nroomDimensions : RoomDimensionsVO, houseID : House IDVO) : Room
 }
 class RoomRepositoryMem{
-    + data : LinkedHashMap<RoomIDVO, Room>
+    - data : LinkedHashMap<RoomIDVO, Room>
     + save(room : Room ) : boolean
 }
 
@@ -115,9 +115,52 @@ class RoomRepositoryJPA {
 }
 
 class RoomDataModel {
+- roomID : String
+- roomName : String
+- roomFloor : int
+- roomLength : double
+- roomWidth : double
+- roomHeight : double
+- houseID : String
++ RoomDataModel(Room room) : RoomDataModel
++ getRoomID() : String
++ getRoomName() : String
++ getRoomFloor() : int
++ getRoomLength() : double
++ getRoomWidth() : double
++ getRoomHeight() : double
++ getHouseID() : String
 }
 
 class RoomAssembler {
+{static} + toDomain(roomFactory : RoomFactory,\n roomDataModel : RoomDataModel) : Room
+{static} + toDomainList(roomFactory : RoomFactory,\n roomDataModelList : Iterable<RoomDataModel>) : Iterable<Room>
+}
+
+interface IHouseRepositorySpringData {
+}
+
+class HouseRepositorySpringData {
+    - houseFactory : HouseFactory
+    - houseRepository : IHouseRepositorySpringData
+    + HouseRepositorySpringData(houseFactory : HouseFactory,\nhouseRepository : IHouseRepositorySpringData)
+    + save(ent : House) : boolean
+    + findAll() : Iterable<House>
+    + findById(id : HouseIDVO) : House
+    + isPresent(id : HouseIDVO) : boolean
+}
+
+interface IRoomRepositorySpringData {
+}
+
+class RoomRepositorySpringData {
+    - roomRepository : IRoomRepositorySpringData
+    - roomFactory : RoomFactory
+    + RoomRepositorySpringData(roomRepository : IRoomRepositorySpringData,\n roomFactory : RoomFactory)
+    + save(room : Room) : boolean
+    + findAll() : Iterable<Room>
+    + findById(roomIDVO : RoomIDVO) : Room
+    + isPresent(roomIDVO : RoomIDVO) : boolean
 }
 
 AddRoomCTRL ..left> RoomMapper
@@ -136,6 +179,11 @@ HouseRepository <|.. HouseRepositoryJPA
 RoomRepository <|..down RoomRepositoryJPA
 RoomRepositoryJPA ..> RoomAssembler
 RoomRepositoryJPA -> RoomDataModel : create >
+HouseRepository <|.. HouseRepositorySpringData
+HouseRepositorySpringData -down.|> IHouseRepositorySpringData
+RoomRepository <|.-up RoomRepositorySpringData
+RoomRepositorySpringData -right.|> IRoomRepositorySpringData
+RoomRepositorySpringData -> RoomDataModel : create >
 
 ' Aggregation relationships
 Room "1" *--down "1" RoomNameVO
