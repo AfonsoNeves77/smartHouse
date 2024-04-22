@@ -1,0 +1,146 @@
+@startuml
+title <size: 30> Use Case: Get devices by functionality - v5.0
+note "<b>Only methods related to\n<b>US09 are represented" as N1
+skinparam linetype ortho
+
+class GetDevicesByFunctionalityCTRL {
+    - query Service : QueryService
+    + getListOfDevicesByFunctionality() : Map<str, DeviceDTO>
+}
+
+class QueryService {
+    - deviceRepository : Device DeviceRepository
+    - sensorRepository : SensorRepository
+    - actuatorRepository : actuatorRepository
+    + QueryServiceImpl(deviceRepository : DeviceRepository, sensorRepository: SensorRepository, actuatorRepository : ActuatorRepository)
+    + getListOfDeviceIDsByFunctionality() : Map<str:DeviceIDVO>
+    - getMapDeviceIDBySensorType() : LinkedHashMap<String,List<DeviceIDVO>>
+    - getMapDeviceIDBySensorAndActuatorType() : LinkedHashMap<String,List<DeviceIDVO>>
+    - mergeMaps (map1 : LinkedHashMap<String,List<DeviceIDVO>>, map2 : LinkedHashMap<String,List<DeviceIDVO>>) : LinkedHashMap<String,List<DeviceIDVO>>
+    - getDevices (map: Map<String, List<DeviceIDVO>>  : LinkedHashMap<String, List<Device>>
+    - updateMap (map : LinkedHashMap<String,List<DeviceIDVO>>, type : String, deviceID : DeviceIDVO) : LinkedHashMap<String,List<DeviceIDVO>>
+    - validParams (params : Object...) : boolean
+}
+
+class SensorRepository {
+    - data : LinkedHashmap<SensorIDVO,Sensor>
+    + findAll() : Iterable<Sensor>
+}
+
+class Sensor {
+    - sensorTypeID : SensorTypeIDVO
+    - deviceIDVO : DeviceIDVO
+    + getSensorTypeID().getID() : String
+    + getDeviceID() : DeviceIDVO
+}
+
+class ActuatorRepository {
+    - data : LinkedHashmap<ActuatorIDVO,Actuator>
+    + findAll() : Iterable<Actuator>
+}
+
+class Actuator {
+    - actuatorTypeID : actuatorTypeIDVO
+    - deviceIDVO : DeviceIDVO
+    + getActuatorTypeID().getID() : String
+    + getDeviceID() : DeviceIDVO
+}
+
+class DeviceRepository {
+    - data : LinkedHashmap<DeviceIDVO,Device>
+    + findByID (DeviceIDVO) : Device
+}
+class DeviceRepositoryJPA {
+    - deviceFactory : DeviceFactory
+    - entityManagerFactory : EntityManagerFactory
+    + save (device : Device) : boolean
+    + findAll () : Iterable<Device>
+    - getDataModelFromId (deviceIDVO : DeviceIDVO) : Optional <DeviceDataModel>
+    + findByID (id : DeviceIDVO) : Device
+    + isPresent (id : DeviceIDVO) : boolean
+    + updateDevice (device : Device) : boolean
+    - isNull (object : Object) : boolean
+    - getDeviceDataModelFromDeviceId (em : EntityManager, id : DeviceIDVO) : Optional<DeviceDataModel>
+}
+interface IDeviceRepositorySpringData {
+
+}
+
+class DeviceRepositorySpringData {
+    - deviceFactory : DeviceFactory
+    - deviceRepository : IDeviceRepositorySpringData
+    + DeviceRepositorySpringData(deviceFactory : DeviceFactory,deviceRepository : IDeviceRepositorySpringData)
+    + save(ent : Device) : boolean
+    + findAll() : Iterable<Device>
+    + findById(id : DeviceIDVO) : Device
+    + findByRoomID (roomID : RoomIDVO) : List<Device>
+    + isPresent(id : DeviceIDVO) : boolean
+    + update (device : Device) : boolean
+    - isNull (object : Object) : boolean
+}
+
+
+class DeviceDataModel {
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomIDVO : RoomIDVO
+    + DeviceDataModel (device : Device) : DeviceDataModel
+    + updateFromDomain (device : Device) : boolean
+    + getDeviceID() : String
+    + getDeviceName() : String
+    + getDeviceModel() : String
+    + getDeviceStatus() : String
+    + getRoomIDVO() : RoomIDVO
+
+}
+
+class DeviceAssembler {
+    + toDomain(deviceFactory : DeviceFactory, deviceDataModel : DeviceDataModel) : Device
+    + toDomainList(deviceFactory : DeviceFactory, deviceDataModelList : List<DeviceDataModel>) : List<Device>
+}
+
+class Device{
+}
+
+class DeviceMapper {
+    + domainToDTO (sensorTypeIDstrToDeviceMap : LinkedHashmap<type,DeviceIDVO>) : LinkedHashmap<type,Device>
+}
+
+class DeviceDTO {
+}
+
+interface Repository {
+    + findAll() : Iterable<T>
+    + findByID (id : DomainID) : T
+}
+
+QueryService <|.. GetDevicesByFunctionalityCTRL
+DeviceMapper -- GetDevicesByFunctionalityCTRL
+
+SensorRepository <|..left QueryService
+ActuatorRepository <|.. QueryService
+DeviceRepository <|.. QueryService
+
+Sensor ..o SensorRepository
+Actuator ..o ActuatorRepository
+Device .o DeviceRepository
+
+Sensor -- QueryService
+Actuator -- QueryService
+
+Repository <.. SensorRepository
+Repository <.. ActuatorRepository
+Repository <.. DeviceRepository
+DeviceRepository <|.. DeviceRepositoryJPA
+DeviceRepositoryJPA ..> DeviceAssembler
+DeviceRepositoryJPA -> DeviceDataModel : create >
+DeviceRepositorySpringData --.|> DeviceRepository
+DeviceRepositorySpringData ..> IDeviceRepositorySpringData
+DeviceRepositorySpringData -> DeviceDataModel : create >
+
+DeviceDTO -- DeviceMapper
+
+@enduml
+
