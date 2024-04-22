@@ -65,4 +65,28 @@ class PositionValueTest {
         assertEquals(expected2, value2.getValue());
         assertEquals(expected3, value3.getValue());
     }
+
+    /**
+     * Verifies that the PositionValue constructor throws an IllegalArgumentException when given a non-integer input.
+     * This test ensures that inputs which cannot be parsed into an integer (such as alphabetic strings) trigger the
+     * appropriate exception. This is crucial for maintaining the integrity of the PositionValue class, which
+     * expects an integer value within a specified range (0 to 100). The test passes a string that is clearly not
+     * an integer and checks if the IllegalArgumentException is thrown with the expected message.
+     *
+     * @throws IllegalArgumentException If the input cannot be parsed to an integer, validating that the class
+     * correctly handles invalid types of inputs not just out-of-range numbers.
+     */
+    @Test
+    void constructor_throwsIllegalArgumentExceptionForNonIntegerInput() {
+        // Arrange
+        String nonIntegerInput = "abc";
+        String expected = "Invalid Position Value, has to be between 0 and 100";
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new PositionValue(nonIntegerInput));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
 }

@@ -25,6 +25,7 @@ class RoomMapperTest {
     private int floor;
     private double roomHeight, roomLength, roomWidth;
     private String houseID;
+    private static final String ERRORMESSAGE = "RoomDTO is invalid";
 
 
     /**
@@ -417,4 +418,133 @@ class RoomMapperTest {
         assertEquals(roomID, result.get(0).getId());
         assertEquals(houseID, result.get(0).getHouseID());
     }
+
+
+    /**
+     * Verifies that attempting to create RoomDimensionsVO with all zero dimensions throws an InstantiationException.
+     * This test checks the validation logic to ensure zero values for length, and width are considered invalid.
+     */
+    @Test
+    void whenCreateRoomDimensionsVOisCalledWithZeroDimensions_ThrowsInstantiationException() {
+        // Arrange
+        String roomID = "123e4567-e89b-12d3-a456-426655440000";
+        String roomName = "BedRoom";
+        int floor = 2;
+        double roomHeight = -1;
+        double roomLength = 0;
+        double roomWidth = 0;
+        String houseID = "00000000-0000-0000-0000-000000000000";
+        RoomDTO roomDTOWithZeroDimensions = new RoomDTO(roomID, roomName, floor, roomHeight, roomLength, roomWidth, houseID);
+        String expectedMessage = "RoomDTO is invalid";
+
+        // Act
+        Exception exception = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTOWithZeroDimensions));
+
+        // Assert
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the room height is negative, indicating invalid dimensions.
+     */
+    @Test
+    void whenHeightIsNegative_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(-1.0, 1.0, 1.0, "Room height is negative but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the room length is zero, ensuring that zero length is treated as invalid.
+     */
+    @Test
+    void whenLengthIsZero_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 0.0, 1.0, "Room length is zero but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the room width is negative, confirming negative width is handled as invalid.
+     */
+    @Test
+    void whenWidthIsNegative_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 1.0, -1.0, "Room width is negative but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Verifies that no exception is thrown when the room length is just above zero, confirming the minimum valid boundary for length.
+     */
+    @Test
+    void whenLengthIsJustAboveZero_DoesNotThrowException() {
+        assertDoesNotThrow(() -> RoomMapper.createRoomDimensionsVO(new RoomDTO("id", "name", 2, 1.0, 0.1, 1.0, "houseID")));
+    }
+
+
+    /**
+     * Verifies that no exception is thrown when the room width is just above zero, confirming the minimum valid boundary for width.
+     */
+    @Test
+    void whenWidthIsJustAboveZero_DoesNotThrowException() {
+        assertDoesNotThrow(() -> RoomMapper.createRoomDimensionsVO(new RoomDTO("id", "name", 2, 1.0, 1.0, 0.1, "houseID")));
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when all dimensions are negative, ensuring the method handles multiple invalid inputs correctly.
+     */
+    @Test
+    void whenAllDimensionsAreNegative_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(-1.0, -1.0, -1.0, "All dimensions are negative but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the height is zero and other dimensions are negative, ensuring complex invalid inputs are handled.
+     */
+    @Test
+    void whenHeightIsZeroAndOthersAreNegative_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(0.0, -1.0, -1.0, "Height is zero and other dimensions negative but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the height is below zero, to confirm that this boundary condition is correctly identified as invalid.
+     */
+    @Test
+    void whenHeightIsExactlyZero_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(-0.1, 1.0, 1.0, "Height is exactly zero but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the room length is exactly zero, confirming that this boundary condition is treated as invalid.
+     */
+    @Test
+    void whenLengthIsJustBelowOne_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 0, 1.0, "Length is just below one but was expected to throw InstantiationException.");
+    }
+
+
+    /**
+     * Tests that an InstantiationException is thrown when the room width is exactly zero, ensuring that this boundary condition is handled as invalid.
+     */
+    @Test
+    void whenWidthIsJustBelowOne_ThrowsInstantiationException() {
+        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 1.0, 0, "Width is just below one but was expected to throw InstantiationException.");
+    }
+
+    /**
+     * Helper method to assert that an InstantiationException is thrown for given room dimensions, aiding in code reuse across multiple tests.
+     * @param height Room height to test.
+     * @param length Room length to test.
+     * @param width Room width to test.
+     * @param message Error message expected when an exception is thrown.
+     */
+    private void assertThrowsInstantiationExceptionForRoomDimensions(double height, double length, double width, String message) {
+        RoomDTO roomDTO = new RoomDTO("id", "name", 2, height, length, width, "houseID");
+        Exception exception = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTO));
+        assertEquals(ERRORMESSAGE, exception.getMessage(), message);
+    }
+
 }
