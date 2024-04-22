@@ -18,8 +18,7 @@ public class ActuatorTypeAssembler {
      * Given that all of its methods are static, there is no need to instantiate an ActuatorTypeAssembler object to
      * access the utility methods provided bellow.
      * */
-    private ActuatorTypeAssembler() {
-    }
+    private ActuatorTypeAssembler() {}
 
     /**
      * This method converts an ActuatorTypeDataModel object into an ActuatorType domain object
