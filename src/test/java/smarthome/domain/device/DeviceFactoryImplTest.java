@@ -1,7 +1,9 @@
 package smarthome.domain.device;
 
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.devicevo.DeviceStatusVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -93,6 +95,64 @@ class DeviceFactoryImplTest {
         String result = exception.getMessage();
         //Assert
         assertEquals(expected,result);
+    }
+
+  /*  @Test
+    void givenCreateDeviceWithDeviceIDAndDeviceStatus_whenCreateDeviceIsCalled_thenReturnDeviceWithCorrectParameters() {
+//        Arrange
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        DeviceNameVO deviceName = mock(DeviceNameVO.class);
+        DeviceModelVO deviceModel = mock(DeviceModelVO.class);
+        DeviceStatusVO deviceStatus = mock(DeviceStatusVO.class);
+        RoomIDVO roomID = mock(RoomIDVO.class);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+//        Act
+        Device device = deviceFactory.createDevice(deviceID, deviceName, deviceModel, deviceStatus, roomID);
+//        Assert
+        DeviceIDVO expectedDeviceIDVO = device.getId();
+        DeviceNameVO expectedDeviceName = device.getDeviceName();
+        DeviceModelVO expectedDeviceModel = device.getDeviceModel();
+        DeviceStatusVO expectedDeviceStatus = device.getDeviceStatus();
+        RoomIDVO expectedRoomIDVO = device.getRoomID();
+
+        assertEquals(deviceID, expectedDeviceIDVO);
+        assertEquals(deviceName, expectedDeviceName);
+        assertEquals(deviceModel, expectedDeviceModel);
+        assertEquals(deviceStatus, expectedDeviceStatus);
+        assertEquals(roomID, expectedRoomIDVO);
+    }*/
+
+    /**
+     * Tests the behavior of the createDevice method in DeviceFactory when valid parameters are provided.
+     * It verifies if the method returns the expected DeviceNameVO.
+     */
+
+    @Test
+    public void givenCreateDeviceWithDeviceIDAndDeviceStatus_whenCreateDeviceIsCalled_thenReturnDeviceWithCorrectParameters() {
+        // Arrange
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        DeviceNameVO deviceName = mock(DeviceNameVO.class);
+        DeviceModelVO deviceModel = mock(DeviceModelVO.class);
+        DeviceStatusVO deviceStatus = mock(DeviceStatusVO.class);
+        RoomIDVO roomID = mock(RoomIDVO.class);
+
+        when(deviceID.getID()).thenReturn("deviceID");
+        when(deviceName.getValue()).thenReturn("deviceName");
+        when(deviceModel.getValue()).thenReturn("deviceModel");
+        when(deviceStatus.getValue()).thenReturn(true);
+        when(roomID.getID()).thenReturn("roomID");
+
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+
+        // Act
+        Device device = deviceFactory.createDevice(deviceID, deviceName, deviceModel, deviceStatus, roomID);
+
+        // Assert
+        assertEquals("deviceID", device.getId().getID());
+        assertEquals("deviceName", device.getDeviceName().getValue());
+        assertEquals("deviceModel", device.getDeviceModel().getValue());
+        assertEquals(true, device.getDeviceStatus().getValue());
+        assertEquals("roomID", device.getRoomID().getID());
     }
 
 
