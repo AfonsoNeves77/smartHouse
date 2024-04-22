@@ -23,7 +23,7 @@ public class DeviceRepositoryJPA implements DeviceRepository {
     private final DeviceFactory deviceFactory;
 
     private final EntityManagerFactory entityManagerFactory;
-    private final String QUERY = "SELECT e FROM DeviceDataModel e";
+    private static final String QUERY = "SELECT e FROM DeviceDataModel e";
 
     /**
      * Constructs a new DeviceRepositoryJPA object.
@@ -67,8 +67,7 @@ public class DeviceRepositoryJPA implements DeviceRepository {
 
     @Override
     public List<Device> findByRoomID(RoomIDVO roomID) {
-        try {
-            EntityManager em = this.entityManagerFactory.createEntityManager();
+        try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
             TypedQuery<DeviceDataModel> query = em.createQuery("SELECT d FROM DeviceDataModel d WHERE d.roomID = :roomID", DeviceDataModel.class);
             query.setParameter("roomID", roomID.getID());
             List<DeviceDataModel> list = query.getResultList();
@@ -82,13 +81,12 @@ public class DeviceRepositoryJPA implements DeviceRepository {
      * It's used a constant JPQL to this operation in QUERY.
      * @return An Iterable containing all Device entities.
      */
+
     @Override
     public Iterable<Device> findAll() {
-        try  {
-            EntityManager em = entityManagerFactory.createEntityManager();
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
             Query query = em.createQuery(QUERY);
             List<DeviceDataModel> devicesDataModels = query.getResultList();
-
             return DeviceAssembler.toDomainList(deviceFactory, devicesDataModels);
         } catch (RuntimeException e) {
             return Collections.emptyList();
