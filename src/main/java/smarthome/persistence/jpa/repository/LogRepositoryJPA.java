@@ -9,6 +9,7 @@ import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.mapper.assembler.LogAssembler;
+import smarthome.persistence.LogRepository;
 import smarthome.persistence.Repository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
 
@@ -23,7 +24,7 @@ import java.util.Optional;
  * API (JPA) for database interactions.
  */
 
-public class LogRepositoryJPA implements Repository<LogIDVO, Log> {
+public class LogRepositoryJPA implements LogRepository {
     private final LogFactory logFactory;
     private final SensorValueFactory sensorValueFactory;
     private final EntityManagerFactory entityManagerFactory;
