@@ -386,6 +386,40 @@ class DeviceTest {
         assertTrue(result);
 
     }
+    /**
+     * Tests if instantiating a Device object with correct parameters returns all parameters correctly.
+     * Verifies that the parameters provided when instantiating a Device object are returned correctly when the accessor methods are called.
+     * For this, the test performs the following steps:
+     * - Arrange: Creates mock instances of objects representing the parameters (DeviceIDVO, DeviceNameVO, DeviceModelVO, DeviceStatusVO, RoomIDVO).
+     * - Defines the expected behavior for the getter methods of each mock object.
+     * - Act: Instantiates a Device object with the mocked parameters.
+     * - Assert: Verifies if the values returned by the getter methods match the mocked values.
+     */
+    @Test
+    public void givenCorrectParameters_whenInstantiatingRoom_shouldReturnAllParameters() {
+        // Arrange
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        DeviceNameVO deviceName = mock(DeviceNameVO.class);
+        DeviceModelVO deviceModel = mock(DeviceModelVO.class);
+        DeviceStatusVO deviceStatus = mock(DeviceStatusVO.class);
+        RoomIDVO roomID = mock(RoomIDVO.class);
+
+        when(deviceID.getID()).thenReturn("deviceID");
+        when(deviceName.getValue()).thenReturn("deviceName");
+        when(deviceModel.getValue()).thenReturn("deviceModel");
+        when(deviceStatus.getValue()).thenReturn(true);
+        when(roomID.getID()).thenReturn("roomID");
+
+        // Act
+        Device device = new Device(deviceID, deviceName, deviceModel, deviceStatus, roomID);
+
+        // Assert
+        assertEquals("deviceID", device.getId().getID());
+        assertEquals("deviceName", device.getDeviceName().getValue());
+        assertEquals("deviceModel", device.getDeviceModel().getValue());
+        assertEquals(true, device.getDeviceStatus().getValue());
+        assertEquals("roomID", device.getRoomID().getID());
+    }
 
 }
 

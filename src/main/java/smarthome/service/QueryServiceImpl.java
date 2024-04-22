@@ -66,7 +66,7 @@ public class QueryServiceImpl implements QueryService{
 
     /**
      * This method utilizes the actuator repository implementation to retrieve a complete list of actuators. It subsequently
-     * iterates through each actuator object, extracting their ctuatorTypeID and deviceID. These actuatorTypeIDs are then
+     * iterates through each actuator object, extracting their actuatorTypeID and deviceID. These actuatorTypeIDs are then
      * mapped as keys in a map structure. For each unique actuatorTypeID, a corresponding list of DeviceIDs is created,
      * ensuring avoidance of duplicate deviceIDs per actuatorTypeID. The method's return value is a Map where each key
      * represents an actuatorTypeID, and its value is a list of DeviceIDVO objects each representing a device associated
@@ -78,7 +78,7 @@ public class QueryServiceImpl implements QueryService{
         for (Actuator actuator : actuatorList){
             String type = actuator.getActuatorTypeID().getID();
             DeviceIDVO deviceID = actuator.getDeviceID();
-            updateMap(map,type,deviceID);
+            updateMap(map, type, deviceID);
         }
         return map;
     }
@@ -105,8 +105,9 @@ public class QueryServiceImpl implements QueryService{
      */
     private LinkedHashMap<String, List<Device>> getDevices (Map<String, List<DeviceIDVO>> map) {
         LinkedHashMap<String, List<Device>> newMap = new LinkedHashMap<>();
-        for (String key : map.keySet()) {
-            List<DeviceIDVO> idList = map.get(key);
+        for (Map.Entry<String, List<DeviceIDVO>> entry : map.entrySet()) {
+            String key = entry.getKey();
+            List<DeviceIDVO> idList = entry.getValue();
             List<Device> deviceList = new ArrayList<>();
             for (DeviceIDVO id : idList) {
                 Device device = this.deviceRepository.findById(id);
