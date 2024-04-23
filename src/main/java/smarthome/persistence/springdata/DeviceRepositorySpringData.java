@@ -108,16 +108,10 @@ public class DeviceRepositorySpringData implements DeviceRepository {
      */
 
     @Override
-    public List<Device> findByRoomID(RoomIDVO roomID) {
+    public Iterable<Device> findByRoomID(RoomIDVO roomID) {
         try {
-            Iterable<DeviceDataModel> deviceDataModelIterable = this.iDeviceRepositorySpringData.findAll();
-            List<DeviceDataModel> devicesInRoom = new ArrayList<>();
-            for (DeviceDataModel deviceDataModel : deviceDataModelIterable) {
-                if (deviceDataModel.getRoomID().equals(roomID.getID())) {
-                    devicesInRoom.add(deviceDataModel);
-                }
-            }
-            return DeviceAssembler.toDomainList(deviceFactory, devicesInRoom);
+            Iterable<DeviceDataModel> deviceDataModelIterable = this.iDeviceRepositorySpringData.findByRoomID(roomID.getID());
+            return DeviceAssembler.toDomainList(deviceFactory, deviceDataModelIterable);
         } catch (RuntimeException e) {
             return Collections.emptyList();
         }
