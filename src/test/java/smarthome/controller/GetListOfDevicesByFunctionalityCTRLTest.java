@@ -1,14 +1,17 @@
 package smarthome.controller;
 
+import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.RollerBlindActuator;
 import smarthome.domain.actuator.SwitchActuator;
 import smarthome.domain.device.Device;
 import smarthome.domain.sensor.HumiditySensor;
+import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SunriseSensor;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.dto.DeviceDTO;
-import smarthome.persistence.mem.ActuatorRepositoryMem;
-import smarthome.persistence.mem.DeviceRepositoryMem;
-import smarthome.persistence.mem.SensorRepositoryMem;
+import smarthome.persistence.ActuatorRepository;
+import smarthome.persistence.DeviceRepository;
+import smarthome.persistence.SensorRepository;
 import smarthome.service.*;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
@@ -23,6 +26,8 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GetListOfDevicesByFunctionalityCTRLTest {
 
@@ -47,6 +52,11 @@ class GetListOfDevicesByFunctionalityCTRLTest {
      * getListOfDevicesByFunctionality method.
      * This test ensures that devices are properly grouped by their functionality types
      * and returned as lists of DeviceDTO objects.
+     * In this test case all repositories injected in query service are doubled. These doubles
+     * have their behavior conditioned:
+     * 1. When invoking findAll() in Sensor Repository, it must return the defined list of sensors;
+     * 2. When invoking findAll() in Actuator Repository, it must return the defined list of actuators;
+     * 3. When invoking findByID(DeviceIDVO) in device repository, it must return the defined device
      */
     @Test
     void getListOfDevicesByFunctionalityTest_whenSuccessCase_DeliversAStrToDeviceDTOList() {
@@ -57,79 +67,87 @@ class GetListOfDevicesByFunctionalityCTRLTest {
         DeviceModelVO model1 = new DeviceModelVO("model1");
         RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
         Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
 
         DeviceNameVO name2 = new DeviceNameVO("name2");
         DeviceModelVO model2 = new DeviceModelVO("model2");
         RoomIDVO room2 = new RoomIDVO(UUID.randomUUID());
         Device device2 = new Device(name2,model2,room2);
+        DeviceIDVO deviceIDVO2 = device2.getId();
 
         DeviceNameVO name3 = new DeviceNameVO("name3");
         DeviceModelVO model3 = new DeviceModelVO("model3");
         RoomIDVO room3 = new RoomIDVO(UUID.randomUUID());
         Device device3 = new Device(name3,model3,room3);
+        DeviceIDVO deviceIDVO3 = device3.getId();
 
         DeviceNameVO name4 = new DeviceNameVO("name4");
         DeviceModelVO model4 = new DeviceModelVO("model4");
         RoomIDVO room4 = new RoomIDVO(UUID.randomUUID());
         Device device4 = new Device(name4,model4,room4);
+        DeviceIDVO deviceIDVO4 = device4.getId();
 
-            // Device repository instantiation + save
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        deviceRepositoryMem.save(device1);
-        deviceRepositoryMem.save(device2);
-        deviceRepositoryMem.save(device3);
-        deviceRepositoryMem.save(device4);
+            // Device doubling and behaviour conditioning
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        when(deviceRepositoryDouble.findById(deviceIDVO1)).thenReturn(device1);
+        when(deviceRepositoryDouble.findById(deviceIDVO2)).thenReturn(device2);
+        when(deviceRepositoryDouble.findById(deviceIDVO3)).thenReturn(device3);
+        when(deviceRepositoryDouble.findById(deviceIDVO4)).thenReturn(device4);
 
-            // Device1 sensors + actuators
+            // Device1 sensors
+        List<Sensor> sensorList = new ArrayList<>();
         SensorNameVO sensorName1 = new SensorNameVO("sensor1");
         SensorTypeIDVO senType1 = new SensorTypeIDVO("SunriseSensor");
         SunriseSensor sensor1 = new SunriseSensor(sensorName1,device1.getId(),senType1);
+        sensorList.add(sensor1);
 
         SensorNameVO sensorName2 = new SensorNameVO("sensor2");
         SensorTypeIDVO senType2 = new SensorTypeIDVO("SwitchSensor");
         SunriseSensor sensor2 = new SunriseSensor(sensorName2,device1.getId(),senType2);
+        sensorList.add(sensor2);
 
             // Device2 sensors + actuators
         SensorNameVO sensorName3 = new SensorNameVO("sensor3");
         SunriseSensor sensor3 = new SunriseSensor(sensorName3,device2.getId(),senType1);
+        sensorList.add(sensor3);
 
+        List<Actuator> actuatorList = new ArrayList<>();
         ActuatorNameVO actuatorName1 = new ActuatorNameVO("actuator1");
         ActuatorTypeIDVO actType1 = new ActuatorTypeIDVO("SwitchActuator");
         SwitchActuator actuator1 = new SwitchActuator(actuatorName1,actType1,device2.getId());
+        actuatorList.add(actuator1);
 
         ActuatorNameVO actuatorName2 = new ActuatorNameVO("actuator2"); // Same type and device as actuator1
         SwitchActuator actuator2 = new SwitchActuator(actuatorName2,actType1,device2.getId());
+        actuatorList.add(actuator2);
 
             // Device3 sensors + actuators
         SensorNameVO sensorName4 = new SensorNameVO("sensor4");
         SensorTypeIDVO senType4 = new SensorTypeIDVO("SunsetSensor");
         SunriseSensor sensor4 = new SunriseSensor(sensorName4,device3.getId(),senType4);
+        sensorList.add(sensor4);
 
         ActuatorNameVO actuatorName3 = new ActuatorNameVO("actuator3");
         ActuatorTypeIDVO actType2 = new ActuatorTypeIDVO("RollerBlindActuator");
         RollerBlindActuator actuator3 = new RollerBlindActuator(actuatorName3,actType2,device3.getId());
+        actuatorList.add(actuator3);
 
             // Device4 sensor
         SensorNameVO sensorName5 = new SensorNameVO("sensor5");
         SensorTypeIDVO senType5 = new SensorTypeIDVO("HumiditySensor");
         HumiditySensor sensor5 = new HumiditySensor(sensorName5,device4.getId(),senType5);
+        sensorList.add(sensor5);
 
-            // Sensor Repository instantiation + save
-        SensorRepositoryMem sensorRepositoryMem = new SensorRepositoryMem();
-        sensorRepositoryMem.save(sensor1);
-        sensorRepositoryMem.save(sensor2);
-        sensorRepositoryMem.save(sensor3);
-        sensorRepositoryMem.save(sensor4);
-        sensorRepositoryMem.save(sensor5);
+            // Sensor Repository doubling and behavior conditioning
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        when(sensorRepositoryDouble.findAll()).thenReturn(sensorList);
 
-            // Actuator Repository instantiation + save
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        actuatorRepositoryMem.save(actuator1);
-        actuatorRepositoryMem.save(actuator2);
-        actuatorRepositoryMem.save(actuator3);
+            // Sensor Repository doubling and behavior conditioning
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        when(actuatorRepositoryDouble.findAll()).thenReturn(actuatorList);
 
             // Service instantiation
-        QueryServiceImpl service = new QueryServiceImpl(deviceRepositoryMem, sensorRepositoryMem, actuatorRepositoryMem);
+        QueryServiceImpl service = new QueryServiceImpl(deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
             // CTRL instantiation and getListOfDevices call to create resultMap
         GetListOfDevicesByFunctionalityCTRL ctrl = new GetListOfDevicesByFunctionalityCTRL(service);
@@ -213,16 +231,19 @@ class GetListOfDevicesByFunctionalityCTRLTest {
     }
 
     /**
-     * Test method to verify that when no devices are present in the system,
-     * the getListOfDevicesByFunctionality method returns an empty map.
+     * Tests whether the getListOfDevicesByFunctionality method returns an empty map
+     * when no devices are present in the system.
+     * In this test case, all repositories injected in query service are doubled.
+     * By default, both actuator and sensor repositories
+     * return an empty list, which is the desired output for this test case.
      */
     @Test
     void whenNoDevicesArePresent_returnsEmptyList(){
         // Arrange
-        DeviceRepositoryMem deviceRepository = new DeviceRepositoryMem();
-        SensorRepositoryMem sensorRepository = new SensorRepositoryMem();
-        ActuatorRepositoryMem actuatorRepository = new ActuatorRepositoryMem();
-        QueryServiceImpl queryService = new QueryServiceImpl(deviceRepository,sensorRepository,actuatorRepository);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        QueryServiceImpl queryService = new QueryServiceImpl(deviceRepositoryDouble,sensorRepositoryDouble,actuatorRepositoryDouble);
         GetListOfDevicesByFunctionalityCTRL controller = new GetListOfDevicesByFunctionalityCTRL(queryService);
         Map<String, List<DeviceDTO>> expected = new LinkedHashMap<>();
         // Act
