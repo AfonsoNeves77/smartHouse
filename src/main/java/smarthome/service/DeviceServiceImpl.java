@@ -9,6 +9,7 @@ import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,6 +75,7 @@ public class DeviceServiceImpl implements DeviceService{
         Device device =  this.deviceRepository.findById(deviceIDVO);
         if (device != null){
             device.deactivateDevice();
+            this.deviceRepository.update(device);
             return device.isActive();
         }
         return false;
@@ -86,8 +88,11 @@ public class DeviceServiceImpl implements DeviceService{
      * @return The list of devices located in the specified room.
      *         It returns an empty list if no devices are found or if the specified room does not exist.
      */
-    public List<Device> getListOfDevicesInARoom(RoomIDVO roomIDVO){
-        return this.deviceRepository.findByRoomID(roomIDVO);
+    public List<Device> getListOfDevicesInARoom(RoomIDVO roomIDVO) {
+        Iterable<Device> deviceIterable = this.deviceRepository.findByRoomID(roomIDVO);
+        List<Device> deviceList = new ArrayList<>();
+        deviceIterable.forEach(deviceList::add);
+        return deviceList;
     }
 
     /**
