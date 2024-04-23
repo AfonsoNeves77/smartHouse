@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RoomAssemblerTest {
 
-    private String roomID;
     private String roomName;
     private int floor;
     private double roomHeight, roomLength, roomWidth;
@@ -33,7 +32,6 @@ class RoomAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        roomID = "123e4567-e89b-12d3-a456-426655440000";
         roomName = "BedRoom";
         floor = 2;
         roomHeight = 2.5;
