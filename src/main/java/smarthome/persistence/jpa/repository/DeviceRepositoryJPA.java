@@ -66,7 +66,7 @@ public class DeviceRepositoryJPA implements DeviceRepository {
      */
 
     @Override
-    public List<Device> findByRoomID(RoomIDVO roomID) {
+    public Iterable<Device> findByRoomID(RoomIDVO roomID) {
         try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
             TypedQuery<DeviceDataModel> query = em.createQuery("SELECT d FROM DeviceDataModel d WHERE d.roomID = :roomID", DeviceDataModel.class);
             query.setParameter("roomID", roomID.getID());
