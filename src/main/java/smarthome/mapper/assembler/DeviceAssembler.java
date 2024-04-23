@@ -52,7 +52,7 @@ public class DeviceAssembler {
      * @return The list of Device objects created.
      */
 
-    public static List<Device> toDomainList(DeviceFactory deviceFactory, Iterable<DeviceDataModel> deviceDataModelList) {
+    public static Iterable<Device> toDomainList(DeviceFactory deviceFactory, Iterable<DeviceDataModel> deviceDataModelList) {
 
         List<Device> devices = new ArrayList<>();
         deviceDataModelList.forEach(deviceDataModel -> {
