@@ -83,11 +83,12 @@ public class ActuatorTypeRepositoryJPA implements ActuatorTypeRepository {
      */
     @Override
     public Iterable<ActuatorType> findAll() {
-        try {
-            EntityManager em = this.entityManagerFactory.createEntityManager();
+        try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
+
             Query query = em.createQuery("SELECT at FROM ActuatorTypeDataModel at Order By at.actuatorTypeID ASC");
             List<ActuatorTypeDataModel> actuatorTypeDataModelList = query.getResultList();
             return ActuatorTypeAssembler.actuatorTypeListToDomain(this.actuatorTypeFactory, actuatorTypeDataModelList);
+
         } catch (RuntimeException e) {
             return Collections.emptyList();
         }
