@@ -85,4 +85,12 @@ public class DeviceRepositoryMem implements DeviceRepository {
                 .filter(device -> roomID.equals(device.getRoomID()))
                 .collect(Collectors.toList());
     }
+    @Override
+    public boolean update(Device entity) {
+        if(entity == null || entity.getId() == null){
+            return false;
+        }
+        data.put(entity.getId(),entity);
+        return true;
+    }
 }
