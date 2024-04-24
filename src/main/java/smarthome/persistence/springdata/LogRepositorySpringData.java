@@ -83,7 +83,7 @@ public class LogRepositorySpringData implements LogRepository {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public Iterable<Log> findAllByDeviceID(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to) {
+    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to) {
         if (deviceID == null || from == null || to == null) {
             throw new IllegalArgumentException("Invalid parameters ");
         }
