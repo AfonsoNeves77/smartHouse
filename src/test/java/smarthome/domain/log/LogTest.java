@@ -26,7 +26,6 @@ class LogTest {
      * ensuring the integrity of the entire Log aggregate.
      * The System Under Test (SUT) in this test is the entire Log aggregate, including its
      * associated ValueObject instances.
-     * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
     void whenGivenANullParameter_throwsIllegalArgumentException() {
@@ -102,7 +101,6 @@ class LogTest {
      * Tests that the Log entity returns the correct SensorIDVO.
      * The System Under Test (SUT) in this test is the Log entity, which is expected
      * to correctly return the SensorIDVO associated with it.
-     * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
     void returnsCorrectSensorID() {
@@ -142,7 +140,6 @@ class LogTest {
      * Tests that the Log entity returns the correct DeviceIDVO.
      * The System Under Test (SUT) in this test is the Log entity, which is expected
      * to correctly return the DeviceIDVO associated with it.
-     * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
     void returnsCorrectDeviceID() {
@@ -182,7 +179,6 @@ class LogTest {
      * Tests that the Log entity returns the correct SensorTypeIDVO.
      * The System Under Test (SUT) in this test is the Log entity, which is expected
      * to correctly return the SensorTypeIDVO associated with it.
-     * @throws InstantiationException if there is an error in instantiating test objects.
      */
     @Test
     void returnsCorrectSensorTypeID() {
