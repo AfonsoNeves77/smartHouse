@@ -4,54 +4,47 @@ import org.springframework.dao.DataAccessException;
 import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-/**
- * The LogRepositorySpringData class is an implementation of the LogRepository interface using Spring Data JPA.
- * It provides methods to interact with the persistence layer for managing logs.
- * <p>
- * This class handles saving, finding, and checking the existence of logs in the database.
- * It utilizes Spring Data JPA repositories for database operations.
- */
 public class LogRepositorySpringData implements LogRepository {
     private final ILogRepositorySpringData iLogRepositorySpringData;
     private final LogFactory logFactory;
     private final SensorValueFactory sensorValueFactory;
 
     /**
-     * Constructs a new LogRepositorySpringData instance.
+     * Constructor for LogRepositorySpringData.
      *
-     * @param iLogRepositorySpringData the Spring Data JPA repository interface
-     * @param logFactory               the factory for creating Log objects
-     * @param sensorValueFactory       the factory for creating SensorValue objects
+     * @param iLogRepositorySpringData the Spring Data repository used for data access
+     * @param logFactory               the factory used to create Log domain objects
+     * @param sensorValueFactory       the factory used to create SensorValue domain objects
      */
     public LogRepositorySpringData(ILogRepositorySpringData iLogRepositorySpringData, LogFactory logFactory, SensorValueFactory sensorValueFactory) {
         this.iLogRepositorySpringData = iLogRepositorySpringData;
         this.logFactory = logFactory;
         this.sensorValueFactory = sensorValueFactory;
-
     }
 
     /**
-     * Saves a Log object to the database.
+     * Saves a log to the database.
      *
-     * @param log the Log object to be saved
-     * @return true if the log is saved successfully, false otherwise
-     * @throws IllegalArgumentException if the provided log is null
+     * @param log the log to be saved
+     * @return true if the log was saved successfully, false otherwise
+     * @throws IllegalArgumentException if the log is null
      */
     @Override
     public boolean save(Log log) {
         if (log == null) {
             throw new IllegalArgumentException("Log cannot be null");
         }
-        LogDataModel logdataModel = new LogDataModel(log);
-
         try {
+            LogDataModel logdataModel = new LogDataModel(log);
             this.iLogRepositorySpringData.save(logdataModel);
             return true;
         } catch (DataAccessException e) {
@@ -60,52 +53,66 @@ public class LogRepositorySpringData implements LogRepository {
     }
 
     /**
-     * Finds a Log object by its ID.
+     * Retrieves a log from the database by its ID.
      *
-     * @param logIDVO the ID of the log to be found
-     * @return the found Log object, or null if not found
-     * @throws IllegalArgumentException if the provided LogIDVO is null
+     * @param logIDVO the ID of the log to be retrieved
+     * @return the retrieved log, or null if no log with the given ID was found
+     * @throws IllegalArgumentException if the logIDVO is null
      */
     @Override
     public Log findById(LogIDVO logIDVO) {
         if (logIDVO == null) {
             throw new IllegalArgumentException("LogIDVO cannot be null");
         }
-        String id = logIDVO.getID();
         try {
-            Optional<LogDataModel> logDataModelOptional = this.iLogRepositorySpringData.findById(id);
-
-            if (logDataModelOptional.isPresent()) {
-                LogDataModel logDataModel = logDataModelOptional.get();
-                return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, logDataModel);
-            } else {
-                return null;
-            }
+            Optional<LogDataModel> logDataModelOptional = this.iLogRepositorySpringData.findById(logIDVO.getID());
+            return logDataModelOptional.map(dataModel ->
+                    LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, dataModel)).orElse(null);
         } catch (DataAccessException e) {
             return null;
         }
     }
 
-
     /**
-     * Checks if a Log with the given ID exists in the database.
+     * Retrieves all logs associated with a specific device within a given time period.
      *
-     * @param id the ID of the log to be checked
-     * @return true if the log exists, false otherwise
-     * @throws IllegalArgumentException if the provided LogIDVO is null
+     * @param deviceID the ID of the device
+     * @param from     the start of the time period
+     * @param to       the end of the time period
+     * @return an Iterable of logs that match the given criteria
+     * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
+    public Iterable<Log> findAllByDeviceID(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to) {
+        if (deviceID == null || from == null || to == null) {
+            throw new IllegalArgumentException("Invalid parameters ");
+        }
+        try {
+            Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), from, to);
+            return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, logDataModelIterable);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Checks if a log with the given ID is present in the database.
+     *
+     * @param id the ID of the log
+     * @return true if the log is present, false otherwise
+     * @throws IllegalArgumentException if the id is null
+     */
     public boolean isPresent(LogIDVO id) {
         if (id == null) {
-            throw new IllegalArgumentException("LogIDVO cannot be null");
+            throw new IllegalArgumentException("ID cannot be null");
         }
         return findById(id) != null;
     }
 
     /**
-     * Retrieves all Log objects from the database.
+     * Retrieves all logs from the database.
      *
-     * @return an Iterable containing all Log objects, or null if an error occurs
+     * @return an Iterable of all logs
      */
     @Override
     public Iterable<Log> findAll() {
