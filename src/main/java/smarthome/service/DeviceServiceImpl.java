@@ -67,16 +67,22 @@ public class DeviceServiceImpl implements DeviceService{
 
     /**
      * Deactivates the device with the given ID.
+     * This method finds the first device with the corresponding given id and returns true if:
+     * 1. device is found;
+     * 2. device is not deactivated;
+     * 3. internal device operation is successful;
+     * 4. update operation e device repository is successful;
+     *
      * @param deviceIDVO The ID of the device to be deactivated.
      * @return The method returns the resulting device status after the operation was performed.
      */
 
     public boolean deactivateDevice(DeviceIDVO deviceIDVO){
         Device device =  this.deviceRepository.findById(deviceIDVO);
-        if (device != null){
-            device.deactivateDevice();
-            this.deviceRepository.update(device);
-            return device.isActive();
+
+        if (device != null && device.isActive() && device.deactivateDevice()){
+
+            return this.deviceRepository.update(device);
         }
         return false;
     }
