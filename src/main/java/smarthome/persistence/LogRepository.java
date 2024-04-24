@@ -21,4 +21,5 @@ public interface LogRepository extends Repository<LogIDVO, Log>{
      * @return an Iterable of logs that match the given criteria
      */
     Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to);
+    Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end);
 }
