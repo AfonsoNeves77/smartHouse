@@ -123,4 +123,35 @@ public class LogRepositorySpringData implements LogRepository {
             return null;
         }
     }
+
+    /**
+     * Retrieves all log data from the database that falls within the specified time range and is associated
+     * with the specified device and sensor type.
+     * It checks if the deviceID, sensorType, start, and end parameters are not null.
+     * It then retrieves all log data that matches the specified device ID, sensor type, and time range. It uses the
+     * findByDeviceIDAndSensorTypeAndTimeBetween() method of the ILogRepositorySpringData interface to query the database.
+     * It then converts the LogDataModel objects to Log objects using LogAssembler and returns the result.
+     * If a DataAccessException occurs, it returns null.
+     * If any of the input parameters are null, it throws an IllegalArgumentException.
+     *
+     * @param deviceID   The device ID to filter the log data by.
+     * @param sensorType The sensor type to filter the log data by.
+     * @param start      The start of the time range to filter the log data by.
+     * @param end        The end of the time range to filter the log data by.
+     * @return An Iterable of Log objects that match the query criteria.
+     */
+
+    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end) {
+        if (deviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+
+        try {
+            String deviceIDString = deviceID.getID();
+            Iterable<LogDataModel> listOfLogs = this.iLogRepositorySpringData.findByDeviceIDAndSensorTypeAndTimeBetween(deviceIDString, sensorType, start, end);
+            return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, listOfLogs);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
 }
