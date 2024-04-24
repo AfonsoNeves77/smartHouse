@@ -1,0 +1,243 @@
+@startuml
+
+title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.0
+
+note "<b>Only methods related to 'get maximum instantaneous temperature to \n<b>room' difference in a given period use case are represented" as N1
+
+skinparam linetype ortho
+
+GetMaxInstantaneousTemperatureDifferenceCTRL ..> DeviceMapper
+    DeviceMapper ..> DeviceDTO
+    DeviceMapper -- DeviceIDVO : <create> >
+
+GetMaxInstantaneousTemperatureDifferenceCTRL ..> TimeConfigMapper
+    TimeConfigMapper ..> TimeConfigDTO
+    TimeConfigMapper -- TimeConfig : <create> >
+
+GetMaxInstantaneousTemperatureDifferenceCTRL ..> LogServiceImpl
+    LogServiceImpl ..|> LogService
+    LogServiceImpl ..> TimeConfig
+    LogServiceImpl ..> LogRepository
+
+LogRepository --|> Repository
+LogRepositoryJPA .up.|> LogRepository
+    SensorValueFactoryImpl ..|> SensorValueFactory
+    LogRepositoryJPA ..> EntityManagerFactory
+    LogFactoryImpl ..|> LogFactory
+    LogRepositoryJPA ..> LogAssembler
+
+
+LogRepositorySpringData .up.|> LogRepository
+    LogRepositorySpringData ..> ILogRepositorySpringData
+    LogRepositorySpringData ..> LogAssembler
+
+ILogRepositorySpringData --|> JpaRepository
+
+LogAssembler ..> LogFactoryImpl
+LogAssembler ..> SensorValueFactoryImpl
+TemperatureValue ..|> SensorValueObject
+SensorValueFactoryImpl -- TemperatureValue : <create> >
+LogFactoryImpl -- Log : <create> >
+LogAssembler ..> LogDataModel
+
+Log "1" -- "1" LogIDVO
+Log "1" -- "1" SensorValueObject
+Log "1" -- "1" SensorIDVO
+Log "1" -- "1" DeviceIDVO
+Log "1" -- "1" SensorTypeIDVO
+Log "1" -- "1" DeviceIDVO
+
+Log ...|> DomainEntity
+
+DomainID <|.up. DeviceIDVO
+DomainID <|.up. LogIDVO
+DomainID <|.up. SensorIDVO
+DomainID <|.up. SensorTypeIDVO
+ValueObject <|-up- SensorValueObject
+
+interface JpaRepository<T>
+
+interface ILogRepositorySpringData{
+}
+
+interface EntityManagerFactory
+
+interface Repository<T> {
+    + save(entity : T) : boolean
+    + findAll() : Iterable<T>
+    + findByID(ID : DomainID) : T
+    + isPresent(ID : DomainID) : boolean
+}
+
+interface LogRepository {
+    + save(log : Log) : boolean
+    + findAll() : Iterable<Log>
+    + findByID(id : LogIDVO) : Log
+    + isPresent(logID : LogIDVO) : boolean
+
+    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : String, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime)
+}
+
+class LogRepositoryJPA{
+    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
+
+    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : SensorTypeIDVO, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime) : Iterable<Log>
+
+    - getDataModelFromId(entityManager : EntityManager, logId : LogIDVO) : Optional<LogDataModel>
+}
+
+class LogRepositorySpringData{
+    - iLogRepositorySpringData : ILogRepositorySpringData
+    - logFactory : LogFactory
+    - sensorValueFactory : SensorValueFactory
+
+    + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, \n logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
+}
+
+
+interface LogFactory{
+    + createLog(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+
+    + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+}
+
+class LogFactoryImpl
+
+interface SensorValueFactory{
+    + createSensorValue(reading : String, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
+
+    + createSensorValue(reading : ZonedDateTime, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
+}
+
+class SensorValueFactoryImpl{
+    - configuration : Configuration
+    + SensorValueFactoryImpl(path : String)
+    + createSunValues(reading : ZonedDateTime, valuePath : String) : SensorValueObject<?>
+
+    - isTypePermitted(type : String) : boolean
+}
+
+class TemperatureValue{
+    - value : double
+    + TemperatureValue(reading : String)
+    + getValue() : Double
+
+    - isReadingValid() : boolean
+}
+
+
+interface LogService {
+    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
+}
+
+class LogServiceImpl {
+    - logRepository : LogRepository
+
+    + LogService(logRepository : LogRepository)
+
+    + computeMaxInstantaneousTemperature(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
+    }
+
+class GetMaxInstantaneousTemperatureDifferenceCTRL{
+    - logService : LogService
+
+    + GetMaxInstantaneousTemperatureDifferenceCTRL(logService : LogService)
+
+    + getMaxInstantaneousTemperature(outdoorDeviceDTO : DeviceDTO,\n indoorDeviceDTO : DeviceDTO, timeConfigDTO : TimeConfigDTO) : String
+}
+
+class DeviceMapper{
+    + createDeviceIDVO(deviceDTO : DeviceDTO) : DeviceNameIDVO
+}
+
+class DeviceDTO{
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomID : String
+
+    + getDeviceID() : String
+}
+
+class DeviceIDVO {
+    - identifier : UUID
+
+    + DeviceIDVO(identifier : UUID)
+}
+
+
+class TimeConfigMapper{
+    + createTimeConfig(timeConfigDTO : TimeConfigDTO) : TimeConfig
+}
+
+class TimeConfig{
+    - initialDateTime : LocalDateTime
+    - finalDateTime : LocalDateTime
+    - definedDelta : String
+
+    + TimeConfig(initialDateTime : LocalDateTime, \nfinalDateTime : LocalDateTime, definedDelta : String)
+}
+
+
+class TimeConfigDTO{
+    - initialTime : String
+    - finalTime : String
+    - initialDate : String
+    - finalDate : String
+    - definedDelta : String
+
+    + TimeConfigDTO(initialTime : String, finalTime : String, initialDate : String,\n finalDate : String, definedDelta : String)
+}
+
+
+class LogDataModel {
+    - logID : String
+    - time : LocalDateTime
+    - reading : String
+    - sensorID : String
+    - deviceID : String
+    - sensorTypeID : String
+
+    + LogDataModel()
+
+    + LogDataModel(log : Log)
+}
+
+class LogAssembler {
+    + toDomain(logFactory : LogFactory, valueFactory : SensorValueFactory, logDataModel : LogDataModel)
+
+    + toDomain(logFactory : LogFactory, valueFactory : SensorValueFactory, \nlogDataModelList : Iterable<LogDataModel>) : Iterable<Log>
+}
+
+class Log{
+    - logID : LogIDVO
+    - readingTime : LocalDateTime
+    - reading : SensorValueObject<?>
+    - sensorID : SensorIDVO
+    - deviceID : DeviceIDVO
+    - sensorTypeID : SensorTypeIDVO
+
+    + Log(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+
+    + Log(logID : LogIDVO, readingTime : LocalDateTime, reading SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+
+}
+
+interface SensorValueObject<T>
+
+interface ValueObject<T>{
+    + T getValue()
+}
+
+
+interface DomainID {
+    + getID() : String
+}
+
+
+interface DomainEntity {
+    + getID() : DomainID
+}
+
+@enduml
