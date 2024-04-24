@@ -1,0 +1,57 @@
+@startuml
+
+skinparam ParticipantPadding 50
+
+autonumber
+title Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.0 - Main Success Scenario
+
+participant ":GetMaxInstantaneousTemperatureDifferenceCTRL" as C
+participant ":DeviceMapper" as DM
+participant ":TimeConfigMapper" as TPM
+participant ":LogService" as LS
+participant ":TimeConfig" as TC
+participant ":LogRepository" as LR
+
+
+[o-> C : getMaxInstantaneousTemperature(outdoorDeviceDTO, indoorDeviceDTO, timeConfigDTO)
+activate C
+
+C -> DM : outdoorDeviceID = createDeviceIDVO(outdoorDeviceDTO)
+activate DM
+deactivate DM
+
+C -> DM : indoorDeviceID = createDeviceIDVO(indoorDeviceDTO)
+activate DM
+deactivate DM
+
+C -> TPM : timeConfig = createTimeConfig(timeConfigDTO)
+activate TPM
+deactivate TPM
+
+C -> LS : getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, timeConfig)
+activate LS
+LS -> TC : initialDateTime = getInitialDateTime()
+activate TC
+LS -> TC : finalDateTime = getFinalDateTime()
+LS -> TC : definedDelta = getDelta()
+|||
+deactivate TC
+LS -> LR : outdoorDeviceLog = getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
+activate LR
+deactivate LR
+
+LS -> LR : indoorDeviceLog = getDeviceLogBySensorTypeAndTimePeriod(indoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
+activate LR
+deactivate LR
+|||
+LS -> LS : maxTemperature = computeMaxInstantaneousTemperature(outdoorDeviceLog,\nindoorDeviceLog, definedDelta)
+activate LS
+deactivate LS
+
+LS --> C : maxTemperature
+deactivate LS
+
+[o<-- C : maxTemperature
+deactivate C
+
+@enduml
