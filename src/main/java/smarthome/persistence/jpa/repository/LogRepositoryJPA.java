@@ -154,4 +154,38 @@ public class LogRepositoryJPA implements LogRepository {
             return Collections.emptyList();
         }
     }
+
+    /**
+     * Retrieves all Log objects from the database that fall within the specified time range and are associated with
+     * the specified device and sensor type.
+     * This method queries the database for LogDataModel objects that match the specified device ID, sensor type, and
+     * time range. It uses the setParameter() method to set the named parameters in the query.
+     * It then converts the LogDataModel objects to Log objects using LogAssembler and returns the result.
+     * If a RuntimeException occurs, it returns an empty list.
+     * If any of the input parameters are null, it throws an IllegalArgumentException.
+     *
+     * @param deviceID   The device ID to filter the log data by.
+     * @param sensorType The sensor type to filter the log data by.
+     * @param start      The start of the time range to filter the log data by.
+     * @param end        The end of the time range to filter the log data by.
+     * @return An Iterable of Log objects that match the query criteria.
+     */
+
+    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end) {
+        if (deviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            Query query = em.createQuery("SELECT l FROM LogDataModel l WHERE l.deviceID = :deviceID AND l.sensorTypeID = :sensorTypeID AND l.time BETWEEN :start AND :end");
+            query.setParameter("deviceID", deviceID.getID());
+            query.setParameter("sensorTypeID", sensorType);
+            query.setParameter("start", start);
+            query.setParameter("end", end);
+            List<LogDataModel> listOfLogs = query.getResultList();
+            return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
+    }
 }
