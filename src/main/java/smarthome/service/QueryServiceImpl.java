@@ -123,12 +123,12 @@ public class QueryServiceImpl implements QueryService{
      * If the map already contains the specified type as a key, the provided DeviceIDVO object is added to the corresponding list,
      * if it's not already present. If the type is not found in the map, a new entry is created with the type as the key and
      * a new List containing the provided DeviceIDVO object.
-     * @param map The LinkedHashMap to update.
-     * @param type The type (String) representing the key in the map.
+     *
+     * @param map      The LinkedHashMap to update.
+     * @param type     The type (String) representing the key in the map.
      * @param deviceID The DeviceIDVO object to add to the map.
-     * @return The updated LinkedHashMap with keys of type String and values of type List containing DeviceIDVO objects.
      */
-    private LinkedHashMap<String,List<DeviceIDVO>> updateMap (LinkedHashMap<String,List<DeviceIDVO>> map, String type, DeviceIDVO deviceID){
+    private void updateMap (LinkedHashMap<String,List<DeviceIDVO>> map, String type, DeviceIDVO deviceID){
         if (map.containsKey(type)){
             List<DeviceIDVO> devicesPerKey = map.get(type);
             if(!devicesPerKey.contains(deviceID)){
@@ -139,7 +139,6 @@ public class QueryServiceImpl implements QueryService{
             devicesPerKey.add(deviceID);
             map.put(type,devicesPerKey);
         }
-        return map;
     }
 
     /**
