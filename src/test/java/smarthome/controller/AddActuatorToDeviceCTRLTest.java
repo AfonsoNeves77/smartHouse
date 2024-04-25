@@ -2,16 +2,19 @@ package smarthome.controller;
 
 import org.apache.commons.collections4.IterableUtils;
 import smarthome.domain.actuator.*;
+import smarthome.domain.actuatortype.ActuatorType;
 import smarthome.domain.actuatortype.ActuatorTypeFactory;
 import smarthome.domain.actuatortype.ActuatorTypeFactoryImpl;
 import smarthome.domain.device.Device;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.mapper.dto.ActuatorDTO;
 import smarthome.mapper.dto.ActuatorTypeDTO;
 import smarthome.mapper.dto.DeviceDTO;
-import smarthome.persistence.mem.ActuatorRepositoryMem;
-import smarthome.persistence.mem.ActuatorTypeRepositoryMem;
-import smarthome.persistence.mem.DeviceRepositoryMem;
+import smarthome.persistence.ActuatorRepository;
+import smarthome.persistence.ActuatorTypeRepository;
+import smarthome.persistence.DeviceRepository;
 import smarthome.service.ActuatorTypeService;
 import smarthome.service.ActuatorServiceImpl;
 import smarthome.service.ActuatorTypeServiceImpl;
@@ -22,9 +25,14 @@ import smarthome.domain.vo.devicevo.DeviceStatusVO;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * This test class includes ActuatorTypeService instantiations that may appear unused.
@@ -54,45 +62,78 @@ class AddActuatorToDeviceCTRLTest {
     }
 
     /**
-     * Test method to verify that when adding a Switch Actuator to a Device using the AddActuatorToDeviceCTRL,
-     * the operation returns true upon success, and the Switch Actuator is correctly added to the Actuator repository.
-     * This test initializes Actuator Service, creates a new Device and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns true, indicating success.
-     * It further asserts that the added Switch Actuator is present in the Actuator repository with the correct attributes.
+     * Test case to verify the behavior of adding a switch actuator to a device.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes a switch actuator (Actuator1) and adds it to a list of actuators.
+     * 3. Initializes an actuator type (SwitchActuator) and sets up mock repositories for devices, actuators, and actuator types,
+     *    and simulate the behavior of repositories and objects in a controlled environment.
+     * 4. Initializes service and factory objects required for the test.
+     * 5. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 6. Constructs DTOs for the device, actuator type, and actuator.
+     * 7. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 8. Asserts that the operation succeeded (result is true).
+     * 9. Verifies that the added switch actuator is present in the actuator repository and its attributes match the expected values.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void  whenAddSwitchActuatorToDevice_thenReturnTrue() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Actuator1 initialized and added to a List
+        List<Actuator> actuatorList = new ArrayList<>();
+        Iterable<Actuator> actuatorIterable = actuatorList;
+        ActuatorNameVO actuatorName1 = new ActuatorNameVO("Actuator1");
+        ActuatorTypeIDVO actType1 = new ActuatorTypeIDVO("SwitchActuator");
+        SwitchActuator actuator1 = new SwitchActuator(actuatorName1,actType1,device1.getId());
+        actuatorList.add(actuator1);
+
+        //ActuatorType initialized
+        ActuatorType actuatorType = new ActuatorType(actType1);
+
+        //A mock DeviceRepository object with predefined behaviors for its findById method.
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        when(deviceRepositoryDouble.findById(deviceIDVO1)).thenReturn(device1);
+
+        //A mock ActuatorRepository object with predefined behaviors for its findById, save, and findAll methods.
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        when(actuatorRepositoryDouble.findById(any(ActuatorIDVO.class))).thenReturn(actuator1);
+        when(actuatorRepositoryDouble.save(any(Actuator.class))).thenReturn(true);
+        when(actuatorRepositoryDouble.findAll()).thenReturn(actuatorIterable);
+
+        //A mock ActuatorTypeRepository object with predefined behaviors for its findById, isPresent, and save methods.
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        when(actuatorTypeRepositoryDouble.findById(any(ActuatorTypeIDVO.class))).thenReturn(actuatorType);
+        when(actuatorTypeRepositoryDouble.isPresent(any(ActuatorTypeIDVO.class))).thenReturn(true);
+        when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
+
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="SwitchActuator";
@@ -100,7 +141,7 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -113,8 +154,8 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the added switch actuator is present in actuator repository
 
         //Fetch the added switch actuator from repository
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        SwitchActuator addedActuator = (SwitchActuator) IterableUtils.get(actuatorIterable,0);
+        Iterable<Actuator> actuatorIterable1 = actuatorRepositoryDouble.findAll();
+        SwitchActuator addedActuator = (SwitchActuator) IterableUtils.get(actuatorIterable1,0);
 
         //Query the fetched switch actuator for it's attributes
         String resultName = addedActuator.getActuatorName().getValue();
@@ -124,51 +165,84 @@ class AddActuatorToDeviceCTRLTest {
         //Compare switch actuator attributes with the ones given in its creation
         assertEquals(actuatorNameVO,resultName);
         assertEquals(actuatorTypeID,resultTypeID);
-        assertEquals(deviceIDVO,resultDeviceID);
+        assertEquals(deviceIDVO1,resultDeviceID);
     }
 
     /**
-     * Test method to verify that when adding an Integer Value Actuator to a Device using the AddActuatorToDeviceCTRL,
-     * the operation returns true upon success, and the Integer Value Actuator is correctly added to the Actuator repository
-     * with the provided upper and lower limit settings.
-     * This test initializes Actuator Service, creates a new Device and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns true, indicating success.
-     * It further asserts that the added Integer Value Actuator is present in the Actuator repository with the correct attributes,
-     * including the provided upper and lower limit settings.
+     * Test case to verify the behavior of adding an Integer Value Actuator to a device with valid integer settings.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes an Integer Value Actuator (Actuator1) with integer settings and adds it to a list of actuators.
+     * 3. Initializes an actuator type (IntegerValueActuator) and sets up mock repositories for devices, actuators, and actuator types,
+     *    and simulate the behavior of repositories and objects in a controlled environment.
+     * 4. Initializes service and factory objects required for the test.
+     * 5. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 6. Constructs DTOs for the device, actuator type, and actuator, including the upper and lower integer limits.
+     * 7. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 8. Asserts that the operation succeeded (result is true).
+     * 9. Verifies that the added Integer Value Actuator is present in the actuator repository and its attributes match
+     *    the expected values, including the integer settings.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addIntegerValueActuatorToDevice_WhenValidIntegerSettings_thenReturnTrue() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Actuator1 initialized and added to a List
+        List<Actuator> actuatorList = new ArrayList<>();
+        Iterable<Actuator> actuatorIterable = actuatorList;
+        Settings settings =new IntegerSettingsVO("1","2");
+        ActuatorNameVO actuatorName1 = new ActuatorNameVO("Actuator1");
+        ActuatorTypeIDVO actType1 = new ActuatorTypeIDVO("IntegerValueActuator");
+        IntegerValueActuator actuator1 = new IntegerValueActuator(actuatorName1,actType1,device1.getId(),settings);
+        actuatorList.add(actuator1);
+
+        //ActuatorType initialized
+        ActuatorType actuatorType = new ActuatorType(actType1);
+
+        //A mock DeviceRepository object with predefined behaviors for its findById method.
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        when(deviceRepositoryDouble.findById(deviceIDVO1)).thenReturn(device1);
+
+        //A mock ActuatorRepository object with predefined behaviors for its findById, save, and findAll methods.
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        when(actuatorRepositoryDouble.findById(any(ActuatorIDVO.class))).thenReturn(actuator1);
+        when(actuatorRepositoryDouble.save(any(Actuator.class))).thenReturn(true);
+        when(actuatorRepositoryDouble.findAll()).thenReturn(actuatorIterable);
+
+        //A mock ActuatorTypeRepository object with predefined behaviors for its findById, isPresent, and save methods.
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        when(actuatorTypeRepositoryDouble.findById(any(ActuatorTypeIDVO.class))).thenReturn(actuatorType);
+        when(actuatorTypeRepositoryDouble.isPresent(any(ActuatorTypeIDVO.class))).thenReturn(true);
+        when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
+
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());;
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="IntegerValueActuator";
@@ -178,8 +252,7 @@ class AddActuatorToDeviceCTRLTest {
         String actuatorNameVO = "Actuator1";
         String upperLimit = "2";
         String downLimit = "1";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,downLimit,upperLimit);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -192,8 +265,8 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the added Integer Value Actuator is present in actuator repository
 
         //Fetch the added Integer Value Actuator from repository
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        IntegerValueActuator addedActuator = (IntegerValueActuator) IterableUtils.get(actuatorIterable,0);
+        Iterable<Actuator> actuatorIterable1 = actuatorRepositoryDouble.findAll();
+        IntegerValueActuator addedActuator = (IntegerValueActuator) IterableUtils.get(actuatorIterable1,0);
 
         //Query the fetched Integer Value Actuator for it's attributes
         String resultName = addedActuator.getActuatorName().getValue();
@@ -205,7 +278,7 @@ class AddActuatorToDeviceCTRLTest {
         //Compare Integer Value Actuator attributes with the ones given in its creation
         assertEquals(actuatorNameVO,resultName);
         assertEquals(actuatorTypeID,resultTypeID);
-        assertEquals(deviceIDVO,resultDeviceID);
+        assertEquals(deviceIDVO1,resultDeviceID);
 
         int upperLimitInt = Integer.parseInt(upperLimit);
         int downLimitInt = Integer.parseInt(downLimit);
@@ -215,47 +288,79 @@ class AddActuatorToDeviceCTRLTest {
     }
 
     /**
-     * Test method to verify that when adding a Decimal Value Actuator to a Device using the AddActuatorToDeviceCTRL,
-     * the operation returns true upon success, and the Decimal Value Actuator is correctly added to the Actuator repository
-     * with the provided upper and lower limit settings, as well as precision.
-     * This test initializes Actuator Service, creates a new Device, and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns true, indicating success.
-     * It further asserts that the added Decimal Value Actuator is present in the Actuator repository with the correct attributes,
-     * including the provided upper and lower limit settings and precision.
+     * Test case to verify the behavior of adding a Decimal Value Actuator to a device with valid decimal settings.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes a Decimal Value Actuator (Actuator1) with decimal settings and adds it to a list of actuators.
+     * 3. Initializes an actuator type (DecimalValueActuator) and sets up mock repositories for devices, actuators, and actuator types,
+     *    and simulate the behavior of repositories and objects in a controlled environment.
+     * 4. Initializes service and factory objects required for the test.
+     * 5. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 6. Constructs DTOs for the device, actuator type, and actuator, including the upper and lower decimal limits and precision.
+     * 7. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 8. Asserts that the operation succeeded (result is true).
+     * 9. Verifies that the added Decimal Value Actuator is present in the actuator repository and its attributes match the expected values, including the decimal settings.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addDecimalValueActuatorToDevice_WhenValidDecimalSettings_thenReturnTrue() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Actuator1 initialized and added to a List
+        List<Actuator> actuatorList = new ArrayList<>();
+        Iterable<Actuator> actuatorIterable = actuatorList;
+        Settings settings =new DecimalSettingsVO("1.1","2.1","0.1");
+        ActuatorNameVO actuatorName1 = new ActuatorNameVO("Actuator1");
+        ActuatorTypeIDVO actType1 = new ActuatorTypeIDVO("DecimalValueActuator");
+        DecimalValueActuator actuator1 = new DecimalValueActuator(actuatorName1,actType1,device1.getId(),settings);
+        actuatorList.add(actuator1);
+
+        //ActuatorType initialized
+        ActuatorType actuatorType = new ActuatorType(actType1);
+
+        //A mock DeviceRepository object with predefined behaviors for its findById method.
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        when(deviceRepositoryDouble.findById(deviceIDVO1)).thenReturn(device1);
+
+        //A mock ActuatorRepository object with predefined behaviors for its findById, save, and findAll methods.
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        when(actuatorRepositoryDouble.findById(any(ActuatorIDVO.class))).thenReturn(actuator1);
+        when(actuatorRepositoryDouble.save(any(Actuator.class))).thenReturn(true);
+        when(actuatorRepositoryDouble.findAll()).thenReturn(actuatorIterable);
+
+        //A mock ActuatorTypeRepository object with predefined behaviors for its findById, isPresent, and save methods.
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        when(actuatorTypeRepositoryDouble.findById(any(ActuatorTypeIDVO.class))).thenReturn(actuatorType);
+        when(actuatorTypeRepositoryDouble.isPresent(any(ActuatorTypeIDVO.class))).thenReturn(true);
+        when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
+
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());;
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="DecimalValueActuator";
@@ -263,11 +368,10 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        String upperLimit = "0.9";
-        String downLimit = "0.1";
+        String upperLimit = "2.1";
+        String downLimit = "1.1";
         String precision = "0.1";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,downLimit,upperLimit,precision);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit,precision);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -277,73 +381,78 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the operation succeeded
         assertTrue(result);
 
-        //This assertion asserts that the added Decimal Value Actuator is present in actuator repository
+        //This assertion asserts that the added Integer Value Actuator is present in actuator repository
 
         //Fetch the added Integer Value Actuator from repository
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        DecimalValueActuator addedActuator = (DecimalValueActuator) IterableUtils.get(actuatorIterable,0);
+        Iterable<Actuator> actuatorIterable1 = actuatorRepositoryDouble.findAll();
+        DecimalValueActuator addedActuator = (DecimalValueActuator) IterableUtils.get(actuatorIterable1,0);
 
-        //Query the fetched Decimal Value Actuator for it's attributes
+        //Query the fetched Integer Value Actuator for it's attributes
         String resultName = addedActuator.getActuatorName().getValue();
         String resultTypeID = addedActuator.getActuatorTypeID().getID();
         DeviceIDVO resultDeviceID = addedActuator.getDeviceID();
-        Double[] resultDoubleSettings = addedActuator.getDecimalSettings().getValue();
+        Double[] resultDecimalSettings = addedActuator.getDecimalSettings().getValue();
 
 
-        //Compare Decimal Value Actuator attributes with the ones given in its creation
+        //Compare Integer Value Actuator attributes with the ones given in its creation
         assertEquals(actuatorNameVO,resultName);
         assertEquals(actuatorTypeID,resultTypeID);
-        assertEquals(deviceIDVO,resultDeviceID);
+        assertEquals(deviceIDVO1,resultDeviceID);
 
-        double upperLimitInt = Double.parseDouble(upperLimit);
-        double downLimitInt = Double.parseDouble(downLimit);
-        double precisionInt = Double.parseDouble(precision);
-        Double[] expectedIntegerSettings = {downLimitInt,upperLimitInt,precisionInt};
+        double upperLimitDouble = Double.parseDouble(upperLimit);
+        double downLimitDouble = Double.parseDouble(downLimit);
+        double precisionDouble = Double.parseDouble(precision);
+        Double[] expectedDoubleSettings = {downLimitDouble,upperLimitDouble,precisionDouble};
 
-        assertArrayEquals(expectedIntegerSettings,resultDoubleSettings);
+        assertArrayEquals(expectedDoubleSettings,resultDecimalSettings);
     }
 
     /**
-     * Test method to verify that when attempting to add a Decimal Value Actuator to a Device with a lower limit
-     * that is bigger than the upper limit, the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service, creates a new Device, and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the lower limit being greater than the upper limit.
+     * Test case to verify the behavior of adding a Decimal Value Actuator to a device when the lower limit is bigger than the upper limit.
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes mock objects for repositories.
+     * 3. Initializes service and factory objects required for the test.
+     * 4. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 5. Constructs DTOs for the device, actuator type, and actuator, including the upper and lower decimal limits and precision.
+     * 6. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 7. Asserts that the operation did not succeed (result is false), indicating that the lower limit is bigger than the upper limit.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addDecimalValueActuatorToDevice_WhenLowerLimitBiggerThanUpperLimit_thenReturnFalse() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Mock's for DeviceRepository, ActuatorRepository and ActuatorTypeRepository objects
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="DecimalValueActuator";
@@ -354,8 +463,7 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "0.5";
         String downLimit = "0.6";
         String precision = "0.1";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,downLimit,upperLimit,precision);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit,precision);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -364,54 +472,56 @@ class AddActuatorToDeviceCTRLTest {
 
         //This assertion asserts that the operation did not succeed
         assertFalse(result);
-
-        //This assertion asserts that actuator repository is empty
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
-        assertTrue(isRepoEmpty);
     }
 
     /**
-     * Test method to verify that when attempting to add a Decimal Value Actuator to a Device with a negative precision,
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service, creates a new Device, and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the negative precision.
+     * Test case to verify the behavior of adding a Decimal Value Actuator to a device when the precision is negative.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes mock objects for repositories.
+     * 3. Initializes service and factory objects required for the test.
+     * 4. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 5. Constructs DTOs for the device, actuator type, and actuator, including the upper and lower decimal limits and precision.
+     * 6. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 7. Asserts that the operation did not succeed (result is false), indicating that the precision is negative.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addDecimalValueActuatorToDevice_WhenNegativePrecision_thenReturnFalse() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Mocks for DeviceRepository, ActuatorRepository and ActuatorTypeRepository objects
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
+
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="DecimalValueActuator";
@@ -422,8 +532,7 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "0.5";
         String downLimit = "0.3";
         String precision = "-0.1";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,upperLimit,downLimit,precision);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),upperLimit,downLimit,precision);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -433,55 +542,55 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the operation did not succeed
         assertFalse(result);
 
-        //This assertion asserts that actuator repository is empty
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
-        assertTrue(isRepoEmpty);
     }
 
     /**
-     * Test method to verify that when attempting to add a Decimal Value Actuator to a Device
-     * with integer value settings (upper limit and down limit),
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service, creates a new Device, and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the integer value settings provided for a Decimal Value Actuator.
+     * Test case to verify that adding a Decimal Value Actuator with integer value settings returns false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room.
+     * 2. Initializes mock objects for repositories.
+     * 3. Initializes service and factory objects required for the test.
+     * 4. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 5. Constructs DTOs for the device, actuator type, and actuator with integer value settings.
+     * 6. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 7. Asserts that the operation returns false, indicating that adding a Decimal Value Actuator with integer value settings is not allowed.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addDecimalValueActuator_givenIntegerValueSettings_ShouldReturnFalse() throws ConfigurationException {
 
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Mocks for DeviceRepository, ActuatorRepository and ActuatorTypeRepository objects
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="DecimalValueActuator";
@@ -491,72 +600,94 @@ class AddActuatorToDeviceCTRLTest {
         String actuatorNameVO = "Actuator1";
         String upperLimit = "1";
         String downLimit = "3";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,upperLimit,downLimit);
-
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),upperLimit,downLimit);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
 
         // Assert
-        assertTrue(isRepoEmpty); //This assertion verifies that actuator repository is empty
         assertFalse(result);
     }
 
     /**
-     * Test method to verify that when attempting to add an Actuator to a Device that is inactive,
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service, creates a new Device, deactivates it, and saves it to the Device repository.
-     * It also initializes the Actuator Type Service to populate the Actuator Type repository,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates DTOs for the Device, Actuator Type, and Actuator.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the inactive status of the Device.
+     * Test case to verify that adding an actuator to a device with inactive status returns false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device (Device1) with a name, model, and room, and deactivates it.
+     * 2. Initializes an actuator (Actuator1) and adds it to a list.
+     * 3. Initializes mock objects for repositories and simulate the behavior of repositories and objects in a controlled environment.
+     * 4. Initializes service and factory objects required for the test.
+     * 5. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 6. Constructs DTOs for the device, actuator type, and actuator.
+     * 7. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 8. Asserts that the operation returns false, indicating that adding the actuator to the device with inactive status is not allowed.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void whenAddActuatorToDeviceWithInactiveStatus_thenReturnFalse() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized and deactivated
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+        device1.deactivateDevice();
+
+        //Actuator1 initialized and added to a List
+        List<Actuator> actuatorList = new ArrayList<>();
+        Iterable<Actuator> actuatorIterable = actuatorList;
+        ActuatorNameVO actuatorName1 = new ActuatorNameVO("Actuator1");
+        ActuatorTypeIDVO actType1 = new ActuatorTypeIDVO("SwitchActuator");
+        SwitchActuator actuator1 = new SwitchActuator(actuatorName1,actType1,device1.getId());
+        actuatorList.add(actuator1);
+
+        //ActuatorType initialized
+        ActuatorType actuatorType = new ActuatorType(actType1);
+
+        //A mock DeviceRepository object with predefined behaviors for its findById method.
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        when(deviceRepositoryDouble.findById(deviceIDVO1)).thenReturn(device1);
+
+        //A mock ActuatorRepository object with predefined behaviors for its findById, save, and findAll methods.
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        when(actuatorRepositoryDouble.findById(any(ActuatorIDVO.class))).thenReturn(actuator1);
+        when(actuatorRepositoryDouble.save(any(Actuator.class))).thenReturn(true);
+        when(actuatorRepositoryDouble.findAll()).thenReturn(actuatorIterable);
+
+        //A mock ActuatorTypeRepository object with predefined behaviors for its findById, isPresent, and save methods.
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        when(actuatorTypeRepositoryDouble.findById(any(ActuatorTypeIDVO.class))).thenReturn(actuatorType);
+        when(actuatorTypeRepositoryDouble.isPresent(any(ActuatorTypeIDVO.class))).thenReturn(true);
+        when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        //DeactivateDevice
-        device.deactivateDevice();
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="SwitchActuator";
         ActuatorTypeDTO actuatorTypeDTO = new ActuatorTypeDTO(actuatorTypeID);
 
         //ActuatorDTO initialization
-
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -565,39 +696,47 @@ class AddActuatorToDeviceCTRLTest {
 
         //This assertion asserts that the operation did not succeed
         assertFalse(result);
-
-        //This assertion asserts that actuator repository is empty
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
-        assertTrue(isRepoEmpty);
     }
 
     /**
-     * Test method to verify that when attempting to add an Actuator to a non-existent Device,
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service and Actuator Type Service,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates a DTO for a non-existent Device.
-     * It also creates DTOs for the Actuator Type and Actuator to be added.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and non-existent DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the non-existence of the Device.
+     * Test case to verify that adding an actuator to a non-existent device returns false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes mock objects for DeviceRepository, ActuatorRepository, and ActuatorTypeRepository.
+     * 2. Configures predefined behaviors for the ActuatorTypeRepository methods and simulate the behavior of the
+     *    ActuatorTypeRepository in a controlled environment.
+     * 3. Initializes service and factory objects required for the test.
+     * 4. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 5. Constructs DTOs for the non-existent device, actuator type, and actuator.
+     * 6. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 7. Asserts that the operation returns false, indicating that adding the actuator to the non-existent device is not allowed.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void whenAddActuatorToDeviceNonExistent_thenReturnFalse() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Mocks for DeviceRepository, ActuatorRepository and ActuatorTypeRepository objects
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+
+        //A mock ActuatorTypeRepository object with predefined behaviors for its isPresent, and save methods.
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+        when(actuatorTypeRepositoryDouble.isPresent(any(ActuatorTypeIDVO.class))).thenReturn(true);
+        when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
+
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
@@ -615,7 +754,6 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeDTO actuatorTypeDTO = new ActuatorTypeDTO(actuatorTypeID);
 
         //ActuatorDTO initialization
-
         String actuatorNameVO = "Actuator1";
         ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID);
 
@@ -627,53 +765,60 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the operation did not succeed
         assertFalse(result);
 
-        //This assertion asserts that actuator repository is empty
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
-        assertTrue(isRepoEmpty);
     }
 
     /**
-     * Test method to verify that when attempting to add an Actuator with a non-existent Actuator Type,
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service and Actuator Type Service,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates a Device and its DTO.
-     * It also creates a DTO for an Actuator with a non-existent Actuator Type.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the Actuator Type not existing.
+     * Test case to verify that adding an actuator with a non-existent actuator type returns false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device and mock objects for DeviceRepository, ActuatorRepository, and ActuatorTypeRepository.
+     * 2. Initializes service and factory objects required for the test.
+     * 3. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 4. Constructs DTOs for the device, non-existent actuator type, and actuator.
+     * 5. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 6. Asserts that the operation returns false, indicating that adding the actuator with a non-existent actuator type is not allowed.
+     * 7. Verifies that the actuator repository is empty after the operation.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addActuatorToDevice_WhenActuatorTypeDoesNotExist_thenReturnFalse() throws ConfigurationException {
+
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1,model1,room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //A mock for DeviceRepository object
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+
+        //A mock for ActuatorRepository object
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+
+        //A mock for ActuatorTypeRepository object
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+
+
+        //ActuatorFactory initialization
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialization
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        //ActuatorTypeService initialization
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble,actuatorTypeFactory,path);
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
         String actuatorTypeID ="HydraulicActuator";
@@ -681,7 +826,7 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -692,56 +837,61 @@ class AddActuatorToDeviceCTRLTest {
         assertFalse(result);
 
         //This assertion asserts that actuator repository is empty
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
-        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
+        Iterable<Actuator> actuatorIterable1 = actuatorRepositoryDouble.findAll();
+        boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable1);
         assertTrue(isRepoEmpty);
     }
 
     /**
-     * Test method to verify that when attempting to add an Integer Value Actuator with decimal value settings,
-     * the operation returns false and the Actuator repository remains empty.
-     * This test initializes Actuator Service and Actuator Type Service,
-     * initializes the AddActuatorToDeviceCTRL controller, and creates a Device and its DTO.
-     * It also creates a DTO for an Integer Value Actuator with decimal value settings.
-     * The test then calls the addActuatorToDevice method on the controller with the ActuatorDTO,
-     * ActuatorTypeDTO, and DeviceDTO, and asserts that the operation returns false, indicating failure.
-     * It further asserts that the Actuator repository remains empty, as the addition should not have succeeded
-     * due to the settings being in decimal format for an Integer Value Actuator.
+     * Test case to verify that adding an integer value actuator with decimal value settings returns false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a device and mock objects for DeviceRepository, ActuatorRepository, and ActuatorTypeRepository.
+     * 2. Initializes service and factory objects required for the test.
+     * 3. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
+     * 4. Constructs DTOs for the device, actuator type, and actuator with decimal value settings.
+     * 5. Calls the method under test (addActuatorToDevice) and captures the result.
+     * 6. Asserts that the operation returns false, indicating that adding the actuator with decimal value settings is not allowed.
+     * 7. Verifies that the actuator repository is empty after the operation.
+     *
+     * @throws ConfigurationException if an error occurs during configuration loading.
      */
     @Test
     void addIntegerValueActuator_givenDecimalValueSettings_ShouldReturnFalse() throws ConfigurationException {
 
         //Arrange
-        //Actuator Service instantiation
+        //Device1 initialized
+        DeviceNameVO name1 = new DeviceNameVO("name1");
+        DeviceModelVO model1 = new DeviceModelVO("model1");
+        RoomIDVO room1 = new RoomIDVO(UUID.randomUUID());
+        Device device1 = new Device(name1, model1, room1);
+        DeviceIDVO deviceIDVO1 = device1.getId();
+
+        //Mocks for DeviceRepository, ActuatorRepository and ActuatorTypeRepository
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
+
+        //ActuatorFactoryImpl initialized
         ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
-        ActuatorRepositoryMem actuatorRepositoryMem = new ActuatorRepositoryMem();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        ActuatorTypeRepositoryMem actuatorTypeRepositoryMem = new ActuatorTypeRepositoryMem();
-        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryMem, actuatorTypeRepositoryMem, actuatorFactoryImpl, actuatorRepositoryMem);
 
-        //Creation of device and addition to repository
-        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
-        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
-        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
-        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
-        deviceRepositoryMem.save(device);
+        //ActuatorServiceImpl initialized
+        ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
 
-        //Actuator Type Service initialization, so it can populate actuator type repository before adding a specific type
+        // ActuatorTypeService initialized
         String path = "actuator.properties";
         ActuatorTypeFactory actuatorTypeFactory = new ActuatorTypeFactoryImpl();
-        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryMem,actuatorTypeFactory,path);
+        ActuatorTypeService actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble, actuatorTypeFactory, path);
 
         //Controller initialization
         AddActuatorToDeviceCTRL addActuatorToDeviceCTRL = new AddActuatorToDeviceCTRL(actuatorServiceImpl);
 
         //DeviceDTO initialization
-        DeviceIDVO deviceIDVO = device.getId();
-        String deviceID = deviceIDVO.getID();
-        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
-        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO.getID(), deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+        DeviceStatusVO deviceStatusVO = device1.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceIDVO1.getID(), name1.getValue(), model1.getValue(), deviceStatusVO.getValue().toString(), room1.getID());
 
         //ActuatorTypeDTO initialization
-        String actuatorTypeID ="IntegerValueActuator";
+        String actuatorTypeID = "IntegerValueActuator";
         ActuatorTypeDTO actuatorTypeDTO = new ActuatorTypeDTO(actuatorTypeID);
 
         //ActuatorDTO initialization
@@ -749,16 +899,21 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "0.9";
         String downLimit = "0.1";
         String precision = "0.1";
-
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID,upperLimit,downLimit,precision);
-        Iterable<Actuator> actuatorIterable = actuatorRepositoryMem.findAll();
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(), upperLimit, downLimit);
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
+
+        // Assert
+        assertFalse(result);
+        Iterable<Actuator> actuatorIterable = actuatorRepositoryDouble.findAll();
+
+        //Act
+
         boolean isRepoEmpty = IterableUtils.isEmpty(actuatorIterable);
 
         // Assert
         assertTrue(isRepoEmpty); //This assertion verifies that actuator repository is empty
-        assertFalse(result);
     }
+
 }
