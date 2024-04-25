@@ -6,7 +6,6 @@ import smarthome.domain.vo.roomvo.*;
 import smarthome.mapper.dto.RoomDTO;
 import smarthome.persistence.HouseRepository;
 import smarthome.persistence.RoomRepository;
-import smarthome.persistence.mem.RoomRepositoryMem;
 import smarthome.service.RoomServiceImpl;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ class GetListOfRoomsCTRLTest {
     @BeforeEach
     void setUp() {
         HouseRepository houseRepositoryDouble = mock(HouseRepository.class);
-        this.roomRepositoryDouble = mock(RoomRepositoryMem.class);
+        this.roomRepositoryDouble = mock(RoomRepository.class);
         this.roomFactory = new RoomFactoryImpl();
         this.roomService = new RoomServiceImpl(houseRepositoryDouble, roomRepositoryDouble,roomFactory);
         this.controller = new GetListOfRoomsCTRL(roomService);
