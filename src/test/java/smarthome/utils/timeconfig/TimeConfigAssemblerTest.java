@@ -53,7 +53,7 @@ class TimeConfigAssemblerTest {
         String expectedEStamp = eDate + "T" + eTime;
         int expected = 60;
 
-        TimeConfigDTO dto = new TimeConfigDTO(iDate,eDate,iTime,eTime,deltaMin);
+        TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime,deltaMin);
 
         TimeConfig config = TimeConfigAssembler.createTimeConfig(dto);
 
@@ -89,7 +89,7 @@ class TimeConfigAssemblerTest {
         String expectedIStamp = iDate + "T" + iTime;
         String expectedEStamp = eDate + "T" + eTime;
 
-        TimeConfigDTO dto = new TimeConfigDTO(iDate,eDate,iTime,eTime);
+        TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime);
 
         TimeConfig config = TimeConfigAssembler.createTimeConfig(dto);
 

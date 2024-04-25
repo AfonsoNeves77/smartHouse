@@ -26,13 +26,13 @@ public class TimeConfigAssembler {
             throw new IllegalArgumentException("Invalid DTO");
         }
         String iDate = timeConfigDTO.iDate;
-        String eDate = timeConfigDTO.eDate;
         String iTime = timeConfigDTO.iTime;
+        String eDate = timeConfigDTO.eDate;
         String eTime = timeConfigDTO.eTime;
         String deltaMin = timeConfigDTO.deltaMin;
 
         return deltaMin != null ?
-                new TimeConfig(iDate, eDate, iTime, eTime, deltaMin) :
-                new TimeConfig(iDate, eDate, iTime, eTime);
+                new TimeConfig(iDate, iTime, eDate, eTime, deltaMin) :
+                new TimeConfig(iDate, iTime, eDate, eTime);
     }
 }
