@@ -65,7 +65,7 @@ public class DeviceMapper {
         }
         String deviceID = deviceDTO.getDeviceID();
         if (!isDeviceIDValid(deviceID)) {
-            throw new IllegalArgumentException("Invalid device ID.");
+            throw new IllegalArgumentException("Invalid device ID");
         }
         UUID id = UUID.fromString(deviceID);
         return new DeviceIDVO(id);
@@ -125,10 +125,12 @@ public class DeviceMapper {
      * @return true if the device ID is valid, false otherwise
      */
     private static boolean isDeviceIDValid(String deviceID) {
-        if (deviceID == null || deviceID.isEmpty()) {
+        try{
+            UUID.fromString(deviceID);
+        } catch (NullPointerException | IllegalArgumentException e) {
             return false;
         }
-        return !deviceID.trim().isEmpty();
+        return true;
     }
 
     /**
@@ -140,10 +142,11 @@ public class DeviceMapper {
      */
     public static LinkedHashMap<String,List<DeviceDTO>> domainToDTO(Map<String, List<Device>> map) {
         LinkedHashMap<String,List<DeviceDTO>> newMap = new LinkedHashMap<>();
-        for (String key : map.keySet()) {
-            List<Device> deviceList = map.get(key);
+        for (Map.Entry<String, List<Device>> entry : map.entrySet()) {
+            String key = entry.getKey();
+            List<Device> deviceList = entry.getValue();
             List<DeviceDTO> deviceDTOList = domainToDTO(deviceList);
-            newMap.put(key,deviceDTOList);
+            newMap.put(key, deviceDTOList);
         }
         return newMap;
     }

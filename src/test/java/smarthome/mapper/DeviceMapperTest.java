@@ -235,7 +235,7 @@ class DeviceMapperTest {
         DeviceDTO deviceDTO3 = mock(DeviceDTO.class);
         when(deviceDTO2.getDeviceModel()).thenReturn("");
 
-        String expected = "Invalid device ID.";
+        String expected = "Invalid device ID";
 
         //Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
@@ -266,7 +266,7 @@ class DeviceMapperTest {
         //Arrange
         DeviceDTO deviceDTO = mock(DeviceDTO.class);
         when(deviceDTO.getDeviceID()).thenReturn("");
-        String expected = "Invalid device ID.";
+        String expected = "Invalid device ID";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(deviceDTO));
