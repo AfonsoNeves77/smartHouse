@@ -16,6 +16,7 @@ import static java.util.Objects.isNull;
  * Implementation of the ActuatorRepository interface using Spring Data JPA.
  * This class interacts with the database to perform CRUD operations on actuator entities.
  */
+
 public class ActuatorRepositorySpringData implements ActuatorRepository {
 
     private final IActuatorRepositorySpringData iActuatorRepositorySpringData;
