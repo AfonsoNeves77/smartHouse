@@ -34,6 +34,7 @@ public class ConfigureLocationCTRL {
      * @param locationDTO the location data transfer object that will be used to update the location
      * @return true if the location was updated successfully, false otherwise
      */
+
     public boolean updateLocation(LocationDTO locationDTO) {
         try {
             LocationVO locationVO = HouseMapper.dtoToDomain(locationDTO);
