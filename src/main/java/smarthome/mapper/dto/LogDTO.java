@@ -11,7 +11,6 @@ package smarthome.mapper.dto;
  * They automatically generate a constructor, accessor methods, a toString() method, and equals() and hashCode() methods,
  * making them suitable for use as data-holding objects.
  */
-
 public record LogDTO(String logID, String localDateTime, String reading, String sensorID, String deviceID,
                      String sensorTypeID) {
 }

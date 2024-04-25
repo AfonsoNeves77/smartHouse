@@ -9,6 +9,7 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class Log implements DomainEntity {
@@ -34,7 +35,7 @@ public class Log implements DomainEntity {
         }
 
         this.logID = new LogIDVO(UUID.randomUUID());
-        this.time = LocalDateTime.now();
+        this.time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         this.reading = reading;
         this.sensorID = sensorID;
         this.deviceID = deviceID;

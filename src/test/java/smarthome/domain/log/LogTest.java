@@ -279,14 +279,14 @@ class LogTest {
                 .atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("UTC"))
                 .toLocalDateTime()
-                .truncatedTo(ChronoUnit.MILLIS);
+                .truncatedTo(ChronoUnit.SECONDS);
 
         // Act
         LocalDateTime resultUTCTime = log.getTime()
                 .atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("UTC"))
                 .toLocalDateTime()
-                .truncatedTo(ChronoUnit.MILLIS);
+                .truncatedTo(ChronoUnit.SECONDS);
 
         // Convert LocalDateTime objects to strings
         String expectedTimeString = expectedUTCTime.toString();
@@ -294,6 +294,8 @@ class LogTest {
 
         // Assert
         assertEquals(expectedTimeString, resultTimeString);
+        System.out.println(expectedTimeString);
+        System.out.println(resultTimeString);
     }
 
     /**

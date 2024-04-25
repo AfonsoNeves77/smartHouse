@@ -10,6 +10,7 @@ import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.dto.LogDTO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +70,7 @@ class LogMapperTest {
         LogIDVO logIDVO = mock(LogIDVO.class);
         when(logIDVO.getID()).thenReturn(logID);
 
-        String time = LocalDateTime.now().minusHours(2).toString();
+        String time = LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS).toString();
         LocalDateTime localDateTime = mock(LocalDateTime.class);
         when(localDateTime.toString()).thenReturn(time);
 
@@ -135,7 +136,7 @@ class LogMapperTest {
         LogIDVO logIDVO2 = mock(LogIDVO.class);
         when(logIDVO2.getID()).thenReturn(logID2);
 
-        String time = LocalDateTime.now().minusHours(2).toString();
+        String time = LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS).toString();
         LocalDateTime localDateTime = mock(LocalDateTime.class);
         when(localDateTime.toString()).thenReturn(time);
 
