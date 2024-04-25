@@ -11,6 +11,7 @@ import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class LogRepositorySpringData implements LogRepository {
@@ -91,7 +92,7 @@ public class LogRepositorySpringData implements LogRepository {
             Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), from, to);
             return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, logDataModelIterable);
         } catch (DataAccessException e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 
