@@ -1,26 +1,27 @@
 package smarthome.controller;
 
+
 import smarthome.domain.device.Device;
+import smarthome.domain.device.DeviceFactory;
 import smarthome.domain.device.DeviceFactoryImpl;
-import smarthome.domain.room.Room;
-import smarthome.domain.room.RoomFactoryImpl;
 import smarthome.domain.vo.roomvo.*;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.RoomDTO;
-import smarthome.persistence.mem.DeviceRepositoryMem;
-import smarthome.persistence.mem.RoomRepositoryMem;
+import smarthome.persistence.DeviceRepository;
+import smarthome.persistence.RoomRepository;
+import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
-import smarthome.domain.vo.housevo.HouseIDVO;
 import org.junit.jupiter.api.Test;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GetListOfDevicesCTRLTest {
 
@@ -59,10 +60,10 @@ class GetListOfDevicesCTRLTest {
     @Test
     void whenParametersValid_thenReturnsObject(){
         //Arrange
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
-        DeviceRepositoryMem deviceRepository = new DeviceRepositoryMem();
-        DeviceFactoryImpl deviceFactory = new DeviceFactoryImpl();
-        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryMem,deviceFactory,deviceRepository);
+        RoomRepository doubleRoomRepositoryMem = mock(RoomRepository.class);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepositoryMem, deviceFactory, doubleDeviceRepository);
 
         //Act
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
@@ -72,23 +73,22 @@ class GetListOfDevicesCTRLTest {
     }
 
     /**
-     * Test case to verify that when a room does not exist (not found),
-     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
-     * with a RoomDTO representing that room returns an empty list of DeviceDTO.
-     * The test sets up a RoomDTO for a room that does not exist in the memory repository,
-     * then creates a new GetListOfDevicesCTRL controller with a DeviceService.
-     * When calling getListOfDevices() with the non-existent room, it asserts
-     * that the returned list of DeviceDTO objects is empty.
+     * Test case to verify that when a room does not exist (not found), calling getListOfDevices() on the
+     * GetListOfDevicesCTRL controller with a RoomDTO representing that room returns an empty list of DeviceDTO.
+     * The test sets up a RoomDTO for a room that does not exist, then creates a new GetListOfDevicesCTRL controller
+     * with a DeviceService.
+     * When calling getListOfDevices() with the non-existent room, it asserts that the returned list of DeviceDTO
+     * objects is empty.
      */
     @Test
     void whenRoomDoesNotExist_thenReturnsAnEmptyList() {
         //Arrange
         RoomDTO roomDTO = new RoomDTO(UUID.randomUUID().toString(),"room1",2,3,3,2,UUID.randomUUID().toString());
 
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
-        DeviceRepositoryMem deviceRepository = new DeviceRepositoryMem();
-        DeviceFactoryImpl deviceFactory = new DeviceFactoryImpl();
-        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryMem,deviceFactory,deviceRepository);
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
@@ -101,49 +101,38 @@ class GetListOfDevicesCTRLTest {
     }
 
     /**
-     * Test case to verify that when a room has no devices,
-     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
-     * with the RoomDTO representing that room returns an empty list of DeviceDTO.
-     * The test sets up a room with specific dimensions and properties but no devices,
-     * then creates a GetListOfDevicesCTRL controller with a DeviceService.
-     * When calling getListOfDevices() with this room, it asserts that the returned
-     * list of DeviceDTO objects is empty.
+     * Test case to verify that when a room has no devices, calling getListOfDevices() on the GetListOfDevicesCTRL
+     * controller with the RoomDTO representing that room returns an empty list of DeviceDTO.
+     * The test sets up a room with specific dimensions and properties but no devices, then creates a
+     * GetListOfDevicesCTRL controller with a DeviceService.
+     * The mock DeviceRepository is set up to return an empty list of devices in that room.
+     * When calling getListOfDevices() with this room, it asserts that the returned list of DeviceDTO objects is empty.
      */
     @Test
     void ifRoomHasNoDevices_whenGetListOfDevicesIsCalled_thenReturnsEmptyList() {
         //Arrange
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
 
-        double roomWidth = 10.0;
-        RoomWidthVO roomWidthVO = new RoomWidthVO(roomWidth);
-        double roomLength = 10.0;
-        RoomLengthVO roomLengthVO = new RoomLengthVO(roomLength);
-        double roomHeight = 10.0;
-        RoomHeightVO roomHeightVO = new RoomHeightVO(roomHeight);
-        RoomDimensionsVO roomDimensionsVO = new RoomDimensionsVO(roomLengthVO, roomWidthVO, roomHeightVO);
+        RoomIDVO roomIDVO = new RoomIDVO(UUID.randomUUID());
 
+        String roomID = roomIDVO.getID();
         String roomName = "room1";
-        RoomNameVO roomNameVO = new RoomNameVO(roomName);
         int roomFloor = 1;
-        RoomFloorVO roomFloorVO = new RoomFloorVO(roomFloor);
-        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
-
-        Room room = new Room (roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepositoryMem.save(room);
-
-        String roomID = room.getId().getID();
+        double roomWidth = 10.0;
+        double roomLength = 10.0;
+        double roomHeight = 10.0;
         String houseIDVO = "124e4567-e89b-12d3-a456-426614174000";
-
         RoomDTO roomDTO = new RoomDTO(roomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
 
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        when(doubleDeviceRepository.findByRoomID(roomIDVO)).thenReturn(Collections.emptyList());
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
         //Act
-
         List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Assert
@@ -151,143 +140,108 @@ class GetListOfDevicesCTRLTest {
     }
 
     /**
-     * Test case to verify that when a room has one device,
-     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
-     * with the RoomDTO representing that room returns a list containing
-     * the DeviceDTO for that device.
-     * The test sets up a room with specific dimensions and properties,
-     * then adds a single device to that room. It creates a GetListOfDevicesCTRL
-     * controller with a DeviceService. When calling getListOfDevices() with
-     * the room, it asserts that the returned list of DeviceDTO objects contains
-     * the details of the device added to the room.
+     * Test case to verify that when a room has one device, calling getListOfDevices() on the GetListOfDevicesCTRL
+     * controller with the RoomDTO representing that room returns a list containing the DeviceDTO for that device.
+     * The test sets up a room with specific dimensions and properties and instantiates a device to add to that room.
+     * The mock DeviceRepository is set up to return a list containing that single device in that room.
+     * It creates a GetListOfDevicesCTRL controller with a DeviceService. When calling getListOfDevices() with
+     * the room, it asserts that the returned list of DeviceDTO objects contains the details of the device added to
+     * the room.
      */
     @Test
     void ifRoomHasOneDevice_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() {
         //Arrange
-        RoomFactoryImpl roomFactoryImpl = new RoomFactoryImpl();
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
-        RoomWidthVO roomWidthVO = new RoomWidthVO(10.0);
-        RoomLengthVO roomLengthVO = new RoomLengthVO(10.0);
-        RoomHeightVO roomHeightVO = new RoomHeightVO(10.0);
-        RoomDimensionsVO roomDimensionsVO = new RoomDimensionsVO(roomLengthVO, roomWidthVO, roomHeightVO);
+        RoomIDVO roomIDVO = new RoomIDVO(UUID.randomUUID());
 
-        RoomNameVO roomNameVO = new RoomNameVO("room1");
-        RoomFloorVO roomFloorVO = new RoomFloorVO(1);
-        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
-
-        Room room = roomFactoryImpl.createRoom(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepositoryMem.save(room);
-
-
+        String roomID = roomIDVO.getID();
         String roomName = "room1";
         int roomFloor = 1;
         double roomWidth = 10.0;
         double roomLength = 10.0;
         double roomHeight = 10.0;
-        String expectedRoomID = room.getId().getID();
         String houseIDVO = "124e4567-e89b-12d3-a456-426614174000";
-        RoomDTO roomDTO = new RoomDTO(expectedRoomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
-
-        RoomIDVO roomIDVO = room.getId();
+        RoomDTO roomDTO = new RoomDTO(roomID, roomName, roomFloor, roomHeight, roomLength, roomWidth, houseIDVO);
 
         String expectedDeviceName = "Fridge";
         DeviceNameVO deviceNameVO = new DeviceNameVO(expectedDeviceName);
         String expectedDeviceModel = "123QWE";
         DeviceModelVO deviceModelVO = new DeviceModelVO(expectedDeviceModel);
 
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
+        Device device = new Device(deviceNameVO, deviceModelVO, roomIDVO);
 
-        Device device = deviceFactoryImpl.createDevice(deviceNameVO, deviceModelVO, roomIDVO);
-        deviceRepositoryMem.save(device);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        when(doubleDeviceRepository.findByRoomID(any(RoomIDVO.class))).thenReturn(Collections.singletonList(device));
 
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
         int expectedSize = 1;
-        List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Act
-        String resultName = deviceDTOList.get(0).getDeviceName();
-        String resultModel = deviceDTOList.get(0).getDeviceModel();
-        String resultRoomID = deviceDTOList.get(0).getRoomID();
-        int resultSize = deviceDTOList.size();
-        String resultStatus = deviceDTOList.get(0).getDeviceStatus();
+        List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Assert
-        assertEquals(expectedDeviceName, resultName);
-        assertEquals(expectedDeviceModel, resultModel);
-        assertEquals(expectedRoomID, resultRoomID);
-        assertEquals(expectedSize, resultSize);
-        assertEquals("true", resultStatus);
+        assertEquals(expectedSize, deviceDTOList.size());
+        assertEquals(expectedDeviceName, deviceDTOList.get(0).getDeviceName());
+        assertEquals(expectedDeviceModel, deviceDTOList.get(0).getDeviceModel());
+        assertEquals(roomID, deviceDTOList.get(0).getRoomID());
+        assertEquals("true", deviceDTOList.get(0).getDeviceStatus());
         }
 
     /**
-     * Test case to verify that when a room has two devices,
-     * calling getListOfDevices() on the GetListOfDevicesCTRL controller
-     * with the RoomDTO representing that room returns a list containing
-     * the DeviceDTOs for both devices.
-     * The test sets up a room with specific dimensions and properties,
-     * then adds two devices to that room. It creates a GetListOfDevicesCTRL
-     * controller with a DeviceService. When calling getListOfDevices() with
-     * the room, it asserts that the returned list of DeviceDTO objects contains
-     * the details of both devices added to the room, including device names,
-     * models, statuses, and IDs.
+     * Test case to verify that when a room has two devices, calling getListOfDevices() on the GetListOfDevicesCTRL
+     * controller with the RoomDTO representing that room returns a list containing the DeviceDTOs for both devices.
+     * The test sets up a room with specific dimensions and properties, and instantiates two devices to add to that room.
+     * The mock DeviceRepository is set up to return a list containing both devices in that room.
+     * It creates a GetListOfDevicesCTRL controller with a DeviceService. When calling getListOfDevices() with
+     * the room, it asserts that the returned list of DeviceDTO objects contains the details of both devices added to
+     * the room, including device names, models, statuses, and IDs.
      */
     @Test
     void ifRoomHasTwoDevices_whenGetListOfDevicesIsCalled_thenReturnsListOfDevicesDTO() {
         //Arrange
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
-        RoomWidthVO roomWidthVO = new RoomWidthVO(10.0);
-        RoomLengthVO roomLengthVO = new RoomLengthVO(10.0);
-        RoomHeightVO roomHeightVO = new RoomHeightVO(10.0);
-        RoomDimensionsVO roomDimensionsVO = new RoomDimensionsVO(roomLengthVO, roomWidthVO, roomHeightVO);
+        RoomIDVO roomIDVO = new RoomIDVO(UUID.randomUUID());
 
-        RoomNameVO roomNameVO = new RoomNameVO("quarto");
-        RoomFloorVO roomFloorVO = new RoomFloorVO(1);
-        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
-
-        Room room =  new Room(roomNameVO, roomFloorVO, roomDimensionsVO, houseID);
-        roomRepositoryMem.save(room);
-
-        String roomName = "quarto";
+        String roomID = roomIDVO.getID();
+        String roomName = "room1";
         int roomFloor = 1;
         double roomWidth = 10.0;
         double roomLength = 10.0;
         double roomHeight = 10.0;
-        String roomID = room.getId().getID();
         String houseIDVO = "124e4567-e89b-12d3-a456-426614174000";
         RoomDTO roomDTO = new RoomDTO(roomID,roomName,roomFloor,roomHeight,roomLength,roomWidth,houseIDVO);
 
-        RoomIDVO roomIDVO = new RoomIDVO(UUID.fromString(roomID));
+        String expectedDeviceName = "Fridge";
+        DeviceNameVO deviceNameVO = new DeviceNameVO(expectedDeviceName);
+        String expectedDeviceModel = "123QWE";
+        DeviceModelVO deviceModelVO = new DeviceModelVO(expectedDeviceModel);
 
-        String expectedName1 = "Fridge";
-        DeviceNameVO deviceName1VO = new DeviceNameVO(expectedName1);
-        String expectedModel1 = "123QWE";
-        DeviceModelVO deviceModel1VO = new DeviceModelVO(expectedModel1);
+        Device device1 = new Device(deviceNameVO, deviceModelVO, roomIDVO);
 
         String expectedName2 = "AirConditioner";
         DeviceNameVO deviceNameVO2 = new DeviceNameVO(expectedName2);
         String expectedModel2 = "456QWE";
         DeviceModelVO deviceModelVO2 = new DeviceModelVO(expectedModel2);
 
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-
-        Device device = new Device(deviceName1VO, deviceModel1VO, roomIDVO);
         Device device2 = new Device(deviceNameVO2,deviceModelVO2,roomIDVO);
-        deviceRepositoryMem.save(device);
-        deviceRepositoryMem.save(device2);
 
-        String expectedID1 = device.getId().getID();
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        when(doubleDeviceRepository.findByRoomID(any(RoomIDVO.class))).thenReturn(Arrays.asList(device1, device2));
+
+
+        String expectedID1 = device1.getId().getID();
         String expectedID2 = device2.getId().getID();
 
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
-        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceServiceImpl);
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
         int expectedSize = 2;
 
@@ -304,8 +258,8 @@ class GetListOfDevicesCTRLTest {
         String resultDeviceID2 = deviceDTOList.get(1).getDeviceID();
 
         //Assert
-        assertEquals(expectedName1, resultName);
-        assertEquals(expectedModel1, resultModel);
+        assertEquals(expectedDeviceName, resultName);
+        assertEquals(expectedDeviceModel, resultModel);
         assertEquals("true", resultStatus);
         assertEquals(expectedID1, resultDeviceID);
 
@@ -315,5 +269,32 @@ class GetListOfDevicesCTRLTest {
         assertEquals(expectedID2, resultDeviceID2);
 
         assertEquals(expectedSize, deviceDTOList.size());
+    }
+
+
+    /**
+     * Test case to verify that when a RoomDTO is null, calling getListOfDevices() on the GetListOfDevicesCTRL controller
+     * returns an empty list of DeviceDTO.
+     * The test sets up a null RoomDTO and creates a GetListOfDevicesCTRL controller with a DeviceService.
+     * When calling getListOfDevices() with the null RoomDTO, it asserts that the returned list of DeviceDTO objects
+     * is empty.
+     */
+    @Test
+    void whenRoomDTOIsNull_thenReturnsEmptyList() {
+        //Arrange
+        RoomDTO roomDTO = null;
+
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+
+        GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
+
+        //Act
+        List<DeviceDTO> result = getListOfDevicesCTRL.getListOfDevices(roomDTO);
+
+        //Assert
+        assertTrue(result.isEmpty());
     }
 }
