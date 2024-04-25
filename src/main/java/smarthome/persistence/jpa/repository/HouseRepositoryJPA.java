@@ -1,14 +1,16 @@
 package smarthome.persistence.jpa.repository;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactory;
 import smarthome.domain.vo.housevo.HouseIDVO;
-import smarthome.persistence.HouseRepository;
 import smarthome.mapper.assembler.HouseAssembler;
+import smarthome.persistence.HouseRepository;
 import smarthome.persistence.jpa.datamodel.HouseDataModel;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ public class HouseRepositoryJPA implements HouseRepository {
 
     private final HouseFactory houseFactory;
     private final EntityManagerFactory entityManagerFactory;
-    private final String QUERY = "SELECT e FROM HouseDataModel e";
+    private static final String QUERY = "SELECT e FROM HouseDataModel e";
 
     /**
      * Constructs a new HouseRepositoryJPA object.

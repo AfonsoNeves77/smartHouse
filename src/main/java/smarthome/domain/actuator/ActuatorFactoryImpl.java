@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ActuatorFactoryImpl implements ActuatorFactory{
 
-    private final String filePath = "actuator.properties";
+    private static final String filePath = "actuator.properties";
     private Configuration configuration;
 
     /**
