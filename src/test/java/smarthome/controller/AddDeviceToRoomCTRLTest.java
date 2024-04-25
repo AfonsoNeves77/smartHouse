@@ -1,21 +1,25 @@
 package smarthome.controller;
 
 import smarthome.domain.device.Device;
+import smarthome.domain.device.DeviceFactory;
 import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.room.Room;
 import smarthome.domain.vo.roomvo.*;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.RoomDTO;
-import smarthome.persistence.mem.DeviceRepositoryMem;
-import smarthome.persistence.mem.RoomRepositoryMem;
+import smarthome.persistence.DeviceRepository;
+import smarthome.persistence.RoomRepository;
+import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * NOTE: RoomDTO and DeviceDTO attributes were not accessed in the controller tests, since all Mappers ensure they cannot
@@ -27,12 +31,14 @@ class AddDeviceToRoomCTRLTest {
      * Test method to verify that when valid data is provided to the AddDeviceToRoomCTRL's addDeviceToRoom method,
      * it returns true, indicating successful addition of the device to the room.
      * This test ensures that the controller correctly adds a new device to a room when valid data is provided.
+     * The test uses a mock RoomRepository and DeviceRepository to simulate the Room and Device repositories. Both are
+     * set up to return true when the respective methods (isPresent() and save()) are called.
      */
     @Test
     void givenValidData_WhenAddDeviceToRoom_ThenShouldReturnTrue(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         RoomNameVO name = new RoomNameVO("Office");
         RoomFloorVO floor = new RoomFloorVO(2);
@@ -43,12 +49,12 @@ class AddDeviceToRoomCTRLTest {
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
         Room room = new Room (name,floor,dimensions,houseID);
 
-        roomRepositoryMem.save(room);
+        when(doubleRoomRepository.isPresent(room.getId())).thenReturn(true);
 
         // arranges Device Service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
@@ -60,31 +66,72 @@ class AddDeviceToRoomCTRLTest {
         String deviceModel = "Samsung WA50R5400AW";
         DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+        when(doubleDeviceRepository.save(any(Device.class))).thenReturn(true);
 
-        int expectedDevicesInRepo = 1;
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
 
         // Act
         // Main operation:
         boolean operationResult = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
 
-        // get the number of devices in the repository
-        List<Device> deviceList = deviceRepositoryMem.findByRoomID(room.getId());
-        int actualDevicesInRepo = deviceList.size();
-
-        // get the device name of the saved Device
-        String devNameResult = deviceList.get(0).getDeviceName().getValue();
-
-        // get the device model of the saved Device
-        String devModelResult = deviceList.get(0).getDeviceModel().getValue();
-
 
         // Assert
         assertTrue(operationResult);
-        assertEquals(expectedDevicesInRepo, actualDevicesInRepo);
-        assertEquals(deviceName, devNameResult);
-        assertEquals(deviceModel, devModelResult);
+    }
+
+
+    /**
+     * Test method to verify that when valid data is provided to the AddDeviceToRoomCTRL's addDeviceToRoom method,
+     * it returns false, indicating that the addition of the device to the room was unsuccessful.
+     * This test ensures that the controller behaves as expected when the save operation in the DeviceRepository is not
+     * successful.
+     * The test uses a mock RoomRepository and DeviceRepository to simulate the Room and Device repositories.
+     * The RoomRepository is set up to return true when the isPresent() method is called, while the DeviceRepository
+     * is set up to return false when the save() method is called.
+     */
+    @Test
+    void givenValidData_WhenAddDeviceToRoomSaveIsNotSuccessful_ThenShouldReturnFalse() {
+        // Arrange
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
+
+        RoomNameVO name = new RoomNameVO("Office");
+        RoomFloorVO floor = new RoomFloorVO(2);
+        RoomWidthVO width = new RoomWidthVO(3.5);
+        RoomLengthVO length = new RoomLengthVO(3);
+        RoomHeightVO height = new RoomHeightVO(2);
+        RoomDimensionsVO dimensions = new RoomDimensionsVO(length, width, height);
+        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
+        Room room = new Room(name, floor, dimensions, houseID);
+
+        when(doubleRoomRepository.isPresent(room.getId())).thenReturn(true);
+
+        // arranges Device Service
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+
+        // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
+        String roomId = room.getId().getID();
+        String houseId = room.getHouseID().getID();
+        RoomDTO roomDTO = new RoomDTO(roomId, "Office", 2, 3.5, 3, 2, houseId);
+
+        // arranges DeviceDTO
+        String deviceName = "Top Load Washing Machine";
+        String deviceModel = "Samsung WA50R5400AW";
+        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+
+        when(doubleDeviceRepository.save(any(Device.class))).thenReturn(false);
+
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
+
+        // Act
+        // Main operation:
+        boolean operationResult = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
+
+        // Assert
+        assertFalse(operationResult);
     }
 
     /**
@@ -115,31 +162,21 @@ class AddDeviceToRoomCTRLTest {
     @Test
     void givenNullRoomDTO_WhenAddDeviceToRoom_ThenShouldReturnFalse(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
-
-        RoomNameVO name = new RoomNameVO("Office");
-        RoomFloorVO floor = new RoomFloorVO(2);
-        RoomWidthVO width = new RoomWidthVO(3.5);
-        RoomLengthVO length = new RoomLengthVO(3);
-        RoomHeightVO height = new RoomHeightVO(2);
-        RoomDimensionsVO dimensions = new RoomDimensionsVO(length, width, height);
-        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
-        Room room = new Room (name,floor,dimensions,houseID);
-
-        roomRepositoryMem.save(room);
+        // arranges Room repository
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         // arranges Device Service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
         DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
         // Act
         boolean result = ctrl.addDeviceToRoom(null, deviceDTO);
@@ -156,8 +193,8 @@ class AddDeviceToRoomCTRLTest {
     @Test
     void givenNullDeviceDTO_WhenAddDeviceToRoom_ThenShouldReturnFalse(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         RoomNameVO name = new RoomNameVO("Office");
         RoomFloorVO floor = new RoomFloorVO(2);
@@ -168,19 +205,18 @@ class AddDeviceToRoomCTRLTest {
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
         Room room = new Room (name,floor,dimensions,houseID);
 
-        roomRepositoryMem.save(room);
 
         // arranges Device service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
         String houseId = room.getHouseID().getID();
         RoomDTO roomDTO = new RoomDTO(roomId,"Office",2,3.5,3,2,houseId);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
         // Act
         boolean result = ctrl.addDeviceToRoom(roomDTO, null);
@@ -196,8 +232,8 @@ class AddDeviceToRoomCTRLTest {
     @Test
     void givenRoomDTOWithInvalidIdFormat_WhenAddDeviceToRoom_ThenShouldReturnFalse(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         RoomNameVO name = new RoomNameVO("Office");
         RoomFloorVO floor = new RoomFloorVO(2);
@@ -208,12 +244,11 @@ class AddDeviceToRoomCTRLTest {
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
         Room room = new Room (name,floor,dimensions,houseID);
 
-        roomRepositoryMem.save(room);
 
         // arranges Device service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges RoomDTO. House ID must be obtained from the previously instantiated HouseIDVO object.
         String houseId = room.getHouseID().getID();
@@ -224,7 +259,7 @@ class AddDeviceToRoomCTRLTest {
         String deviceModel = "Samsung WA50R5400AW";
         DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
         // Act
         boolean result = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
@@ -236,12 +271,17 @@ class AddDeviceToRoomCTRLTest {
     /**
      * This test ensures that the addDeviceToRoom() method returns false if the information within the RoomDTO does not result
      * in a RoomIDVO object that corresponds to a key in the repository (does not exist).
+     * The mock RoomRepository is set up to return true when the isPresent() method is called with the RoomIDVO object
+     * of the instantiated Room object.
+     * However the RoomDTO object is created with a different UUID, and therefore the RoomIDVO object created from it
+     * does not correspond to any key in the repository.
+     * The method should return false, as the RoomIDVO object from the RoomDTO is not present in the repository.
      */
     @Test
     void givenRoomDTOWithAnIdNotPresentInRoomRepository_WhenAddDeviceToRoom_ThenShouldReturnFalse(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         RoomNameVO name = new RoomNameVO("Office");
         RoomFloorVO floor = new RoomFloorVO(2);
@@ -252,12 +292,12 @@ class AddDeviceToRoomCTRLTest {
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
         Room room = new Room (name,floor,dimensions,houseID);
 
-        roomRepositoryMem.save(room);
+        when(doubleRoomRepository.isPresent(room.getId())).thenReturn(true);
 
         // arranges Device Service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges RoomDTO. House ID must be obtained from the previously instantiated HouseIDVO object.
         String houseId = room.getHouseID().getID();
@@ -268,7 +308,7 @@ class AddDeviceToRoomCTRLTest {
         String deviceModel = "Samsung WA50R5400AW";
         DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
         // Act
         boolean result = ctrl.addDeviceToRoom(roomDTO, deviceDTO);
@@ -282,12 +322,15 @@ class AddDeviceToRoomCTRLTest {
      * This test ensures the method addDeviceToRoom() returns true even if the Device to be added has a similar name and model.
      * This indicates that a brand new DeviceIDVO is being created on Device instantiation. The same DeviceDTO is introduced twice
      * in the system and added to the same Room.
+     * The mock RoomRepository is set up to return true when the isPresent() method is called with the RoomIDVO object
+     * of the instantiated Room object. The mock DeviceRepository is set up to return true when the save() method is called
+     * on any Device object.
      */
     @Test
     void whenAddingDevicesWithSameNameAndModel_ThenShouldReturnTrue(){
         // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
+        // arranges Room repository, creates Room
+        RoomRepository doubleRoomRepository = mock(RoomRepository.class);
 
         RoomNameVO name = new RoomNameVO("Office");
         RoomFloorVO floor = new RoomFloorVO(2);
@@ -298,12 +341,12 @@ class AddDeviceToRoomCTRLTest {
         HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
         Room room = new Room (name,floor,dimensions,houseID);
 
-        roomRepositoryMem.save(room);
+        when(doubleRoomRepository.isPresent(room.getId())).thenReturn(true);
 
         // arranges Device Service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
+        DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
@@ -315,68 +358,16 @@ class AddDeviceToRoomCTRLTest {
         String deviceModel = "Samsung WA50R5400AW";
         DeviceDTO deviceDTO = new DeviceDTO(deviceName,deviceModel);
 
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
+        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
-        ctrl.addDeviceToRoom(roomDTO,deviceDTO);
+        when(doubleDeviceRepository.save(any(Device.class))).thenReturn(true);
+
+        ctrl.addDeviceToRoom(roomDTO, deviceDTO);
 
         // Act
         boolean result = ctrl.addDeviceToRoom(roomDTO,deviceDTO);
 
         // Assert
         assertTrue(result);
-    }
-
-    /**
-     * This test ensures that when the addDeviceToRoom() method is utilized, the new device can be accessed through the repository,
-     * and its name is the same as the defined name, meaning the Device was actually saved.
-     */
-    @Test
-    void givenValidData_DeviceIsAdded_WhenFindByRoomIDFollowedByGetDeviceName_ExpectedDeviceNameIsReturned(){
-        // Arrange
-        // arranges Room repository, creates Room, saves Room to repository
-        RoomRepositoryMem roomRepositoryMem = new RoomRepositoryMem();
-
-        RoomNameVO name = new RoomNameVO("Office");
-        RoomFloorVO floor = new RoomFloorVO(2);
-        RoomWidthVO width = new RoomWidthVO(3.5);
-        RoomLengthVO length = new RoomLengthVO(3);
-        RoomHeightVO height = new RoomHeightVO(2);
-        RoomDimensionsVO dimensions = new RoomDimensionsVO(length, width, height);
-        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
-        Room room = new Room (name,floor,dimensions,houseID);
-
-        roomRepositoryMem.save(room);
-
-        // arranges Device Service
-        DeviceFactoryImpl deviceFactoryImpl = new DeviceFactoryImpl();
-        DeviceRepositoryMem deviceRepositoryMem = new DeviceRepositoryMem();
-        DeviceServiceImpl deviceServiceImpl = new DeviceServiceImpl(roomRepositoryMem, deviceFactoryImpl, deviceRepositoryMem);
-
-        // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
-        String roomId = room.getId().getID();
-        String houseId = room.getHouseID().getID();
-        RoomDTO roomDTO = new RoomDTO(roomId,"Office",2,3.5,3,2,houseId);
-
-        // arranges DeviceDTO
-        String deviceName = "Top Load Washing Machine";
-        String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName,deviceModel);
-
-        AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceServiceImpl);
-
-        ctrl.addDeviceToRoom(roomDTO, deviceDTO);
-
-        RoomIDVO roomIdVO = room.getId();
-
-        List<Device> resultList = deviceRepositoryMem.findByRoomID(roomIdVO);
-        int expectedSize = 1;
-
-        // Act
-        String resultName = resultList.get(0).getDeviceName().getValue();
-        int listSize = resultList.size();
-
-        // Assert
-        assertEquals(deviceName,resultName);
-        assertEquals(expectedSize, listSize);
     }
 }

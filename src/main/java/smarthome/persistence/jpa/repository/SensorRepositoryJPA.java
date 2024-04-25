@@ -19,7 +19,7 @@ public class SensorRepositoryJPA implements SensorRepository {
 
     private final SensorFactory sensorFactory;
     private final EntityManagerFactory entityManagerFactory;
-    private final String QUERY = "SELECT e FROM SensorDataModel e";
+    private static final String QUERY = "SELECT e FROM SensorDataModel e";
 
     /**
      * Constructor for SensorRepositoryJPA. It takes a SensorFactory and an EntityManagerFactory as parameters.
