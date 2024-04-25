@@ -42,7 +42,7 @@ class LogMapperTest {
         String result1 = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, ()
-                -> LogMapper.domainToDTO((Iterable<Log>) null));
+                -> LogMapper.domainToDTO((List<Log>) null));
         String result2 = exception2.getMessage();
 
         // Assert

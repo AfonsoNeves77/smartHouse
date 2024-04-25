@@ -58,7 +58,7 @@ public class LogMapper {
      * @return A list of LogDTO objects representing the data from the input Log objects.
      * @throws IllegalArgumentException If the provided iterable collection of Logs is null.
      */
-    public static Iterable<LogDTO> domainToDTO (Iterable<Log> listOfLogs) {
+    public static List<LogDTO> domainToDTO (List<Log> listOfLogs) {
         if (listOfLogs == null){
             throw new IllegalArgumentException("Invalid parameter");
         }
