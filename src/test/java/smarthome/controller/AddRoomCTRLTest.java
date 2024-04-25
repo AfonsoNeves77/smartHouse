@@ -1,8 +1,7 @@
 package smarthome.controller;
 
 import org.apache.commons.collections4.IterableUtils;
-import smarthome.domain.actuator.Actuator;
-import smarthome.domain.actuator.SwitchActuator;
+
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactoryImpl;
 import smarthome.domain.room.Room;
@@ -13,7 +12,6 @@ import smarthome.mapper.dto.RoomDTO;
 import smarthome.persistence.HouseRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.persistence.mem.HouseRepositoryMem;
-import smarthome.persistence.mem.RoomRepositoryMem;
 import smarthome.service.HouseServiceImpl;
 import smarthome.service.RoomServiceImpl;
 import org.junit.jupiter.api.Test;
