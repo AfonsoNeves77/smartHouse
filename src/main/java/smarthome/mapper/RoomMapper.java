@@ -28,10 +28,11 @@ public class RoomMapper {
      * Validates the RoomDTO object to ensure it is not null nor its room name is empty.
      * @param roomDTO  RoomDTO object that contains the room name.
      * @return  RoomNameVO value-object.
+     * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomNameVO.
      */
-    public static RoomNameVO createRoomNameVO(RoomDTO roomDTO) throws InstantiationException {
+    public static RoomNameVO createRoomNameVO(RoomDTO roomDTO)  {
         if(roomDTO==null || roomDTO.getRoomName()==null || roomDTO.getRoomName().trim().isEmpty()){
-            throw new InstantiationException(ERRORMESSAGE);
+            throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             return new RoomNameVO(roomDTO.getRoomName());
@@ -44,10 +45,11 @@ public class RoomMapper {
      * Validates the RoomDTO object to ensure it is not null and that the room dimensions are valid.
      * @param roomDTO  RoomDTO object that contains the room dimensions.
      * @return  RoomDimensionsVO value-object.
+     * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomDimensionsVO.
      */
-    public static RoomDimensionsVO createRoomDimensionsVO(RoomDTO roomDTO) throws InstantiationException {
+    public static RoomDimensionsVO createRoomDimensionsVO(RoomDTO roomDTO) {
         if(roomDTO==null || roomDTO.getRoomHeight()<0 || roomDTO.getRoomLength()<=0 || roomDTO.getRoomWidth()<=0){
-            throw new InstantiationException(ERRORMESSAGE);
+            throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             RoomHeightVO roomHeightVO = new RoomHeightVO(roomDTO.getRoomHeight());
@@ -63,10 +65,11 @@ public class RoomMapper {
      * Validates the RoomDTO object to ensure it is not null.
      * @param roomDTO  RoomDTO object that contains the room floor.
      * @return  RoomFloorVO value-object.
+     * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomFloorVO.
      */
-    public static RoomFloorVO createRoomFloorVO(RoomDTO roomDTO) throws InstantiationException {
+    public static RoomFloorVO createRoomFloorVO(RoomDTO roomDTO) {
         if(roomDTO==null){
-            throw new InstantiationException(ERRORMESSAGE);
+            throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             return new RoomFloorVO(roomDTO.getFloor());
@@ -79,10 +82,11 @@ public class RoomMapper {
      * Validates the RoomDTO object to ensure it is not null nor its ID is empty.
      * @param roomDTO  RoomDTO object that contains the room ID.
      * @return  RoomIDVO value-object.
+     * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomIDVO.
      */
-    public static RoomIDVO createRoomIDVO(RoomDTO roomDTO) throws InstantiationException {
+    public static RoomIDVO createRoomIDVO(RoomDTO roomDTO) {
         if(roomDTO==null || roomDTO.getId()==null || roomDTO.getId().trim().isEmpty()){
-            throw new InstantiationException(ERRORMESSAGE);
+            throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             // Converts String from the DTO into a UUID
@@ -97,10 +101,11 @@ public class RoomMapper {
      * Validates the RoomDTO object to ensure it is not null nor its house ID is empty.
      * @param roomDTO  RoomDTO object that contains the house ID.
      * @return  HouseIDVO value-object.
+     * @throws IllegalArgumentException In case RoomDTO is not valid to create a HouseIDVO.
      */
-    public static HouseIDVO createHouseIDVO(RoomDTO roomDTO) throws InstantiationException {
+    public static HouseIDVO createHouseIDVO(RoomDTO roomDTO) {
         if(roomDTO==null || roomDTO.getHouseID()==null || roomDTO.getHouseID().trim().isEmpty()){
-            throw new InstantiationException(ERRORMESSAGE);
+            throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             // Converts String from the DTO into a UUID

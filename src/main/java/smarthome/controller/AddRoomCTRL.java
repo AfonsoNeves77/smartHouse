@@ -43,7 +43,7 @@ public class AddRoomCTRL {
             RoomFloorVO roomFloor = RoomMapper.createRoomFloorVO(roomDTO);
             RoomDimensionsVO roomDimensions = RoomMapper.createRoomDimensionsVO(roomDTO);
             return roomService.addRoom(roomName,roomFloor,roomDimensions);
-        } catch (InstantiationException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

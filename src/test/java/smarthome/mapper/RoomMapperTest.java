@@ -50,7 +50,7 @@ class RoomMapperTest {
      * Test to verify that the RoomNameVO object is created correctly.
      */
     @Test
-    void whenCreateRoomNameVOisCalled_RoomNameVOisRetrieved() throws InstantiationException {
+    void whenCreateRoomNameVOisCalled_RoomNameVOisRetrieved() {
         // Arrange
         String expected = "BedRoom";
 
@@ -63,16 +63,16 @@ class RoomMapperTest {
 
 
     /**
-     * Test to verify that when the RoomDTO object is null, an InstantiationException is
+     * Test to verify that when the RoomDTO object is null, an IllegalArgumentException is
      * thrown when creating a RoomNameVO object.
      */
     @Test
-    void whenCreateRoomNameVOisCalledWithNullEntry_ThrowsInstantiationException() {
+    void whenCreateRoomNameVOisCalledWithNullEntry_ThrowsIllegalArgumentException() {
         // Arrange
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomNameVO(null));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomNameVO(null));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -82,7 +82,7 @@ class RoomMapperTest {
      * Test to verify that the RoomFloorVO object is created correctly.
      */
     @Test
-    void whenCreateRoomFloorVOisCalled_RoomFloorVOisRetrieved() throws InstantiationException {
+    void whenCreateRoomFloorVOisCalled_RoomFloorVOisRetrieved() {
         // Arrange
         int expected = 2;
 
@@ -94,16 +94,16 @@ class RoomMapperTest {
     }
 
     /**
-     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * Test to verify that when the RoomDTO object is null, an IllegalArgumentException is thrown
      * when creating a RoomFloorVO object.
      */
     @Test
-    void whenCreateRoomFloorVOisCalledWithNullEntry_ThrowsInstantiationException() {
+    void whenCreateRoomFloorVOisCalledWithNullEntry_ThrowsIllegalArgumentException() {
         // Arrange
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomFloorVO(null));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomFloorVO(null));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -114,7 +114,7 @@ class RoomMapperTest {
      * Test to verify that the RoomDimensionsVO object is created correctly.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalled_RoomDimensionsVOisRetrieved() throws InstantiationException {
+    void whenCreateRoomDimensionsVOisCalled_RoomDimensionsVOisRetrieved() {
         // Arrange
         double expectedLength = 5.6;
         double expectedWidth = 3.2;
@@ -130,16 +130,16 @@ class RoomMapperTest {
     }
 
     /**
-     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * Test to verify that when the RoomDTO object is null, an IllegalArgumentException is thrown
      * when creating a RoomDimensionsVO object.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithNullEntry_ThrowsInstantiationException() {
+    void whenCreateRoomDimensionsVOisCalledWithNullEntry_ThrowsIllegalArgumentException() {
         // Arrange
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(null));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(null));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -147,11 +147,11 @@ class RoomMapperTest {
 
 
     /**
-     * Test to verify that when the RoomDTO object has invalid values, an InstantiationException is
+     * Test to verify that when the RoomDTO object has invalid values, an IllegalArgumentException is
      * thrown when creating a RoomDimensionsVO object.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithInvalidDTOValues_ThrowsInstantiationException() {
+    void whenCreateRoomDimensionsVOisCalledWithInvalidDTOValues_ThrowsIllegalArgumentException() {
         // Arrange
         String roomID1 = "123e4567-e89b-12d3-a456-426655440000";
         String roomName1 = "BedRoom";
@@ -164,18 +164,18 @@ class RoomMapperTest {
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(room1DTO));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(room1DTO));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
     }
 
     /**
-     * Test to verify that when the RoomDTO object has invalid values, an InstantiationException is
+     * Test to verify that when the RoomDTO object has invalid values, an IllegalArgumentException is
      * thrown when creating a RoomDimensionsVO object.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithInvalidBorderDTOValues_ThrowsInstantiationException() {
+    void whenCreateRoomDimensionsVOisCalledWithInvalidBorderDTOValues_ThrowsIllegalArgumentException(){
         // Arrange
         String roomID1 = "123e4567-e89b-12d3-a456-426655440000";
         String roomName1 = "BedRoom";
@@ -188,7 +188,7 @@ class RoomMapperTest {
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(room1DTO));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(room1DTO));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -198,7 +198,7 @@ class RoomMapperTest {
      * Test to verify that when the RoomDTO object has border values, The object is created
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithBorderDTOValues_ThrowsInstantiationException() throws InstantiationException {
+    void whenCreateRoomDimensionsVOisCalledWithBorderDTOValues_ThenDimensionsVOIsCreated() {
         // Arrange
         String roomID1 = "123e4567-e89b-12d3-a456-426655440000";
         String roomName1 = "BedRoom";
@@ -223,7 +223,7 @@ class RoomMapperTest {
      * Test to verify that the RoomIDVO object is created correctly.
      */
     @Test
-    void whenCreateRoomIDVOisCalled_RoomIDVOisRetrieved() throws InstantiationException {
+    void whenCreateRoomIDVOisCalled_RoomIDVOisRetrieved() {
         // Arrange
         String expected = "123e4567-e89b-12d3-a456-426655440000";
 
@@ -237,16 +237,16 @@ class RoomMapperTest {
 
 
     /**
-     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown
+     * Test to verify that when the RoomDTO object is null, an IllegalArgumentException is thrown
      * when creating a RoomIDVO object.
      */
     @Test
-    void whenCreateRoomIDVOisCalledWithNullEntry_ThrowsInstantiationException() {
+    void whenCreateRoomIDVOisCalledWithNullEntry_ThrowsIllegalArgumentException() {
         // Arrange
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomIDVO(null));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomIDVO(null));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -257,7 +257,7 @@ class RoomMapperTest {
      * Test to verify that the HouseIDVO object is created correctly.
      */
     @Test
-    void whenCreateHouseIDVOisCalled_HouseIDVOisRetrieved() throws InstantiationException {
+    void whenCreateHouseIDVOisCalled_HouseIDVOisRetrieved() {
         // Arrange
         String expected = "00000000-0000-0000-0000-000000000000";
 
@@ -270,16 +270,16 @@ class RoomMapperTest {
 
 
     /**
-     * Test to verify that when the RoomDTO object is null, an InstantiationException is thrown when
+     * Test to verify that when the RoomDTO object is null, an IllegalArgumentException is thrown when
      * creating a HouseIDVO object.
      */
     @Test
-    void whenCreateHouseIDVOisCalledWithNullEntry_ThrowsInstantiationException() {
+    void whenCreateHouseIDVOisCalledWithNullEntry_ThrowsIllegalArgumentException() {
         // Arrange
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception e = assertThrows(InstantiationException.class, () -> RoomMapper.createHouseIDVO(null));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createHouseIDVO(null));
 
         // Assert
         assertEquals(expectedMessage, e.getMessage());
@@ -421,11 +421,11 @@ class RoomMapperTest {
 
 
     /**
-     * Verifies that attempting to create RoomDimensionsVO with all zero dimensions throws an InstantiationException.
+     * Verifies that attempting to create RoomDimensionsVO with all zero dimensions throws an IllegalArgumentException.
      * This test checks the validation logic to ensure zero values for length, and width are considered invalid.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithZeroDimensions_ThrowsInstantiationException() {
+    void whenCreateRoomDimensionsVOisCalledWithZeroDimensions_ThrowsIllegalArgumentException() {
         // Arrange
         String roomID = "123e4567-e89b-12d3-a456-426655440000";
         String roomName = "BedRoom";
@@ -438,7 +438,7 @@ class RoomMapperTest {
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
-        Exception exception = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTOWithZeroDimensions));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTOWithZeroDimensions));
 
         // Assert
         assertEquals(expectedMessage, exception.getMessage());
@@ -446,29 +446,29 @@ class RoomMapperTest {
 
 
     /**
-     * Tests that an InstantiationException is thrown when the room height is negative, indicating invalid dimensions.
+     * Tests that an IllegalArgumentException is thrown when the room height is negative, indicating invalid dimensions.
      */
     @Test
-    void whenHeightIsNegative_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(-1.0, 1.0, 1.0, "Room height is negative but was expected to throw InstantiationException.");
+    void whenHeightIsNegative_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(-1.0, 1.0, 1.0, "Room height is negative but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the room length is zero, ensuring that zero length is treated as invalid.
+     * Tests that an IllegalArgumentException is thrown when the room length is zero, ensuring that zero length is treated as invalid.
      */
     @Test
-    void whenLengthIsZero_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 0.0, 1.0, "Room length is zero but was expected to throw InstantiationException.");
+    void whenLengthIsZero_ThrowsIllegalException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(1.0, 0.0, 1.0, "Room length is zero but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the room width is negative, confirming negative width is handled as invalid.
+     * Tests that an IllegalArgumentException is thrown when the room width is negative, confirming negative width is handled as invalid.
      */
     @Test
-    void whenWidthIsNegative_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 1.0, -1.0, "Room width is negative but was expected to throw InstantiationException.");
+    void whenWidthIsNegative_ThrowsIllegalException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(1.0, 1.0, -1.0, "Room width is negative but was expected to throw IllegalArgumentException.");
     }
 
 
@@ -491,59 +491,59 @@ class RoomMapperTest {
 
 
     /**
-     * Tests that an InstantiationException is thrown when all dimensions are negative, ensuring the method handles multiple invalid inputs correctly.
+     * Tests that an IllegalArgumentException is thrown when all dimensions are negative, ensuring the method handles multiple invalid inputs correctly.
      */
     @Test
-    void whenAllDimensionsAreNegative_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(-1.0, -1.0, -1.0, "All dimensions are negative but was expected to throw InstantiationException.");
+    void whenAllDimensionsAreNegative_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(-1.0, -1.0, -1.0, "All dimensions are negative but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the height is zero and other dimensions are negative, ensuring complex invalid inputs are handled.
+     * Tests that an IllegalArgumentException is thrown when the height is zero and other dimensions are negative, ensuring complex invalid inputs are handled.
      */
     @Test
-    void whenHeightIsZeroAndOthersAreNegative_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(0.0, -1.0, -1.0, "Height is zero and other dimensions negative but was expected to throw InstantiationException.");
+    void whenHeightIsZeroAndOthersAreNegative_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(0.0, -1.0, -1.0, "Height is zero and other dimensions negative but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the height is below zero, to confirm that this boundary condition is correctly identified as invalid.
+     * Tests that an IllegalArgumentException is thrown when the height is below zero, to confirm that this boundary condition is correctly identified as invalid.
      */
     @Test
-    void whenHeightIsExactlyZero_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(-0.1, 1.0, 1.0, "Height is exactly zero but was expected to throw InstantiationException.");
+    void whenHeightIsExactlyZero_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(-0.1, 1.0, 1.0, "Height is exactly zero but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the room length is exactly zero, confirming that this boundary condition is treated as invalid.
+     * Tests that an IllegalArgumentException is thrown when the room length is exactly zero, confirming that this boundary condition is treated as invalid.
      */
     @Test
-    void whenLengthIsJustBelowOne_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 0, 1.0, "Length is just below one but was expected to throw InstantiationException.");
+    void whenLengthIsJustBelowOne_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(1.0, 0, 1.0, "Length is just below one but was expected to throw IllegalArgumentException.");
     }
 
 
     /**
-     * Tests that an InstantiationException is thrown when the room width is exactly zero, ensuring that this boundary condition is handled as invalid.
+     * Tests that an IllegalArgumentException is thrown when the room width is exactly zero, ensuring that this boundary condition is handled as invalid.
      */
     @Test
-    void whenWidthIsJustBelowOne_ThrowsInstantiationException() {
-        assertThrowsInstantiationExceptionForRoomDimensions(1.0, 1.0, 0, "Width is just below one but was expected to throw InstantiationException.");
+    void whenWidthIsJustBelowOne_ThrowsIllegalArgumentException() {
+        assertThrowsIllegalArgumentExceptionForRoomDimensions(1.0, 1.0, 0, "Width is just below one but was expected to throw IllegalArgumentException.");
     }
 
     /**
-     * Helper method to assert that an InstantiationException is thrown for given room dimensions, aiding in code reuse across multiple tests.
+     * Helper method to assert that an IllegalArgumentException is thrown for given room dimensions, aiding in code reuse across multiple tests.
      * @param height Room height to test.
      * @param length Room length to test.
      * @param width Room width to test.
      * @param message Error message expected when an exception is thrown.
      */
-    private void assertThrowsInstantiationExceptionForRoomDimensions(double height, double length, double width, String message) {
+    private void assertThrowsIllegalArgumentExceptionForRoomDimensions(double height, double length, double width, String message) {
         RoomDTO roomDTO = new RoomDTO("id", "name", 2, height, length, width, "houseID");
-        Exception exception = assertThrows(InstantiationException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTO));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTO));
         assertEquals(ERRORMESSAGE, exception.getMessage(), message);
     }
 

@@ -43,7 +43,7 @@ public class AddDeviceToRoomCTRL {
             DeviceNameVO deviceName = DeviceMapper.createDeviceName(deviceDTO);
             DeviceModelVO model = DeviceMapper.createDeviceModel(deviceDTO);
             return this.deviceService.addDevice(deviceName,model,roomIDVO);
-        } catch (IllegalArgumentException | InstantiationException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

@@ -43,7 +43,7 @@ public class GetListOfDevicesCTRL {
             RoomIDVO roomIDVO = RoomMapper.createRoomIDVO(roomDTO);
             List<Device> deviceList = deviceService.getListOfDevicesInARoom(roomIDVO);
             return DeviceMapper.domainToDTO(deviceList);
-        } catch (IllegalArgumentException | InstantiationException e){
+        } catch (IllegalArgumentException e){
             return new ArrayList<>();
         }
     }

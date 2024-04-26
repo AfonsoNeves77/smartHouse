@@ -294,8 +294,6 @@ class LogTest {
 
         // Assert
         assertEquals(expectedTimeString, resultTimeString);
-        System.out.println(expectedTimeString);
-        System.out.println(resultTimeString);
     }
 
     /**
