@@ -182,7 +182,7 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
-        String expected = "Invalid DTO";
+        String expected = "Invalid TimeConfigDTO";
 
         // Act
         String result = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, null);

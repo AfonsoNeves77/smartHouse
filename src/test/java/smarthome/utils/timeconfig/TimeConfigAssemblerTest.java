@@ -20,7 +20,7 @@ class TimeConfigAssemblerTest {
     @Test
     void whenDTONull_throwsIllegalArgumentException(){
         // Arrange
-        String expected = "Invalid DTO";
+        String expected = "Invalid TimeConfigDTO";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
