@@ -2,7 +2,7 @@
 
 title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.0
 
-note "<b>Only methods related to 'get maximum instantaneous temperature to \n<b>room' difference in a given period use case are represented" as N1
+note "<b>Only methods related to 'get maximum instantaneous temperature difference' in a given period use case are represented" as N1
 
 skinparam linetype ortho
 
@@ -14,7 +14,7 @@ GetMaxInstantaneousTemperatureDifferenceCTRL ..> TimeConfigMapper
     TimeConfigMapper ..> TimeConfigDTO
     TimeConfigMapper -- TimeConfig : <create> >
 
-GetMaxInstantaneousTemperatureDifferenceCTRL ..> LogServiceImpl
+GetMaxInstantaneousTemperatureDifferenceCTRL ..> LogService
     LogServiceImpl ..|> LogService
     LogServiceImpl ..> TimeConfig
     LogServiceImpl ..> LogRepository
@@ -23,7 +23,7 @@ LogRepository --|> Repository
 LogRepositoryJPA .up.|> LogRepository
     SensorValueFactoryImpl ..|> SensorValueFactory
     LogRepositoryJPA ..> EntityManagerFactory
-    LogFactoryImpl ..|> LogFactory
+    LogFactoryImpl .up.|> LogFactory
     LogRepositoryJPA ..> LogAssembler
 
 
@@ -33,8 +33,8 @@ LogRepositorySpringData .up.|> LogRepository
 
 ILogRepositorySpringData --|> JpaRepository
 
-LogAssembler ..> LogFactoryImpl
-LogAssembler ..> SensorValueFactoryImpl
+LogAssembler ..> LogFactory
+LogAssembler ..> SensorValueFactory
 TemperatureValue ..|> SensorValueObject
 SensorValueFactoryImpl -- TemperatureValue : <create> >
 LogFactoryImpl -- Log : <create> >
@@ -76,13 +76,14 @@ interface LogRepository {
     + isPresent(logID : LogIDVO) : boolean
 
     + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : String, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime)
+    +getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
 }
 
 class LogRepositoryJPA{
     + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
 
     + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : SensorTypeIDVO, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime) : Iterable<Log>
-
+    +getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
     - getDataModelFromId(entityManager : EntityManager, logId : LogIDVO) : Optional<LogDataModel>
 }
 
@@ -91,7 +92,8 @@ class LogRepositorySpringData{
     - logFactory : LogFactory
     - sensorValueFactory : SensorValueFactory
 
-    + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, \n logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
+    + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
+    +getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
 }
 
 
@@ -135,7 +137,8 @@ class LogServiceImpl {
 
     + LogService(logRepository : LogRepository)
 
-    + computeMaxInstantaneousTemperature(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
+    +findReadingsFromDeviceInATimePeriod(deviceID : DeviceIDVO, timeConfig : TimeConfig) : List<Log>
+    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
     }
 
 class GetMaxInstantaneousTemperatureDifferenceCTRL{
@@ -143,7 +146,7 @@ class GetMaxInstantaneousTemperatureDifferenceCTRL{
 
     + GetMaxInstantaneousTemperatureDifferenceCTRL(logService : LogService)
 
-    + getMaxInstantaneousTemperature(outdoorDeviceDTO : DeviceDTO,\n indoorDeviceDTO : DeviceDTO, timeConfigDTO : TimeConfigDTO) : String
+    + getMaxInstantaneousTemperature(outdoorDeviceDTO : DeviceIDVO,\n indoorDeviceIDVO : DeviceDTO, timeConfigDTO : TimeConfigDTO) : String
 }
 
 class DeviceMapper{
@@ -165,6 +168,24 @@ class DeviceIDVO {
 
     + DeviceIDVO(identifier : UUID)
 }
+
+class SensorIDVO {
+  - identifier : UUID
+
+    + SensorIDVO(identifier : UUID)
+    }
+
+class SensorTypeIDVO {
+  - identifier : UUID
+
+    + SensorTypeIDVO(sensorType : String)
+    }
+
+class LogIDVO {
+  - identifier : UUID
+
+    + LogIDVO(identifier : UUID)
+    }
 
 
 class TimeConfigMapper{
@@ -239,5 +260,9 @@ interface DomainID {
 interface DomainEntity {
     + getID() : DomainID
 }
+
+interface ILogRepositorySpringData{
+    +findByDeviceIDAndSensorTypeAndTimeBetween(deviceID : String, sensorType : String, start : LocalDateTime, end : LocalDateTime)
+    }
 
 @enduml

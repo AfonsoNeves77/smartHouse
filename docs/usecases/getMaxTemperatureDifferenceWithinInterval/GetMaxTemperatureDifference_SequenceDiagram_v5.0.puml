@@ -33,20 +33,18 @@ activate LS
 LS -> TC : initialDateTime = getInitialDateTime()
 activate TC
 LS -> TC : finalDateTime = getFinalDateTime()
-LS -> TC : definedDelta = getDelta()
 |||
 deactivate TC
-LS -> LR : outdoorDeviceLog = getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
+LS -> LR : outdoorDeviceLog = getDeviceTemperatureLogs(outdoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
 activate LR
 deactivate LR
 
-LS -> LR : indoorDeviceLog = getDeviceLogBySensorTypeAndTimePeriod(indoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
+LS -> LR : indoorDeviceLog = getDeviceTemperatureLogs(indoorDeviceID,\nsensorTypeID, initialDateTime, finalDateTime)
 activate LR
 deactivate LR
+LS ->LS : configureDelta(timeConfig)
 |||
-LS -> LS : maxTemperature = computeMaxInstantaneousTemperature(outdoorDeviceLog,\nindoorDeviceLog, definedDelta)
-activate LS
-deactivate LS
+
 
 LS --> C : maxTemperature
 deactivate LS
