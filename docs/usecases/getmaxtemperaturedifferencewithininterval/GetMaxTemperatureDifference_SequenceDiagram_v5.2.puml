@@ -3,7 +3,7 @@
 skinparam ParticipantPadding 50
 
 autonumber
-title Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.0 - Main Success Scenario
+title Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.2 - Main Success Scenario
 
 participant ":GetMaxInstantaneousTemperatureDifferenceCTRL" as C
 participant ":DeviceMapper" as DM

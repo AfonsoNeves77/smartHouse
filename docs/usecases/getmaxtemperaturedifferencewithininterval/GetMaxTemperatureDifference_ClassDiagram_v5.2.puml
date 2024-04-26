@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.0
+title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.2
 
 note "<b>- Only methods related to 'get maximum instantaneous temperature \n<b>difference in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted." as N1
 
