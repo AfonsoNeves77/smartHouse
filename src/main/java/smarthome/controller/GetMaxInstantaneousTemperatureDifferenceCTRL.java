@@ -34,16 +34,14 @@ public class GetMaxInstantaneousTemperatureDifferenceCTRL {
      * @param outdoorDeviceDTO the outdoor device.
      * @param indoorDeviceDTO the indoor device.
      * @param timeConfigDTO the time configuration.
-     * @return the maximum instantaneous temperature difference between the two devices.
+     * @return the maximum instantaneous temperature difference between the two devices, throws an IllegalArgumentException
+     * if any of the parameters are null, or if there are errors in the outdoor or indoor device IDs, or in the time
+     * configuration.
      */
     public String getMaxInstantaneousTemperature(DeviceDTO outdoorDeviceDTO, DeviceDTO indoorDeviceDTO, TimeConfigDTO timeConfigDTO) {
-        try {
-            DeviceIDVO outdoorDeviceID = DeviceMapper.createDeviceID(outdoorDeviceDTO);
-            DeviceIDVO indoorDeviceID = DeviceMapper.createDeviceID(indoorDeviceDTO);
-            TimeConfig timeConfig = TimeConfigAssembler.createTimeConfig(timeConfigDTO);
-            return logService.getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, timeConfig);
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
-        }
+        DeviceIDVO outdoorDeviceID = DeviceMapper.createDeviceID(outdoorDeviceDTO);
+        DeviceIDVO indoorDeviceID = DeviceMapper.createDeviceID(indoorDeviceDTO);
+        TimeConfig timeConfig = TimeConfigAssembler.createTimeConfig(timeConfigDTO);
+        return logService.getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, timeConfig);
     }
 }

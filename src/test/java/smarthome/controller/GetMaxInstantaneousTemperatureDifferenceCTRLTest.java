@@ -32,14 +32,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
-
-
     /**
      * Test for the constructor of GetMaxInstantaneousTemperatureDifferenceCTRL.
      * When the service is null it throws an IllegalArgumentException.
      */
     @Test
-    void whenConstructorGetsNullService_throwsInstantiationException() {
+    void whenConstructorGetsNullService_throwsIllegalArgumentException() {
         //Arrange
         String expected = "Invalid service";
 
@@ -74,10 +72,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the outdoor device DTO is null it returns an error message.
+     * When the outdoor device DTO is null it throws an IllegalArgumentException.
      */
     @Test
-    void whenOutdoorDeviceDTOIsNull_returnsErrorMessage() {
+    void whenOutdoorDeviceDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -103,9 +101,11 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "DeviceDTO cannot be null.";
-
         // Act
-        String result = ctrl.getMaxInstantaneousTemperature(null, deviceInDTO, timeConfigDTO);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(null, deviceInDTO, timeConfigDTO));
+
+        String result = exception.getMessage();
 
         // Assert
         assertEquals(expected, result);
@@ -114,10 +114,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the indoor device DTO is null it returns an error message.
+     * When the indoor device DTO is null it throws an IllegalArgumentException.
      */
     @Test
-    void whenIndoorDeviceDTOIsNull_returnsErrorMessage() {
+    void whenIndoorDeviceDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -143,9 +143,11 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "DeviceDTO cannot be null.";
-
         // Act
-        String result = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, null, timeConfigDTO);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, null, timeConfigDTO));
+
+        String result = exception.getMessage();
 
         // Assert
         assertEquals(expected, result);
@@ -154,10 +156,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the time configuration DTO is null it returns an error message.
+     * When the time configuration DTO is null it throws an IllegalArgumentException.
      */
     @Test
-    void whenTimeConfigDTOIsNull_returnsErrorMessage() {
+    void whenTimeConfigDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -183,9 +185,11 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Invalid TimeConfigDTO";
-
         // Act
-        String result = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, null);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, null));
+
+        String result = exception.getMessage();
 
         // Assert
         assertEquals(expected, result);
@@ -193,10 +197,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the time configuration DTO has null parameters it returns an error message.
+     * When the time configuration DTO has null parameters it throws an IllegalArgumentException.
      */
     @Test
-    void whenGivenNullParamsToTimeConfigDTO_returnsErrorMessage() {
+    void whenGivenNullParamsToTimeConfigDTO_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -233,13 +237,23 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Invalid timestamps";
-
         // Act
-        String result1 = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO1);
-        String result2 = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO2);
-        String result3 = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO3);
-        String result4 = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO4);
-        String result5 = ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO5);
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO1));
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO2));
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO3));
+        Exception exception4 = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO4));
+        Exception exception5 = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO5));
+
+        String result1 = exception1.getMessage();
+        String result2 = exception2.getMessage();
+        String result3 = exception3.getMessage();
+        String result4 = exception4.getMessage();
+        String result5 = exception5.getMessage();
 
         // Assert
         assertEquals(expected, result1);
@@ -251,10 +265,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the outside device is inside the house (=has height greater than zero) it returns an error message.
+     * When the outside device is inside the house (=has height greater than zero) it throws an IllegalArgumentException.
      */
     @Test
-    void whenGetMaxInstantaneousTempDifferenceIsCalled_IfOutsideDeviceIsInside_ReturnsErrorMessage() {
+    void whenGetMaxInstantaneousTempDifferenceIsCalled_IfOutsideDeviceIsInside_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -324,21 +338,23 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Invalid Device Location";
-
         // Act
-        String result1 = ctrl.getMaxInstantaneousTemperature(outDeviceDTO, intDeviceDTO, timeConfigDTO);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(outDeviceDTO, intDeviceDTO, timeConfigDTO));
+
+        String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected, result1);
+        assertEquals(expected, result);
 
     }
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the inside device is outside the house (=has height equal to zero) it returns an error message.
+     * When the inside device is outside the house (=has height equal to zero) it throws an IllegalArgumentException.
      */
     @Test
-    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifInsideDeviceIsOutside_returnsErrorMessage() {
+    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifInsideDeviceIsOutside_throwsIllegalArgumentException() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -408,22 +424,25 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Invalid Device Location";
-
         // Act
-        String result1 = ctrl.getMaxInstantaneousTemperature(outDeviceDTO, intDeviceDTO, timeConfigDTO);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ctrl.getMaxInstantaneousTemperature(outDeviceDTO, intDeviceDTO, timeConfigDTO));
+
+        String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected, result1);
+        assertEquals(expected, result);
 
     }
 
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the outside device's logs are not found within the time period given it returns an error message.
+     * When the outside device's logs are not found within the time period given it returns an error message
+     * saying "There are no records available for the given period".
      */
     @Test
-    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoOutsideLogsAreFoundWithinTimePeriodGiven_returnsErrorMessage() {
+    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoOutsideLogsAreFoundWithinTimePeriodGiven_returnsMessage() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -511,10 +530,11 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the inside device's logs are not found within the time period given it returns an error message.
+     * When the inside device's logs are not found within the time period given it returns an error message,
+     * saying "There are no records available for the given period".
      */
     @Test
-    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoInsideLogsAreFoundWithinTimePeriodGiven_returnsErrorMessage() {
+    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoInsideLogsAreFoundWithinTimePeriodGiven_returnsMessage() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -617,10 +637,10 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     /**
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
      * When both device's logs are found within the time period given but the delta span does not include
-     * readings it returns an error message.
+     * readings it returns an error message saying "There are no records available for the given period".
      */
     @Test
-    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifMatchingInstantLogsAreFoundWithinTimePeriodGivenButDeltaSpanDoesNotAllowForMatchingReadings_returnsErrorMessage() {
+    void whenGetMaxInstantaneousTempDifferenceIsCalled_ifLogsAreFoundWithinTimePeriodGivenButDeltaSpanDoesNotAllowForMatchingReadings_returnsMessage() {
         // Arrange
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -734,6 +754,7 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
      * Test for getMaxInstantaneousTemperature method of GetMaxInstantaneousTemperatureDifferenceCTRL.
      * When both device's logs are found within the time period given and the delta span allows for matching readings,
      * it returns the maximum instantaneous temperature difference and the corresponding timestamp.
+     * The return message should be "The maximum instantaneous temperature difference is (X) Cº at (HH:MM:SS)".
      */
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifMatchingInstantLogsAreFoundWithinTimePeriodGiven_returnsSuccessMessage(){
