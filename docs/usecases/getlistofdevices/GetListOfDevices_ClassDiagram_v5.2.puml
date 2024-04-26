@@ -1,5 +1,5 @@
 @startuml
-        title <size: 30> Use Case: Get List of Devices v5.0
+        title <size: 30> Use Case: Get List of Devices v5.2
 
 note "<b>Only methods related to the ´get list of devices' are represented" as N1
  skinparam linetype ortho
