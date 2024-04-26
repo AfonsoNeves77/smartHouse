@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Use Case: Define Location v5.1
+title <size: 30> Use Case: Define Location v5.3
 
 note "<b>Only methods related to 'define \n<b>location' use case are represented" as N1
 
@@ -15,7 +15,7 @@ class House {
     + configureLocation(location : LocationVO) : boolean
 }
 
-interface DomainEntity {
+interface AggregateRoot {
     + getId() : DomainID
 }
 
@@ -164,7 +164,7 @@ HouseRepositorySpringData --up.|> HouseRepository
 HouseRepositorySpringData ..> IHouseRepositorySpringData
 
 HouseRepository -down.|> Repository
-House -up.|> DomainEntity
+House -up.|> AggregateRoot
 
 House --up-o HouseRepository
 

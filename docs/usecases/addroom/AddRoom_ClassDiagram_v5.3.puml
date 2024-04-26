@@ -25,6 +25,10 @@ interface RoomService{
     + findAll() : List<Room>
 }
 
+interface AggregateRoot{
+    + getID() : DomainID
+}
+
 class RoomMapper {
     + createRoomNameVO(roomDTO : RoomDTO) : RoomNameVO
     + createRoomFloorVO(roomDTO : RoomDTO) : RoomFloorVO
@@ -191,6 +195,7 @@ Room "1" *--down "1" RoomIDVO
 Room "1" *--right "1" RoomFloorVO
 Room "1" *--down "1" RoomDimensionsVO
 Room "*" *--up "1" HouseIDVO
+Room ..|> AggregateRoot
 RoomDimensionsVO "1" *-- "1" RoomLengthVO
 RoomDimensionsVO "1" *-- "1" RoomWidthVO
 RoomDimensionsVO "1" *-- "1" RoomHeightVO

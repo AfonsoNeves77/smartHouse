@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Use Case: Add Sensor to Device v5.2
+title <size: 30> Use Case: Add Sensor to Device v5.3
 note "<b>Only methods related to\n<b>'add sensor to device' use case are represented" as N1
 skinparam linetype ortho
 
@@ -17,6 +17,7 @@ skinparam linetype ortho
        SensorFactoryImpl -down- Sensor : creates >
        DeviceMapper ..> DeviceDTO
        DeviceMapper -- DeviceIDVO : creates >
+       Device ..|> AggregateRoot
        SensorMapper .right.> SensorDTO
        SensorMapper -- SensorNameVO : creates >
        SensorTypeMapper ..> SensorTypeDTO
@@ -38,6 +39,7 @@ skinparam linetype ortho
        SensorRepositoryJPA .up.> SensorAssembler
        SensorRepositorySpringData -up- SensorDataModel : creates >
        SensorRepositorySpringData .up.> ISensorRepositorySpringData
+       Sensor -right-|> AggregateRoot
 
 
     class AddSensorToDeviceCTRL{
@@ -201,6 +203,10 @@ skinparam linetype ortho
     }
 
     interface ISensorRepositorySpringData{}
+
+    interface AggregateRoot{
+        + getID(): DomainID
+    }
 
 
 @enduml

@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Use case Deactivate Device - v5.0
+title <size: 30> Use case Deactivate Device - v5.3
 note "<b>Only methods related to\n<b>use case Deactivate Device are represented" as N1
 skinparam linetype ortho
 
@@ -59,7 +59,22 @@ class DeviceRepositoryJPA {
     - isNull (object : Object) : boolean
     - getDeviceDataModelFromDeviceId (em : EntityManager, id : DeviceIDVO) : Optional<DeviceDataModel>
 }
+interface IDeviceRepositorySpringData {
 
+}
+
+class DeviceRepositorySpringData {
+    - deviceFactory : DeviceFactory
+    - deviceRepository : IDeviceRepositorySpringData
+    + DeviceRepositorySpringData(deviceFactory : DeviceFactory,deviceRepository : IDeviceRepositorySpringData)
+    + save(ent : Device) : boolean
+    + findAll() : Iterable<Device>
+    + findById(id : DeviceIDVO) : Device
+    + findByRoomID (roomID : RoomIDVO) : List<Device>
+    + isPresent(id : DeviceIDVO) : boolean
+    + update (device : Device) : boolean
+    - isNull (object : Object) : boolean
+}
 
 class DeviceDataModel {
     - deviceID : String
@@ -110,7 +125,7 @@ class DeviceStatusVO {
 
 }
 
-interface DomainEntity {
+interface AggregateRoot {
      + getId() : DomainID
 }
 
@@ -141,9 +156,11 @@ DeviceRepository <|.. DeviceRepositoryMem
 DeviceRepository <|.. DeviceRepositoryJPA
 DeviceRepositoryJPA ..> DeviceAssembler
 DeviceRepositoryJPA -> DeviceDataModel : create >
+DeviceRepositorySpringData --.|> DeviceRepository
+DeviceRepositorySpringData ..> IDeviceRepositorySpringData
+DeviceRepositorySpringData -> DeviceDataModel : create >
 
-
-Device ..up|> DomainEntity
+Device ..up|> AggregateRoot
 
 Device *-- DeviceIDVO
 Device *-- DeviceStatusVO

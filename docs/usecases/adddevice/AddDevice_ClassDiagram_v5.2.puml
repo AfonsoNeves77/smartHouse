@@ -1,6 +1,6 @@
 @startuml
 
-title <size: 30> Use Case: Add Device to Room v5.0
+title <size: 30> Use Case: Add Device to Room v5.3
 
 note "<b>Only methods related to 'add device to \n<b>room' use case are represented" as N1
 
@@ -206,7 +206,7 @@ interface Repository<T> {
 '}
 
 
-interface DomainEntity {
+interface AggregateRoot {
     + getID() : DomainID
 }
 
@@ -249,8 +249,8 @@ DeviceRepositoryJPA ..> DeviceAssembler
 DeviceRepositoryJPA -> DeviceDataModel : create >
 DeviceRepositorySpringData -> DeviceDataModel : create >
 
-Room ...|> DomainEntity
-Device ...|> DomainEntity
+Room ...|> AggregateRoot
+Device ...|> AggregateRoot
 'DomainID <|.. RoomIDVO
 'DomainID <|.up. DeviceIDVO
 
