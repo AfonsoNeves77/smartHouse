@@ -19,7 +19,7 @@ public class LogServiceImpl implements LogService {
     private final LogRepository logRepository;
     private final DeviceRepository deviceRepository;
     private final RoomRepository roomRepository;
-    private final int DELTA = 5; // Default time delta in minutes for comparisons of instant matches on readings.
+    private static final int DELTA = 5; // Default time delta in minutes for comparisons of instant matches on readings.
 
     /**
      * Constructor for LogServiceImpl.
@@ -132,6 +132,11 @@ public class LogServiceImpl implements LogService {
         Iterable<Log> outdoorDeviceLog = logRepository.getDeviceTemperatureLogs(outdoorDevice, sensorTypeID, initialDateTime, finalDateTime);
         Iterable<Log> indoorDeviceLog = logRepository.getDeviceTemperatureLogs(indoorDevice, sensorTypeID, initialDateTime, finalDateTime);
 
+        return retrieveMaxTempDiffInAnInstant(outdoorDeviceLog, indoorDeviceLog, delta);
+    }
+
+
+    private String retrieveMaxTempDiffInAnInstant(Iterable<Log> outdoorDeviceLog, Iterable<Log> indoorDeviceLog, int delta){
         // Defines the two variables needed: Maximum temperature difference and the Instant where it occurred.
         double maxTempDiff = 0;
         String instantTime = null;
@@ -161,15 +166,14 @@ public class LogServiceImpl implements LogService {
         // In case the variable has not been altered (is still null) it means there were no matches that were
         // in the same instant (instant is defined by the delta)
         // In case the variable has a new value, it means that there were matches found that are in the same instant
-        // and retrieves the biggest temperature difference between all the instantaneous reading matches, as well
-        // as the instant time where that difference occurred.
+        // and retrieves the biggest temperature difference between all the instantaneous readings, as well
+        // as the instant time when that difference occurred.
         if(instantTime==null){
             return "Readings were found within the provided time span, but with no matches within the delta provided";
         } else{
             return "The Maximum Temperature Difference within the selected Period was of " +maxTempDiff+ " Cº which happened at " +instantTime;
         }
     }
-
     /**
      * Checks if the outdoor device is located in the exterior of the House.
      * The method checks the room where the device is located and checks if the room's height is 0, which means
@@ -210,7 +214,7 @@ public class LogServiceImpl implements LogService {
     private int configureDelta(TimeConfig timeConfig) {
         int delta = timeConfig.getDeltaMin();
         if (delta <= 0) {
-            delta = this.DELTA;
+            delta = DELTA;
         }
         return delta;
     }
