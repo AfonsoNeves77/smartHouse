@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> SunsetSensor Class Diagram v5.0
+title <size: 30> SunsetSensor Class Diagram v5.1
 
 note "<b>Only methods related to Sunset \n<b> Sensor are represented" as 1
 
@@ -58,7 +58,7 @@ class SunTimeCalculator {
     + computeSunset(date : String, gpsCoordinates : String) : ZonedDateTime
 }
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -78,7 +78,7 @@ SunTimeValue -up..|> ValueObject
 SunsetSensor -left..> SunTimeValue : <<creates>>
 SunsetSensor -right..> SunTimeCalculator : <<uses>>
 SunsetSensor -up..|> Sensor
-Sensor -right--|>DomainEntity
+Sensor -right--|>AggregateRoot
 SunTimeCalculator -up.|> SunTimesServices
 
 @enduml

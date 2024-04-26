@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> WindSensor Class Diagram v5.0
+title <size: 30> WindSensor Class Diagram v5.1
 
 note "<b>Only methods related to Wind \n<b> Sensor are represented" as 1
 
@@ -60,7 +60,7 @@ class WindValue {
 }
 
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -83,7 +83,7 @@ SensorNameVO -left..|> ValueObject
 WindValue -up..|> ValueObject
 WindSensor -left..> WindValue
 WindSensor -up..|> Sensor
-Sensor -right--|>DomainEntity
+Sensor -right--|>AggregateRoot
 WindSensor ..> SimHardware
 SimHardware -down.|> ExternalService
 

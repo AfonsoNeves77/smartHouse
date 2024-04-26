@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> TemperatureSensor Class Diagram v5.0
+title <size: 30> TemperatureSensor Class Diagram v5.1
 
 skinparam linetype ortho
 
@@ -7,7 +7,7 @@ interface Sensor {
 
 }
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -97,6 +97,6 @@ DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
 ValueObject <|.. TemperatureValue
-Sensor --|>DomainEntity
+Sensor --|>AggregateRoot
 
 @enduml

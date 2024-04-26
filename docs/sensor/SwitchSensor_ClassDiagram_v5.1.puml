@@ -1,5 +1,9 @@
 @startuml
-title <size: 30> Switch Sensor Class Diagram
+title <size: 30> Switch Sensor Class Diagram v5.1
+
+note "<b>Only methods related to \n<b>HumiditySensor are represented" as 1
+
+skinparam linetype ortho
 
 interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO;
@@ -53,18 +57,30 @@ class SimHardware{
     + getValue() : String
 }
 
-interface SensorExternalService {
+interface SensorExternalServices {
 +getValue() : String
 }
 
+interface AggregateRoot {
+    +getID() : DomainID
+}
+
+Sensor <|..left SwitchSensor
+SimHardware <.. SwitchSensor
+
+SensorNameVO <.. SwitchSensor
+SensorExternalServices <|..down SimHardware
+SensorIDVO ..> SwitchSensor
+SwitchValue <..right SwitchSensor
+SensorTypeIDVO <.. SwitchSensor
+DeviceIDVO <.. SwitchSensor
+
+ValueObject <|.. SensorNameVO
+DomainID  <|.. SensorIDVO
+DomainID  <|.. SensorTypeIDVO
+DomainID  <|.. DeviceIDVO
+
 ValueObject <|.. SwitchValue
-Sensor <|.. SwitchSensor
-SwitchSensor .right.> SwitchValue
-SwitchSensor .left.> SimHardware
-SwitchSensor .down.> SensorNameVO
-SwitchSensor .down.> DeviceIDVO
-SwitchSensor .down.> SensorTypeIDVO
-SwitchSensor .down.> SensorIDVO
-SimHardware ..|> SensorExternalService
+Sensor -up-|> AggregateRoot
 
 @enduml
