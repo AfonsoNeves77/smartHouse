@@ -1,6 +1,6 @@
 package smarthome.domain;
 
-public interface DomainEntity {
+public interface AggregateRoot {
 
     DomainID getId();
 }

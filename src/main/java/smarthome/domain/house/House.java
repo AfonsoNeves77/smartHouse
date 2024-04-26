@@ -1,12 +1,12 @@
 package smarthome.domain.house;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.housevo.LocationVO;
 
 import java.util.UUID;
 
-public class House  implements DomainEntity {
+public class House implements AggregateRoot {
     private final HouseIDVO houseID;
     private LocationVO location;
 

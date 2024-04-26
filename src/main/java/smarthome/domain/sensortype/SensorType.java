@@ -1,6 +1,6 @@
 package smarthome.domain.sensortype;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.vo.sensortype.UnitVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
@@ -10,7 +10,7 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
  * The constructor of this class validates the parameters and throws an IllegalArgumentException
  * if any of them are null.
  */
-public class SensorType implements DomainEntity {
+public class SensorType implements AggregateRoot {
 
     private final SensorTypeIDVO sensorTypeID;
 

@@ -1,9 +1,9 @@
 package smarthome.persistence;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.DomainID;
 
-public interface Repository <ID extends DomainID, T extends DomainEntity>{
+public interface Repository<ID extends DomainID, T extends AggregateRoot> {
 
     /**
      * Saves a domainEntity unto the repository implementation

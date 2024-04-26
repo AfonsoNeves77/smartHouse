@@ -1,6 +1,6 @@
 package smarthome.domain.device;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
@@ -9,7 +9,7 @@ import smarthome.domain.vo.roomvo.RoomIDVO;
 
 import java.util.UUID;
 
-public class Device implements DomainEntity {
+public class Device implements AggregateRoot {
 
         private DeviceNameVO deviceName;
         private final DeviceModelVO deviceModel;

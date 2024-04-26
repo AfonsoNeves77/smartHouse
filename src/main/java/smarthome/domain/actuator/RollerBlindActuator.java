@@ -1,6 +1,6 @@
 package smarthome.domain.actuator;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
@@ -9,7 +9,7 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
 
-public class RollerBlindActuator implements DomainEntity, Actuator{
+public class RollerBlindActuator implements AggregateRoot, Actuator {
 
     private final ActuatorIDVO actuatorID;
     private final ActuatorTypeIDVO actuatorTypeID;

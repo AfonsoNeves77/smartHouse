@@ -1,6 +1,6 @@
 package smarthome.domain.room;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * if any of them are null. Additionally, the constructor instantiates a RoomIDVO object
  * for the room's unique identifier.
  */
-public class Room implements DomainEntity {
+public class Room implements AggregateRoot {
 
     private final RoomIDVO roomID;
     private RoomNameVO roomName;

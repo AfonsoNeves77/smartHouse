@@ -1,6 +1,6 @@
 package smarthome.domain.log;
 
-import smarthome.domain.DomainEntity;
+import smarthome.domain.AggregateRoot;
 import smarthome.domain.DomainID;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-public class Log implements DomainEntity {
+public class Log implements AggregateRoot {
     private final LogIDVO logID;
     private final LocalDateTime time;
     private final SensorValueObject<?> reading;
