@@ -1,0 +1,281 @@
+@startuml
+
+title <size: 30> Use Case - Get a List of All Measurements of a Device in a Room in a Given Period v5.0
+
+note "<b>- Only methods related to 'get a list of all measurements \n<b>of a device in a room in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted." as N1
+
+skinparam linetype ortho
+
+GetLogByDeviceIDAndTimeFrameCTRL ..> DeviceMapper
+    DeviceMapper ..> DeviceDTO
+    DeviceMapper -- DeviceIDVO : <create>
+
+GetLogByDeviceIDAndTimeFrameCTRL ..> TimeConfigAssembler
+    TimeConfigAssembler ..> TimeConfigDTO
+    TimeConfigAssembler -- TimeConfig : <create> >
+
+GetLogByDeviceIDAndTimeFrameCTRL ..> LogService
+    LogServiceImpl ..|> LogService
+    LogServiceImpl ..> TimeConfig
+    LogServiceImpl ..> LogRepository
+    LogServiceImpl ..> RoomRepository
+    LogServiceImpl ..> DeviceRepository
+    RoomRepository ..|> Repository
+    DeviceRepository ..|> Repository
+
+GetLogByDeviceIDAndTimeFrameCTRL ..> LogMapper
+LogMapper -- LogDTO : <create>
+LogMapper ..> Log
+
+LogRepository .up.|> Repository
+LogRepositoryJPA .up.|> LogRepository
+    SensorValueFactoryImpl ..|> SensorValueFactory
+    LogRepositoryJPA ..> EntityManagerFactory
+    LogFactoryImpl .up.|> LogFactory
+    LogRepositoryJPA ..> LogAssembler
+
+
+LogRepositorySpringData .up.|> LogRepository
+    LogRepositorySpringData ..> ILogRepositorySpringData
+    LogRepositorySpringData ..> LogAssembler
+
+ILogRepositorySpringData ..|> JpaRepository
+
+LogAssembler ..> LogFactory
+LogAssembler ..> SensorValueFactory
+SensorValueFactoryImpl -- "*" SensorValueObject : <create> >
+LogFactoryImpl -- Log : <create> >
+LogAssembler ..> LogDataModel
+
+Log "1" -- "1" LogIDVO
+Log  -left- "1" SensorValueObject :  > <has>
+Log "1" -- "1" SensorIDVO
+Log "1" -- "1" DeviceIDVO
+Log "1" -- "1" SensorTypeIDVO
+
+Log .right.|> AggregateRoot
+
+DomainID <|.up. DeviceIDVO
+DomainID <|.up. LogIDVO
+DomainID <|.up. SensorIDVO
+DomainID <|.up. SensorTypeIDVO
+ValueObject <|.up. SensorValueObject
+
+interface JpaRepository<T>
+
+interface EntityManagerFactory
+
+interface Repository<T> {
+    + save(entity : T) : boolean
+    + findAll() : Iterable<T>
+    + findByID(ID : DomainID) : T
+    + isPresent(ID : DomainID) : boolean
+}
+
+interface RoomRepository
+interface DeviceRepository
+
+interface LogRepository {
+    + save(log : Log) : boolean
+    + findAll() : Iterable<Log>
+    + findByID(id : LogIDVO) : Log
+    + isPresent(logID : LogIDVO) : boolean
+
+    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : String, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime)
+
+    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
+}
+
+class LogRepositoryJPA{
+    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
+
+    - getDataModelFromId(entityManager : EntityManager, logId : LogIDVO) : Optional<LogDataModel>
+}
+
+class LogRepositorySpringData{
+    - iLogRepositorySpringData : ILogRepositorySpringData
+    - logFactory : LogFactory
+    - sensorValueFactory : SensorValueFactory
+
+    + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
+}
+
+
+interface LogFactory{
+    + createLog(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+
+    + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+}
+
+class LogFactoryImpl
+
+interface SensorValueFactory{
+    + createSensorValue(reading : String, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
+
+    + createSensorValue(reading : ZonedDateTime, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
+}
+
+class SensorValueFactoryImpl{
+    - configuration : Configuration
+    + SensorValueFactoryImpl(path : String)
+    + createSunValues(reading : ZonedDateTime, valuePath : String) : SensorValueObject<?>
+
+    - isTypePermitted(type : String) : boolean
+}
+
+
+interface LogService {
+    + findReadingsFromDeviceInATimePeriod(deviceID : DeviceIDVO, timeConfig : TimeConfig) : List<Log>
+    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
+}
+
+class LogServiceImpl {
+    - logRepository : LogRepository
+    - deviceRepository : DeviceRepository
+    - roomRepository : RoomRepository
+
+    + LogServiceImpl(logRepository : LogRepository,\n deviceRepository : DeviceRepository, roomRepository : RoomRepository)
+}
+
+class GetLogByDeviceIDAndTimeFrameCTRL{
+    - logService : LogService
+
+    + GetLogByDeviceIDAndTimeFrameCTRL(logService : LogService)
+
+    + getLogByDeviceIDAndTimeFrame(deviceDTO : DeviceIDVO, timeConfigDTO : TimeConfigDTO) : List<LogDTO>
+}
+
+class DeviceMapper{
+    + createDeviceIDVO(deviceDTO : DeviceDTO) : DeviceIDVO
+}
+
+class DeviceDTO{
+    - deviceID : String
+    - deviceName : String
+    - deviceModel : String
+    - deviceStatus : String
+    - roomID : String
+
+    + getDeviceID() : String
+}
+
+class DeviceIDVO {
+    - identifier : UUID
+
+    + DeviceIDVO(identifier : UUID)
+}
+
+class SensorIDVO {
+  - identifier : UUID
+
+    + SensorIDVO(identifier : UUID)
+    }
+
+class SensorTypeIDVO {
+  - identifier : UUID
+
+    + SensorTypeIDVO(sensorType : String)
+    }
+
+class LogIDVO {
+  - identifier : UUID
+
+    + LogIDVO(identifier : UUID)
+    }
+
+class LogMapper{
+    + domainToDTO (log : Log) : LogDTO
+
+    + domainToDTO (logList : List<Log>) : List<LogDTO>
+}
+
+class LogDTO{
+    - logID : String
+    - localDateTime : String
+    - reading : String
+    - sensorID String
+    - deviceID : String
+    - sensorTypeID : String
+}
+
+class TimeConfigAssembler{
+    + createTimeConfig(timeConfigDTO : TimeConfigDTO) : TimeConfig
+}
+
+class TimeConfig{
+    - initialDateTime : LocalDateTime
+    - finalDateTime : LocalDateTime
+    - definedDelta : String
+
+    + TimeConfig(initialDateTime : LocalDateTime, \nfinalDateTime : LocalDateTime)
+}
+
+
+class TimeConfigDTO{
+    - initialTime : String
+    - finalTime : String
+    - initialDate : String
+    - finalDate : String
+    - definedDelta : String
+
+    + TimeConfigDTO(initialTime : String, finalTime : String, \n initialDate : String, finalDate : String)
+}
+
+
+class LogDataModel {
+    - logID : String
+    - time : LocalDateTime
+    - reading : String
+    - sensorID : String
+    - deviceID : String
+    - sensorTypeID : String
+
+    + LogDataModel()
+
+    + LogDataModel(log : Log)
+}
+
+class LogAssembler {
+    + toDomain(logFactory : LogFactory, valueFactory : SensorValueFactory, logDataModel : LogDataModel)
+
+    + toDomain(logFactory : LogFactory, valueFactory : SensorValueFactory, \nlogDataModelList : Iterable<LogDataModel>) : Iterable<Log>
+}
+
+class Log{
+    - logID : LogIDVO
+    - readingTime : LocalDateTime
+    - reading : SensorValueObject<?>
+    - sensorID : SensorIDVO
+    - deviceID : DeviceIDVO
+    - sensorTypeID : SensorTypeIDVO
+
+    + Log(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+
+    + Log(logID : LogIDVO, readingTime : LocalDateTime, reading SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+
+}
+
+interface SensorValueObject<T>
+note left: <b>There are 11 implementations of SensorValueObject interface:\nAverage Power Consumption, Dew Point, Energy Consumption, Humidity, Position,\nPower Consumption, Solar Irradiance, Sun Time, Switch, Temperature and Wind.
+
+interface ValueObject<T>{
+    + T getValue()
+}
+
+
+interface DomainID {
+    + getID() : String
+}
+
+
+interface AggregateRoot {
+    + getID() : DomainID
+}
+
+interface ILogRepositorySpringData{
+    + findByDeviceIDAndTimeBetween(deviceID : String, from : LocalDateTime, to : LocalDateTime)
+
+    + findByDeviceIDAndSensorTypeAndTimeBetween(deviceID : String, sensorType : String, start : LocalDateTime, end : LocalDateTime)
+    }
+
+@enduml
