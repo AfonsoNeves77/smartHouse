@@ -38,10 +38,6 @@ public class GetLogByDeviceIDAndTimeFrameCTRL {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     public List<LogDTO> getLogByDeviceIDAndTimeFrame(DeviceDTO device, TimeConfigDTO time) {
-        if (areParamsNull(device, time)) {
-            throw new IllegalArgumentException("Invalid parameters");
-        }
-
         TimeConfig timeInterval = TimeConfigAssembler.createTimeConfig(time);
         DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(device);
 

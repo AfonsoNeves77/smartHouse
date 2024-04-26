@@ -23,7 +23,7 @@ public class TimeConfigAssembler {
      */
     public static TimeConfig createTimeConfig(TimeConfigDTO timeConfigDTO){
         if (timeConfigDTO == null){
-            throw new IllegalArgumentException("Invalid DTO");
+            throw new IllegalArgumentException("Invalid TimeConfigDTO");
         }
         String iDate = timeConfigDTO.iDate;
         String iTime = timeConfigDTO.iTime;

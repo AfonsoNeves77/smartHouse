@@ -92,7 +92,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         DeviceDTO deviceDTO3 = new DeviceDTO(deviceID3,placeHolder,placeHolder,placeHolder,placeHolder);
         DeviceDTO deviceDTO4 = new DeviceDTO(null,placeHolder,placeHolder,placeHolder,placeHolder);
 
-        String controllerException = "Invalid parameters";
+        String controllerException = "DeviceDTO cannot be null.";
         String mapperException = "Invalid device ID";
 
         //Act
@@ -154,7 +154,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String deviceStatus = "status";
         String roomID = "rid";
         DeviceDTO deviceDTO = new DeviceDTO(deviceID,deviceName,deviceModel,deviceStatus,roomID);
-        String controllerError = "Invalid parameters";
+        String controllerError = "Invalid TimeConfigDTO";
         String timeStampError = "Invalid timestamps";
 
         String iDate = "2024-04-23";
