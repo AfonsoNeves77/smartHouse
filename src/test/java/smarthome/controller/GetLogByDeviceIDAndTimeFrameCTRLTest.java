@@ -10,7 +10,9 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.LogDTO;
+import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
+import smarthome.persistence.RoomRepository;
 import smarthome.service.LogServiceImpl;
 import smarthome.utils.timeconfig.TimeConfigDTO;
 
@@ -67,7 +69,9 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
     void whenGivenInvalidDeviceDTO_thenIllegalArgumentExceptionIsThrown() {
         //Arrange
         LogRepository logRepository = mock(LogRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
         GetLogByDeviceIDAndTimeFrameCTRL getLogByDeviceIDAndTimeFrameCTRL =
                 new GetLogByDeviceIDAndTimeFrameCTRL(logService);
 
@@ -137,7 +141,9 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
     void whenGivenInvalidTimeConfig_thenIllegalArgumentExceptionIsThrown() {
         //Arrange
         LogRepository logRepository = mock(LogRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         GetLogByDeviceIDAndTimeFrameCTRL getLogByDeviceIDAndTimeFrameCTRL =
                 new GetLogByDeviceIDAndTimeFrameCTRL(logService);
@@ -223,7 +229,9 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LocalDateTime finalTimeStamp = LocalDateTime.parse("2024-04-23T18:00");
 
         LogRepository logRepository = mock(LogRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
         when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initalTimeStamp, finalTimeStamp))
                 .thenReturn(new ArrayList<>());
 
@@ -304,7 +312,9 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
 
         // Creating a repository double and stub of findByDevice... method
         LogRepository logRepository = mock(LogRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
         when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initalTimeStamp, finalTimeStamp))
                 .thenReturn(logList);
 
