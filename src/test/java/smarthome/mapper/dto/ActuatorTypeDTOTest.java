@@ -9,6 +9,6 @@ class ActuatorTypeDTOTest {
     void givenType_ThenReturnActuatorTypeDTO() {
         String type = "type";
         ActuatorTypeDTO actuatorTypeDTO = new ActuatorTypeDTO(type);
-        assertEquals(type, actuatorTypeDTO.getActuatorTypeID());
+        assertEquals(type, actuatorTypeDTO.actuatorTypeID());
     }
 }

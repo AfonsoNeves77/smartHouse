@@ -1,24 +1,8 @@
 package smarthome.mapper.dto;
 
-public class ActuatorTypeDTO {
-
-    private String actuatorTypeID;
-
-    /**
-     * Constructor for ActuatorTypeDTO
-     *
-     * @param actuatorTypeID as String
-     */
-    public ActuatorTypeDTO(String actuatorTypeID) {
-        this.actuatorTypeID = actuatorTypeID;
-    }
-
-    /**
-     * Get the actuatorTypeID
-     *
-     * @return actuatorTypeID as String
-     */
-    public String getActuatorTypeID() {
-        return actuatorTypeID;
-    }
+/**
+ * Represents a Data Transfer Object (DTO) for an actuator type.
+ * This DTO is used to transfer actuator type information between different layers of the application.
+ */
+public record ActuatorTypeDTO(String actuatorTypeID) {
 }

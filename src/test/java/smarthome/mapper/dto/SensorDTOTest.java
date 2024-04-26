@@ -22,7 +22,7 @@ class SensorDTOTest {
         SensorDTO dto = new SensorDTO(sensorName);
 
         //Act
-        String result = dto.getSensorName();
+        String result = dto.sensorName();
 
         //
         assertEquals(sensorName, result);
@@ -38,7 +38,7 @@ class SensorDTOTest {
         SensorDTO dto = new SensorDTO(null);
 
         //Act
-        String result = dto.getSensorName();
+        String result = dto.sensorName();
 
         //
         assertNull(result);
@@ -55,7 +55,7 @@ class SensorDTOTest {
         SensorDTO dto = new SensorDTO(sensorName);
 
         //Act
-        String result = dto.getSensorName();
+        String result = dto.sensorName();
 
         //
         assertEquals(sensorName, result);

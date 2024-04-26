@@ -79,7 +79,7 @@ class GetListOfSensorTypesCTRLTest {
 
         //Assert
         assertEquals(expectedSize, result.size());
-        assertEquals(expectedSensorTypeID, result.get(0).getSensorTypeID());
+        assertEquals(expectedSensorTypeID, result.get(0).sensorTypeID());
     }
 
 }

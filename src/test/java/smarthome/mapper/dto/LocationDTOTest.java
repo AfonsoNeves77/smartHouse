@@ -21,7 +21,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(expectedDoor,street,city,country,postalCode,latitude,longitude);
         //Act
-        String resultDoor = locationDTO.getDoor();
+        String resultDoor = locationDTO.door();
 
         //Assert
         assertEquals(expectedDoor, resultDoor);
@@ -42,7 +42,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,expectedStreet,city,country,postalCode,latitude,longitude);
         //Act
-        String resultStreet = locationDTO.getStreet();
+        String resultStreet = locationDTO.street();
 
         //Assert
         assertEquals(expectedStreet, resultStreet);
@@ -63,7 +63,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,expectedCity,country,postalCode,latitude,longitude);
         //Act
-        String resultCity = locationDTO.getCity();
+        String resultCity = locationDTO.city();
 
         //Assert
         assertEquals(expectedCity, resultCity);
@@ -84,7 +84,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,expectedCountry,postalCode,latitude,longitude);
         //Act
-        String resultCountry = locationDTO.getCountry();
+        String resultCountry = locationDTO.country();
 
         //Assert
         assertEquals(expectedCountry, resultCountry);
@@ -105,7 +105,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,expectedPostalCode,latitude,longitude);
         //Act
-        String resultPostalCode = locationDTO.getPostalCode();
+        String resultPostalCode = locationDTO.postalCode();
 
         //Assert
         assertEquals(expectedPostalCode, resultPostalCode);
@@ -126,7 +126,7 @@ class LocationDTOTest {
         double longitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,postalCode,expectedLatitude,longitude);
         //Act
-        double resultLatitude= locationDTO.getLatitude();
+        double resultLatitude= locationDTO.latitude();
 
         //Assert
         assertEquals(expectedLatitude, resultLatitude);
@@ -147,7 +147,7 @@ class LocationDTOTest {
         double expectedLongitude = 8;
         LocationDTO locationDTO = new LocationDTO(door,street,city,country,postalCode,latitude,expectedLongitude);
         //Act
-        double resultLongitude= locationDTO.getLongitude();
+        double resultLongitude= locationDTO.longitude();
 
         //Assert
         assertEquals(expectedLongitude, resultLongitude);

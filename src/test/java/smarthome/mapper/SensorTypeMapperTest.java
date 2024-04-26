@@ -75,8 +75,8 @@ class SensorTypeMapperTest {
         List<SensorTypeDTO> result = SensorTypeMapper.domainToDTO(sensorTypeList);
         // Assert
         assertEquals(expectedListSize, result.size());
-        assertEquals(sensorTypeIDVODouble.getID(), result.get(0).getSensorTypeID());
-        assertEquals(unitVODouble.getValue(), result.get(0).getUnit());
+        assertEquals(sensorTypeIDVODouble.getID(), result.get(0).sensorTypeID());
+        assertEquals(unitVODouble.getValue(), result.get(0).unit());
     }
 
     /**
@@ -108,10 +108,10 @@ class SensorTypeMapperTest {
         List<SensorTypeDTO> result = SensorTypeMapper.domainToDTO(sensorTypeList);
         // Assert
         assertEquals(expectedListSize, result.size());
-        assertEquals(sensorTypeIDVODoubleOne.getID(), result.get(0).getSensorTypeID());
-        assertEquals(unitVODoubleOne.getValue(), result.get(0).getUnit());
-        assertEquals(sensorTypeIDVODoubleTwo.getID(), result.get(1).getSensorTypeID());
-        assertEquals(unitVODoubleTwo.getValue(), result.get(1).getUnit());
+        assertEquals(sensorTypeIDVODoubleOne.getID(), result.get(0).sensorTypeID());
+        assertEquals(unitVODoubleOne.getValue(), result.get(0).unit());
+        assertEquals(sensorTypeIDVODoubleTwo.getID(), result.get(1).sensorTypeID());
+        assertEquals(unitVODoubleTwo.getValue(), result.get(1).unit());
     }
 
 

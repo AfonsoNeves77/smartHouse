@@ -37,7 +37,7 @@ class RoomDTOTest {
         String expectedRoomID = "1";
 
         //Act
-        String resultRoomID = roomDTO.getId();
+        String resultRoomID = roomDTO.id();
 
         //Assert
         assertEquals(expectedRoomID, resultRoomID);
@@ -52,7 +52,7 @@ class RoomDTOTest {
         String expectedRoomName = "Living Room";
 
         //Act
-        String resultRoomName = roomDTO.getRoomName();
+        String resultRoomName = roomDTO.roomName();
 
         //Assert
         assertEquals(expectedRoomName, resultRoomName);
@@ -67,7 +67,7 @@ class RoomDTOTest {
         int expectedFloor = 1;
 
         //Act
-        int resultFloor = roomDTO.getFloor();
+        int resultFloor = roomDTO.floor();
 
         //Assert
         assertEquals(expectedFloor, resultFloor);
@@ -82,7 +82,7 @@ class RoomDTOTest {
         double expectedRoomHeight = 3.0;
 
         //Act
-        double resultRoomHeight = roomDTO.getRoomHeight();
+        double resultRoomHeight = roomDTO.roomHeight();
 
         //Assert
         assertEquals(expectedRoomHeight, resultRoomHeight);
@@ -97,7 +97,7 @@ class RoomDTOTest {
         double expectedRoomLength = 5.0;
 
         //Act
-        double resultRoomLength = roomDTO.getRoomLength();
+        double resultRoomLength = roomDTO.roomLength();
 
         //Assert
         assertEquals(expectedRoomLength, resultRoomLength);
@@ -112,7 +112,7 @@ class RoomDTOTest {
         double expectedRoomWidth = 4.0;
 
         //Act
-        double resultRoomWidth = roomDTO.getRoomWidth();
+        double resultRoomWidth = roomDTO.roomWidth();
 
         //Assert
         assertEquals(expectedRoomWidth, resultRoomWidth);
@@ -127,7 +127,7 @@ class RoomDTOTest {
         String expectedHouseID = "1";
 
         //Act
-        String resultHouseID = roomDTO.getHouseID();
+        String resultHouseID = roomDTO.houseID();
 
         //Assert
         assertEquals(expectedHouseID, resultHouseID);

@@ -33,9 +33,9 @@ class ActuatorTypeMapperTest {
         list.add(actuator2Double);
         list.add(actuator3Double);
         List<ActuatorTypeDTO> listDTO = ActuatorTypeMapper.domainToDTO(list);
-        assertEquals("actuator1", listDTO.get(0).getActuatorTypeID());
-        assertEquals("actuator2", listDTO.get(1).getActuatorTypeID());
-        assertEquals("actuator3", listDTO.get(2).getActuatorTypeID());
+        assertEquals("actuator1", listDTO.get(0).actuatorTypeID());
+        assertEquals("actuator2", listDTO.get(1).actuatorTypeID());
+        assertEquals("actuator3", listDTO.get(2).actuatorTypeID());
 
 
     }
@@ -50,12 +50,12 @@ class ActuatorTypeMapperTest {
         ActuatorTypeDTO actuator1Double = mock(ActuatorTypeDTO.class);
         ActuatorTypeDTO actuator2Double = mock(ActuatorTypeDTO.class);
         ActuatorTypeDTO actuator3Double = mock(ActuatorTypeDTO.class);
-        when(actuator1Double.getActuatorTypeID()).thenReturn("actuator1");
-        when(actuator2Double.getActuatorTypeID()).thenReturn("actuator2");
-        when(actuator3Double.getActuatorTypeID()).thenReturn("actuator3");
-        String actuator1 = actuator1Double.getActuatorTypeID();
-        String actuator2 = actuator2Double.getActuatorTypeID();
-        String actuator3 = actuator3Double.getActuatorTypeID();
+        when(actuator1Double.actuatorTypeID()).thenReturn("actuator1");
+        when(actuator2Double.actuatorTypeID()).thenReturn("actuator2");
+        when(actuator3Double.actuatorTypeID()).thenReturn("actuator3");
+        String actuator1 = actuator1Double.actuatorTypeID();
+        String actuator2 = actuator2Double.actuatorTypeID();
+        String actuator3 = actuator3Double.actuatorTypeID();
         ActuatorTypeIDVO actuatorTypeIDVO1 = ActuatorTypeMapper.createActuatorTypeIDVO(actuator1Double);
         ActuatorTypeIDVO actuatorTypeIDVO2 = ActuatorTypeMapper.createActuatorTypeIDVO(actuator2Double);
         ActuatorTypeIDVO actuatorTypeIDVO3 = ActuatorTypeMapper.createActuatorTypeIDVO(actuator3Double);
@@ -69,12 +69,12 @@ class ActuatorTypeMapperTest {
         ActuatorTypeDTO actuator1Double = mock(ActuatorTypeDTO.class);
         ActuatorTypeDTO actuator2Double = mock(ActuatorTypeDTO.class);
         ActuatorTypeDTO actuator3Double = mock(ActuatorTypeDTO.class);
-        when(actuator1Double.getActuatorTypeID()).thenReturn("actuator1");
-        when(actuator2Double.getActuatorTypeID()).thenReturn("actuator2");
-        when(actuator3Double.getActuatorTypeID()).thenReturn("actuator3");
-        String actuator1 = actuator1Double.getActuatorTypeID();
-        String actuator2 = actuator2Double.getActuatorTypeID();
-        String actuator3 = actuator3Double.getActuatorTypeID();
+        when(actuator1Double.actuatorTypeID()).thenReturn("actuator1");
+        when(actuator2Double.actuatorTypeID()).thenReturn("actuator2");
+        when(actuator3Double.actuatorTypeID()).thenReturn("actuator3");
+        String actuator1 = actuator1Double.actuatorTypeID();
+        String actuator2 = actuator2Double.actuatorTypeID();
+        String actuator3 = actuator3Double.actuatorTypeID();
         ActuatorTypeIDVO actuatorTypeIDVO1 = ActuatorTypeMapper.createActuatorTypeIDVOFromString(actuator1);
         ActuatorTypeIDVO actuatorTypeIDVO2 = ActuatorTypeMapper.createActuatorTypeIDVOFromString(actuator2);
         ActuatorTypeIDVO actuatorTypeIDVO3 = ActuatorTypeMapper.createActuatorTypeIDVOFromString(actuator3);

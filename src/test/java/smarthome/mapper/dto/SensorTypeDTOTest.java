@@ -16,7 +16,7 @@ class SensorTypeDTOTest {
         String type = "Temperature";
         String unit = "C";
         SensorTypeDTO sensorTypeDTO = new SensorTypeDTO(type,unit);
-        assertEquals(type, sensorTypeDTO.getSensorTypeID());
+        assertEquals(type, sensorTypeDTO.sensorTypeID());
     }
     /**
      * Test the constructor of SensorTypeDTO with valid unit
@@ -28,6 +28,6 @@ class SensorTypeDTOTest {
         String type = "Temperature";
         String unit = "C";
         SensorTypeDTO sensorTypeDTO = new SensorTypeDTO(type,unit);
-        assertEquals(unit, sensorTypeDTO.getUnit());
+        assertEquals(unit, sensorTypeDTO.unit());
     }
 }

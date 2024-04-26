@@ -121,12 +121,12 @@ class GetListOfRoomsCTRLTest {
         List<RoomDTO> list = controller.getListOfRooms();
 
         // Act
-        String resultName = list.get(0).getRoomName();
-        String resultHouseID = list.get(0).getHouseID();
-        int resultFloor = list.get(0).getFloor();
-        double resultWidth = list.get(0).getRoomWidth();
-        double resultLength = list.get(0).getRoomLength();
-        double resultHeight = list.get(0).getRoomHeight();
+        String resultName = list.get(0).roomName();
+        String resultHouseID = list.get(0).houseID();
+        int resultFloor = list.get(0).floor();
+        double resultWidth = list.get(0).roomWidth();
+        double resultLength = list.get(0).roomLength();
+        double resultHeight = list.get(0).roomHeight();
 
         // Assert
         assertEquals(expectedName, resultName);
@@ -183,12 +183,12 @@ class GetListOfRoomsCTRLTest {
         List<RoomDTO> list = controller.getListOfRooms();
 
         // Act
-        String resultName = list.get(1).getRoomName();
-        String resultHouseID = list.get(1).getHouseID();
-        int resultFloor = list.get(1).getFloor();
-        double resultWidth = list.get(1).getRoomWidth();
-        double resultLength = list.get(1).getRoomLength();
-        double resultHeight = list.get(1).getRoomHeight();
+        String resultName = list.get(1).roomName();
+        String resultHouseID = list.get(1).houseID();
+        int resultFloor = list.get(1).floor();
+        double resultWidth = list.get(1).roomWidth();
+        double resultLength = list.get(1).roomLength();
+        double resultHeight = list.get(1).roomHeight();
 
         // Assert
         assertEquals(expectedName2, resultName);

@@ -23,7 +23,7 @@ public class SensorMapper {
         if(sensorDTO == null)
             throw new IllegalArgumentException("Invalid DTO, Value Object cannot be created");
 
-        String sensorName = sensorDTO.getSensorName();
+        String sensorName = sensorDTO.sensorName();
         return new SensorNameVO(sensorName);
     }
 

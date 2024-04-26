@@ -41,7 +41,7 @@ public class HouseMapper {
      * @return DoorVO
      */
     private static DoorVO createDoorVO(LocationDTO locationDTO) {
-        return new DoorVO(locationDTO.getDoor());
+        return new DoorVO(locationDTO.door());
     }
 
     /**
@@ -50,7 +50,7 @@ public class HouseMapper {
      * @return StreetVO
      */
     private static StreetVO createStreetVO(LocationDTO locationDTO) {
-        return new StreetVO(locationDTO.getStreet());
+        return new StreetVO(locationDTO.street());
     }
 
     /**
@@ -59,7 +59,7 @@ public class HouseMapper {
      * @return CityVO
      */
     private static CityVO createCityVO(LocationDTO locationDTO) {
-        return new CityVO(locationDTO.getCity());
+        return new CityVO(locationDTO.city());
     }
 
     /**
@@ -68,7 +68,7 @@ public class HouseMapper {
      * @return CountryVO
      */
     private static CountryVO createCountryVO(LocationDTO locationDTO) {
-        return new CountryVO(locationDTO.getCountry());
+        return new CountryVO(locationDTO.country());
     }
 
     /**
@@ -77,7 +77,7 @@ public class HouseMapper {
      * @return PostalCodeVO
      */
     private static PostalCodeVO createPostalCodeVO(LocationDTO locationDTO) {
-        return new PostalCodeVO(locationDTO.getPostalCode());
+        return new PostalCodeVO(locationDTO.postalCode());
     }
 
     /**
@@ -86,7 +86,7 @@ public class HouseMapper {
      * @return LatitudeVO
      */
     private static LatitudeVO createLatitudeVO(LocationDTO locationDTO) {
-        return new LatitudeVO(locationDTO.getLatitude());
+        return new LatitudeVO(locationDTO.latitude());
     }
 
     /**
@@ -95,7 +95,7 @@ public class HouseMapper {
      * @return LongitudeVO
      */
     private static LongitudeVO createLongitudeVO(LocationDTO locationDTO) {
-        return new LongitudeVO(locationDTO.getLongitude());
+        return new LongitudeVO(locationDTO.longitude());
     }
 
     /**

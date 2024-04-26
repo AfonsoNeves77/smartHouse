@@ -24,7 +24,7 @@ class SensorMapperTest {
     void givenAValidDto_SensorNameVOIsCreated_WhenGetValueIsInvoked_ThenShouldReturnTheExpectedSensorName(){
         //Arrange
         SensorDTO doubleDto = mock(SensorDTO.class);
-        when(doubleDto.getSensorName()).thenReturn("Swimming pool temperature sensor");
+        when(doubleDto.sensorName()).thenReturn("Swimming pool temperature sensor");
         String expected = "Swimming pool temperature sensor";
         int valuesListExpectedSize = 1;
 
@@ -77,7 +77,7 @@ class SensorMapperTest {
     void givenADtoWithNullSensorName_WhenCreateSensorNameVOIsInvoked_ThenShouldThrowIllegalArgumentException(){
         //Arrange
         SensorDTO doubleDto = mock(SensorDTO.class);
-        when(doubleDto.getSensorName()).thenReturn(null);
+        when(doubleDto.sensorName()).thenReturn(null);
         String expected = "Invalid parameters.";
 
         //Act
@@ -99,7 +99,7 @@ class SensorMapperTest {
     void givenADtoWithBlankSensorName_WhenCreateSensorNameVOIsInvoked_ThenShouldThrowIllegalArgumentException(){
         //Arrange
         SensorDTO doubleDto = mock(SensorDTO.class);
-        when(doubleDto.getSensorName()).thenReturn("   ");
+        when(doubleDto.sensorName()).thenReturn("   ");
         String expected = "Invalid parameters.";
 
         //Act
