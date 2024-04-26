@@ -1,0 +1,51 @@
+@startuml
+
+skinparam ParticipantPadding 50
+autonumber
+title Use Case Get Log By Device ID And Time Frame v5.0 - Main Success Scenario
+
+participant ":GetLogByDeviceIDAndTimeFrameCTRL" as C
+participant ":TimeConfigAssembler" as TCA
+participant ":TimeConfig" as TC
+participant ":DeviceMapper" as DM
+participant ":DeviceIDVO" as DIV
+participant ":LogService" as LS
+participant ":LogRepository" as LR
+participant ":LogMapper" as LM
+
+[o-> C : getLogByDeviceIDAndTimeFrame(deviceDTO, timeConfigDTO)
+activate C
+
+C -> TCA : createTimeConfig(timeConfigDTO)
+activate TCA
+
+TCA -> TC** : create(initialDate, initialTime, endDate, endTime)
+TCA --> C  : timeInterval
+deactivate TCA
+
+C -> DM  : createDeviceID(deviceDTO)
+activate DM
+DM -> DIV** : create(deviceID)
+DM --> C : deviceIDVO
+deactivate DM
+
+C -> LS : findReadingsFromDeviceInATimePeriod(deviceIDVO, timeInterval)
+activate LS
+
+LS -> LR : iterableLogs = findByDeviceIDAndTimeBetween(deviceID, from, to)
+LS --> C : listOfLogs
+deactivate LS
+
+C -> LM : domainToDTO(listOfLogs)
+activate LM
+loop for each log in log list
+    LM -> LM : domainToDTO(listOfLogs)
+end loop
+
+LM --> C : listOfLogDTO
+deactivate LM
+
+[o<-- C : listOfLogDTO
+deactivate C
+
+@enduml
