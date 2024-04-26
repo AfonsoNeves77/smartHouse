@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> AveragePowerConsumptionSensor Class Diagram v5.0
+title <size: 30> AveragePowerConsumptionSensor Class Diagram v5.1
 
 note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
 
@@ -62,7 +62,7 @@ interface SensorExternalServices {
 + getValue(initialDate : String, finalDate : String) : String
 }
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -78,7 +78,7 @@ AveragePowerConsumptionValue -up..|> ValueObject
 AveragePowerConsumptionSensor -left..> AveragePowerConsumptionValue : <<creates>>
 AveragePowerConsumptionSensor -right..> SimHardware : <<uses>>
 AveragePowerConsumptionSensor -up..|> Sensor
-Sensor -right--|>DomainEntity
+Sensor -right--|>AggregateRoot
 SimHardware -up.|> SensorExternalServices
 
 @enduml

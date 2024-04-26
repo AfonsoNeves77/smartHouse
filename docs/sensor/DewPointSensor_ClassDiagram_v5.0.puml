@@ -1,11 +1,16 @@
 @startuml
-title <size: 30> US22 Class Diagram - v4.0
+title <size: 30> Dew Point Sensor Class Diagram v5.0
 
+note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
+
+skinparam linetype ortho
 
 interface Sensor {
+    + getSensorTypeID() : SensorTypeIDVO
+    + getDeviceID() : DeviceIDVO
 }
 
-interface DomainEntity {
+interface AggregateRoot {
     + getID() : DomainID
 }
 
@@ -61,21 +66,23 @@ class DeviceIDVO {
     + getID() : String
 }
 
-DomainEntity <|.. DewPointSensor
-Sensor <|.. DewPointSensor
-SimHardware <|.. DewPointSensor
+interface SensorExternalServices {
++ getValue(initialDate : String, finalDate : String) : String
+}
 
-SensorNameVO <.. DewPointSensor
-SensorIDVO *-- DewPointSensor
-DewPointValue *--right DewPointSensor
-SensorTypeIDVO <.. DewPointSensor
-DeviceIDVO <.. DewPointSensor
-
-ValueObject <.. SensorNameVO
-DomainID <|.. SensorIDVO
-DomainID <|.. SensorTypeIDVO
-DomainID <|.. DeviceIDVO
-
-ValueObject <|.. DewPointValue
+DewPointSensor *---down SensorIDVO
+DewPointSensor -down..> SensorTypeIDVO : <<has>>
+DewPointSensor -down..> DeviceIDVO : <<has>>
+DewPointSensor -left..> SensorNameVO : <<has>>
+SensorIDVO -down..|> DomainID
+SensorTypeIDVO -down..|> DomainID
+DeviceIDVO -down..|> DomainID
+SensorNameVO -left..|> ValueObject
+DewPointValue -up..|> ValueObject
+DewPointSensor -left..> DewPointValue : <<creates>>
+DewPointSensor -right..> SimHardware : <<uses>>
+DewPointSensor -up..|> Sensor
+Sensor -right--|>AggregateRoot
+SimHardware -up.|> SensorExternalServices
 
 @enduml
