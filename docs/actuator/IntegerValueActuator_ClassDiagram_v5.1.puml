@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> IntegerValueActuator Class Diagram v5.0
+title <size: 30> IntegerValueActuator Class Diagram v5.1
 
 note "<b>Only methods related to\n<b>IntegerValueActuator are represented" as 1
 
@@ -11,7 +11,7 @@ interface Actuator <<Root>>{
     + getActuatorName() : ActuatorNameVO
 }
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -77,7 +77,7 @@ class IntegerSettingsVO <<Value Object>>{
 }
 
 
-DomainEntity <|-- Actuator
+AggregateRoot <|-- Actuator
 Actuator <|.. IntegerValueActuator
 SimHardwareAct <.. IntegerValueActuator
 ActuatorExternalService <|.. SimHardwareAct

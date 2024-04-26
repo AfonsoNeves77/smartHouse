@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> RollerBlindActuator Class Diagram v5.0
+title <size: 30> RollerBlindActuator Class Diagram v5.1
 
 skinparam linetype ortho
 
@@ -11,7 +11,7 @@ interface Actuator {
     +getActuatorName() : ActuatorNameVO
 }
 
-interface DomainEntity{
+interface AggregateRoot{
     + getID() : DomainID
 }
 
@@ -62,7 +62,7 @@ interface ActuatorExternalService{
     + executeIntegerCommandSim(position : Integer) : boolean
 }
 
-Actuator --up|> DomainEntity
+Actuator --up|> AggregateRoot
 Actuator <|.. RollerBlindActuator
 SimHardwareAct <..up RollerBlindActuator
 SimHardwareAct ..|> ActuatorExternalService

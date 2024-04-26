@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> DecimalValueActuator Class Diagram v5.0
+title <size: 30> DecimalValueActuator Class Diagram v5.1
 
 note "<b>Only methods related to Decimal \n<b>Value Actuator are represented" as 1
 
@@ -15,7 +15,7 @@ interface ActuatorExternalService{
     + executeDecimalCommand(value : double) : boolean
 }
 
-interface DomainEntity {
+interface AggregateRoot {
     + getID() : DomainID
 }
 
@@ -82,7 +82,7 @@ class DecimalSettingsVO {
 }
 
 ValueObject <|-- Settings
-DomainEntity <|-left- Actuator
+AggregateRoot <|-left- Actuator
 Actuator <|.up. DecimalValueActuator
 SimHardwareAct <.. DecimalValueActuator
 ActuatorNameVO "1" --o "1" DecimalValueActuator
