@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> US20 Class Diagram - v5.0
+title <size: 30> Sunrise Sensor - Class Diagram - v5.1
 
 
 interface Sensor {
@@ -8,7 +8,7 @@ interface Sensor {
     + getSensorName() : SensorNameVO;
 }
 
-interface DomainEntity {
+interface AggregateRoot {
     + getID() : DomainID
 }
 
@@ -73,7 +73,7 @@ class DeviceIDVO {
 
 
 
-DomainEntity <|.. Sensor
+AggregateRoot <|-- Sensor
 Sensor <|.. SunriseSensor
 SunTimeCalculator <|.. SunriseSensor
 SunTimeServices <|.. SunTimeCalculator

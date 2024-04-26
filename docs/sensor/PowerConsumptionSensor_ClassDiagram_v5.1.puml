@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Power Consumption Sensor - Class Diagram
+title <size: 30> Power Consumption Sensor - Class Diagram v5.1
 
 skinparam linetype ortho
 
@@ -11,7 +11,7 @@ interface Sensor {
     +getDeviceID() : DeviceIDVO
 }
 
-interface DomainEntity{
+interface AggregateRoot {
     + getID() : DomainID
 }
 
@@ -74,7 +74,7 @@ interface SensorExternalService{
 }
 
 
-Sensor --|> DomainEntity
+Sensor --|> AggregateRoot
 Sensor <|..right PowerConsumptionSensor
 SimHardware <..up PowerConsumptionSensor
 SimHardware ..|> SensorExternalService

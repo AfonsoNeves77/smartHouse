@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> SolarIrradianceSensor Class Diagram v5.0
+title <size: 30> Solar Irradiance Sensor - Class Diagram v5.1
 
 note "<b>Only methods related to Solar \n<b>Irradiance Sensor are represented" as 1
 
@@ -12,13 +12,10 @@ interface Sensor {
     + getSensorName() : SensorNameVO
 }
 
-interface DomainID {
+interface AggregateRoot {
     + getID() : String
 }
 
-interface DomainEntity{
-    + getId() : DomainID
-}
 
 interface ValueObject<T> {
     + getValue() : T
@@ -71,7 +68,11 @@ class SolarIrradianceValue {
     - validReading(reading : String) : boolean
 }
 
-DomainEntity <|-down- Sensor
+interface DomainID{
+    + getID() : String
+}
+
+AggregateRoot <|-down- Sensor
 ValueObject <|.. SolarIrradianceValue
 Sensor <|.. SolarIrradianceSensor
 SolarIrradianceSensor .right.> SolarIrradianceValue

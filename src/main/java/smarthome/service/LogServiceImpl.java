@@ -136,6 +136,14 @@ public class LogServiceImpl implements LogService {
     }
 
 
+    /**
+     * Retrieves the maximum instantaneous temperature difference between an indoor and an outdoor device over a given
+     * time period.
+     * @param outdoorDeviceLog The logs from the outdoor device.
+     * @param indoorDeviceLog The logs from the indoor device.
+     * @param delta The time window allowed for the same readings to be considered as being in the same instant (in minutes)
+     * @return A string message detailing the maximum temperature difference and the precise moment it occurred, or a relevant error message.
+     */
     private String retrieveMaxTempDiffInAnInstant(Iterable<Log> outdoorDeviceLog, Iterable<Log> indoorDeviceLog, int delta){
         // Defines the two variables needed: Maximum temperature difference and the Instant where it occurred.
         double maxTempDiff = 0;

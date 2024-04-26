@@ -1,7 +1,12 @@
 Position Sensor Class Diagram
 
 @startuml
-title <size: 30> Position Sensor Class Diagram
+title <size: 30> Position Sensor - Class Diagram v5.1
+
+
+interface AggregateRoot {
+    + getID() : DomainID
+}
 
 interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO;
@@ -59,14 +64,22 @@ class SimHardware{
     + getValue() : String
 }
 
+interface DomainID {
+    + getID() : String
+}
+
+Sensor --right|> AggregateRoot
 ValueObject <|.. PositionValue
 Sensor <|.. PositionSensor
 SensorExternalServices <|.. SimHardware
 PositionSensor .right.> PositionValue
 PositionSensor .left.> SimHardware
-PositionSensor "1" *--down "1" SensorNameVO
-PositionSensor "*" *--down "1" DeviceIDVO
+PositionSensor "1" *--right "1" SensorNameVO
+PositionSensor "*" o-- "1" DeviceIDVO
 PositionSensor "1" *--down "1" SensorTypeIDVO
 PositionSensor "1" *--down "1" SensorIDVO
-
+DeviceIDVO ..|> DomainID
+SensorTypeIDVO ..|> DomainID
+SensorIDVO ..|> DomainID
+SensorNameVO ..|> ValueObject
 @enduml
