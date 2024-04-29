@@ -14,7 +14,7 @@
         <java.version>17</java.version>
 
         <!-- Maven Version Configuration -->
-        <maven-compiler-plugin>3.10.1</maven-compiler-plugin>
+        <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
 
 
         <!-- Project Encoding Configuration -->
@@ -26,11 +26,11 @@
         <junit-jupiter>5.10.2</junit-jupiter>
 
         <!-- Coverage configuration -->
-        <jacoco-maven-plugin>0.8.11</jacoco-maven-plugin>
+        <jacoco-maven-plugin>0.8.12</jacoco-maven-plugin>
 
         <!-- Pitest Version Configuration-->
-        <pitest-maven>1.15.8</pitest-maven>
-        <pitest-junit5-plugin>1.1.2</pitest-junit5-plugin>
+        <pitest-maven>1.16.0</pitest-maven>
+        <pitest-junit5-plugin>1.2.1</pitest-junit5-plugin>
 
         <!-- Surefire Version Configuration -->
         <maven-surefire-plugin>3.2.5</maven-surefire-plugin>
@@ -125,16 +125,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin}</version>
                 <configuration>
-                    <includes>
-                        <include>**/Test*.java</include>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                        <include>**/*TestCase.java</include>
-                        <include>**/*IT.java</include>
-                    </includes>
-                    <!--                    <excludes>-->
-                    <!--                        <exclude>**Main**</exclude>-->
-                    <!--                    </excludes>-->
+                    <excludes>
+                        <exclude>**/persistence/**/*.java</exclude>
+                        <exclude>**/ddd/**/*.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -179,18 +173,14 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <targetClasses>
-                        <!-- Example: <param>lapr.project.model.*</param> -->
-                        <param>smarthome.*</param>
-                    </targetClasses>
                     <excludedClasses>
-                        <param>smarthome.ddd.*</param>
-                        <param>smarthome.persistence.*</param>
+                        <param>**.ddd.**.*</param>
+                        <param>**.persistence.**.*</param>
                     </excludedClasses>
-                    <targetTests>
-                        <!-- Example: <param>lapr.project.utils.*</param> -->
-                        <param>smarthome.*</param>
-                    </targetTests>
+                    <excludedTestClasses>
+                        <param>**.ddd.**.*</param>
+                        <param>**.persistence.**.*</param>
+                    </excludedTestClasses>
                     <outputFormats>
                         <outputFormat>XML</outputFormat>
                         <outputFormat>HTML</outputFormat>
