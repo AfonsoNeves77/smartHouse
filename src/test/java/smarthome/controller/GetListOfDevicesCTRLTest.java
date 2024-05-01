@@ -97,6 +97,7 @@ class GetListOfDevicesCTRLTest {
         List<DeviceDTO> result = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Assert
+        assertTrue(result.isEmpty());
         assertEquals(expected,result);
     }
 
@@ -185,6 +186,7 @@ class GetListOfDevicesCTRLTest {
         List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
         //Assert
+        assertFalse(deviceDTOList.isEmpty());
         assertEquals(expectedSize, deviceDTOList.size());
         assertEquals(expectedDeviceName, deviceDTOList.get(0).getDeviceName());
         assertEquals(expectedDeviceModel, deviceDTOList.get(0).getDeviceModel());
@@ -258,6 +260,7 @@ class GetListOfDevicesCTRLTest {
         String resultDeviceID2 = deviceDTOList.get(1).getDeviceID();
 
         //Assert
+        assertFalse(deviceDTOList.isEmpty());
         assertEquals(expectedDeviceName, resultName);
         assertEquals(expectedDeviceModel, resultModel);
         assertEquals("true", resultStatus);
