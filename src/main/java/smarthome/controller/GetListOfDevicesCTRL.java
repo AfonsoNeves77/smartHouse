@@ -8,7 +8,7 @@ import smarthome.mapper.RoomMapper;
 import smarthome.service.DeviceService;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GetListOfDevicesCTRL {
@@ -44,7 +44,7 @@ public class GetListOfDevicesCTRL {
             List<Device> deviceList = deviceService.getListOfDevicesInARoom(roomIDVO);
             return DeviceMapper.domainToDTO(deviceList);
         } catch (IllegalArgumentException e){
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 

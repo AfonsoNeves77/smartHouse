@@ -12,6 +12,7 @@ import smarthome.utils.timeconfig.TimeConfig;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LogServiceImpl implements LogService {
@@ -55,7 +56,7 @@ public class LogServiceImpl implements LogService {
             Iterable<Log> iterable = logRepository.findByDeviceIDAndTimeBetween(deviceID, from, to);
             return convertToList(iterable);
         } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 
