@@ -355,6 +355,7 @@ class SensorValueFactoryImplTest {
      * LocalDateTime.now() to set the time, so it may fail if the implementation changes or if there are time zone differences.
      * </p>
      */
+
     @Test
     void whenGivenValidParameters_SuccessfullyInstantiatesSunTimeValue1_getValueReturnsZoneDateTime() {
         // Arrange
@@ -371,6 +372,123 @@ class SensorValueFactoryImplTest {
         // Assert
         assertInstanceOf(SunTimeValue.class, value);
         assertEquals(time, result);
+    }
+
+    /**
+     * Tests the behavior of the createSensorValue() method in the SensorValueFactoryImpl class
+     * when provided with an invalid sensor type.
+     * Test Case: Create a sensor value object with an invalid sensor type.
+     * If the provided sensor type is not recognized (does not have a valid classpath), the method should return null.
+     * Test Steps:
+     * 1. Arrange: Set up the test environment by creating a current timestamp, defining an invalid sensor type,
+     *    specifying a path for sensor values, and initializing a SensorValueFactoryImpl object.
+     * 2. Act: Invoke the createSensorValue() method with the current timestamp and the invalid sensor type.
+     * 3. Assert: Verify that the returned SensorValueObject is null, indicating the creation of the sensor value failed.
+     */
+
+    @Test
+    void createSensorValue_givenInvalidSensorType_ShouldReturnNull() {
+        // Arrange
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
+        SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("NuclearSensor");
+        String path = "value.properties";
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+
+        // Act
+        SensorValueObject<?> result = factory.createSensorValue(zdt, sensorTypeID);
+
+        // Assert
+        assertNull(result);
+    }
+
+    /**
+     * Tests the behavior of the createSensorValue() method in the SensorValueFactoryImpl class
+     * when provided with a non-existing sensor type.
+
+     * Test Case: Create a sensor value object with a non-existing sensor type.
+     * If the provided sensor type does not exist in the system, the method should return null.
+
+     * Test Steps:
+     * 1. Arrange: Set up the test environment by creating a current timestamp, defining a non-existing sensor type,
+     *    specifying a path for sensor values, and initializing a SensorValueFactoryImpl object.
+     * 2. Act: Invoke the createSensorValue() method with the current timestamp and the non-existing sensor type.
+     * 3. Assert: Verify that the returned SensorValueObject is null, indicating the creation of the sensor value failed.
+     */
+
+    @Test
+    void createSensorValue_givenNonExistingSensorType_ShouldReturnNull() {
+        // Arrange
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
+        SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("NonExistingSensor");
+        String path = "value.properties";
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+
+        // Act
+        SensorValueObject<?> result = factory.createSensorValue(zdt, sensorTypeID);
+
+        // Assert
+        assertNull(result);
+    }
+
+    /**
+     * Tests the behavior of the createSensorValue() method in the SensorValueFactoryImpl class
+     * when provided with a null sensor type.
+
+     * Test Case: Create a sensor value object with a null sensor type.
+     * If the provided sensor type is null, the method should return null.
+
+     * Test Steps:
+     * 1. Arrange: Set up the test environment by creating a current timestamp, specifying a path for sensor values,
+     *    and initializing a SensorValueFactoryImpl object.
+     * 2. Act: Invoke the createSensorValue() method with the current timestamp and a null sensor type.
+     * 3. Assert: Verify that the returned SensorValueObject is null, indicating the creation of the sensor value failed.
+     */
+
+
+    @Test
+    void createSensorValue_givenNullSensorType_ShouldReturnNull() {
+        // Arrange
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
+        String path = "value.properties";
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+
+        // Act
+        SensorValueObject<?> result = factory.createSensorValue(zdt, null);
+
+        // Assert
+        assertNull(result);
+    }
+
+    /**
+     * Tests the behavior of the createSensorValue() method in the SensorValueFactoryImpl class
+     * when provided with a valid sensor type.
+
+     * Test Case: Create a sensor value object with a valid sensor type.
+     * If the provided sensor type is valid, the method should return a SensorValueObject with the correct type and value.
+
+     * Test Steps:
+     * 1. Arrange: Set up the test environment by creating a current timestamp, defining a valid sensor type,
+     *    specifying a path for sensor values, and initializing a SensorValueFactoryImpl object.
+     * 2. Act: Invoke the createSensorValue() method with the current timestamp and the valid sensor type.
+     * 3. Assert: Verify that the returned SensorValueObject is an instance of SunTimeValue class and its value matches the input timestamp.
+
+     */
+
+    @Test
+    void createSensorValue_givenValidSensorType_ShouldReturnNull() {
+        // Arrange
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
+        SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("SunriseSensor");
+        String path = "value.properties";
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+
+        // Act
+        SensorValueObject<?> value = factory.createSensorValue(zdt, sensorTypeID);
+        ZonedDateTime result = (ZonedDateTime) value.getValue();
+
+        // Assert
+        assertInstanceOf(SunTimeValue.class, value);
+        assertEquals(zdt, result);
     }
 
     /**

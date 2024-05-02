@@ -26,6 +26,7 @@ class WindValueTest {
         String reading3 = "3K:N";
         String reading4 = "33:J";
         String reading5 = "-58:J";
+        String reading6 = "0:N";
 
         // Act + Assert
         Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new WindValue(reading1));
@@ -46,6 +47,9 @@ class WindValueTest {
         Exception exception6 = assertThrows(IllegalArgumentException.class, () -> new WindValue(null));
         String result6 = exception6.getMessage();
 
+        Exception exception7 = assertThrows(IllegalArgumentException.class, () -> new WindValue(reading6));
+        String result7 = exception7.getMessage();
+
         //Assert
         assertEquals(expected,result1);
         assertEquals(expected,result2);
@@ -53,6 +57,7 @@ class WindValueTest {
         assertEquals(expected,result4);
         assertEquals(expected,result5);
         assertEquals(expected,result6);
+        assertEquals(expected,result7);
     }
 
     /**
@@ -75,4 +80,5 @@ class WindValueTest {
         // Assert
         assertEquals(reading,result);
     }
+
 }
