@@ -1,8 +1,8 @@
 @startuml
 
-title <size: 30> Use Case - Get a List of All Measurements of a Device in a Room in a Given Period v5.0
+title <size: 30> Use Case - Get a List of All Measurements of a Device in a Room in a Given Period v6.0
 
-note "<b>- Only methods related to 'get a list of all measurements \n<b>of a device in a room in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted." as N1
+note "<b>- Only methods related to 'get a list of all measurements \n<b>of a device in a room in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted.\n<b>- TimeStampVO and DeltaVO implement ValueObject interface, these relations are abstracted to improve diagram readability" as N1
 
 skinparam linetype ortho
 
@@ -12,11 +12,11 @@ GetLogByDeviceIDAndTimeFrameCTRL ..> DeviceMapper
 
 GetLogByDeviceIDAndTimeFrameCTRL ..> TimeConfigAssembler
     TimeConfigAssembler ..> TimeConfigDTO
-    TimeConfigAssembler -- TimeConfig : <create> >
+    TimeConfigAssembler -- TimeStampVO : <create> >
 
 GetLogByDeviceIDAndTimeFrameCTRL ..> LogService
     LogServiceImpl ..|> LogService
-    LogServiceImpl ..> TimeConfig
+    LogServiceImpl ..> TimeStampVO
     LogServiceImpl ..> LogRepository
     LogServiceImpl ..> RoomRepository
     LogServiceImpl ..> DeviceRepository
@@ -68,28 +68,29 @@ interface EntityManagerFactory
 interface Repository<T> {
     + save(entity : T) : boolean
     + findAll() : Iterable<T>
-    + findByID(ID : DomainID) : T
-    + isPresent(ID : DomainID) : boolean
+    + findByID(id : ID) : T
+    + isPresent(id : ID) : boolean
 }
 
 interface RoomRepository
-interface DeviceRepository
+
+interface DeviceRepository{
+    + findByRoomID(roomID : RoomIDVO) : Iterable<Device>
+}
 
 interface LogRepository {
-    + save(log : Log) : boolean
-    + findAll() : Iterable<Log>
-    + findByID(id : LogIDVO) : Log
-    + isPresent(logID : LogIDVO) : boolean
 
-    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : String, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime)
-
-    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
+    + findByDeviceIDAndTimeBetween(deviceID : DeviceIDVO, from : TimeStampVO, to : TimeStampVO) : Iterable<Log>
 }
 
 class LogRepositoryJPA{
-    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
+    - logFactory : LogFactory
+    - sensorValueFactory : SensorValueFactory
+    - entityManagerFactory : EntityManagerFactory
 
+    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
     - getDataModelFromId(entityManager : EntityManager, logId : LogIDVO) : Optional<LogDataModel>
+    + findByDeviceIDAndTimeBetween(deviceID : DeviceIDVO, from : TimeStampVO, to : TimeStampVO) : Iterable<Log>
 }
 
 class LogRepositorySpringData{
@@ -98,35 +99,31 @@ class LogRepositorySpringData{
     - sensorValueFactory : SensorValueFactory
 
     + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
+    + findByDeviceIDAndTimeBetween(deviceID : DeviceIDVO, from : TimeStampVO, to : TimeStampVO) : Iterable<Log>f
 }
 
 
 interface LogFactory{
-    + createLog(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
-
     + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
 }
 
-class LogFactoryImpl
+class LogFactoryImpl{
+    + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+}
 
 interface SensorValueFactory{
     + createSensorValue(reading : String, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
-
-    + createSensorValue(reading : ZonedDateTime, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
 }
 
 class SensorValueFactoryImpl{
     - configuration : Configuration
     + SensorValueFactoryImpl(path : String)
-    + createSunValues(reading : ZonedDateTime, valuePath : String) : SensorValueObject<?>
 
-    - isTypePermitted(type : String) : boolean
 }
 
 
 interface LogService {
     + findReadingsFromDeviceInATimePeriod(deviceID : DeviceIDVO, timeConfig : TimeConfig) : List<Log>
-    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
 }
 
 class LogServiceImpl {
@@ -135,6 +132,7 @@ class LogServiceImpl {
     - roomRepository : RoomRepository
 
     + LogServiceImpl(logRepository : LogRepository,\n deviceRepository : DeviceRepository, roomRepository : RoomRepository)
+    + FindReadingsFromDeviceInATimePeriod(deviceID : DeviceIDVO, initialTimeStamp : TimeStampVO, finalTimeStamp : TimeStampVO) : List<Log>
 }
 
 class GetLogByDeviceIDAndTimeFrameCTRL{
@@ -142,7 +140,7 @@ class GetLogByDeviceIDAndTimeFrameCTRL{
 
     + GetLogByDeviceIDAndTimeFrameCTRL(logService : LogService)
 
-    + getLogByDeviceIDAndTimeFrame(deviceDTO : DeviceIDVO, timeConfigDTO : TimeConfigDTO) : List<LogDTO>
+    + getLogByDeviceIDAndTimeFrame(device : DeviceIDVO, time : TimeConfigDTO) : List<LogDTO>
 }
 
 class DeviceMapper{
@@ -199,26 +197,27 @@ class LogDTO{
 }
 
 class TimeConfigAssembler{
-    + createTimeConfig(timeConfigDTO : TimeConfigDTO) : TimeConfig
+    - TimeConfigAssembler()
+
+    + createInitialTimeStamp(timeConfigDTO : TimeConfigDTO) : TimeStampVO
+    + createFinalTimeStamp(timeConfigDTO : TimeConfigDTO) : TimeStampVO
 }
 
-class TimeConfig{
-    - initialDateTime : LocalDateTime
-    - finalDateTime : LocalDateTime
-    - definedDelta : String
+class TimeStampVO{
+    - timeStamp : LocalDateTime
 
-    + TimeConfig(initialDateTime : LocalDateTime, \nfinalDateTime : LocalDateTime)
+    + TimeStampVO(localDateTime : LocalDateTime)
 }
 
 
 class TimeConfigDTO{
-    - initialTime : String
-    - finalTime : String
-    - initialDate : String
-    - finalDate : String
-    - definedDelta : String
+    - iDate : String
+    - iTime : String
+    - eDate : String
+    -eTime : String
+    -deltaMin : String
 
-    + TimeConfigDTO(initialTime : String, finalTime : String, \n initialDate : String, finalDate : String)
+    + TimeConfigDTO(iDate : String, iTime : String, eDate : String, eTime : String)
 }
 
 
@@ -275,7 +274,6 @@ interface AggregateRoot {
 interface ILogRepositorySpringData{
     + findByDeviceIDAndTimeBetween(deviceID : String, from : LocalDateTime, to : LocalDateTime)
 
-    + findByDeviceIDAndSensorTypeAndTimeBetween(deviceID : String, sensorType : String, start : LocalDateTime, end : LocalDateTime)
     }
 
 @enduml
