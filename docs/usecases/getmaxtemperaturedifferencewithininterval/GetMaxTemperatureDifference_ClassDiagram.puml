@@ -1,8 +1,8 @@
 @startuml
 
-title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.2
+title <size: 30> Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v6.0
 
-note "<b>- Only methods related to 'get maximum instantaneous temperature \n<b>difference in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted." as N1
+note "<b>- Only methods related to 'get maximum instantaneous temperature \n<b>difference in a given period' use case are represented.\n<b>- Only the several implementations of LogRepository are representated\n<b>(i.e. RoomRepository and DeviceRepository implementation types were omitted.\n<b>- TimeStampVO and DeltaVO implement ValueObject interface, these relations are abstracted to improve diagram readability" as N1
 
 skinparam linetype ortho
 
@@ -12,11 +12,13 @@ GetMaxInstantaneousTemperatureDifferenceCTRL ..> DeviceMapper
 
 GetMaxInstantaneousTemperatureDifferenceCTRL .up.> TimeConfigAssembler
     TimeConfigAssembler .up.> TimeConfigDTO
-    TimeConfigAssembler -- TimeConfig : <create> >
+    TimeConfigAssembler -- TimeStampVO : <create> >
+    TimeConfigAssembler -- DeltaVO : <create> >
 
 GetMaxInstantaneousTemperatureDifferenceCTRL ..> LogService
     LogServiceImpl ..|> LogService
-    LogServiceImpl .up.> TimeConfig
+    LogServiceImpl .up.> TimeStampVO
+    LogServiceImpl .up.> DeltaVO
     LogServiceImpl ..> LogRepository
     LogServiceImpl .up.> RoomRepository
     LogServiceImpl .right.> DeviceRepository
@@ -70,26 +72,24 @@ interface Repository<T> {
 }
 
 interface RoomRepository
-interface DeviceRepository
+interface DeviceRepository{
+    + findByRoomID(roomID : RoomIDVO) : Iterable<Device>
+}
 
 interface LogRepository {
-    + save(log : Log) : boolean
-    + findAll() : Iterable<Log>
-    + findByID(id : LogIDVO) : Log
-    + isPresent(logID : LogIDVO) : boolean
 
-    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : String, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime)
+    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : TimeStampVO, end : TimeStampVO) : Iterable<Log>
 
-    +getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
 }
 
 class LogRepositoryJPA{
-    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
+    - logFactory : LogFactory
+    - sensorValueFactory : SensorValueFactory
+    - entityManagerFactory : EntityManagerFactory
 
-    + getDeviceLogBySensorTypeAndTimePeriod(outdoorDeviceID : DeviceIDVO,\nsensorTypeID : SensorTypeIDVO, initialDateTime : LocalDateTime, finalDateTime : LocalDateTime) : Iterable<Log>
-    +getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
+    + LogRepositoryJPA(logFactory : LogFactory, sensorValueFactory : SensorValueFactory, \nentityManagerFactory : EntityManagerFactory)
     - getDataModelFromId(entityManager : EntityManager, logId : LogIDVO) : Optional<LogDataModel>
-}
+    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : TimeStampVO, end : TimeStampVO) : Iterable<Log>}
 
 class LogRepositorySpringData{
     - iLogRepositorySpringData : ILogRepositorySpringData
@@ -97,31 +97,25 @@ class LogRepositorySpringData{
     - sensorValueFactory : SensorValueFactory
 
     + LogRepositorySpringData(iLogRepositorySpringDat : ILogRepositorySpringData, logFactory : LogFactory, sensorValueFactory : SensorValueFactory)
-
-    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : LocalDateTime, end : LocalDateTime) : Iterable<Log>
-}
+    + getDeviceTemperatureLogs(deviceID : DeviceIDVO, sensorType : String, start : TimeStampVO, end : TimeStampVO) : Iterable<Log>}
 
 
 interface LogFactory{
-    + createLog(reading : SensorValueObject<?>, sensorID : SensorIDVO, \ndeviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
-
     + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
 }
 
-class LogFactoryImpl
+class LogFactoryImpl{
+    + createLog(logID : LogIDVO, time : LocalDateTime, reading : SensorValueObject<?>, \nsensorID : SensorIDVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO) : Log
+}
 
 interface SensorValueFactory{
     + createSensorValue(reading : String, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
-
-    + createSensorValue(reading : ZonedDateTime, sensorTypeID : SensorTypeIDVO) : SensorValueObject<?>
 }
 
 class SensorValueFactoryImpl{
     - configuration : Configuration
     + SensorValueFactoryImpl(path : String)
-    + createSunValues(reading : ZonedDateTime, valuePath : String) : SensorValueObject<?>
 
-    - isTypePermitted(type : String) : boolean
 }
 
 class TemperatureValue{
@@ -134,8 +128,7 @@ class TemperatureValue{
 
 
 interface LogService {
-    + findReadingsFromDeviceInATimePeriod(deviceID : DeviceIDVO, timeConfig : TimeConfig) : List<Log>
-        + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, timeConfig : TimeConfig) : String
+    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, initialTimeStamp : TimeStampVO, finalTimeStamp : TimeStampVO, deltaMin : DeltaVO) : String
 }
 
 class LogServiceImpl {
@@ -145,7 +138,7 @@ class LogServiceImpl {
 
     + LogServiceImpl(logRepository : LogRepository,\n deviceRepository : DeviceRepository, roomRepository : RoomRepository)
 
-    - retrieveMaxTempDiffInAnInstant(outdoorDeviceLog : Iterable<Log>, \nindoorDeviceLog : Iterable<Log>, delta : int) : String
+    + getMaxInstantaneousTempDifference(outdoorDeviceID : DeviceIDVO, \nindoorDeviceID : DeviceIDVO, initialTimeStamp : TimeStampVO, finalTimeStamp : TimeStampVO, deltaMin : DeltaVO) : String
     }
 
 class GetMaxInstantaneousTemperatureDifferenceCTRL{
@@ -196,26 +189,36 @@ class LogIDVO {
 
 
 class TimeConfigAssembler{
-    + createTimeConfig(timeConfigDTO : TimeConfigDTO) : TimeConfig
+    - TimeConfigAssembler()
+
+    + createDeltaVO((timeConfigDTO : TimeConfigDTO) : DeltaVO
+    + createInitialTimeStamp(timeConfigDTO : TimeConfigDTO) : TimeStampVO
+    + createFinalTimeStamp(timeConfigDTO : TimeConfigDTO) : TimeStampVO
 }
 
-class TimeConfig{
-    - initialDateTime : LocalDateTime
-    - finalDateTime : LocalDateTime
-    - definedDelta : String
+class DeltaVO{
+    - delta : int
+    - DEFAULT : int
 
-    + TimeConfig(initialDateTime : LocalDateTime, \nfinalDateTime : LocalDateTime, definedDelta : String)
+    + DeltaVO(delta : String)
+    - definedDelta(delta : int) : String
+}
+
+class TimeStampVO{
+    - timeStamp : LocalDateTime
+
+    + TimeStampVO(localDateTime : LocalDateTime)
 }
 
 
 class TimeConfigDTO{
-    - initialTime : String
-    - finalTime : String
-    - initialDate : String
-    - finalDate : String
-    - definedDelta : String
+    - iDate : String
+    - iTime : String
+    - eDate : String
+    -eTime : String
+    -deltaMin : String
 
-    + TimeConfigDTO(initialTime : String, finalTime : String, initialDate : String,\n finalDate : String, definedDelta : String)
+    + TimeConfigDTO(iDate : String, iTime : String, eDate : String, eTime : String)
 }
 
 
