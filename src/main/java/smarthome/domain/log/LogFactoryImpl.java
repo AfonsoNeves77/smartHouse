@@ -5,8 +5,7 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
-
-import java.time.LocalDateTime;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 public class LogFactoryImpl implements LogFactory {
 
@@ -36,7 +35,7 @@ public class LogFactoryImpl implements LogFactory {
      * @return a new Log object
      * @throws IllegalArgumentException if any of the parameters are null
      */
-    public Log createLog(LogIDVO logID, LocalDateTime time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+    public Log createLog(LogIDVO logID, TimeStampVO time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
         return new Log(logID, time, reading, sensorID, deviceID, sensorTypeID);
     }
 

@@ -8,22 +8,26 @@ import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
-import smarthome.utils.timeconfig.TimeConfig;
-
+import smarthome.domain.vo.DeltaVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 public class LogServiceImpl implements LogService {
 
     private final LogRepository logRepository;
     private final DeviceRepository deviceRepository;
     private final RoomRepository roomRepository;
-    private static final int DELTA = 5; // Default time delta in minutes for comparisons of instant matches on readings.
 
     /**
      * Constructor for LogServiceImpl.
      * @param logRepository the repository used for data access
+     * @param deviceRepository the repository used for data access
+     * @param roomRepository the repository used for data access
      * @throws IllegalArgumentException if the logRepository is null
      */
     public LogServiceImpl(LogRepository logRepository, DeviceRepository deviceRepository, RoomRepository roomRepository) {
@@ -38,26 +42,29 @@ public class LogServiceImpl implements LogService {
     /**
      * Retrieves all logs associated with a specific device within a given time period.
      * @param deviceID the ID of the device
-     * @param time     the time configuration object
+     * @param initialTimeStamp the initial timestamp that represents the beginning of the time period
+     * @param finalTimeStamp the final timestamp that represents the end of the time period
      * @return an Iterable of logs that match the given criteria
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public List<Log> findReadingsFromDeviceInATimePeriod(DeviceIDVO deviceID, TimeConfig time) {
-        if (areParamsNull(deviceID, time)) {
+    public List<Log> findReadingsFromDeviceInATimePeriod(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
+        if (areParamsNull(deviceID, initialTimeStamp, finalTimeStamp)) {
             throw new IllegalArgumentException("Invalid parameters");
         }
 
-        LocalDateTime from = time.getInitialTimeStamp();
-        LocalDateTime to = time.getEndTimeStamp();
+        if (areTimeStampsInvalid(initialTimeStamp, finalTimeStamp)) {
+            throw new IllegalArgumentException("Invalid Time Stamps");
+        }
 
         try {
-            Iterable<Log> iterable = logRepository.findByDeviceIDAndTimeBetween(deviceID, from, to);
+            Iterable<Log> iterable = logRepository.findByDeviceIDAndTimeBetween(deviceID, initialTimeStamp, finalTimeStamp);
             return convertToList(iterable);
         } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
+
 
     /**
      * Checks if any of the provided parameters are null.
@@ -98,18 +105,19 @@ public class LogServiceImpl implements LogService {
      *
      * @param outdoorDevice The identification of the outdoor device.
      * @param indoorDevice The identification of the indoor device.
-     * @param timeConfig The configuration containing the initial and end timestamps of the time period, and the
-     * delta for matching log timestamps.
+     * @param initialTimeStamp The initial timestamp that represents the beginning of the time period.
+     * @param finalTimeStamp The final timestamp that represents the end of the time period.
+     * @param deltaMin The minute difference allowed for the same readings to be considered as being in the same instant.
      * @return String message detailing the maximum temperature difference and the precise moment it
      * occurred, or a relevant error message.
      * @throws IllegalArgumentException if parameters are null, if the specified devices are not located
      * correctly (outdoor/indoor), or if no logs exist within the time span.
      */
 
-    public String getMaxInstantaneousTempDifference(DeviceIDVO outdoorDevice, DeviceIDVO indoorDevice, TimeConfig timeConfig) {
+    public String getMaxInstantaneousTempDifference(DeviceIDVO outdoorDevice, DeviceIDVO indoorDevice, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp, DeltaVO deltaMin) {
 
         // Checks that params are not null
-        if(areParamsNull(outdoorDevice, indoorDevice, timeConfig)){
+        if(areParamsNull(outdoorDevice, indoorDevice, initialTimeStamp, finalTimeStamp, deltaMin)){
             throw new IllegalArgumentException("Invalid Parameters");
         }
 
@@ -118,21 +126,21 @@ public class LogServiceImpl implements LogService {
             throw new IllegalArgumentException("Invalid Device Location");
         }
 
-        // Gets the initialDateTime, finalDateTime and delta that represent the time window to search for logs, and the delta
-        LocalDateTime initialDateTime = timeConfig.getInitialTimeStamp();
-        LocalDateTime finalDateTime = timeConfig.getEndTimeStamp();
 
-        // Sets delta at 5 if the user did not select a valid delta
-        int delta = configureDelta(timeConfig);
+        // Checks if the initial date time and final date time are valid, and that the final date time is not in the future
+        // and that the initial date is before the final date.
+        if(areTimeStampsInvalid(initialTimeStamp, finalTimeStamp)){
+            throw new IllegalArgumentException("Invalid Time Stamps");
+        }
 
         // Defines the sensorTypeID for the desired query
         String sensorTypeID = "TemperatureSensor";
 
         // Gets the Logs that result from the query for the Logs for the desired devices, with the desired sensor type, within the desired period/time frame
-        Iterable<Log> outdoorDeviceLog = logRepository.getDeviceTemperatureLogs(outdoorDevice, sensorTypeID, initialDateTime, finalDateTime);
-        Iterable<Log> indoorDeviceLog = logRepository.getDeviceTemperatureLogs(indoorDevice, sensorTypeID, initialDateTime, finalDateTime);
+        Iterable<Log> outdoorDeviceLog = logRepository.getDeviceTemperatureLogs(outdoorDevice, sensorTypeID, initialTimeStamp, finalTimeStamp);
+        Iterable<Log> indoorDeviceLog = logRepository.getDeviceTemperatureLogs(indoorDevice, sensorTypeID, initialTimeStamp, finalTimeStamp);
 
-        return retrieveMaxTempDiffInAnInstant(outdoorDeviceLog, indoorDeviceLog, delta);
+        return retrieveMaxTempDiffInAnInstant(outdoorDeviceLog, indoorDeviceLog, deltaMin);
     }
 
 
@@ -144,7 +152,7 @@ public class LogServiceImpl implements LogService {
      * @param delta The time window allowed for the same readings to be considered as being in the same instant (in minutes)
      * @return A string message detailing the maximum temperature difference and the precise moment it occurred, or a relevant error message.
      */
-    private String retrieveMaxTempDiffInAnInstant(Iterable<Log> outdoorDeviceLog, Iterable<Log> indoorDeviceLog, int delta){
+    private String retrieveMaxTempDiffInAnInstant(Iterable<Log> outdoorDeviceLog, Iterable<Log> indoorDeviceLog, DeltaVO delta){
         // Defines the two variables needed: Maximum temperature difference and the Instant where it occurred.
         double maxTempDiff = 0;
         String instantTime = null;
@@ -158,14 +166,14 @@ public class LogServiceImpl implements LogService {
         // there are records/logs found in the query)
         // Compares the two logs to get the maximum temperature difference and the instant where it happened
         for (Log interiorLog : indoorDeviceLog) {
-            LocalDateTime intTime = interiorLog.getTime();
+            TimeStampVO intTime = interiorLog.getTime();
             for (Log exteriorLog : outdoorDeviceLog) {
-                LocalDateTime extTime = exteriorLog.getTime();
+                TimeStampVO extTime = exteriorLog.getTime();
                 if (isWithinTimeWindow(intTime, extTime, delta)) {
                     double temp = getAbsoluteDifference(interiorLog, exteriorLog);
                     if (temp>maxTempDiff){
                         maxTempDiff=temp;
-                        instantTime = interiorLog.getTime().toString();
+                        instantTime = interiorLog.getTime().getValue().toString();
                     }
                 }
             }
@@ -212,20 +220,6 @@ public class LogServiceImpl implements LogService {
         return inRoom.getRoomDimensions().getRoomHeight()>0;
     }
 
-    /**
-     * Configures the delta for the comparison of the logs' reading timestamps.
-     * If the user does not provide a valid delta, the method sets the delta to 5 minutes.
-     * @param timeConfig The configuration containing the initial and end timestamps of the time period, as well
-     * as the delta for matching log timestamps.
-     * @return The delta for the comparison of logs.
-     */
-    private int configureDelta(TimeConfig timeConfig) {
-        int delta = timeConfig.getDeltaMin();
-        if (delta <= 0) {
-            delta = DELTA;
-        }
-        return delta;
-    }
 
 
     /**
@@ -243,11 +237,32 @@ public class LogServiceImpl implements LogService {
      * devices are within a given time window.
      * @param intTime The timestamp of the indoor device's reading.
      * @param extTime The timestamp of the outdoor device's reading.
-     * @param delta The time window in minutes.
+     * @param deltaMin The time window in minutes.
      * @return true if the timestamps are within the time window, false otherwise.
      */
-    private boolean isWithinTimeWindow(LocalDateTime intTime, LocalDateTime extTime, int delta) {
-        return intTime.plusMinutes(delta).isAfter(extTime) && intTime.minusMinutes(delta).isBefore(extTime);
+    private boolean isWithinTimeWindow(TimeStampVO intTime, TimeStampVO extTime, DeltaVO deltaMin) {
+        LocalDateTime intT= intTime.getValue();
+        LocalDateTime extT = extTime.getValue();
+        int delta = deltaMin.getValue();
+        return intT.plusMinutes(delta).isAfter(extT) && intT.minusMinutes(delta).isBefore(extT);
+    }
+
+    /**
+     * Checks if the provided timestamps are invalid, i.e., if they are null, if the initial timestamp is after the final
+     * and if the final timestamp is after the current time.
+     * @param initial The initial timestamp.
+     * @param end The final timestamp.
+     * @return true if the timestamps are invalid, false otherwise.
+     */
+    private boolean areTimeStampsInvalid(TimeStampVO initial, TimeStampVO end){
+        if (initial == null || end == null){
+            return true;
+        }
+
+        LocalDateTime from = initial.getValue();
+        LocalDateTime to = end.getValue();
+
+        return from.isAfter(to) || to.isAfter(LocalDateTime.now());
     }
 
 

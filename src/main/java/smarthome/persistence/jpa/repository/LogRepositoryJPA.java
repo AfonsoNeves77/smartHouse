@@ -12,8 +12,8 @@ import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -139,15 +139,15 @@ public class LogRepositoryJPA implements LogRepository {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to) {
+    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
         if (deviceID == null || from == null || to == null) {
             throw new IllegalArgumentException("DeviceIDVO, from and to cannot be null");
         }
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
             Query query = em.createQuery("SELECT r FROM LogDataModel r WHERE r.deviceID = :deviceID AND r.time >= :from AND r.time <= :to");
             query.setParameter("deviceID", deviceID.getID());
-            query.setParameter("from", from);
-            query.setParameter("to", to);
+            query.setParameter("from", from.getValue());
+            query.setParameter("to", to.getValue());
             List<LogDataModel> listOfLogs = query.getResultList();
             return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
         } catch (RuntimeException e) {
@@ -171,7 +171,7 @@ public class LogRepositoryJPA implements LogRepository {
      * @return An Iterable of Log objects that match the query criteria.
      */
 
-    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end) {
+    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
             throw new IllegalArgumentException("Invalid parameters.");
         }
@@ -180,8 +180,8 @@ public class LogRepositoryJPA implements LogRepository {
             Query query = em.createQuery("SELECT l FROM LogDataModel l WHERE l.deviceID = :deviceID AND l.sensorTypeID = :sensorTypeID AND l.time BETWEEN :start AND :end");
             query.setParameter("deviceID", deviceID.getID());
             query.setParameter("sensorTypeID", sensorType);
-            query.setParameter("start", start);
-            query.setParameter("end", end);
+            query.setParameter("start", start.getValue());
+            query.setParameter("end", end.getValue());
             List<LogDataModel> listOfLogs = query.getResultList();
             return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
         } catch (RuntimeException e) {

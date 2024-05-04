@@ -7,14 +7,19 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+/**
+ * Represents a log entry in the system. Each log entry contains a unique identifier, a timestamp, a sensor reading,
+ * a sensor ID, a device ID, and a sensor type ID.
+ */
 public class Log implements AggregateRoot {
     private final LogIDVO logID;
-    private final LocalDateTime time;
+    private final TimeStampVO time;
     private final SensorValueObject<?> reading;
     private final SensorIDVO sensorID;
     private final DeviceIDVO deviceID;
@@ -22,6 +27,7 @@ public class Log implements AggregateRoot {
 
     /**
      * Constructs a new Log object with the provided parameters. Usually created right after a reading is obtained.
+     *
      *
      * @param reading      the sensor value object representing the reading
      * @param sensorID     the sensor ID object representing the ID of the sensor
@@ -35,7 +41,7 @@ public class Log implements AggregateRoot {
         }
 
         this.logID = new LogIDVO(UUID.randomUUID());
-        this.time = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        this.time = new TimeStampVO(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         this.reading = reading;
         this.sensorID = sensorID;
         this.deviceID = deviceID;
@@ -46,14 +52,14 @@ public class Log implements AggregateRoot {
      * Constructs a new Log object with the provided parameters. Usually created after a query to the persistence.
      *
      * @param logID        the log ID object representing the ID of the log
-     * @param time         timestamp of the reading
+     * @param time
      * @param reading      the sensor value object representing the reading
      * @param sensorID     the sensor ID object representing the ID of the sensor
      * @param deviceID     the device ID object representing the ID of the device
      * @param sensorTypeID the sensor type ID object representing the ID of the sensor type
      * @throws IllegalArgumentException if any of the parameters are null
      */
-    public Log(LogIDVO logID, LocalDateTime time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
+    public Log(LogIDVO logID, TimeStampVO time, SensorValueObject<?> reading, SensorIDVO sensorID, DeviceIDVO deviceID, SensorTypeIDVO sensorTypeID) {
         if (areParamsNull(logID, time, reading, sensorID, deviceID, sensorTypeID)) {
             throw new IllegalArgumentException("Invalid parameters.");
         }
@@ -117,7 +123,7 @@ public class Log implements AggregateRoot {
      *
      * @return the timestamp representing the time stored in this object.
      */
-    public LocalDateTime getTime() {
+    public TimeStampVO getTime() {
         return this.time;
     }
 

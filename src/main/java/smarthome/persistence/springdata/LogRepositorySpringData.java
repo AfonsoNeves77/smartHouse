@@ -9,6 +9,7 @@ import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -84,12 +85,12 @@ public class LogRepositorySpringData implements LogRepository {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to) {
+    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
         if (deviceID == null || from == null || to == null) {
             throw new IllegalArgumentException("Invalid parameters ");
         }
         try {
-            Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), from, to);
+            Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), from.getValue(), to.getValue());
             return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, logDataModelIterable);
         } catch (DataAccessException e) {
             return new ArrayList<>();
@@ -142,14 +143,16 @@ public class LogRepositorySpringData implements LogRepository {
      * @return An Iterable of Log objects that match the query criteria.
      */
 
-    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end) {
+    public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
             throw new IllegalArgumentException("Invalid parameters.");
         }
 
         try {
             String deviceIDString = deviceID.getID();
-            Iterable<LogDataModel> listOfLogs = this.iLogRepositorySpringData.findByDeviceIDAndSensorTypeAndTimeBetween(deviceIDString, sensorType, start, end);
+            LocalDateTime startTime = start.getValue();
+            LocalDateTime endTime = end.getValue();
+            Iterable<LogDataModel> listOfLogs = this.iLogRepositorySpringData.findByDeviceIDAndSensorTypeAndTimeBetween(deviceIDString, sensorType, startTime, endTime);
             return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, listOfLogs);
         } catch (DataAccessException e) {
             return null;

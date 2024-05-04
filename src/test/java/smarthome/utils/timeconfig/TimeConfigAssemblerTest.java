@@ -1,6 +1,8 @@
 package smarthome.utils.timeconfig;
 
 import org.junit.jupiter.api.Test;
+import smarthome.domain.vo.DeltaVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 
@@ -24,10 +26,18 @@ class TimeConfigAssemblerTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                TimeConfigAssembler.createTimeConfig(null));
+                TimeConfigAssembler.createInitialTimeStamp(null));
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
+                TimeConfigAssembler.createFinalTimeStamp(null));
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
+                TimeConfigAssembler.createDeltaVO(null));
         String result = exception.getMessage();
+        String result2 = exception2.getMessage();
+        String result3 = exception3.getMessage();
         // Assert
         assertEquals(expected,result);
+        assertEquals(expected,result2);
+        assertEquals(expected,result3);
     }
 
     /**
@@ -55,17 +65,19 @@ class TimeConfigAssemblerTest {
 
         TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime,deltaMin);
 
-        TimeConfig config = TimeConfigAssembler.createTimeConfig(dto);
+        TimeStampVO initial = TimeConfigAssembler.createInitialTimeStamp(dto);
+        TimeStampVO end = TimeConfigAssembler.createFinalTimeStamp(dto);
+        DeltaVO delta = TimeConfigAssembler.createDeltaVO(dto);
 
         // Act
-        LocalDateTime iStamp = config.getInitialTimeStamp();
-        LocalDateTime eStamp = config.getEndTimeStamp();
-        int delta = config.getDeltaMin();
+        LocalDateTime iStamp = initial.getValue();
+        LocalDateTime eStamp = end.getValue();
+        int deltaM = delta.getValue();
 
         // Assert
         assertEquals(expectedIStamp,iStamp.toString());
         assertEquals(expectedEStamp,eStamp.toString());
-        assertEquals(expected,delta);
+        assertEquals(expected,deltaM);
     }
 
     /**
@@ -91,11 +103,12 @@ class TimeConfigAssemblerTest {
 
         TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime);
 
-        TimeConfig config = TimeConfigAssembler.createTimeConfig(dto);
+        TimeStampVO initial = TimeConfigAssembler.createInitialTimeStamp(dto);
+        TimeStampVO end = TimeConfigAssembler.createFinalTimeStamp(dto);
 
         // Act
-        LocalDateTime iStamp = config.getInitialTimeStamp();
-        LocalDateTime eStamp = config.getEndTimeStamp();
+        LocalDateTime iStamp = initial.getValue();
+        LocalDateTime eStamp = end.getValue();
 
         // Assert
         assertEquals(expectedIStamp,iStamp.toString());

@@ -8,6 +8,7 @@ import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.dto.LogDTO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -71,8 +72,8 @@ class LogMapperTest {
         when(logIDVO.getID()).thenReturn(logID);
 
         String time = LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS).toString();
-        LocalDateTime localDateTime = mock(LocalDateTime.class);
-        when(localDateTime.toString()).thenReturn(time);
+        TimeStampVO localDateTime = mock(TimeStampVO.class);
+        when(localDateTime.getValue()).thenReturn(LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS));
 
         String reading = "60";
         HumidityValue readingObj= mock(HumidityValue.class);
@@ -89,6 +90,7 @@ class LogMapperTest {
         String sensorTypeID = UUID.randomUUID().toString();
         SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
         when(sensorTypeIDVO.getID()).thenReturn(sensorTypeID);
+
 
         // Ideally, the log should be mocked, unable to do so due to mockito limitations when stubbing SensorValueObject
         Log log = new Log(logIDVO,localDateTime,readingObj,sensorIDVO,deviceIDVO,sensorTypeIDVO);
@@ -137,8 +139,8 @@ class LogMapperTest {
         when(logIDVO2.getID()).thenReturn(logID2);
 
         String time = LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS).toString();
-        LocalDateTime localDateTime = mock(LocalDateTime.class);
-        when(localDateTime.toString()).thenReturn(time);
+        TimeStampVO localDateTime = mock(TimeStampVO.class);
+        when(localDateTime.getValue()).thenReturn(LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS));
 
         String reading = "60";
         HumidityValue readingObj= mock(HumidityValue.class);

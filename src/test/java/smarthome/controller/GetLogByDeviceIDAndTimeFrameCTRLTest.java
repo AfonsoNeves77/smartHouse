@@ -15,6 +15,7 @@ import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.service.LogServiceImpl;
 import smarthome.utils.timeconfig.TimeConfigDTO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -148,24 +149,25 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         GetLogByDeviceIDAndTimeFrameCTRL getLogByDeviceIDAndTimeFrameCTRL =
                 new GetLogByDeviceIDAndTimeFrameCTRL(logService);
 
-        String deviceID = "Did";
+        String deviceID = "f2e4113e-1b76-4eaa-8b4e-bb391b62e23e";
         String deviceName = "device1";
         String deviceModel = "model1";
         String deviceStatus = "status";
         String roomID = "rid";
         DeviceDTO deviceDTO = new DeviceDTO(deviceID,deviceName,deviceModel,deviceStatus,roomID);
         String controllerError = "Invalid TimeConfigDTO";
-        String timeStampError = "Invalid timestamps";
+        String timeStampError = "Invalid date/time entries";
+        String dateLogicError = "Invalid Time Stamps";
 
         String iDate = "2024-04-23";
-        String iTime = "16:00";
-        String eDate = "2024-04-23";
+        String iTime = "19:00";
+        String eDate = "2024-04-22";
         String eTime = "18:00";
 
         TimeConfigDTO timeConfigDTO1 = new TimeConfigDTO(null,null,null,null);
         TimeConfigDTO timeConfigDTO2 = new TimeConfigDTO(iDate,iTime,eDate,"fail");
         TimeConfigDTO timeConfigDTO3 = new TimeConfigDTO("fail",iTime,eDate,eTime);
-        TimeConfigDTO timeConfigDTO4 = new TimeConfigDTO(eDate,eTime,eDate,iTime);
+        TimeConfigDTO timeConfigDTO4 = new TimeConfigDTO(iDate, iTime, eDate, eTime);
 
         //Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
@@ -194,7 +196,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         assertEquals(timeStampError, result2); // TimeConfig has all parameters null
         assertEquals(timeStampError, result3); // TimeConfig has end time null
         assertEquals(timeStampError, result4); // TimeConfig has initial date null
-        assertEquals(timeStampError, result5); // TimeConfig has initial time stamp after end time stamp
+        assertEquals(dateLogicError, result5); // TimeConfig has initial time stamp after end time stamp
     }
 
     /**
@@ -225,8 +227,11 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String eTime = "18:00";
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime);
 
-        LocalDateTime initalTimeStamp = LocalDateTime.parse("2024-04-23T16:00");
-        LocalDateTime finalTimeStamp = LocalDateTime.parse("2024-04-23T18:00");
+        LocalDateTime initalT = LocalDateTime.parse("2024-04-23T16:00");
+        LocalDateTime finalT = LocalDateTime.parse("2024-04-23T18:00");
+
+        TimeStampVO initalTimeStamp = new TimeStampVO(initalT);
+        TimeStampVO finalTimeStamp = new TimeStampVO(finalT);
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -273,15 +278,17 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
 
         // Arranging timeconfigDTO
         String iDate = "2024-04-23";
-        String iTime = "16:00";
+        String iTime = "16:00:00";
         String eDate = "2024-04-23";
-        String eTime = "18:00";
+        String eTime = "18:00:00";
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime);
 
-        String strInitialTimeStamp = "2024-04-23T16:00";
-        LocalDateTime initalTimeStamp = LocalDateTime.parse(strInitialTimeStamp);
-        String strFinalTimeStamp = "2024-04-23T18:00";
-        LocalDateTime finalTimeStamp = LocalDateTime.parse(strFinalTimeStamp);
+        String strInitialTimeStamp = "2024-04-23T16:00:00";
+        LocalDateTime initialTime = LocalDateTime.parse(strInitialTimeStamp);
+        TimeStampVO initialTimeStamp = new TimeStampVO(initialTime);
+        String strFinalTimeStamp = "2024-04-23T18:00:00";
+        LocalDateTime finalTime = LocalDateTime.parse(strFinalTimeStamp);
+        TimeStampVO finalTimeStamp = new TimeStampVO(finalTime);
 
         // Arranging Logs and creating list of logs
         LogIDVO logID1 = new LogIDVO(UUID.randomUUID());
@@ -304,7 +311,8 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String type2 = "TemperatureSensor";
         SensorTypeIDVO sensorTypeIDVO2 = new SensorTypeIDVO(type2);
 
-        Log log1 = new Log(logID1,initalTimeStamp,reading1obj,sensorID1,deviceIDVO,sensorTypeIDVO1);
+
+        Log log1 = new Log(logID1,initialTimeStamp,reading1obj,sensorID1,deviceIDVO,sensorTypeIDVO1);
         Log log2 = new Log(logID2,finalTimeStamp,reading2obj,sensorID2,deviceIDVO,sensorTypeIDVO2);
         ArrayList<Log> logList = new ArrayList<>();
         logList.add(log1);
@@ -315,7 +323,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initalTimeStamp, finalTimeStamp))
+        when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initialTimeStamp, finalTimeStamp))
                 .thenReturn(logList);
 
         // Creating ctrl and obtaining the result iterable

@@ -10,8 +10,8 @@ import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +45,7 @@ public class LogAssembler {
      */
     public static Log toDomain(LogFactory logFactory, SensorValueFactory valueFactory, LogDataModel logDataModel){
         LogIDVO logIDVO = new LogIDVO(UUID.fromString(logDataModel.getLogID()));
-        LocalDateTime timeStamp = logDataModel.getTime();
+        TimeStampVO timeStamp = new TimeStampVO(logDataModel.getTime());
         SensorIDVO sensorIDVO = new SensorIDVO(UUID.fromString(logDataModel.getSensorID()));
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(logDataModel.getDeviceID()));
         SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(logDataModel.getSensorTypeID());

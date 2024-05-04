@@ -1,12 +1,12 @@
 package smarthome.controller;
 
+import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.service.LogService;
-import smarthome.utils.timeconfig.TimeConfig;
-import smarthome.utils.timeconfig.TimeConfigAssembler;
-import smarthome.utils.timeconfig.TimeConfigDTO;
+import smarthome.utils.timeconfig.*;
 
 /**
  * Controller class for getting the maximum instantaneous temperature difference between two devices, one located
@@ -41,7 +41,9 @@ public class GetMaxInstantaneousTemperatureDifferenceCTRL {
     public String getMaxInstantaneousTemperature(DeviceDTO outdoorDeviceDTO, DeviceDTO indoorDeviceDTO, TimeConfigDTO timeConfigDTO) {
         DeviceIDVO outdoorDeviceID = DeviceMapper.createDeviceID(outdoorDeviceDTO);
         DeviceIDVO indoorDeviceID = DeviceMapper.createDeviceID(indoorDeviceDTO);
-        TimeConfig timeConfig = TimeConfigAssembler.createTimeConfig(timeConfigDTO);
-        return logService.getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, timeConfig);
+        TimeStampVO initialTimeStamp = TimeConfigAssembler.createInitialTimeStamp(timeConfigDTO);
+        TimeStampVO finalTimeStamp = TimeConfigAssembler.createFinalTimeStamp(timeConfigDTO);
+        DeltaVO delta = TimeConfigAssembler.createDeltaVO(timeConfigDTO);
+        return logService.getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, initialTimeStamp, finalTimeStamp, delta);
     }
 }

@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
@@ -20,6 +21,7 @@ import smarthome.persistence.RoomRepository;
 import smarthome.service.LogService;
 import smarthome.service.LogServiceImpl;
 import smarthome.utils.timeconfig.TimeConfigDTO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -32,6 +34,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
+
+    private LogRepository logRepository;
+    private DeviceRepository deviceRepository;
+    private RoomRepository roomRepository;
+    private LogService logService;
+    private GetMaxInstantaneousTemperatureDifferenceCTRL ctrl;
+
+    @BeforeEach
+    void setUp() {
+        logRepository = mock(LogRepository.class);
+        deviceRepository = mock(DeviceRepository.class);
+        roomRepository = mock(RoomRepository.class);
+        logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
+    }
+
     /**
      * Test for the constructor of GetMaxInstantaneousTemperatureDifferenceCTRL.
      * When the service is null it throws an IllegalArgumentException.
@@ -58,14 +76,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenConstructorGetsValidParam_thenControllerIsInstantiated() {
         //Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
-
-        // Act
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
-
         // Assert
         assertNotNull(ctrl);
     }
@@ -77,10 +87,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenOutdoorDeviceDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         String deviceID2 = UUID.randomUUID().toString();
         String deviceName2 = "TempDevice2";
@@ -98,7 +104,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, endDate, startTime, endTime, delta);
 
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "DeviceDTO cannot be null.";
         // Act
@@ -119,10 +124,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenIndoorDeviceDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         String deviceID2 = UUID.randomUUID().toString();
         String deviceName2 = "TempDevice2";
@@ -139,8 +140,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         String delta = "5";
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, endDate, startTime, endTime, delta);
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "DeviceDTO cannot be null.";
         // Act
@@ -161,10 +160,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenTimeConfigDTOIsNull_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         String deviceID1 = UUID.randomUUID().toString();
         String deviceName1 = "TempDevice1";
@@ -181,8 +176,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         DeviceDTO deviceInDTO = new DeviceDTO(deviceID1, deviceName1, deviceModel1, deviceStatus1, roomID1);
         DeviceDTO deviceOutDTO = new DeviceDTO(deviceID2, deviceName2, deviceModel2, deviceStatus2, roomID2);
 
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Invalid TimeConfigDTO";
         // Act
@@ -202,10 +195,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGivenNullParamsToTimeConfigDTO_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         String deviceID1 = UUID.randomUUID().toString();
         String deviceName1 = "TempDevice1";
@@ -234,9 +223,7 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         TimeConfigDTO timeConfigDTO4 = new TimeConfigDTO(startDate, endDate, startTime, null, delta);
         TimeConfigDTO timeConfigDTO5 = new TimeConfigDTO(startDate, endDate, startTime, endTime, null);
 
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
-
-        String expected = "Invalid timestamps";
+        String expected = "Invalid date/time entries";
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
                 ctrl.getMaxInstantaneousTemperature(deviceOutDTO, deviceInDTO, timeConfigDTO1));
@@ -270,10 +257,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_IfOutsideDeviceIsInside_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -335,8 +318,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, startTime, endDate, endTime, delta);
 
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
-
         String expected = "Invalid Device Location";
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -356,10 +337,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifInsideDeviceIsOutside_throwsIllegalArgumentException() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -421,8 +398,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, startTime, endDate, endTime, delta);
 
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
-
         String expected = "Invalid Device Location";
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -444,10 +419,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoOutsideLogsAreFoundWithinTimePeriodGiven_returnsMessage() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -509,14 +480,15 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         DeviceIDVO outDeviceIDVO = outDevice.getId();
 
-        LocalDateTime initialDateTime = LocalDateTime.parse(startDate+"T"+startTime);
-        LocalDateTime finalDateTime = LocalDateTime.parse(endDate+"T"+endTime);
+        LocalDateTime initialT = LocalDateTime.parse(startDate + "T" + startTime);
+        LocalDateTime finalT = LocalDateTime.parse(endDate + "T" + endTime);
+
+        TimeStampVO initialDateTime = new TimeStampVO(initialT);
+        TimeStampVO finalDateTime = new TimeStampVO(finalT);
 
         when(logRepository.getDeviceTemperatureLogs(outDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(Collections.emptyList());
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, startTime, endDate, endTime, delta);
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "There are no records available for the given period";
 
@@ -536,10 +508,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifNoInsideLogsAreFoundWithinTimePeriodGiven_returnsMessage() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -602,18 +570,24 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         DeviceIDVO outDeviceIDVO = outDevice.getId();
         DeviceIDVO inDeviceIDVO = inDevice.getId();
 
-        LocalDateTime initialDateTime = LocalDateTime.parse(startDate+"T"+startTime);
-        LocalDateTime finalDateTime = LocalDateTime.parse(endDate+"T"+endTime);
+        LocalDateTime initialT = LocalDateTime.parse(startDate + "T" + startTime);
+        LocalDateTime finalT = LocalDateTime.parse(endDate + "T" + endTime);
+
+        TimeStampVO initialDateTime = new TimeStampVO(initialT);
+        TimeStampVO finalDateTime = new TimeStampVO(finalT);
+
+        when(logRepository.getDeviceTemperatureLogs(outDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(Collections.emptyList());
+        when(logRepository.getDeviceTemperatureLogs(inDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(Collections.emptyList());
 
         SensorIDVO outdoorSensorID = new SensorIDVO(UUID.randomUUID());
 
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
 
-        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:55:50"), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:59:59"), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:00:00"), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:03:50"), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:35:50"), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:55:50")), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:59:59")), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:00:00")), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:03:50")), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:35:50")), new TemperatureValue("23"), outdoorSensorID, outDeviceID, sensorType);
 
         List<Log> outdoorLogs = Arrays.asList(outLog1Dev1, outLog2Dev1, outLog3Dev1, outLog4Dev1, outLog5Dev1);
 
@@ -621,8 +595,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         when(logRepository.getDeviceTemperatureLogs(inDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(Collections.emptyList());
 
         TimeConfigDTO timeConfigDTO = new TimeConfigDTO(startDate, startTime, endDate, endTime, delta);
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "There are no records available for the given period";
 
@@ -642,10 +614,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifLogsAreFoundWithinTimePeriodGivenButDeltaSpanDoesNotAllowForMatchingReadings_returnsMessage() {
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -677,7 +645,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         String deviceModelDTO1 = "XPTO";
         String deviceStatusDTO1 = "On";
         String outRoomDTOID = roomID1.getID();
-
 
         DeviceNameVO deviceName2 = new DeviceNameVO("Inside Device");
         DeviceModelVO deviceModel2 = new DeviceModelVO("XP");
@@ -710,25 +677,28 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         DeviceIDVO outDeviceIDVO = outDevice.getId();
         DeviceIDVO inDeviceIDVO = inDevice.getId();
 
-        LocalDateTime initialDateTime = LocalDateTime.parse(startDate + "T" + startTime);
-        LocalDateTime finalDateTime = LocalDateTime.parse(endDate + "T" + endTime);
+        LocalDateTime initialT = LocalDateTime.parse(startDate + "T" + startTime);
+        LocalDateTime finalT = LocalDateTime.parse(endDate + "T" + endTime);
+
+        TimeStampVO initialDateTime = new TimeStampVO(initialT);
+        TimeStampVO finalDateTime = new TimeStampVO(finalT);
 
         SensorIDVO outdoorSensorID = new SensorIDVO(UUID.randomUUID());
         SensorIDVO insideSensorID = new SensorIDVO(UUID.randomUUID());
 
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
 
-        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:50:00"), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:10:00"), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:20:00"), new TemperatureValue("18"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:40:00"), new TemperatureValue("17"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T01:10:00"), new TemperatureValue("15"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:50:00")), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:10:00")), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:20:00")), new TemperatureValue("18"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:40:00")), new TemperatureValue("17"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T01:10:00")), new TemperatureValue("15"), outdoorSensorID, outDeviceID, sensorType);
 
-        Log inLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:00:00"), new TemperatureValue("23"), insideSensorID, inDeviceID, sensorType);
-        Log inLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:30:00"), new TemperatureValue("21"), insideSensorID, inDeviceID, sensorType);
-        Log inLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:00:00"), new TemperatureValue("22"), insideSensorID, inDeviceID, sensorType);
-        Log inLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:30:00"), new TemperatureValue("25"), insideSensorID, inDeviceID, sensorType);
-        Log inLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T01:00:00"), new TemperatureValue("20"), insideSensorID, inDeviceID, sensorType);
+        Log inLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:00:00")), new TemperatureValue("23"), insideSensorID, inDeviceID, sensorType);
+        Log inLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:30:00")), new TemperatureValue("21"), insideSensorID, inDeviceID, sensorType);
+        Log inLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:00:00")), new TemperatureValue("22"), insideSensorID, inDeviceID, sensorType);
+        Log inLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:30:00")), new TemperatureValue("25"), insideSensorID, inDeviceID, sensorType);
+        Log inLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T01:00:00")), new TemperatureValue("20"), insideSensorID, inDeviceID, sensorType);
 
 
         List<Log> outdoorLogs = Arrays.asList(outLog1Dev1, outLog2Dev1, outLog3Dev1, outLog4Dev1, outLog5Dev1);
@@ -736,9 +706,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         when(logRepository.getDeviceTemperatureLogs(outDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(outdoorLogs);
         when(logRepository.getDeviceTemperatureLogs(inDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(indoorLogs);
-
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "Readings were found within the provided time span, but with no matches within the delta provided";
 
@@ -759,10 +726,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
     @Test
     void whenGetMaxInstantaneousTempDifferenceIsCalled_ifMatchingInstantLogsAreFoundWithinTimePeriodGiven_returnsSuccessMessage(){
         // Arrange
-        LogRepository logRepository = mock(LogRepository.class);
-        DeviceRepository deviceRepository = mock(DeviceRepository.class);
-        RoomRepository roomRepository = mock(RoomRepository.class);
-        LogService logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
 
         HouseIDVO houseID1 = new HouseIDVO(UUID.randomUUID());
         RoomNameVO roomName1 = new RoomNameVO("Outside");
@@ -827,25 +790,28 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         DeviceIDVO outDeviceIDVO = outDevice.getId();
         DeviceIDVO inDeviceIDVO = inDevice.getId();
 
-        LocalDateTime initialDateTime = LocalDateTime.parse(startDate+"T"+startTime);
-        LocalDateTime finalDateTime = LocalDateTime.parse(endDate+"T"+endTime);
+        LocalDateTime initialT = LocalDateTime.parse(startDate + "T" + startTime);
+        LocalDateTime finalT = LocalDateTime.parse(endDate + "T" + endTime);
+
+        TimeStampVO initialDateTime = new TimeStampVO(initialT);
+        TimeStampVO finalDateTime = new TimeStampVO(finalT);
 
         SensorIDVO outdoorSensorID = new SensorIDVO(UUID.randomUUID());
         SensorIDVO insideSensorID = new SensorIDVO(UUID.randomUUID());
 
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
 
-        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:50:00"), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:00:00"), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:05:00"), new TemperatureValue("18"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:10:00"), new TemperatureValue("17"), outdoorSensorID, outDeviceID, sensorType);
-        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:15:00"), new TemperatureValue("15"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:50:00")), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:00:00")), new TemperatureValue("13"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:05:00")), new TemperatureValue("18"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:10:00")), new TemperatureValue("17"), outdoorSensorID, outDeviceID, sensorType);
+        Log outLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:15:00")), new TemperatureValue("15"), outdoorSensorID, outDeviceID, sensorType);
 
-        Log inLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:00:00"), new TemperatureValue("23"), insideSensorID, inDeviceID, sensorType);
-        Log inLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-25T23:30:00"), new TemperatureValue("21"), insideSensorID, inDeviceID, sensorType);
-        Log inLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:02:01"), new TemperatureValue("22"), insideSensorID, inDeviceID, sensorType);
-        Log inLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:08:01"), new TemperatureValue("25"), insideSensorID, inDeviceID, sensorType);
-        Log inLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), LocalDateTime.parse("2024-03-26T00:19:00"), new TemperatureValue("20"), insideSensorID, inDeviceID, sensorType);
+        Log inLog1Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:00:00")), new TemperatureValue("23"), insideSensorID, inDeviceID, sensorType);
+        Log inLog2Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-25T23:30:00")), new TemperatureValue("21"), insideSensorID, inDeviceID, sensorType);
+        Log inLog3Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:02:01")), new TemperatureValue("22"), insideSensorID, inDeviceID, sensorType);
+        Log inLog4Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:08:01")), new TemperatureValue("25"), insideSensorID, inDeviceID, sensorType);
+        Log inLog5Dev1 = new Log(new LogIDVO(UUID.randomUUID()), new TimeStampVO(LocalDateTime.parse("2024-03-26T00:19:00")), new TemperatureValue("20"), insideSensorID, inDeviceID, sensorType);
 
 
         List<Log> outdoorLogs = Arrays.asList(outLog1Dev1, outLog2Dev1, outLog3Dev1, outLog4Dev1, outLog5Dev1);
@@ -853,9 +819,6 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
         when(logRepository.getDeviceTemperatureLogs(outDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(outdoorLogs);
         when(logRepository.getDeviceTemperatureLogs(inDeviceIDVO, "TemperatureSensor", initialDateTime, finalDateTime)).thenReturn(indoorLogs);
-
-
-        GetMaxInstantaneousTemperatureDifferenceCTRL ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
 
         String expected = "The Maximum Temperature Difference within the selected Period was of 9.0 Cº which happened at 2024-03-26T00:02:01";
 

@@ -9,6 +9,7 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -35,7 +36,7 @@ class LogTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("Humidity");
         LogIDVO logID = new LogIDVO(UUID.randomUUID());
-        LocalDateTime time = LocalDateTime.now();
+        TimeStampVO time = new TimeStampVO(LocalDateTime.now());
         String expected = "Invalid parameters.";
 
         // Act
@@ -73,7 +74,7 @@ class LogTest {
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeID = mock(SensorTypeIDVO.class);
         LogIDVO logID = mock(LogIDVO.class);
-        LocalDateTime time = mock(LocalDateTime.class);
+        TimeStampVO time = mock(TimeStampVO.class);
         String expected = "Invalid parameters.";
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, () -> new Log(null, sensorID, deviceID, sensorTypeID));
@@ -282,7 +283,7 @@ class LogTest {
                 .truncatedTo(ChronoUnit.SECONDS);
 
         // Act
-        LocalDateTime resultUTCTime = log.getTime()
+        LocalDateTime resultUTCTime = log.getTime().getValue()
                 .atZone(ZoneId.systemDefault())
                 .withZoneSameInstant(ZoneId.of("UTC"))
                 .toLocalDateTime()
@@ -309,7 +310,7 @@ class LogTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("Humidity");
         LogIDVO logID = new LogIDVO(UUID.randomUUID());
-        LocalDateTime time = LocalDateTime.now();
+        TimeStampVO time = new TimeStampVO(LocalDateTime.now());
 
         Log log = new Log(logID,time,reading,sensorID,deviceID,sensorTypeID);
 

@@ -45,7 +45,7 @@ public class LogDataModel {
      */
     public LogDataModel(Log log) {
         this.logID = log.getId().getID();
-        this.time = log.getTime();
+        this.time = log.getTime().getValue();
         this.reading = log.getReading().getValue().toString();
         this.sensorID = log.getSensorID().getID();
         this.deviceID = log.getDeviceID().getID();

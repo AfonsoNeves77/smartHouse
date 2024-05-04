@@ -3,6 +3,8 @@ package smarthome.mapper;
 import smarthome.domain.log.Log;
 import smarthome.mapper.dto.LogDTO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,14 @@ public class LogMapper {
             throw new IllegalArgumentException("Invalid parameter");
         }
         String logID = log.getId().getID();
-        String localDateTime = log.getTime().toString();
+        LocalDateTime timeValue = log.getTime().getValue();
+        String formattedTime = timeValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")); // Formats the time onto a string with the desired format
         String reading = log.getReading().getValue().toString();
         String sensorID = log.getSensorID().getID();
         String deviceID = log.getDeviceID().getID();
         String sensorTypeID = log.getSensorTypeID().getID();
 
-        return new LogDTO(logID, localDateTime, reading, sensorID, deviceID, sensorTypeID);
+        return new LogDTO(logID, formattedTime, reading, sensorID, deviceID, sensorTypeID);
     }
 
     /**

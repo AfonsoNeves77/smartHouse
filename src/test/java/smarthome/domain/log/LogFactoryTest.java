@@ -7,6 +7,7 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -49,7 +50,7 @@ class LogFactoryTest {
     void whenCreateLogUsingOverloadedMethodWithInvalidParameters_ShouldPropagateIllegalArgumentException() {
         //Arrange
         LogIDVO logID = new LogIDVO(UUID.randomUUID());
-        LocalDateTime time = LocalDateTime.now();
+        TimeStampVO time = new TimeStampVO(LocalDateTime.now());
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("123");
@@ -99,7 +100,7 @@ class LogFactoryTest {
     void whenCreateLogWithValidParameters_ShouldCreateLogWithLogID() {
         //Arrange
         LogIDVO logID = new LogIDVO(UUID.randomUUID());
-        LocalDateTime time = LocalDateTime.now();
+        TimeStampVO time = new TimeStampVO(LocalDateTime.now());
         SensorValueObject<?> reading = new TemperatureValue("20.0");
         SensorIDVO sensorID = new SensorIDVO(UUID.randomUUID());
         DeviceIDVO deviceID =  new DeviceIDVO(UUID.randomUUID());

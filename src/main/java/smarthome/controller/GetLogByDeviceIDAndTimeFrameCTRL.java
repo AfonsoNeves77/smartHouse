@@ -7,9 +7,9 @@ import smarthome.mapper.LogMapper;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.LogDTO;
 import smarthome.service.LogService;
-import smarthome.utils.timeconfig.TimeConfig;
 import smarthome.utils.timeconfig.TimeConfigAssembler;
 import smarthome.utils.timeconfig.TimeConfigDTO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.util.List;
 
@@ -38,10 +38,11 @@ public class GetLogByDeviceIDAndTimeFrameCTRL {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     public List<LogDTO> getLogByDeviceIDAndTimeFrame(DeviceDTO device, TimeConfigDTO time) {
-        TimeConfig timeInterval = TimeConfigAssembler.createTimeConfig(time);
+        TimeStampVO initialTimeStamp = TimeConfigAssembler.createInitialTimeStamp(time);
+        TimeStampVO finalTimeStamp = TimeConfigAssembler.createFinalTimeStamp(time);
         DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(device);
 
-        List<Log> listOfLogs = logService.findReadingsFromDeviceInATimePeriod(deviceIDVO, timeInterval);
+        List<Log> listOfLogs = logService.findReadingsFromDeviceInATimePeriod(deviceIDVO, initialTimeStamp, finalTimeStamp);
         return LogMapper.domainToDTO(listOfLogs);
     }
 

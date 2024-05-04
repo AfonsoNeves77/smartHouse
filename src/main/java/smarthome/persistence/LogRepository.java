@@ -3,8 +3,7 @@ package smarthome.persistence;
 import smarthome.domain.log.Log;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
-
-import java.time.LocalDateTime;
+import smarthome.domain.vo.logvo.TimeStampVO;
 
 /**
  * This interface defines the operations that a LogRepository must support.
@@ -20,6 +19,6 @@ public interface LogRepository extends Repository<LogIDVO, Log>{
      * @param to       the end of the time period
      * @return an Iterable of logs that match the given criteria
      */
-    Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, LocalDateTime from, LocalDateTime to);
-    Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, LocalDateTime start, LocalDateTime end);
+    Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to);
+    Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end);
 }
