@@ -3,13 +3,14 @@
 skinparam ParticipantPadding 50
 
 autonumber
-title Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period v5.2 - Main Success Scenario
+title Use Case - Get Maximum Instantaneous Temperature Difference in a Given Period - Main Success Scenario
 
 participant ":GetMaxInstantaneousTemperatureDifferenceCTRL" as C
 participant ":DeviceMapper" as DM
 participant ":TimeConfigAssembler" as TCA
+participant ":TimeStampVO" as TS
+participant ":DeltaVO" as DV
 participant ":LogService" as LS
-participant ":TimeConfig" as TC
 participant ":LogRepository" as LR
 
 
@@ -24,19 +25,28 @@ C -> DM : indoorDeviceID = createDeviceIDVO(indoorDeviceDTO)
 activate DM
 deactivate DM
 
-C -> TCA : timeConfig = createTimeConfig(timeConfigDTO)
+C -> TCA : initialTimeStamp = createInitialTimeStamp(timeConfigDTO)
 activate TCA
+create TS
+TCA -> TS : create
+
+
+
+
+C -> TCA : finalTimeStamp = createFinalTimeStamp(timeConfigDTO)
+TCA -> TS : create
+
+C -> TCA : delta = createDeltaVO(timeConfigDTO)
+
+create DV
+TCA -> DV : create
 deactivate TCA
 
-C -> LS : getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, timeConfig)
+C -> LS : getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, initialTimeStamp, finalTimeStamp, delta)
 activate LS
-LS -> TC : initialDateTime = getInitialTimeStamp()
-activate TC
-LS -> TC : finalDateTime = getEndTimeStamp()
-|||
-deactivate TC
 
-LS -> LS : delta = configureDelta(timeConfig)
+|||
+
 activate LS
 deactivate LS
 |||
@@ -52,10 +62,10 @@ deactivate LR
 LS -> LS : retrieveMaxTempDiffInAnInstant(outdoorDeviceLog, indoorDeviceLog, delta)
 activate LS
 deactivate LS
-LS --> C : maxTemperature
+LS --> C : maxTemperatureAndInstant
 deactivate LS
 
-[o<-- C : maxTemperature
+[o<-- C : maxTemperatureAndInstant
 deactivate C
 
 @enduml

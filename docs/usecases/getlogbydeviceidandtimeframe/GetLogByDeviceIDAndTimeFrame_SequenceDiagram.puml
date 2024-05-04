@@ -6,7 +6,7 @@ title Use Case Get Log By Device ID And Time Frame v5.0 - Main Success Scenario
 
 participant ":GetLogByDeviceIDAndTimeFrameCTRL" as C
 participant ":TimeConfigAssembler" as TCA
-participant ":TimeConfig" as TC
+participant ":TimeStampVO" as TSV
 participant ":DeviceMapper" as DM
 participant ":DeviceIDVO" as DIV
 participant ":LogService" as LS
@@ -16,17 +16,22 @@ participant ":LogMapper" as LM
 [o-> C : getLogByDeviceIDAndTimeFrame(deviceDTO, timeConfigDTO)
 activate C
 
-C -> TCA : createTimeConfig(timeConfigDTO)
+C -> TCA : initialTimeStamp = createInitialTimeStamp(time)
 activate TCA
+create TSV
+TCA -> TSV : create
 
-TCA -> TC** : create(initialDate, initialTime, endDate, endTime)
-TCA --> C  : timeInterval
+
+
+C -> TCA : finalTimeStamp = createFinalTimeStamp(time)
+TCA -> TSV : create
+
 deactivate TCA
 
-C -> DM  : createDeviceID(deviceDTO)
+C -> DM  : deviceIDVO = createDeviceID(deviceDTO)
 activate DM
 DM -> DIV** : create(deviceID)
-DM --> C : deviceIDVO
+
 deactivate DM
 
 C -> LS : findReadingsFromDeviceInATimePeriod(deviceIDVO, timeInterval)

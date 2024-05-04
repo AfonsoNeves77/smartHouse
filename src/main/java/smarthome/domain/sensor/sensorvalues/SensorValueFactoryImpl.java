@@ -98,14 +98,12 @@ public class SensorValueFactoryImpl implements SensorValueFactory{
      * @param sensorTypeID The ID of the sensor type for which the value object is created.
      * @return A sensor value object corresponding to the reading, or {@code null} if creation fails.
      */
+
     public SensorValueObject<?> createSensorValue(ZonedDateTime reading, SensorTypeIDVO sensorTypeID){
         if (areParamsValid(sensorTypeID) && isTypePermitted(sensorTypeID.getID())){
-            try {
-                String valuePath = this.configuration.getString(sensorTypeID.getID());
-                return createSunValues(reading,valuePath);
-            } catch (NumberFormatException | NullPointerException e) {
-                return null;
-            }
+
+            String valuePath = this.configuration.getString(sensorTypeID.getID());
+            return createSunValues(reading,valuePath);
         }
         return null;
     }
