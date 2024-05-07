@@ -77,7 +77,7 @@ deactivate DRM
 DRM --> DS : <font color=green>**true**</font>
 deactivate DRM
 
-DS --> C : <font color=green>**true**</font>
+DS --> C : <font color=green>**device**</font>
 deactivate DS
 
 [o<-- C : <font color=green>**true**</font>

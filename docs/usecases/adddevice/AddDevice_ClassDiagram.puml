@@ -54,14 +54,15 @@ class Room {
 }
 
 interface DeviceService {
-    + addDevice(deviceName : deviceNameVO, deviceModel : DeviceModelVO, \nroomID : RoomIDVO) : boolean
+    + addDevice(deviceName : deviceNameVO, deviceModel : DeviceModelVO, \nroomID : RoomIDVO) : Optional<Device>
 }
 
 class DeviceServiceImpl {
+    - roomRepository : RoomRepository
     - deviceFactory : DeviceFactory
     - deviceRepository : DeviceRepository
 
-    + DeviceServiceImpl(deviceFactory : DeviceFactory, roomRepository : RoomRepository, deviceRepository : DeviceRepository)
+    + DeviceServiceImpl(deviceFactory : DeviceFactory, roomRepository : RoomRepository, deviceRepository : DeviceRepository) : Optional<Device>
 }
 
 interface DeviceFactory {
