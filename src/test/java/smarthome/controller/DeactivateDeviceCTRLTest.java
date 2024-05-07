@@ -1,18 +1,18 @@
 package smarthome.controller;
 
+import org.junit.jupiter.api.Test;
 import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactory;
 import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
-import smarthome.domain.vo.devicevo.DeviceModelVO;
-import smarthome.domain.vo.devicevo.DeviceNameVO;
-import smarthome.domain.vo.roomvo.RoomIDVO;
-import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ class DeactivateDeviceCTRLTest {
      */
 
     @Test
-    void whenNullDeviceService_ConstructorShouldThrowIllegalArgumentException(){
+    void whenNullDeviceService_ConstructorShouldThrowIllegalArgumentException() {
 
         //Arrange
         String expected = "Invalid service";
@@ -38,7 +38,7 @@ class DeactivateDeviceCTRLTest {
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -48,7 +48,7 @@ class DeactivateDeviceCTRLTest {
      */
 
     @Test
-    void deactivateDevice_WhenNullDeviceDTO_ShouldReturnFalse(){
+    void deactivateDevice_WhenNullDeviceDTO_ShouldReturnFalse() {
 
         //Arrange
         //Doubling the device service dependencies (room repository, device repository) and injecting them in device service constructor
@@ -229,16 +229,16 @@ class DeactivateDeviceCTRLTest {
         DeviceNameVO deviceNameVO = new DeviceNameVO(deviceName);
 
         String deviceModel = "Bosch electronics 77-kk";
-        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceName);
+        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceModel);
 
-        String deviceStatus = "true";
+        String deviceStatus = "false";
 
         UUID idRoom = UUID.randomUUID();
         String idRoomString = idRoom.toString();
         RoomIDVO roomIDVO = new RoomIDVO(idRoom);
 
         // Creating a new device
-        Device device = new Device(deviceNameVO,deviceModelVO,roomIDVO);
+        Device device = new Device(deviceNameVO, deviceModelVO, roomIDVO);
         DeviceIDVO deviceIDVO = device.getId();
         String deviceID = deviceIDVO.getID();
 
@@ -259,7 +259,8 @@ class DeactivateDeviceCTRLTest {
         device.deactivateDevice();
 
         // Creating a DeviceDTO representing the deactivated device
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus,idRoomString);
+        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, idRoomString);
+
 
         // Act: Invoking deactivateDevice method with a DeviceDTO representing an already deactivated device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -267,7 +268,7 @@ class DeactivateDeviceCTRLTest {
         //Query the device for its status assuring that the created device is deactivated (false)
         boolean state = device.getDeviceStatus().getValue();
 
-        // Assert: Verifying that the result is false (represents the success of the operation), as expected
+        // Assert: Verifying that the result is false (represents the failure of the operation), as expected
         assertFalse(result);
         // Assert: Verifying that the result is false (represents device's status), as expected
         assertFalse(state);
@@ -287,7 +288,7 @@ class DeactivateDeviceCTRLTest {
         DeviceNameVO deviceNameVO = new DeviceNameVO(deviceName);
 
         String deviceModel = "Bosch electronics 77-kk";
-        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceName);
+        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceModel);
 
         String deviceStatus = "true";
 
@@ -296,7 +297,7 @@ class DeactivateDeviceCTRLTest {
         RoomIDVO roomIDVO = new RoomIDVO(idRoom);
 
         // Creating a new device
-        Device device = new Device(deviceNameVO,deviceModelVO,roomIDVO);
+        Device device = new Device(deviceNameVO, deviceModelVO, roomIDVO);
         DeviceIDVO deviceIDVO = device.getId();
         String deviceID = deviceIDVO.getID();
 
@@ -305,7 +306,7 @@ class DeactivateDeviceCTRLTest {
         //Conditioning device repository to return correct device when is invoked findById(DeviceIDVO) method.
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         when(deviceRepositoryDouble.findById(deviceIDVO)).thenReturn(device);
-        //Conditioning device repository to return true when device update operation is called.
+        //Conditioning device repository to return false when device update operation is called.
         when(deviceRepositoryDouble.update(device)).thenReturn(false);
 
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
@@ -316,7 +317,8 @@ class DeactivateDeviceCTRLTest {
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
 
         // Creating a DeviceDTO representing the deactivated device
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus,idRoomString);
+        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, idRoomString);
+        when(deviceRepositoryDouble.isPresent(deviceIDVO)).thenReturn(true);
 
         // Act: Invoking deactivateDevice method with a DeviceDTO representing an already deactivated device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);
@@ -353,7 +355,7 @@ class DeactivateDeviceCTRLTest {
         RoomIDVO roomIDVO = new RoomIDVO(idRoom);
 
         // Creating a new device
-        Device device = new Device(deviceNameVO,deviceModelVO,roomIDVO);
+        Device device = new Device(deviceNameVO, deviceModelVO, roomIDVO);
         DeviceIDVO deviceIDVO = device.getId();
         String deviceID = deviceIDVO.getID();
 
@@ -373,7 +375,9 @@ class DeactivateDeviceCTRLTest {
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
 
         // Creating a DeviceDTO representing the deactivated device
-        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus,idRoomString);
+        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceName, deviceModel, deviceStatus, idRoomString);
+        when(deviceRepositoryDouble.isPresent(deviceIDVO)).thenReturn(true);
+
 
         // Act: Invoking deactivateDevice method with a DeviceDTO representing an already deactivated device
         boolean result = deactivateDeviceCTRL.deactivateDevice(deviceDTO);

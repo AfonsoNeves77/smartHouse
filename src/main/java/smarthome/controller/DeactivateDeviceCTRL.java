@@ -37,11 +37,12 @@ public class DeactivateDeviceCTRL {
     public boolean deactivateDevice(DeviceDTO deviceDTO){
         try {
             DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(deviceDTO);
-            return deviceService.deactivateDevice(deviceIDVO);
+            return deviceService.deactivateDevice(deviceIDVO).isPresent();
         } catch (IllegalArgumentException e){
             return false;
         }
     }
+
 
     /**
      * Checks if the passed parameter to the method is non-null.

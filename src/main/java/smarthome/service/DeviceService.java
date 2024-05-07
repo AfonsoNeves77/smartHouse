@@ -7,9 +7,12 @@ import smarthome.domain.vo.devicevo.DeviceNameVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DeviceService {
-    boolean addDevice(DeviceNameVO deviceNameVO, DeviceModelVO deviceModelVO, RoomIDVO roomIDVO);
-    boolean deactivateDevice(DeviceIDVO deviceIDVO);
+    Optional<Device> addDevice(DeviceNameVO deviceNameVO, DeviceModelVO deviceModelVO, RoomIDVO roomIDVO);
+
+    Optional<Device> deactivateDevice(DeviceIDVO deviceIDVO);
+
     List<Device> getListOfDevicesInARoom(RoomIDVO roomIDVO);
 }

@@ -182,6 +182,8 @@ class GetListOfDevicesCTRLTest {
 
         int expectedSize = 1;
 
+        when(doubleRoomRepository.isPresent(roomIDVO)).thenReturn(true);
+
         //Act
         List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
 
@@ -246,6 +248,7 @@ class GetListOfDevicesCTRLTest {
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
         int expectedSize = 2;
+        when(doubleRoomRepository.isPresent(roomIDVO)).thenReturn(true);
 
         //Act
         List<DeviceDTO> deviceDTOList = getListOfDevicesCTRL.getListOfDevices(roomDTO);
