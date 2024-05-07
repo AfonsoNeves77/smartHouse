@@ -38,7 +38,7 @@ activate D
 D -> DVS** : create(false)
 D --> DS : true
 deactivate D
-DS --> C : true
+DS --> C : device
 deactivate DS
 [o<-- C : true
 deactivate C

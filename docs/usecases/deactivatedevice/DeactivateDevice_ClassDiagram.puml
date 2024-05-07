@@ -98,7 +98,16 @@ class DeviceAssembler {
 }
 
 interface DeviceService {
-    + deactivateDevice(DeviceIDVO) : boolean
+    + deactivateDevice(DeviceIDVO) : Optional<Device>
+}
+
+class DeviceServiceImpl {
+    - roomRepository : RoomRepository
+    - deviceRepository : DeviceRepository
+    - deviceFactory : DeviceFactory
+
+    + DeviceServiceImpl(deviceRepository : DeviceRepository, deviceFactory : DeviceFactory)
+    + deactivateDevice(deviceID : DeviceIDVO) : Optional<Device>
 }
 
 
