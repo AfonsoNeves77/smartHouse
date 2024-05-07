@@ -2,15 +2,16 @@ package smarthome.service;
 
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactory;
-import smarthome.persistence.HouseRepository;
-import smarthome.persistence.RoomRepository;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
+import smarthome.persistence.HouseRepository;
+import smarthome.persistence.RoomRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RoomServiceImpl implements RoomService {
 
@@ -38,17 +39,21 @@ public class RoomServiceImpl implements RoomService {
      * @param roomNameVO RoomNameVO object
      * @param roomFloorVO FloorVO object
      * @param roomDimensionsVO RoomDimensionVO object
-     * @return True or false
+     * @return Optional of Room object
      */
     @Override
-    public boolean addRoom(RoomNameVO roomNameVO, RoomFloorVO roomFloorVO, RoomDimensionsVO roomDimensionsVO) {
+    public Optional<Room> addRoom(RoomNameVO roomNameVO, RoomFloorVO roomFloorVO, RoomDimensionsVO roomDimensionsVO) {
         try{
             HouseIDVO houseIDVO = houseRepository.getFirstHouseIDVO();
             Room newRoom = roomFactory.createRoom(roomNameVO,roomFloorVO,roomDimensionsVO,houseIDVO);
-            return roomRepository.save(newRoom);
+            if (roomRepository.save(newRoom)) {
+                return Optional.of(newRoom);
+            }
         } catch (IllegalArgumentException e) {
-            return false;
+            throw new IllegalArgumentException("Unable to save room");
+
         }
+        return Optional.empty();
     }
 
     /**

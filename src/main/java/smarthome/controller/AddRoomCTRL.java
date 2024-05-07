@@ -1,11 +1,14 @@
 package smarthome.controller;
 
-import smarthome.mapper.dto.RoomDTO;
-import smarthome.mapper.RoomMapper;
-import smarthome.service.RoomService;
+import smarthome.domain.room.Room;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
+import smarthome.mapper.RoomMapper;
+import smarthome.mapper.dto.RoomDTO;
+import smarthome.service.RoomService;
+
+import java.util.Optional;
 
 
 /**
@@ -42,7 +45,8 @@ public class AddRoomCTRL {
             RoomNameVO roomName = RoomMapper.createRoomNameVO(roomDTO);
             RoomFloorVO roomFloor = RoomMapper.createRoomFloorVO(roomDTO);
             RoomDimensionsVO roomDimensions = RoomMapper.createRoomDimensionsVO(roomDTO);
-            return roomService.addRoom(roomName,roomFloor,roomDimensions);
+            Optional<Room> opt = roomService.addRoom(roomName, roomFloor, roomDimensions);
+            return opt.isPresent();
         } catch (IllegalArgumentException e) {
             return false;
         }

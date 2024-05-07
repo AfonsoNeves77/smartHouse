@@ -6,8 +6,10 @@ import smarthome.domain.vo.roomvo.RoomFloorVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomService {
     List<Room> findAll();
-    boolean addRoom(RoomNameVO roomNameVO, RoomFloorVO roomFloorVO, RoomDimensionsVO roomDimensionsVO);
+
+    Optional<Room> addRoom(RoomNameVO roomNameVO, RoomFloorVO roomFloorVO, RoomDimensionsVO roomDimensionsVO);
 }
