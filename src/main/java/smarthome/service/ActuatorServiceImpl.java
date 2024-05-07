@@ -11,6 +11,8 @@ import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
+import java.util.Optional;
+
 public class ActuatorServiceImpl implements ActuatorService{
     private final DeviceRepository deviceRepository;
     private final ActuatorTypeRepository actuatorTypeRepository;
@@ -24,10 +26,13 @@ public class ActuatorServiceImpl implements ActuatorService{
      * @throws IllegalArgumentException if either factoryActuator or ActuatorRepository is null.
      */
 
-    public ActuatorServiceImpl(DeviceRepository deviceRepository, ActuatorTypeRepository actuatorTypeRepository, ActuatorFactory actuatorFactory, ActuatorRepository actuatorRepository){
-        if(!validParams(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository)){
-            throw new IllegalArgumentException("Invalid parameters");
+    public ActuatorServiceImpl(DeviceRepository deviceRepository, ActuatorTypeRepository actuatorTypeRepository,
+                               ActuatorFactory actuatorFactory, ActuatorRepository actuatorRepository){
+
+        if(areParamsNull(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository)){
+            throw new IllegalArgumentException("Parameters cannot be null");
         }
+
         this.deviceRepository = deviceRepository;
         this.actuatorTypeRepository = actuatorTypeRepository;
         this.actuatorFactory = actuatorFactory;
@@ -35,25 +40,46 @@ public class ActuatorServiceImpl implements ActuatorService{
     }
 
     /**
-     * This method is responsible for creating and persisting an actuator instance. It orchestrates the process by
-     * interfacing with the actuator factory to create a new actuator object. The newly created actuator is then passed to the
-     * actuator repository for storage. The method ultimately returns the result of the save operation from the actuator repository.
-     * @param actuatorNameVO actuatorNameVO object
-     * @param actuatorTypeIDVO actuatorTypeIDVO object
-     * @param deviceIDVO deviceIDVO object
-     * @param settings settings object
-     * @return True or false
+     * Adds a new Actuator to the system.
+     * This method creates a new Actuator with the provided parameters and saves it to the repository.
+     * Before the Actuator is created, the method validates the parameters and checks if the associated Device is active
+     * and if the Actuator type is present in the system.
+     * The method interacts with the ActuatorFactory to create a new Actuator instance. This is done by calling the
+     * createActuator method of the ActuatorFactory with the specified parameters.
+     * The method also interacts with the ActuatorRepository to save the newly created Actuator. This is done by
+     * calling the save method of the ActuatorRepository with the new Actuator as the parameter.
+     * If the save operation is successful (returns true), the newActuator is wrapped in an Optional and returned.
+     * If the save operation is not successful (returns false), an empty Optional is returned.
+     * @param actuatorNameVO The name of the Actuator to be added. This parameter cannot be null.
+     * @param actuatorTypeIDVO The type ID of the Actuator to be added. This parameter cannot be null and the Actuator
+     *                         type must be present in the system.
+     * @param deviceIDVO The ID of the Device to which the Actuator belongs. This parameter cannot be null and the
+     *                   Device must be active.
+     * @param settings The settings for the Actuator.
+     * @return If the save operation is successful (returns true), the newActuator is wrapped in an Optional and
+     * returned. If the save operation is not successful (returns false), an empty Optional is returned.
+     * @throws IllegalArgumentException if any of the parameters are null, if the Device is not active, or if the
+     * Actuator type is not present.
      */
-    public boolean addActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO, DeviceIDVO deviceIDVO, Settings settings){
-        if (isDeviceActive(deviceIDVO) && isActuatorTypePresent(actuatorTypeIDVO)){
-            try {
-                Actuator newActuator = actuatorFactory.createActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO,settings);
-                return actuatorRepository.save(newActuator);
-            } catch (IllegalArgumentException e){
-                return false;
-            }
+    public Optional<Actuator> addActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO,
+                                          DeviceIDVO deviceIDVO, Settings settings){
+
+        if (areParamsNull(actuatorNameVO,actuatorTypeIDVO,deviceIDVO)) {
+            throw new IllegalArgumentException("Parameters cannot be null");
         }
-        return false;
+        if (!isDeviceActive(deviceIDVO)) {
+            throw new IllegalArgumentException("Device is not active");
+        }
+        if (!isActuatorTypePresent(actuatorTypeIDVO)) {
+            throw new IllegalArgumentException("Actuator type is not present");
+        }
+
+        Actuator newActuator = this.actuatorFactory.createActuator(actuatorNameVO,actuatorTypeIDVO,
+                                                                    deviceIDVO,settings);
+        if (this.actuatorRepository.save(newActuator)){
+            return Optional.of(newActuator);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -93,13 +119,12 @@ public class ActuatorServiceImpl implements ActuatorService{
      * @param params The parameters to be checked for nullity.
      * @return true if all parameters are non-null, false otherwise.
      */
-
-    private boolean validParams (Object... params){
+    private boolean areParamsNull(Object... params){
         for (Object param : params){
             if (param == null){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

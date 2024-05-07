@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import smarthome.domain.actuator.Actuator;
 import smarthome.mapper.dto.ActuatorDTO;
 import smarthome.mapper.dto.ActuatorTypeDTO;
 import smarthome.mapper.dto.DeviceDTO;
@@ -13,7 +14,7 @@ import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 
-import static java.util.Objects.isNull;
+import java.util.Optional;
 
 public class AddActuatorToDeviceCTRL {
 
@@ -28,22 +29,24 @@ public class AddActuatorToDeviceCTRL {
      * an invalid or missing service.
      */
     public AddActuatorToDeviceCTRL(ActuatorService actuatorService) {
-        if (isNull(actuatorService)) {
+        if (actuatorService == null) {
             throw new IllegalArgumentException("Invalid service");
         }
         this.actuatorService = actuatorService;
     }
 
     /**
-     * Adds an Actuator to the specified Device.
-     * This method creates Value Objects (VOs) for ActuatorName, ActuatorTypeID, Settings, and DeviceID
-     * using the provided ActuatorDTO, ActuatorTypeDTO, and DeviceDTO.
-     * It then calls the addActuator method of the ActuatorService to add the Actuator to the Device.
-     * @param actuatorDTO The Data Transfer Object (DTO) containing Actuator information.
-     * @param actuatorTypeDTO The DTO containing ActuatorType information.
-     * @param deviceDTO The DTO containing Device information.
-     * @return true if the Actuator is successfully added to the Device, false otherwise. It returns false if any of the
-     * provided DTOs are invalid or if there is an error adding the Actuator.
+     * Adds an Actuator to a Device.
+     * This method attempts to add an Actuator to a Device using the provided DTOs. It first maps the DTOs to their
+     * corresponding Value Objects. Then, it calls the addActuator method of the ActuatorService with these Value
+     * Objects. If the Actuator is successfully added (i.e., the returned Optional is not empty), it returns true. If
+     * the Actuator is not added (i.e., the returned Optional is empty) or if an IllegalArgumentException is thrown, it
+     * returns false.
+     * @param actuatorDTO The DTO containing the data for the Actuator to be added.
+     * @param actuatorTypeDTO The DTO containing the data for the type of the Actuator to be added.
+     * @param deviceDTO The DTO containing the data for the Device to which the Actuator will be added.
+     * @return true if the Actuator is successfully added, false otherwise.
+     * @throws IllegalArgumentException if any of the DTOs are null or if they contain invalid data.
      */
     public boolean addActuatorToDevice(ActuatorDTO actuatorDTO, ActuatorTypeDTO actuatorTypeDTO, DeviceDTO deviceDTO) {
         try{
@@ -51,7 +54,8 @@ public class AddActuatorToDeviceCTRL {
             Settings settings = ActuatorMapper.createSettingsVO(actuatorDTO);
             ActuatorTypeIDVO actuatorTypeIDVO = ActuatorTypeMapper.createActuatorTypeIDVO(actuatorTypeDTO);
             DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(deviceDTO);
-            return actuatorService.addActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO,settings);
+            Optional<Actuator> opt = actuatorService.addActuator(actuatorNameVO,actuatorTypeIDVO,deviceIDVO,settings);
+            return (opt.isPresent());
         } catch (IllegalArgumentException e){
             return false;
         }
