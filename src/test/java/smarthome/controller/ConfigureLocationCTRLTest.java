@@ -1,5 +1,7 @@
 package smarthome.controller;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactory;
 import smarthome.domain.house.HouseFactoryImpl;
@@ -8,8 +10,6 @@ import smarthome.mapper.dto.LocationDTO;
 import smarthome.persistence.HouseRepository;
 import smarthome.service.HouseService;
 import smarthome.service.HouseServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -102,7 +102,7 @@ class ConfigureLocationCTRLTest {
         LocationVO locationVO = new LocationVO(addressVO, gpsVO);
         House house = new House(locationVO);
 
-        LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber,streetName,cityName,countryName,postalCodeName,expectedLatitudeValue,expectedLongitudeValue);
+        LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
 
         //Conditioning house repository double to return the created house;
         when(houseRepositoryDouble.getFirstHouse()).thenReturn(house);
@@ -125,13 +125,13 @@ class ConfigureLocationCTRLTest {
 
 //        Assert
         assertTrue(result);
-        assertEquals(changedDoorNumber,resultDoorNumber);
-        assertEquals(streetName,resultStreetName);
-        assertEquals(countryName,resultCountry);
-        assertEquals(cityName,resultCity);
-        assertEquals(postalCodeName,resultPostalCode);
-        assertEquals(expectedLatitudeValue,resultLatitude);
-        assertEquals(expectedLongitudeValue,resultLongitude);
+        assertEquals(changedDoorNumber, resultDoorNumber);
+        assertEquals(streetName, resultStreetName);
+        assertEquals(countryName, resultCountry);
+        assertEquals(cityName, resultCity);
+        assertEquals(postalCodeName, resultPostalCode);
+        assertEquals(expectedLatitudeValue, resultLatitude);
+        assertEquals(expectedLongitudeValue, resultLongitude);
     }
 
     /**
@@ -153,7 +153,7 @@ class ConfigureLocationCTRLTest {
         double expectedLatitudeValue = 77.777;
         double expectedLongitudeValue = -89.999;
 
-        LocationDTO locationDTO1 = new LocationDTO(doorNumber,streetName,cityName,countryName,postalCodeName,expectedLatitudeValue,expectedLongitudeValue);
+        LocationDTO locationDTO1 = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
         when(houseRepositoryDouble.getFirstHouse()).thenReturn(null);
 
         ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
@@ -200,7 +200,7 @@ class ConfigureLocationCTRLTest {
         LocationVO locationVO = new LocationVO(addressVO, gpsVO);
         House house = new House(locationVO);
 
-        LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber,streetName,cityName,countryName,postalCodeName,expectedLatitudeValue,expectedLongitudeValue);
+        LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
 
         //Conditioning house repository double to return the created house;
         when(houseRepositoryDouble.getFirstHouse()).thenReturn(house);
@@ -371,6 +371,4 @@ class ConfigureLocationCTRLTest {
 //        Assert
         assertFalse(result);
     }
-
-
 }
