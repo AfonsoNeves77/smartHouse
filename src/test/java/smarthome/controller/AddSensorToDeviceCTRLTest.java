@@ -1,6 +1,8 @@
 package smarthome.controller;
 
 import smarthome.domain.device.Device;
+import smarthome.domain.device.DeviceFactory;
+import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
 import smarthome.domain.sensor.SensorFactoryImpl;
@@ -99,11 +101,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -170,11 +167,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -239,11 +231,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -310,11 +297,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -379,11 +361,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -450,11 +427,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -518,11 +490,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -589,11 +556,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -658,11 +620,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -729,11 +686,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -798,11 +750,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -869,11 +816,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory sensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService sensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, sensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -937,11 +879,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
 
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory SensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService SensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, SensorTypeFactory, propertiesPath);
-
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
 
@@ -994,11 +931,6 @@ class AddSensorToDeviceCTRLTest {
         DeviceDTO deviceDTO = new DeviceDTO(deviceId,deviceName,deviceModel,deviceStatus,roomId);
 
         when(doubleDeviceRepository.findById(deviceIDVO)).thenReturn(null);
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory SensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService SensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, SensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -1054,11 +986,6 @@ class AddSensorToDeviceCTRLTest {
         String deviceID = deviceIDVO.getID();
         DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
         DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
-
-        //Sensor Type Service initialization
-        //SensorType is not used only it's initialization is necessary in this test
-        SensorTypeFactory SensorTypeFactory = new SensorTypeFactoryImpl();
-        SensorTypeService SensorTypeService = new SensorTypeServiceImpl(doubleSensorTypeRepository, SensorTypeFactory, propertiesPath);
 
         //Controller initialization
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
@@ -1152,6 +1079,72 @@ class AddSensorToDeviceCTRLTest {
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, sensorTypeDTO, null);
 
         // Assert
+        assertFalse(result);
+    }
+
+    /**
+     * This test verifies the behavior when attempting to add the repository does not save the sensor.
+     * It ensures that the operation returns false and that no sensor is stored in the sensor repository,
+     * with the behaviour stubbed.
+     * The test initializes the necessary components, including Sensor Service, Device repository, Sensor Type Service,
+     * and the controller.
+     * It creates a new Device then initializes DTOs for Device, Sensor Type (with an invalid type), and Sensor.
+     * The Device repository is stubbed to return the device when findById is called.
+     * The Sensor repository is stubbed to return false when checking if the sensor is saved.
+     * After calling the method to add the sensor to the Device, the test verifies the operation's failure by checking
+     * if it returns false.
+     */
+    @Test
+    void addSensorToDevice_whenRepositoryDoesNotSaveSensor_shouldReturnFalse(){
+        //Arrange
+        //Sensor Service instantiation
+        String propertiesPath = "sensor.properties";
+        SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
+        SensorTypeRepository doubleSensorTypeRepository = mock(SensorTypeRepository.class);
+        //Sensor repository behaviour conditioned to return false
+        when(doubleSensorRepository.save(any(Sensor.class))).thenReturn(false);
+
+        SensorService sensorService = new SensorServiceImpl(doubleDeviceRepository, doubleSensorTypeRepository, doubleSensorRepository, sensorFactory);
+
+        //Creation of device's value objects and the device
+        DeviceNameVO deviceNameVO = new DeviceNameVO("Device1");
+        DeviceModelVO deviceModelVO = new DeviceModelVO("Model1");
+        RoomIDVO roomID = new RoomIDVO(UUID.randomUUID());
+        Device device = new Device(deviceNameVO, deviceModelVO, roomID);
+        when(doubleDeviceRepository.findById(device.getId())).thenReturn(device);
+
+        //DeviceDTO initialization
+        DeviceIDVO deviceIDVO = device.getId();
+        String deviceID = deviceIDVO.getID();
+        DeviceStatusVO deviceStatusVO = device.getDeviceStatus();
+        DeviceDTO deviceDTO = new DeviceDTO(deviceID, deviceNameVO.getValue(), deviceModelVO.getValue(), deviceStatusVO.getValue().toString(), roomID.getID());
+
+        //Controller initialization
+        AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
+
+        //SensorTypeDTO initialization
+        String sensorTypeID ="HumiditySensor";
+        String unit = "%";
+        SensorTypeDTO sensorTypeDTO = new SensorTypeDTO(sensorTypeID,unit);
+
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO(sensorTypeID);
+        when(doubleSensorTypeRepository.isPresent(sensorTypeIDVO)).thenReturn(true);
+
+
+        //SensorDTO initialization
+        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
+        String sensorName = sensorNameVO.getValue();
+        SensorDTO sensorDTO = new SensorDTO(sensorName);
+
+
+        //Act
+        boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO,sensorTypeDTO,sensorDTO);
+
+        //Assert
+
+        //This assertion asserts that the operation succeeded
         assertFalse(result);
     }
 }

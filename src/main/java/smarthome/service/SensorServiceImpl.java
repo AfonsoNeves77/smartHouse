@@ -10,6 +10,8 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 
+import java.util.Optional;
+
 public class SensorServiceImpl implements SensorService{
     private final DeviceRepository deviceRepository;
     private final SensorTypeRepository sensorTypeRepository;
@@ -41,16 +43,21 @@ public class SensorServiceImpl implements SensorService{
      * @param sensorTypeIDVO SensorTypeIDVO object
      * @return True or false
      */
-    public boolean addSensor(SensorNameVO sensorName, DeviceIDVO deviceIDVO, SensorTypeIDVO sensorTypeIDVO){
-        if(isDeviceActive(deviceIDVO) && isSensorTypePresent(sensorTypeIDVO)){
-            try{
-                Sensor newSensor = sensorFactory.createSensor(sensorName,deviceIDVO,sensorTypeIDVO);
-                return sensorRepository.save(newSensor);
-            } catch (IllegalArgumentException e){
-                return false;
-            }
+    public Optional<Sensor> addSensor(SensorNameVO sensorName, DeviceIDVO deviceIDVO, SensorTypeIDVO sensorTypeIDVO){
+        if(areParamsNull(sensorName,deviceIDVO,sensorTypeIDVO)){
+            throw new IllegalArgumentException("SensorName, DeviceIDVO and SensorTypeIDVO must not be null.");
         }
-        return false;
+        if(!isDeviceActive(deviceIDVO)){
+            throw new IllegalArgumentException("Device with ID: " + deviceIDVO.getID() + " is not active.");
+        }
+        if(!isSensorTypePresent(sensorTypeIDVO)){
+            throw new IllegalArgumentException("Sensor type with ID " + sensorTypeIDVO.getID() + " is not present.");
+        }
+        Sensor newSensor = sensorFactory.createSensor(sensorName, deviceIDVO, sensorTypeIDVO);
+        if (sensorRepository.save(newSensor)) {
+            return Optional.of(newSensor);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -61,12 +68,11 @@ public class SensorServiceImpl implements SensorService{
      * repository is unable to provide the information.
      */
     private boolean isDeviceActive(DeviceIDVO deviceIDVO){
-         try{
-             Device device = deviceRepository.findById(deviceIDVO);
-             return device.isActive();
-         } catch (NullPointerException e){
-             return false;
-         }
+        Device device = deviceRepository.findById(deviceIDVO);
+        if(device!= null){
+            return device.isActive();
+        }
+        return false;
     }
 
     /**

@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import smarthome.domain.sensor.Sensor;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.SensorDTO;
 import smarthome.mapper.dto.SensorTypeDTO;
@@ -10,6 +11,8 @@ import smarthome.service.SensorService;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
+
+import java.util.Optional;
 
 public class AddSensorToDeviceCTRL {
     private final SensorService sensorService;
@@ -41,7 +44,8 @@ public class AddSensorToDeviceCTRL {
             SensorNameVO sensorNameVO = SensorMapper.createSensorNameVO(sensorDTO);
             DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(deviceDTO);
             SensorTypeIDVO sensorTypeIDVO = SensorTypeMapper.createSensorTypeIDVO(sensorTypeDTO);
-            return sensorService.addSensor(sensorNameVO,deviceIDVO,sensorTypeIDVO);
+            Optional<Sensor> ops = sensorService.addSensor(sensorNameVO,deviceIDVO,sensorTypeIDVO);
+            return ops.isPresent();
         } catch (IllegalArgumentException e){
             return false;
         }
