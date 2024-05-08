@@ -1,7 +1,7 @@
 package smarthome.persistence.springdata;
 
-import jakarta.persistence.TypedQuery;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactory;
 
@@ -11,12 +11,10 @@ import smarthome.mapper.assembler.DeviceAssembler;
 import smarthome.persistence.DeviceRepository;
 
 import smarthome.persistence.jpa.datamodel.DeviceDataModel;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class DeviceRepositorySpringData implements DeviceRepository {
 
     private final IDeviceRepositorySpringData iDeviceRepositorySpringData;

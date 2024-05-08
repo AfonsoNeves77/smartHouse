@@ -1,5 +1,7 @@
 package smarthome.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import smarthome.domain.actuatortype.ActuatorType;
 import smarthome.domain.actuatortype.ActuatorTypeFactory;
 import smarthome.mapper.ActuatorTypeMapper;
@@ -23,6 +25,8 @@ import java.util.List;
  * which it then uses to interact with actuator type data. The service validates the presence of the
  * repository upon construction to prevent null-pointer exceptions during runtime.
  */
+
+@Service
 public class ActuatorTypeServiceImpl implements ActuatorTypeService {
     private final ActuatorTypeRepository actuatorTypeRepository;
     private final ActuatorTypeFactory actuatorTypeFactory;
@@ -35,9 +39,9 @@ public class ActuatorTypeServiceImpl implements ActuatorTypeService {
      * Additionally, it calls the populateRepository() method to populate the repository with actuator types.
      * @param actuatorTypeRepository ActuatorTypeRepository implementation
      * @param actuatorTypeFactory ActuatorTypeFactory implementation
-     * @param filepath Filepath
+     * @param filepath Filepath configured in application.properties file
      */
-    public ActuatorTypeServiceImpl(ActuatorTypeRepository actuatorTypeRepository, ActuatorTypeFactory actuatorTypeFactory, String filepath)  {
+    public ActuatorTypeServiceImpl(ActuatorTypeRepository actuatorTypeRepository, ActuatorTypeFactory actuatorTypeFactory, @Value("${filepath}")String filepath)  {
         if (actuatorTypeRepository == null || actuatorTypeFactory == null || filepath == null || filepath.trim().isEmpty()){
             throw new IllegalArgumentException("Invalid repository");
         }
@@ -59,7 +63,7 @@ public class ActuatorTypeServiceImpl implements ActuatorTypeService {
      * Each actuator type is used to initialize ActuatorTypeIDVO (Actuator type mapper is used to initialize ActuatorTypeIDVO) ;
      * Initializes an actuatorType with this value object;
      * Saves the newly created actuatorType in the actuator type repository;
-     * @throws ConfigurationException If configuration object unable to be instantiated.
+     * @throws ConfigurationException If a configuration object unable to be instantiated.
      */
     private void populateRepository() throws ConfigurationException {
         List<String> actuatorTypes;

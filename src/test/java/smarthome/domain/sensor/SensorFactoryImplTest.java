@@ -44,7 +44,7 @@ class SensorFactoryImplTest {
     @Test
     void givenCorrectVOs_createSensorReturnsASensorObject(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
@@ -70,7 +70,7 @@ class SensorFactoryImplTest {
     @Test
     void givenNullSensorNameVO_createSensorReturnsNull(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
 
@@ -94,7 +94,7 @@ class SensorFactoryImplTest {
     @Test
     void givenNullDeviceIDVO_createSensorReturnsNull(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
 
@@ -118,7 +118,7 @@ class SensorFactoryImplTest {
     @Test
     void givenNullSensorTypeID_createSensorReturnsNull(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
 
@@ -143,7 +143,7 @@ class SensorFactoryImplTest {
     @Test
     void givenSensorTypeIDVO_whenGetIDFromVOreturnsNull_createSensorReturnsNull(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
@@ -170,7 +170,7 @@ class SensorFactoryImplTest {
     @Test
     void givenSensorTypeIDVO_whenGetIDFromVOreturnsInvalidType_createSensorReturnsNull(){
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
@@ -209,7 +209,7 @@ class SensorFactoryImplTest {
         //Arrange
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         Sensor sensor = sensorFactoryImpl.createSensor(null,expectedDeviceID,expectedSensorTypeID);
@@ -229,7 +229,7 @@ class SensorFactoryImplTest {
         //Arrange
         SensorNameVO expectedName = mock(SensorNameVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         Sensor sensor = sensorFactoryImpl.createSensor(expectedName,null,expectedSensorTypeID);
@@ -249,7 +249,7 @@ class SensorFactoryImplTest {
         //Arrange
         SensorNameVO expectedName = mock(SensorNameVO.class);
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         Sensor sensor = sensorFactoryImpl.createSensor(expectedName,expectedDeviceID,null);
@@ -283,7 +283,7 @@ class SensorFactoryImplTest {
         SensorTypeIDVO expectedSensorTypeID3 = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID3.getID()).thenReturn("RotationSensor");
 
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         Sensor sensor1 = sensorFactoryImpl.createSensor(expectedName,expectedDeviceID,expectedSensorTypeID1);
@@ -309,7 +309,7 @@ class SensorFactoryImplTest {
     @Test
     void givenValidParameters_createSensorReturnsSensorObject() {
         // Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         SensorIDVO sensorID = mock(SensorIDVO.class);
@@ -334,14 +334,14 @@ class SensorFactoryImplTest {
 
     /**
      * Test method to verify the behavior of the second createSensor method when provided with a non permitted sensor type.
-     * By non permitted we mean, a sensor type that is not present in sensor.properties.
+     * By non permitted we mean, a sensor type that is not present in config.properties.
      * This method tests whether the second createSensor method of SensorFactory returns null when a SensorTypeIDVO
      * is non permitted.
      */
     @Test
     void givenNonPermittedSensorType_createSensorShouldReturnNull() {
         //Arrange
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorNameVO expectedName = mock(SensorNameVO.class);
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorIDVO expectedSensorID = mock(SensorIDVO.class);
@@ -373,7 +373,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("TemperatureSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         TemperatureSensor temperatureSensor = (TemperatureSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -404,7 +404,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("HumiditySensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         HumiditySensor humiditySensor = (HumiditySensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -435,7 +435,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("PositionSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         PositionSensor positionSensor = (PositionSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -466,7 +466,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("WindSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         WindSensor windSensor = (WindSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -497,7 +497,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("DewPointSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         DewPointSensor dewPointSensor = (DewPointSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -528,7 +528,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("SunsetSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         SunsetSensor sunsetSensor = (SunsetSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -559,7 +559,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("SunriseSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         SunriseSensor sunriseSensor = (SunriseSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -590,7 +590,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("AveragePowerConsumptionSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         AveragePowerConsumptionSensor averagePowerConsumptionSensor = (AveragePowerConsumptionSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -621,7 +621,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("PowerConsumptionSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         PowerConsumptionSensor powerConsumptionSensor = (PowerConsumptionSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -652,7 +652,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("SwitchSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         SwitchSensor switchSensor = (SwitchSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);
@@ -683,7 +683,7 @@ class SensorFactoryImplTest {
         DeviceIDVO expectedDeviceID = mock(DeviceIDVO.class);
         SensorTypeIDVO expectedSensorTypeID = mock(SensorTypeIDVO.class);
         when(expectedSensorTypeID.getID()).thenReturn("SolarIrradianceSensor");
-        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("sensor.properties");
+        SensorFactoryImpl sensorFactoryImpl = new SensorFactoryImpl("config.properties");
 
         //Act
         SolarIrradianceSensor irradianceSensor = (SolarIrradianceSensor) sensorFactoryImpl.createSensor(expectedName, expectedDeviceID, expectedSensorTypeID);

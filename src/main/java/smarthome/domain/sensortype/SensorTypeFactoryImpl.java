@@ -1,8 +1,10 @@
 package smarthome.domain.sensortype;
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.sensortype.UnitVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
+@Component
 public class SensorTypeFactoryImpl implements SensorTypeFactory {
 
     /**

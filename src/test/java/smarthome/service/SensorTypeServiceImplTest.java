@@ -70,7 +70,7 @@ class SensorTypeServiceImplTest {
         // Arrange
         String expected = "Invalid parameters";
         SensorTypeFactoryImpl factory = mock(SensorTypeFactoryImpl.class);
-        String path = "sensor.properties";
+        String path = "config.properties";
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new SensorTypeServiceImpl(null,factory,path));
@@ -87,7 +87,7 @@ class SensorTypeServiceImplTest {
         // Arrange
         String expected = "Invalid parameters";
         SensorTypeRepositoryMem repository = mock(SensorTypeRepositoryMem.class);
-        String path = "sensor.properties";
+        String path = "config.properties";
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new SensorTypeServiceImpl(repository,null,path));

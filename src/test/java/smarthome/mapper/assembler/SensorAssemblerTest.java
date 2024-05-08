@@ -33,7 +33,7 @@ class SensorAssemblerTest {
      * It checks if the Sensor object created has the same attributes as the SensorDataModel object.
      * First, it creates a Sensor object with the predefined values.
      * Then, it creates a SensorDataModel object from the Sensor Object.
-     * It initializes a SensorFactory object with the path to the sensor.properties file.
+     * It initializes a SensorFactory object with the path to the config.properties file.
      * Finally, it calls the toDomain method of SensorAssembler to convert the SensorDataModel object to a Sensor object.
      */
     @Test
@@ -47,7 +47,7 @@ class SensorAssemblerTest {
 
         SensorDataModel sensorDataModel = new SensorDataModel(sensor);
 
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(path);
 
         // Act
@@ -67,7 +67,7 @@ class SensorAssemblerTest {
      * It checks if the Sensor objects created have the same attributes as the SensorDataModel objects.
      * First, it creates two Sensor objects with predefined values.
      * Then, it creates two SensorDataModel objects from the Sensor Objects.
-     * It initializes a SensorFactory object with the path to the sensor.properties file.
+     * It initializes a SensorFactory object with the path to the config.properties file.
      * It creates a list of SensorDataModel objects and adds the two SensorDataModel objects to it.
      * Finally, it calls the toDomain method of SensorAssembler to convert the list of SensorDataModel objects to a list
      * of Sensor objects.
@@ -90,7 +90,7 @@ class SensorAssemblerTest {
         SensorDataModel sensorDataModel = new SensorDataModel(sensor);
         SensorDataModel secondSensorDataModel = new SensorDataModel(secondSensor);
 
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(path);
 
         List<SensorDataModel> sensorDataModelList = new ArrayList<>();

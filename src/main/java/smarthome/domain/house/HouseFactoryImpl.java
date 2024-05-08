@@ -1,5 +1,6 @@
 package smarthome.domain.house;
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.housevo.LocationVO;
 
@@ -7,6 +8,7 @@ import smarthome.domain.vo.housevo.LocationVO;
  * Factory class for the House Entity.
  */
 
+@Component
 public class HouseFactoryImpl implements HouseFactory{
 
     /**

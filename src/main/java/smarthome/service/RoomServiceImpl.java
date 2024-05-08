@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactory;
 import smarthome.domain.vo.housevo.HouseIDVO;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RoomServiceImpl implements RoomService {
 
     private final HouseRepository houseRepository;

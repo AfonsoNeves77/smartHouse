@@ -1,5 +1,7 @@
 package smarthome.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import smarthome.domain.sensortype.SensorType;
 import smarthome.domain.sensortype.SensorTypeFactory;
 import smarthome.persistence.SensorTypeRepository;
@@ -12,6 +14,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class SensorTypeServiceImpl implements SensorTypeService{
     private final SensorTypeRepository sensorTypeRepository;
     private final SensorTypeFactory sensorTypeFactory;
@@ -27,7 +30,7 @@ public class SensorTypeServiceImpl implements SensorTypeService{
      * @throws IllegalArgumentException if the sensorTypeFactory, sensorTypeRepository, or path parameters are null, or if
      * there is an issue with the configuration path. This exception is thrown to indicate invalid or missing parameters.
      */
-    public SensorTypeServiceImpl(SensorTypeRepository sensorTypeRepository, SensorTypeFactory sensorTypeFactory, String path) {
+    public SensorTypeServiceImpl(SensorTypeRepository sensorTypeRepository, SensorTypeFactory sensorTypeFactory, @Value("${filepath}") String path) {
         if (areParamsNull(sensorTypeFactory, sensorTypeRepository,path)){
             throw new IllegalArgumentException("Invalid parameters");
         }

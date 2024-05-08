@@ -1,8 +1,10 @@
 package smarthome.domain.actuatortype;
 
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 
+@Component
 public class ActuatorTypeFactoryImpl implements ActuatorTypeFactory{
     /**
      * Create an ActuatorType object

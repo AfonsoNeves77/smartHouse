@@ -1,5 +1,7 @@
 package smarthome.domain.actuator;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
@@ -12,18 +14,19 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+@Component
 public class ActuatorFactoryImpl implements ActuatorFactory{
 
-    private static final String filePath = "actuator.properties";
     private Configuration configuration;
 
     /**
      * Constructor for FactoryActuator Class.
-     * File path is encapsulated in the Class. If file path changes, this is the only place that requires an update.
-     * @throws ConfigurationException If file path is invalid.
+     * File path is injected in the Class.
+     * So this factory is able to read from any file properties passed on.
+     * @throws ConfigurationException If a file path is invalid.
      */
-    public ActuatorFactoryImpl() throws ConfigurationException {
-        initializeConfiguration();
+    public ActuatorFactoryImpl(@Value("${filepath}")String filePath) throws ConfigurationException {
+        initializeConfiguration(filePath);
     }
 
     /**
@@ -190,7 +193,7 @@ public class ActuatorFactoryImpl implements ActuatorFactory{
      * Initializes the Configuration Object with the proper file path containing the required actuators' data.
      * @throws ConfigurationException If file path is invalid.
      */
-    private void initializeConfiguration() throws ConfigurationException {
+    private void initializeConfiguration(String filePath) throws ConfigurationException {
         Configurations configs = new Configurations();
         this.configuration = configs.properties(filePath);
     }

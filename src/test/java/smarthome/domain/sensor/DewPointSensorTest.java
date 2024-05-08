@@ -22,7 +22,7 @@ class DewPointSensorTest {
 
     /**
      * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
+     * attempts to create a mocked construction of the sensorID, however, as can be observed, the mocked construction
      * does not get to be created as it does not reach that stage.
      */
     @Test
@@ -241,7 +241,7 @@ class DewPointSensorTest {
 
     /**
      * This test ensures the constructor throws an Illegal Argument Exception when given a null VO. This test also
-     * attempts to create a mocked construction of the sensorID, however as can be observed, the mocked construction
+     * attempts to create a mocked construction of the sensorID, however, as can be observed, the mocked construction
      * does not get to be created as it does not reach that stage.
      */
     @Test

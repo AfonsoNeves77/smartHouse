@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * Service class responsible for managing devices in the smart home domain (create,save,checking for activation status and retrieving a list of devices in a room).
  */
 
+@Service
 public class DeviceServiceImpl implements DeviceService {
 
     private final RoomRepository roomRepository;

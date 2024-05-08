@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.device.Device;
 import smarthome.domain.sensor.Sensor;
@@ -13,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class QueryServiceImpl implements QueryService{
     private final SensorRepository sensorRepository;
     private final DeviceRepository deviceRepository;

@@ -1,11 +1,13 @@
 package smarthome.domain.room;
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
 
+@Component
 public class RoomFactoryImpl implements RoomFactory{
 
     /**

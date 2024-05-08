@@ -1,6 +1,7 @@
 package smarthome.controller;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.junit.jupiter.api.BeforeAll;
 import smarthome.domain.actuator.*;
 import smarthome.domain.actuatortype.ActuatorType;
 import smarthome.domain.device.Device;
@@ -39,6 +40,13 @@ import static org.mockito.Mockito.when;
 
 class AddActuatorToDeviceCTRLTest {
 
+    private static String filePath;
+
+    @BeforeAll
+    public static void setUp() {
+        filePath = "config.properties";
+    }
+
     /**
      * Test method to verify that when a null ActuatorService is provided to the AddActuatorToDeviceCTRL constructor,
      * it throws an IllegalArgumentException with the expected error message.
@@ -69,7 +77,7 @@ class AddActuatorToDeviceCTRLTest {
      * 5. Initializes a controller (AddActuatorToDeviceCTRL) to add the actuator to the device.
      * 6. Constructs DTOs for the device, actuator type, and actuator.
      * 7. Calls the method under test (addActuatorToDevice) and captures the result.
-     * 8. Asserts that the operation succeeded (result is true).
+     * 8. Asserts that the operation succeeded (a result is true).
      * 9. Verifies that the added switch actuator is present in the actuator repository and its attributes match the
      * expected values.
      */
@@ -111,7 +119,7 @@ class AddActuatorToDeviceCTRLTest {
         when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -139,7 +147,7 @@ class AddActuatorToDeviceCTRLTest {
         //This assertion asserts that the operation succeeded
         assertTrue(result);
 
-        //This assertion asserts that the added switch actuator is present in actuator repository
+        //This assertion asserts that the added switch actuator is present in the actuator repository
 
         //Fetch the added switch actuator from repository
         Iterable<Actuator> actuatorIterable1 = actuatorRepositoryDouble.findAll();
@@ -211,7 +219,7 @@ class AddActuatorToDeviceCTRLTest {
         when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -321,7 +329,7 @@ class AddActuatorToDeviceCTRLTest {
         when(actuatorTypeRepositoryDouble.save(any(ActuatorType.class))).thenReturn(true);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -407,7 +415,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -469,7 +477,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -532,7 +540,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -598,7 +606,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -655,7 +663,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -726,7 +734,7 @@ class AddActuatorToDeviceCTRLTest {
         when(actuatorTypeRepositoryDouble.isPresent(actuatorTypeIDVO)).thenReturn(false);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -785,7 +793,7 @@ class AddActuatorToDeviceCTRLTest {
         ActuatorTypeRepository actuatorTypeRepositoryDouble = mock(ActuatorTypeRepository.class);
 
         //ActuatorFactoryImpl initialized
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialized
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble, actuatorTypeRepositoryDouble, actuatorFactoryImpl, actuatorRepositoryDouble);
@@ -851,7 +859,7 @@ class AddActuatorToDeviceCTRLTest {
         when(actuatorRepositoryDouble.save(actuator)).thenReturn(false);
 
         //ActuatorFactory initialization
-        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl();
+        ActuatorFactoryImpl actuatorFactoryImpl = new ActuatorFactoryImpl(filePath);
 
         //ActuatorServiceImpl initialization
         ActuatorServiceImpl actuatorServiceImpl = new ActuatorServiceImpl(deviceRepositoryDouble,

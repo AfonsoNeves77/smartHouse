@@ -65,7 +65,7 @@ class GetListOfActuatorTypesCTRLTest {
         when(actuatorTypeRepositoryDouble.findAll()).thenReturn(actuatorTypeIterable);
 
         //Initializing ActuatorTypeService
-        String path = "actuator.properties";
+        String path = "config.properties";
         ActuatorTypeFactoryImpl actuatorTypeFactory = new ActuatorTypeFactoryImpl();
         ActuatorTypeServiceImpl actuatorTypeService = new ActuatorTypeServiceImpl(actuatorTypeRepositoryDouble, actuatorTypeFactory, path);
 

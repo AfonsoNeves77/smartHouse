@@ -1,6 +1,7 @@
 package smarthome.persistence.springdata;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.room.Room;
 import smarthome.domain.room.RoomFactory;
 import smarthome.domain.vo.roomvo.RoomIDVO;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * It uses Spring Data JPA to interact with the database.
  */
 
+@Repository
 public class RoomRepositorySpringData implements RoomRepository {
 
     IRoomRepositorySpringData iRoomRepositorySpringData;

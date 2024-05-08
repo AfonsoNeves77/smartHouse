@@ -1,5 +1,6 @@
 package smarthome.domain.sensor.sensorvalues;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
@@ -9,6 +10,13 @@ import java.time.ZonedDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SensorValueFactoryImplTest {
+
+    private static String filePath;
+
+    @BeforeAll
+    public static void setUp() {
+        filePath = "value.properties";
+    }
 
     /**
      * This test ensures that when given an invalid path. The constructor throws an exception.
@@ -92,8 +100,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "50";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("HumiditySensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 50;
 
         // Act
@@ -134,8 +141,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "36.7";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("TemperatureSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         double expected = 36.7;
 
         // Act
@@ -182,8 +188,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "36";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("PositionSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 36;
 
         // Act
@@ -230,8 +235,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "30:N";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("WindSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         String expected = "30:N";
 
         // Act
@@ -278,8 +282,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "30.6";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("DewPointSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         double expected = 30.6;
 
         // Act
@@ -320,8 +323,7 @@ class SensorValueFactoryImplTest {
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
         String time = zdt.toString();
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("SunsetSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> value = factory.createSensorValue(time, sensorTypeID);
@@ -362,8 +364,7 @@ class SensorValueFactoryImplTest {
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
         String time = zdt.toString();
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("SunriseSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> value = factory.createSensorValue(time, sensorTypeID);
@@ -391,8 +392,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("NuclearSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> result = factory.createSensorValue(zdt, sensorTypeID);
@@ -420,8 +420,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("NonExistingSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> result = factory.createSensorValue(zdt, sensorTypeID);
@@ -449,8 +448,7 @@ class SensorValueFactoryImplTest {
     void createSensorValue_givenNullSensorType_ShouldReturnNull() {
         // Arrange
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> result = factory.createSensorValue(zdt, null);
@@ -475,12 +473,12 @@ class SensorValueFactoryImplTest {
      */
 
     @Test
-    void createSensorValue_givenValidSensorType_ShouldReturnNull() {
+    void createSensorValue_givenValidSensorType_ShouldReturnCorrectSensorValue() {
         // Arrange
         ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("UTC"));
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("SunriseSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> value = factory.createSensorValue(zdt, sensorTypeID);
@@ -521,8 +519,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "4000";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("AveragePowerConsumptionSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 4000;
 
         // Act
@@ -564,8 +561,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "4000";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("PowerConsumptionSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 4000;
 
         // Act
@@ -607,8 +603,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "2000";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("EnergyConsumptionSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 2000;
 
         // Act
@@ -648,8 +643,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "On";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("SwitchSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         // Act
         SensorValueObject<?> value = factory.createSensorValue(reading,sensorTypeID);
@@ -690,8 +684,7 @@ class SensorValueFactoryImplTest {
         // Arrange
         String reading = "100";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("SolarIrradianceSensor");
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
         int expected = 100;
 
         // Act
@@ -726,8 +719,7 @@ class SensorValueFactoryImplTest {
         //Arrange
         SensorTypeIDVO sensorTypeID = new SensorTypeIDVO("I will fail");
         String reading = "60";
-        String path = "value.properties";
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         //Act
         SensorValueObject<?> value = factory.createSensorValue(reading,sensorTypeID);
@@ -758,9 +750,8 @@ class SensorValueFactoryImplTest {
     void whenNullSensorType_shouldReturnNull(){
         //Arrange
         String reading = "60";
-        String path = "value.properties";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("NuclearSensor");
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         //Act
         SensorValueObject<?> value = factory.createSensorValue(reading,sensorTypeID);
@@ -791,9 +782,8 @@ class SensorValueFactoryImplTest {
     void whenReadingIsNotWithinBounds_shouldReturnNull(){
         //Arrange
         String reading = "-1";
-        String path = "value.properties";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("HumiditySensor");
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         //Act
         SensorValueObject<?> value = factory.createSensorValue(reading,sensorTypeID);
@@ -823,9 +813,8 @@ class SensorValueFactoryImplTest {
     @Test
     void whenReadingIsNull_shouldReturnNull(){
         //Arrange
-        String path = "value.properties";
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("HumiditySensor");
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         //Act
         SensorValueObject<?> value = factory.createSensorValue((String) null,sensorTypeID);
@@ -837,9 +826,9 @@ class SensorValueFactoryImplTest {
     @Test
     void whenLocalDateTimeReadingIsInvalid_shouldReturnNull(){
         //Arrange
-        String path = "value.properties";
+
         SensorTypeIDVO sensorTypeID= new SensorTypeIDVO("SunriseSensor");
-        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(path);
+        SensorValueFactoryImpl factory = new SensorValueFactoryImpl(filePath);
 
         //Act
         SensorValueObject<?> value = factory.createSensorValue((ZonedDateTime) null,sensorTypeID);

@@ -1,5 +1,6 @@
 package smarthome.domain.log;
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
@@ -7,6 +8,7 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
 
+@Component
 public class LogFactoryImpl implements LogFactory {
 
     /**

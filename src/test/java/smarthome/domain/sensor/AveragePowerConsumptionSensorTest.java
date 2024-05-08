@@ -241,7 +241,7 @@ class AveragePowerConsumptionSensorTest {
      *
      * <p>
      * The simulated hardware is configured to return a specific reading for the given time range.
-     * The value factory is set up using a properties file ("value.properties") containing configuration information.
+     * The value factory is set up using a properties file ("config.properties") containing configuration information.
      * </p>
      *
      * <p>

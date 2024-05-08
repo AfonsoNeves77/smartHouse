@@ -3,6 +3,8 @@ package smarthome.domain.sensor.sensorvalues;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 
 import java.io.File;
@@ -10,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.ZonedDateTime;
 
+@Component
 public class SensorValueFactoryImpl implements SensorValueFactory{
 
     private final Configuration configuration;
@@ -19,7 +22,8 @@ public class SensorValueFactoryImpl implements SensorValueFactory{
      * creating SensorValueObjects based on configurations loaded from a properties file
      * located at the specified path.
      *
-     * @param path The path to the properties file containing configurations for the factory.
+     * @param path The property path is referred in the application.properties file.
+     *             The path to the properties file containing configurations for the factory.
      *             The properties file should contain key-value pairs representing sensor types
      *             and their corresponding valueObject's path.
      * @throws IllegalArgumentException If the path is null or if an error occurs while reading
@@ -28,7 +32,7 @@ public class SensorValueFactoryImpl implements SensorValueFactory{
      *                                  exception, or if the properties file is invalid or
      *                                  cannot be read.
      */
-    public SensorValueFactoryImpl (String path) {
+    public SensorValueFactoryImpl (@Value("${filePathValue}")String path) {
         try {
             Configurations configs = new Configurations();
             this.configuration = configs.properties(new File(path));

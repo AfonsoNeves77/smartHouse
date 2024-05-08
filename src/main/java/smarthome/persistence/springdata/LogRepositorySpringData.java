@@ -1,6 +1,7 @@
 package smarthome.persistence.springdata;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Repository
 public class LogRepositorySpringData implements LogRepository {
     private final ILogRepositorySpringData iLogRepositorySpringData;
     private final LogFactory logFactory;

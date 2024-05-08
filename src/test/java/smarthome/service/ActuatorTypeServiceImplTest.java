@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 class ActuatorTypeServiceImplTest {
 
-
     /**
      * Test to check if the ActuatorTypeService constructor
      * throws an IllegalArgumentException when given a null repository.
@@ -85,11 +84,11 @@ class ActuatorTypeServiceImplTest {
         String expected = "Invalid repository";
         ActuatorTypeRepositoryMem memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
         ActuatorTypeFactoryImpl v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
-        String filepath = " ";
+        String emptyFilePath = " ";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new ActuatorTypeServiceImpl(memActuatorTypeRepositoryDouble, v1ActuatorTypeFactoryDouble, filepath));
+                new ActuatorTypeServiceImpl(memActuatorTypeRepositoryDouble, v1ActuatorTypeFactoryDouble, emptyFilePath));
         String result = exception.getMessage();
 
         // Assert
@@ -134,7 +133,7 @@ class ActuatorTypeServiceImplTest {
         // Arrange
         ActuatorTypeRepositoryMem repository = mock(ActuatorTypeRepositoryMem.class);
         ActuatorTypeFactoryImpl factory = mock(ActuatorTypeFactoryImpl.class);
-        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "actuator.properties");
+        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
 
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
         when(repository.isPresent(id)).thenReturn(true);
@@ -162,7 +161,7 @@ class ActuatorTypeServiceImplTest {
         // Arrange
         ActuatorTypeRepositoryMem repository = mock(ActuatorTypeRepositoryMem.class);
         ActuatorTypeFactoryImpl factory = mock(ActuatorTypeFactoryImpl.class);
-        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "actuator.properties");
+        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
 
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
         when(repository.isPresent(id)).thenReturn(false);

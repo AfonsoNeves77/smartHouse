@@ -1,5 +1,7 @@
 package smarthome.domain.sensor;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -13,8 +15,10 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+@Component
 public class SensorFactoryImpl implements SensorFactory{
     private final Configuration configuration;
+
 
     /**
      * Constructs an instance of V1SensorFactory with the provided configuration file path.
@@ -24,7 +28,7 @@ public class SensorFactoryImpl implements SensorFactory{
      * @throws IllegalArgumentException if there is an error reading the configuration file. This exception is thrown to
      * indicate an error while loading properties from the file.
      */
-    public SensorFactoryImpl(String path) {
+    public SensorFactoryImpl(@Value("${filepath}") String path) {
         try {
             Configurations configs = new Configurations();
             this.configuration = configs.properties(new File(path));

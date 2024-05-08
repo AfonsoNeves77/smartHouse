@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import org.junit.jupiter.api.BeforeAll;
 import smarthome.domain.device.Device;
 import smarthome.domain.device.DeviceFactory;
 import smarthome.domain.device.DeviceFactoryImpl;
@@ -80,7 +81,7 @@ class AddSensorToDeviceCTRLTest {
     void addHumiditySensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -146,7 +147,7 @@ class AddSensorToDeviceCTRLTest {
     void addTemperatureSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -211,7 +212,7 @@ class AddSensorToDeviceCTRLTest {
     void addPositionSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -276,7 +277,7 @@ class AddSensorToDeviceCTRLTest {
     void addWindSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -341,7 +342,7 @@ class AddSensorToDeviceCTRLTest {
     void addDewPointSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -406,7 +407,7 @@ class AddSensorToDeviceCTRLTest {
     void addSunsetSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -470,7 +471,7 @@ class AddSensorToDeviceCTRLTest {
     void addSunriseSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -535,7 +536,7 @@ class AddSensorToDeviceCTRLTest {
     void addAveragePowerConsumptionSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -600,7 +601,7 @@ class AddSensorToDeviceCTRLTest {
     void addPowerConsumptionSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -665,7 +666,7 @@ class AddSensorToDeviceCTRLTest {
     void addEnergyConsumptionSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -730,7 +731,7 @@ class AddSensorToDeviceCTRLTest {
     void addSwitchSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -795,7 +796,7 @@ class AddSensorToDeviceCTRLTest {
     void addSolarIrradianceSensorToDevice_shouldReturnTrue() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -857,7 +858,7 @@ class AddSensorToDeviceCTRLTest {
     void addSensorToDevice_WhenDeactivatedDevice_shouldReturnFalse() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -914,7 +915,7 @@ class AddSensorToDeviceCTRLTest {
     void addSensorToDevice_WhenNonExistingDevice_shouldReturnFalse() {
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -967,7 +968,7 @@ class AddSensorToDeviceCTRLTest {
     void addSensorToDevice_WhenInvalidSensorType_shouldReturnFalse(){
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
@@ -1018,7 +1019,7 @@ class AddSensorToDeviceCTRLTest {
     @Test
     void addSensorToDevice_givenNullDeviceDTO_shouldReturnFalse() {
         // Arrange
-        SensorFactory sensorFactory = new SensorFactoryImpl("sensor.properties");
+        SensorFactory sensorFactory = new SensorFactoryImpl("config.properties");
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         SensorTypeRepository doubleSensorTypeRepository = mock(SensorTypeRepository.class);
@@ -1042,7 +1043,7 @@ class AddSensorToDeviceCTRLTest {
     @Test
     void addSensorToDevice_givenNullSensorTypeDTO_shouldReturnFalse() {
         // Arrange
-        SensorFactory sensorFactory = new SensorFactoryImpl("sensor.properties");
+        SensorFactory sensorFactory = new SensorFactoryImpl("config.properties");
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         SensorTypeRepository doubleSensorTypeRepository = mock(SensorTypeRepository.class);
@@ -1066,7 +1067,7 @@ class AddSensorToDeviceCTRLTest {
     @Test
     void addSensorToDevice_givenNullSensorDTO_shouldReturnFalse() {
         // Arrange
-        SensorFactory sensorFactory = new SensorFactoryImpl("sensor.properties");
+        SensorFactory sensorFactory = new SensorFactoryImpl("config.properties");
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         SensorTypeRepository doubleSensorTypeRepository = mock(SensorTypeRepository.class);
@@ -1098,7 +1099,7 @@ class AddSensorToDeviceCTRLTest {
     void addSensorToDevice_whenRepositoryDoesNotSaveSensor_shouldReturnFalse(){
         //Arrange
         //Sensor Service instantiation
-        String propertiesPath = "sensor.properties";
+        String propertiesPath = "config.properties";
         SensorFactory sensorFactory = new SensorFactoryImpl(propertiesPath);
         SensorRepository doubleSensorRepository = mock(SensorRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);

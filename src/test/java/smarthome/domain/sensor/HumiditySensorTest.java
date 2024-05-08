@@ -402,7 +402,7 @@ class HumiditySensorTest {
      * First, the sensor name is mocked, as well as the other constructor's parameters.
      * In this case, the sensor type ID is mocked and the expected value is set to "XPTO".
      * The expected string is set to "XPTO" and the SensorIDVO constructor mocked.
-     * Afterward, the humidity sensor is created and the getSensorTypeID method called, being converted to String.
+     * Afterward, the humidity sensor is created and the getSensorTypeID method called, is converted to String.
      * Meanwhile, a list of SensorIDVO is created to store the mocked SensorIDVO.
      * Finally, the expected value is compared to the result and the size of the list checked.
      */

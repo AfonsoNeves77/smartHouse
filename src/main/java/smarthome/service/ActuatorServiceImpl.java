@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
 import smarthome.domain.device.Device;
@@ -13,6 +14,7 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.Optional;
 
+@Service
 public class ActuatorServiceImpl implements ActuatorService{
     private final DeviceRepository deviceRepository;
     private final ActuatorTypeRepository actuatorTypeRepository;

@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.device.Device;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
@@ -12,6 +13,7 @@ import smarthome.domain.vo.sensorvo.SensorNameVO;
 
 import java.util.Optional;
 
+@Service
 public class SensorServiceImpl implements SensorService{
     private final DeviceRepository deviceRepository;
     private final SensorTypeRepository sensorTypeRepository;

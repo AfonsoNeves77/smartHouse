@@ -1,5 +1,6 @@
 package smarthome.service;
 
+import org.springframework.stereotype.Service;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+@Service
 public class LogServiceImpl implements LogService {
 
     private final LogRepository logRepository;

@@ -1,6 +1,7 @@
 package smarthome.persistence.springdata;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
@@ -10,6 +11,7 @@ import smarthome.persistence.jpa.datamodel.SensorDataModel;
 
 import java.util.Optional;
 
+@Repository
 public class SensorRepositorySpringData implements SensorRepository {
 
     private final ISensorRepositorySpringData iSensorRepositorySpringData;

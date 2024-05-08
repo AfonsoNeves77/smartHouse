@@ -1,5 +1,6 @@
 package smarthome.domain.actuator;
 
+import org.junit.jupiter.api.BeforeAll;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
@@ -19,15 +20,22 @@ class ActuatorFactoryImplTest {
     A double of all the other collaborators is done (which are the required value objects to create the actuator).
      */
 
+    private static String filePath;
+
+    @BeforeAll
+    public static void setUp() {
+        filePath = "config.properties";
+    }
+
     /**
      * Success Scenario: Switch Actuator is created.
      * Upon actuator attributes request, returns all the expected attributes (ActuatorTypeIDVO, ActuatorNameVO and DeviceIDVO).
-     * @throws ConfigurationException If file path used is invalid (it is encapsulated in the ActuatorFactory Class)
+     * @throws ConfigurationException If a file path used is invalid (it is encapsulated in the ActuatorFactory Class)
      */
     @Test
     void createSwitchActuator_WhenGetActuatorAttributes_ThenShouldReturnExpectedAttributes() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO nameDouble = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeIdDouble = mock(ActuatorTypeIDVO.class);
         when(typeIdDouble.getID()).thenReturn("SwitchActuator");
@@ -54,7 +62,7 @@ class ActuatorFactoryImplTest {
     @Test
     void createRollerBlindActuator_WhenGetActuatorAttributes_ThenShouldReturnExpectedAttributes() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO nameDouble = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeIdDouble = mock(ActuatorTypeIDVO.class);
         when(typeIdDouble.getID()).thenReturn("RollerBlindActuator");
@@ -81,7 +89,7 @@ class ActuatorFactoryImplTest {
     @Test
     void createDecimalValueActuator_WhenGetActuatorAttributes_ThenShouldReturnExpectedAttributes() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO nameDouble = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeIdDouble = mock(ActuatorTypeIDVO.class);
         when(typeIdDouble.getID()).thenReturn("DecimalValueActuator");
@@ -109,7 +117,7 @@ class ActuatorFactoryImplTest {
     @Test
     void createIntegerValueActuator_WhenGetActuatorAttributes_ThenShouldReturnExpectedAttributes() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO nameDouble = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeIdDouble = mock(ActuatorTypeIDVO.class);
         when(typeIdDouble.getID()).thenReturn("IntegerValueActuator");
@@ -140,7 +148,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenWrongSettingsToADecimalValueActuator_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("DecimalValueActuator");
@@ -164,7 +172,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenWrongSettingsToAnIntegerValueActuator_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("IntegerValueActuator");
@@ -189,7 +197,7 @@ class ActuatorFactoryImplTest {
     @Test
     void whenNullActuatorName_ThenThrowsIllegalArgumentException() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         Settings settings = mock(Settings.class);
@@ -212,7 +220,7 @@ class ActuatorFactoryImplTest {
     @Test
     void whenNullActuatorTypeID_ThenThrowsIllegalArgumentException() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         Settings settings = mock(Settings.class);
@@ -235,7 +243,7 @@ class ActuatorFactoryImplTest {
     @Test
     void whenNullDeviceID_ThenThrowsIllegalArgumentException() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         Settings settings = mock(Settings.class);
@@ -261,7 +269,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenValidParameters_FileDoesNotContainActuatorType_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
 
         ActuatorTypeIDVO actuatorTypeID1 = mock(ActuatorTypeIDVO.class);
@@ -295,7 +303,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenNullSettings_WhenCreateDecimalValueActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("DecimalValueActuator");
@@ -316,7 +324,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenNullSettings_WhenCreateIntegerValueActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("IntegerValueActuator");
@@ -337,7 +345,7 @@ class ActuatorFactoryImplTest {
     @Test
     void givenNonNullSettingsToASwitchActuator_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("SwitchActuator");
@@ -354,12 +362,12 @@ class ActuatorFactoryImplTest {
     /**
      * Verifies that when Settings are given to create an actuator that does not require such parameters, the actuator
      * is not created, since a proper constructor is not found. This test attempts to create a Roller Blind Actuator.
-     * @throws ConfigurationException If file path used is invalid (it is encapsulated in the ActuatorFactory Class)
+     * @throws ConfigurationException If a file path used is invalid (it is encapsulated in the ActuatorFactory Class)
      */
     @Test
     void givenNonNullSettingsToARollerBlindActuator_WhenCreateActuator_ThenShouldReturnNull() throws ConfigurationException {
         //Arrange
-        ActuatorFactoryImpl factory = new ActuatorFactoryImpl();
+         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeID.getID()).thenReturn("RollerBlindActuator");

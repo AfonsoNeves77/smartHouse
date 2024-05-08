@@ -1,11 +1,13 @@
 package smarthome.domain.device;
 
+import org.springframework.stereotype.Component;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
 import smarthome.domain.vo.devicevo.DeviceStatusVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 
+@Component
 public class DeviceFactoryImpl implements DeviceFactory{
 
     /**

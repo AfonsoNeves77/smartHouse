@@ -1,6 +1,7 @@
 package smarthome.mapper.assembler;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import smarthome.domain.actuator.*;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
@@ -16,16 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ActuatorAssemblerTest {
 
+
+    private static String filePath;
+
+    @BeforeAll
+    public static void setUp() {
+        filePath = "config.properties";
+    }
+
     /**
      * Test to verify if the ActuatorAssembler can convert an ActuatorDataModel object to a persisted Integer Actuator object.
      * The test creates an ActuatorDataModel object with valid parameters and then converts it to an Integer Actuator object.
      * The Actuator object is created with the same parameters as the ActuatorDataModel object.
-     * @throws ConfigurationException If file with actuator properties is not found
+     * @throws ConfigurationException If a file with actuator properties is not found
      */
     @Test
     void givenValidDataModel_whenToDomain_thenReturnIntegerActuator() throws ConfigurationException {
         //Arrange
-        ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
+          ActuatorFactoryImpl actuatorFactory  = new ActuatorFactoryImpl(filePath);
         ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
         ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
         ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("IntegerValueActuator");
@@ -56,7 +65,7 @@ class ActuatorAssemblerTest {
     @Test
     void givenValidDataModel_whenToDomain_thenReturnDecimalActuator() throws ConfigurationException {
         //Arrange
-        ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
+          ActuatorFactoryImpl actuatorFactory  = new ActuatorFactoryImpl(filePath);
         ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
         ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
         ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("DecimalValueActuator");
@@ -87,7 +96,7 @@ class ActuatorAssemblerTest {
     @Test
     void givenValidDataModel_whenToDomain_thenReturnSwitchActuator() throws ConfigurationException {
         //Arrange
-        ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
+          ActuatorFactoryImpl actuatorFactory  = new ActuatorFactoryImpl(filePath);
         ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
         ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
         ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("SwitchActuator");
@@ -117,7 +126,7 @@ class ActuatorAssemblerTest {
     @Test
     void givenValidDataModel_whenToDomain_thenReturnRollerBlindActuator() throws ConfigurationException {
         //Arrange
-        ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
+          ActuatorFactoryImpl actuatorFactory  = new ActuatorFactoryImpl(filePath);
         ActuatorIDVO actuatorID = new ActuatorIDVO(UUID.randomUUID());
         ActuatorNameVO actuatorName = new ActuatorNameVO("actuatorName");
         ActuatorTypeIDVO actuatorTypeID = new ActuatorTypeIDVO("RollerBlindActuator");
@@ -142,12 +151,12 @@ class ActuatorAssemblerTest {
      * Test to verify if the ActuatorAssembler can convert a list of ActuatorDataModel objects to a list of Actuator objects.
      * The test creates a list of ActuatorDataModel objects with valid parameters and then converts it to a list of Actuator objects.
      *
-     * @throws ConfigurationException If file with actuator properties is not found
+     * @throws ConfigurationException If a file with actuator properties is not found
      */
     @Test
     void givenListOfDataModels_whenToDomainList_thenReturnListOfActuators() throws ConfigurationException {
         //Arrange
-        ActuatorFactory actuatorFactory = new ActuatorFactoryImpl();
+          ActuatorFactoryImpl actuatorFactory  = new ActuatorFactoryImpl(filePath);
 
         // Create Integer Actuator
         ActuatorIDVO first_actuatorID = new ActuatorIDVO(UUID.randomUUID());

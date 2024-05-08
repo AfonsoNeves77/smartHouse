@@ -52,7 +52,7 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
 
     /**
      * Test for the constructor of GetMaxInstantaneousTemperatureDifferenceCTRL.
-     * When the service is null it throws an IllegalArgumentException.
+     * When the service is null, it throws an IllegalArgumentException.
      */
     @Test
     void whenConstructorGetsNullService_throwsIllegalArgumentException() {

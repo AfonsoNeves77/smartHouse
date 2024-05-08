@@ -43,10 +43,10 @@ class GetListOfSensorTypesCTRLTest {
     /**
      * Test for the getListOfSensorTypes method of AddSensorToDeviceCTRL.
      * Tests if the method returns a list of SensorTypeDTO of all the available sensor types.
-     * The expected size of the list is 12, which corresponds to the number of sensor types in the sensor.properties file.
+     * The expected size of the list is 12, which corresponds to the number of sensor types in the config.properties file.
      * The first sensor type in the list is HumiditySensor.
      * The mock SensorTypeRepository is set up to return a list of SensorType objects with the same sensor types as the
-     * sensor.properties file.
+     * config.properties file.
      * The method should return a list of SensorTypeDTO with a size of 12 and the first sensor type id should be
      * HumiditySensor.
      */
@@ -55,7 +55,7 @@ class GetListOfSensorTypesCTRLTest {
         //Arrange
         int expectedSize = 12;
         String expectedSensorTypeID = "HumiditySensor";
-        String path = "sensor.properties";
+        String path = "config.properties";
         SensorTypeRepository doubleSensorTypeRepository = mock(SensorTypeRepository.class);
         Configurations config = new Configurations();
         Configuration configuration = config.properties(path);

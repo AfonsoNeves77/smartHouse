@@ -1,6 +1,7 @@
 package smarthome.persistence.springdata;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.actuatortype.ActuatorType;
 import smarthome.domain.actuatortype.ActuatorTypeFactory;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * This class implements the ActuatorTypeRepository interface, interacting with the database using Spring Data JPA.
  */
+@Repository
 public class ActuatorTypeRepositorySpringData implements ActuatorTypeRepository {
 
     ActuatorTypeFactory actuatorTypeFactory;

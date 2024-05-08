@@ -27,7 +27,7 @@ class GetListOfRoomsCTRLTest {
     RoomRepository roomRepositoryDouble;
 
     /**
-     * Set up method for initializing necessary objects before each test.
+     * Set up method for initializing the necessary objects before each test.
      * Initializes a Memory House Repository, a V1 House Factory, and a V1 House Service
      * for testing purposes. Also initializes a Memory Room Repository, a V1 Room Factory,
      * and a V1 Room Service with the previously created House Service. Finally, creates

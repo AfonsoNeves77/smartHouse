@@ -1,5 +1,6 @@
 package smarthome.persistence.springdata;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
 import smarthome.domain.house.House;
 import smarthome.domain.house.HouseFactory;
 import smarthome.domain.vo.housevo.HouseIDVO;
@@ -14,6 +15,7 @@ import java.util.Optional;
  * This class interacts with the database to perform CRUD operations on house entities.
  */
 
+@Repository
 public class HouseRepositorySpringData implements HouseRepository {
 
     private final IHouseRepositorySpringData iHouseRepositorySpringData;
