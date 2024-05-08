@@ -182,15 +182,6 @@ public class DeviceRepositoryJPA implements DeviceRepository {
     }
 
     /**
-     * Helper method to check if an object is null.
-     * @param object The object to check.
-     * @return True if the object is null, false otherwise.
-     */
-    private boolean isNull(Object object){
-        return object == null;
-    }
-
-    /**
      * Retrieves a DeviceDataModel entity from the database by its ID.
      * @param em The EntityManager used to perform the database operation.
      * @param id The ID of the DeviceDataModel entity to retrieve.
@@ -200,6 +191,15 @@ public class DeviceRepositoryJPA implements DeviceRepository {
     private Optional<DeviceDataModel> getDeviceDataModelFromDeviceId(EntityManager em, DeviceIDVO id){
         String deviceID = id.getID();
         return Optional.ofNullable(em.find(DeviceDataModel.class, deviceID));
+    }
+
+    /**
+     * Helper method to check if an object is null.
+     * @param object The object to check.
+     * @return True if the object is null, false otherwise.
+     */
+    private boolean isNull(Object object){
+        return object == null;
     }
 }
 

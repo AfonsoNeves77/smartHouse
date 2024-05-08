@@ -131,37 +131,6 @@ public class HouseRepositoryJPA implements HouseRepository {
     }
 
     /**
-     * Retrieves the first House entity from the database.
-     * @return The first House entity, null if the database is empty or any RunTimeException occurred.
-     */
-
-    @Override
-    public House getFirstHouse() {
-        try(EntityManager em = entityManagerFactory.createEntityManager())  {
-            Query query = em.createQuery(QUERY).setMaxResults(1);
-            HouseDataModel houseDataModel = (HouseDataModel) query.getSingleResult();
-
-            return HouseAssembler.toDomain(houseFactory, houseDataModel);
-        }catch (RuntimeException e){
-            return null;
-        }
-    }
-
-    /**
-     * Retrieves the ID of the first House entity from the database.
-     * @return The ID of the first House entity, or null if the database is empty.
-     */
-
-    @Override
-    public HouseIDVO getFirstHouseIDVO() {
-        House house = getFirstHouse();
-        if(house !=null){
-            return house.getId();
-        }
-        return null;
-    }
-
-    /**
      * Updates a House entity in the database.
      * 1. Obtains HouseDataModel object associated with the given house id, from database;
      * 2. Invoked updateFromDomain() method to make the retrieved HouseDataModel update it's attributes based on
@@ -207,6 +176,36 @@ public class HouseRepositoryJPA implements HouseRepository {
         }
     }
 
+    /**
+     * Retrieves the first House entity from the database.
+     * @return The first House entity, null if the database is empty or any RunTimeException occurred.
+     */
+
+    @Override
+    public House getFirstHouse() {
+        try(EntityManager em = entityManagerFactory.createEntityManager())  {
+            Query query = em.createQuery(QUERY).setMaxResults(1);
+            HouseDataModel houseDataModel = (HouseDataModel) query.getSingleResult();
+
+            return HouseAssembler.toDomain(houseFactory, houseDataModel);
+        }catch (RuntimeException e){
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves the ID of the first House entity from the database.
+     * @return The ID of the first House entity, or null if the database is empty.
+     */
+
+    @Override
+    public HouseIDVO getFirstHouseIDVO() {
+        House house = getFirstHouse();
+        if(house !=null){
+            return house.getId();
+        }
+        return null;
+    }
 
     /**
      * Verifies if the given object is null. Although is not type-safe, this method is only used when there is

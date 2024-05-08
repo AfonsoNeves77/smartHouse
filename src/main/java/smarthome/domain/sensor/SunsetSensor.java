@@ -99,16 +99,6 @@ public class SunsetSensor implements Sensor {
     /**
      * Simple getter method
      *
-     * @return The encapsulated VO for Name;
-     */
-    @Override
-    public SensorNameVO getSensorName() {
-        return sensorName;
-    }
-
-    /**
-     * Simple getter method
-     *
      * @return The encapsulated VO for SensorTypeID;
      */
     @Override
@@ -119,11 +109,11 @@ public class SunsetSensor implements Sensor {
     /**
      * Simple getter method
      *
-     * @return The encapsulated VO for DeviceID;
+     * @return The encapsulated VO for Name;
      */
     @Override
-    public DeviceIDVO getDeviceID() {
-        return deviceID;
+    public SensorNameVO getSensorName() {
+        return sensorName;
     }
 
     /**
@@ -136,6 +126,16 @@ public class SunsetSensor implements Sensor {
     @Override
     public DomainID getId() {
         return this.sensorID;
+    }
+
+    /**
+     * Simple getter method
+     *
+     * @return The encapsulated VO for DeviceID;
+     */
+    @Override
+    public DeviceIDVO getDeviceID() {
+        return deviceID;
     }
 
     /**
