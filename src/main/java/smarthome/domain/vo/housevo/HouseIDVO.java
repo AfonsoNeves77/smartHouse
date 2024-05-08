@@ -36,15 +36,15 @@ public class HouseIDVO implements DomainID {
     }
 
     @Override
+    public int hashCode() {
+        return identifier.hashCode();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof HouseIDVO)) return false;
         HouseIDVO houseIDVO = (HouseIDVO) o;
         return Objects.equals(identifier, houseIDVO.identifier);
-    }
-
-    @Override
-    public int hashCode() {
-        return identifier.hashCode();
     }
 }

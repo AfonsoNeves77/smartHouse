@@ -22,14 +22,21 @@ public class LogIDVO implements DomainID {
     }
 
     /**
-     * Gets the string representation of the log identifier.
-     * @return The string representation of the log identifier.
+     * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+     *
+     * @return a hash code value for this object.
      */
     @Override
-    public String getID() {
-        return this.identifier.toString();
+    public int hashCode() {
+        return identifier.hashCode();
     }
 
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param o the reference object with which to compare.
+     * @return true if this object is the same as the o argument; false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,8 +44,12 @@ public class LogIDVO implements DomainID {
         return identifier.equals(logIDVO.identifier);
     }
 
+    /**
+     * Gets the string representation of the log identifier.
+     * @return The string representation of the log identifier.
+     */
     @Override
-    public int hashCode() {
-        return identifier.hashCode();
+    public String getID() {
+        return this.identifier.toString();
     }
 }

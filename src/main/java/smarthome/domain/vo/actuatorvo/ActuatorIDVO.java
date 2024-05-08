@@ -32,17 +32,6 @@ public class ActuatorIDVO implements DomainID {
     }
 
     /**
-     * Gets the string representation of the actuator identifier.
-     *
-     * @return The string representation of the actuator identifier.
-     */
-
-    @Override
-    public String getID() {
-        return this.identifier.toString();
-    }
-
-    /**
      * Compares this ActuatorIDVO object to another object of the same type to check if they are equal.
      *
      * @param o object
@@ -64,5 +53,16 @@ public class ActuatorIDVO implements DomainID {
     @Override
     public int hashCode() {
         return Objects.hash(identifier);
+    }
+
+    /**
+     * Gets the string representation of the actuator identifier.
+     *
+     * @return The string representation of the actuator identifier.
+     */
+
+    @Override
+    public String getID() {
+        return this.identifier.toString();
     }
 }
