@@ -16,6 +16,7 @@ import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +31,7 @@ class LogServiceImplTest {
      * Test to verify that IllegalArgumentException is thrown when given null parameters.
      */
     @Test
-    void whenGivenNullRepository_construtorThrowsIllegalArgumentException(){
+    void whenGivenNullRepository_constructorThrowsIllegalArgumentException(){
         // Arrange
         String expected = "Repository cannot be null.";
         LogRepository logRepository = mock(LogRepository.class);
@@ -63,6 +64,7 @@ class LogServiceImplTest {
     void whenGivenNullParameters_throwsIllegalArgumentException(){
         // Arrange
         String expected = "Invalid parameters";
+        String expectedTimeStamp = "Invalid Time Stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -87,14 +89,129 @@ class LogServiceImplTest {
 
         Exception exception4 = assertThrows(IllegalArgumentException.class, ()
                 -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime, null));
-        String result4 = exception2.getMessage();
+        String result4 = exception4.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expectedTimeStamp,result2);
+        assertEquals(expected,result3);
+        assertEquals(expectedTimeStamp,result4);
+    }
+
+    /**
+     * Test case to verify that when given invalid timestamps, the method findReadingsFromDeviceInATimePeriod
+     * throws an IllegalArgumentException.
+     */
+    @Test
+    void whenGivenInvalidTimeStamps_throwsIllegalArgumentException(){
+        // Arrange
+        String expected = "Invalid Time Stamps";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+
+        LocalDateTime from = mock(LocalDateTime.class);
+        LocalDateTime to = mock(LocalDateTime.class);
+        LocalDateTime placeholder = mock(LocalDateTime.class);
+
+        when(from.isAfter(to)).thenReturn(true);
+        when(to.isAfter(placeholder)).thenReturn(true);
+
+        when(initialTime.getValue()).thenReturn(from);
+        when(finalTime.getValue()).thenReturn(to);
+
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime));
+        String result1 = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime));
+        String result2 = exception2.getMessage();
 
         // Assert
         assertEquals(expected,result1);
         assertEquals(expected,result2);
-        assertEquals(expected,result3);
-        assertEquals(expected,result4);
     }
+
+    /**
+     * Test case to verify that when the repository throws an exception while attempting to find logs by device ID and
+     * time frame, the method findReadingsFromDeviceInATimePeriod throws an IllegalArgumentException.
+     */
+    @Test
+    void whenRepositoryThrowsException_FindLogByDeviceIDAndTimeFrameThrowsIllegalArgumentException(){
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+
+        LocalDateTime from = mock(LocalDateTime.class);
+        LocalDateTime to = mock(LocalDateTime.class);
+        LocalDateTime placeholder = mock(LocalDateTime.class);
+        when(from.isAfter(to)).thenReturn(false);
+        when(to.isAfter(placeholder)).thenReturn(false);
+        when(initialTime.getValue()).thenReturn(from);
+        when(finalTime.getValue()).thenReturn(to);
+
+        when(logRepository.findByDeviceIDAndTimeBetween(deviceID,initialTime,finalTime))
+                .thenThrow(new IllegalArgumentException("Invalid parameters "));
+
+        List<Log> expected = Collections.emptyList();
+        // Act
+        List<Log> result = service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime);
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * Test case to verify that when logs are found within a specified time frame for a given device ID,
+     * the method findReadingsFromDeviceInATimePeriod successfully returns a list of logs.
+     */
+    @Test
+    void whenLogsAreFound_FindLogByDeviceIDAndTimeFrameSuccessfullyReturnsAListOfLogs(){
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+
+        LocalDateTime from = mock(LocalDateTime.class);
+        LocalDateTime to = mock(LocalDateTime.class);
+        LocalDateTime placeholder = mock(LocalDateTime.class);
+        when(from.isAfter(to)).thenReturn(false);
+        when(to.isAfter(placeholder)).thenReturn(false);
+        when(initialTime.getValue()).thenReturn(from);
+        when(finalTime.getValue()).thenReturn(to);
+
+        Log log1 = mock(Log.class);
+        Log log2 = mock(Log.class);
+        List<Log> expected = new ArrayList<>();
+        expected.add(log1);
+        expected.add(log2);
+
+        when(logRepository.findByDeviceIDAndTimeBetween(deviceID,initialTime,finalTime))
+                .thenReturn(expected);
+
+        // Act
+        List<Log> result = service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime);
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
 
     /**
      * Test to verify that IllegalArgumentException is thrown when given null outdoor device.
@@ -114,7 +231,8 @@ class LogServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(null, deviceIdInt, initialTime, finalTime, delta));
+                logService.getMaxInstantaneousTempDifference(null, deviceIdInt, initialTime,
+                                                                finalTime, delta));
         String result = exception.getMessage();
 
         // Assert
@@ -139,7 +257,8 @@ class LogServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(deviceIdOut, null, initialTime, finalTime, delta));
+                logService.getMaxInstantaneousTempDifference(deviceIdOut, null, initialTime,
+                                                                finalTime, delta));
         String result = exception.getMessage();
 
         // Assert
@@ -166,14 +285,17 @@ class LogServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, null, finalTime, delta));
+                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, null,
+                                                                finalTime, delta));
         Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime, null, delta));
+                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime,
+                                                    null, delta));
         Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime, finalTime, null));
+                logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime,
+                                                                finalTime, null));
         String result = exception.getMessage();
-        String result2 = exception.getMessage();
-        String result3 = exception.getMessage();
+        String result2 = exception2.getMessage();
+        String result3 = exception3.getMessage();
 
         // Assert
         assertEquals(expected,result);
@@ -199,7 +321,8 @@ class LogServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                logService.getMaxInstantaneousTempDifference(deviceIdOut, null, initialTime, finalTime, delta));
+                logService.getMaxInstantaneousTempDifference(deviceIdOut, null, initialTime,
+                                                                finalTime, delta));
         String result = exception.getMessage();
 
         // Assert
@@ -367,12 +490,14 @@ class LogServiceImplTest {
 
         String sensorType = "TemperatureSensor";
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialTime, finalTime)).thenReturn(Collections.emptyList());
+        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialTime, finalTime))
+                .thenReturn(Collections.emptyList());
 
         String expectedMessage = "There are no records available for the given period";
 
         // Act
-        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime, finalTime, delta);
+        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime,
+                                                                        finalTime, delta);
 
         // Assert
         assertEquals(expectedMessage, result);
@@ -442,14 +567,17 @@ class LogServiceImplTest {
 
         List<Log> outdoorLogs = Arrays.asList(log1, log2);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialTime, finalTime)).thenReturn(outdoorLogs);
+        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialTime, finalTime))
+                .thenReturn(outdoorLogs);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, initialTime, finalTime)).thenReturn(Collections.emptyList());
+        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, initialTime, finalTime))
+                .thenReturn(Collections.emptyList());
 
         String expectedMessage = "There are no records available for the given period";
 
         // Act
-        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime, finalTime, delta);
+        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialTime,
+                                                                        finalTime, delta);
 
         // Assert
         assertEquals(expectedMessage, result);
@@ -547,15 +675,19 @@ class LogServiceImplTest {
         TimeStampVO userFinalTime = mock(TimeStampVO.class);
         when(userFinalTime.getValue()).thenReturn(userFinTime);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, userInitialTime, userFinalTime)).thenReturn(outdoorLogs);
+        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, userInitialTime, userFinalTime))
+                .thenReturn(outdoorLogs);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, userInitialTime, userFinalTime)).thenReturn(indoorLogs);
+        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, userInitialTime, userFinalTime))
+                .thenReturn(indoorLogs);
 
 
-        String expectedMessage = "Readings were found within the provided time span, but with no matches within the delta provided";
+        String expectedMessage = "Readings were found within the provided time span, but with no matches within the " +
+                "delta provided";
 
         // Act
-        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, userInitialTime, userFinalTime, delta);
+        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, userInitialTime,
+                                                                        userFinalTime, delta);
 
         // Assert
         assertEquals(expectedMessage, result);
@@ -570,8 +702,7 @@ class LogServiceImplTest {
         // Arrange
         DeviceIDVO deviceIdOut = mock(DeviceIDVO.class);
         DeviceIDVO deviceIdInt = mock(DeviceIDVO.class);
-        TimeStampVO initialTime = mock(TimeStampVO.class);
-        TimeStampVO finalTime = mock(TimeStampVO.class);
+
         DeltaVO delta = mock(DeltaVO.class);
 
         LogRepository logRepository = mock(LogRepository.class);
@@ -668,16 +799,93 @@ class LogServiceImplTest {
 
         List<Log> indoorLogs = Arrays.asList(log3, log4);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialDateTime, finalDateTime)).thenReturn(outdoorLogs);
+        when(logRepository.getDeviceTemperatureLogs(deviceIdOut, sensorType, initialDateTime, finalDateTime))
+                .thenReturn(outdoorLogs);
 
-        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, initialDateTime, finalDateTime)).thenReturn(indoorLogs);
+        when(logRepository.getDeviceTemperatureLogs(deviceIdInt, sensorType, initialDateTime, finalDateTime))
+                .thenReturn(indoorLogs);
 
-        String expectedMessage = "The Maximum Temperature Difference within the selected Period was of 10.0 Cº which happened at 2024-02-25T23:55";
+        String expectedMessage = "The Maximum Temperature Difference within the selected Period was of 10.0 Cº which "
+                + "happened at 2024-02-25T23:55";
 
         // Act
-        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialDateTime, finalDateTime, delta);
+        String result = logService.getMaxInstantaneousTempDifference(deviceIdOut, deviceIdInt, initialDateTime,
+                                                                        finalDateTime, delta);
 
         // Assert
         assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Test case to verify that when given invalid timestamps, attempting to get the maximum instantaneous temperature
+     * difference between an outdoor and indoor device throws an IllegalArgumentException.
+     */
+    @Test
+    void whenGivenInvalidTimeStamps_GetMaxTemp_throwsIllegalArgumentException(){
+        // Arrange
+        String expected = "Invalid Time Stamps";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+
+        Room outdoorRoom = mock(Room.class);
+        RoomDimensionsVO outdoorDimensions = mock(RoomDimensionsVO.class);
+        when(outdoorDimensions.getRoomHeight()).thenReturn((double) 0);
+        RoomIDVO outdoorRoomID = mock(RoomIDVO.class);
+
+        Room indoorRoom = mock(Room.class);
+        RoomIDVO indoorRoomID = mock(RoomIDVO.class);
+        RoomDimensionsVO indoorDimensions = mock(RoomDimensionsVO.class);
+        when(indoorDimensions.getRoomHeight()).thenReturn((double) 1);
+
+        Device outdoorDevice = mock(Device.class); //Outdoor device
+        Device indoorDevice = mock(Device.class); //Indoor device
+        DeviceIDVO outdoorDeviceID = mock(DeviceIDVO.class);
+        DeviceIDVO indoorDeviceID = mock(DeviceIDVO.class);
+
+        // Arranging condition for isOutdoorDeviceInTheExterior
+        when(roomRepository.findById(outdoorRoomID)).thenReturn(outdoorRoom);
+        when(outdoorDevice.getRoomID()).thenReturn(outdoorRoomID);
+        when(outdoorRoom.getRoomDimensions()).thenReturn(outdoorDimensions);
+
+        // Arranging condition for isIndoorDeviceInTheInterior
+        when(roomRepository.findById(indoorRoomID)).thenReturn(indoorRoom);
+        when(indoorDevice.getRoomID()).thenReturn(indoorRoomID);
+        when(indoorRoom.getRoomDimensions()).thenReturn(indoorDimensions);
+
+        // Arranging behaviour of deviceRepository
+        when(deviceRepository.findById(outdoorDeviceID)).thenReturn(outdoorDevice);
+        when(deviceRepository.findById(indoorDeviceID)).thenReturn(indoorDevice);
+
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        DeltaVO deltaVO = mock(DeltaVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+
+        LocalDateTime from = mock(LocalDateTime.class);
+        LocalDateTime to = mock(LocalDateTime.class);
+        LocalDateTime placeholder = mock(LocalDateTime.class);
+
+        when(from.isAfter(to)).thenReturn(true);
+        when(to.isAfter(placeholder)).thenReturn(true);
+
+        when(initialTime.getValue()).thenReturn(from);
+        when(finalTime.getValue()).thenReturn(to);
+
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getMaxInstantaneousTempDifference(outdoorDeviceID,indoorDeviceID,
+                                                              initialTime,finalTime,deltaVO));
+        String result1 = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getMaxInstantaneousTempDifference(outdoorDeviceID,indoorDeviceID,
+                                                             initialTime,finalTime,deltaVO));
+        String result2 = exception2.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expected,result2);
     }
 }

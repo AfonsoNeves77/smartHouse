@@ -49,7 +49,7 @@ public class LogServiceImpl implements LogService {
      */
     @Override
     public List<Log> findReadingsFromDeviceInATimePeriod(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
-        if (areParamsNull(deviceID, initialTimeStamp, finalTimeStamp)) {
+        if (areParamsNull(deviceID)) {
             throw new IllegalArgumentException("Invalid parameters");
         }
 
@@ -220,8 +220,6 @@ public class LogServiceImpl implements LogService {
         return inRoom.getRoomDimensions().getRoomHeight()>0;
     }
 
-
-
     /**
      * Gets the absolute difference between the readings of two logs.
      * @param interiorLog The log from the indoor device.
@@ -255,10 +253,9 @@ public class LogServiceImpl implements LogService {
      * @return true if the timestamps are invalid, false otherwise.
      */
     private boolean areTimeStampsInvalid(TimeStampVO initial, TimeStampVO end){
-        if (initial == null || end == null){
+        if (areParamsNull(initial,end)){
             return true;
         }
-
         LocalDateTime from = initial.getValue();
         LocalDateTime to = end.getValue();
 
