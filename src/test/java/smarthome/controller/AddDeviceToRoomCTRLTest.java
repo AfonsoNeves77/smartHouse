@@ -7,8 +7,10 @@ import smarthome.domain.room.Room;
 import smarthome.domain.vo.roomvo.*;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.RoomDTO;
+import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.persistence.SensorRepository;
 import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
 import smarthome.domain.vo.housevo.HouseIDVO;
@@ -54,7 +56,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device Service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
@@ -110,7 +114,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device Service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
@@ -146,7 +152,7 @@ class AddDeviceToRoomCTRLTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new AddDeviceToRoomCTRL(null));
+                new AddDeviceToRoomCTRL(null));
         String result = exception.getMessage();
 
         // Assert
@@ -168,7 +174,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device Service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
@@ -209,7 +217,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();
@@ -248,7 +258,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. House ID must be obtained from the previously instantiated HouseIDVO object.
         String houseId = room.getHouseID().getID();
@@ -297,7 +309,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device Service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. House ID must be obtained from the previously instantiated HouseIDVO object.
         String houseId = room.getHouseID().getID();
@@ -346,7 +360,9 @@ class AddDeviceToRoomCTRLTest {
         // arranges Device Service
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         // arranges RoomDTO. String IDs must be obtained from the previously instantiated Room and HouseIDVO objects.
         String roomId = room.getId().getID();

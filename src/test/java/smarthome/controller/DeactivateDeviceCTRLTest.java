@@ -9,8 +9,10 @@ import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.mapper.dto.DeviceDTO;
+import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.persistence.SensorRepository;
 import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
 
@@ -44,7 +46,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when a null DeviceDTO is provided to deactivateDevice method,
      * it returns false.
-     * For this test case DeviceRepository and RoomRepository are being doubled.
+     * For this test case DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are being doubled.
      */
 
     @Test
@@ -55,8 +57,10 @@ class DeactivateDeviceCTRLTest {
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
 
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
 
@@ -70,7 +74,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when a null device ID is provided in the DeviceDTO to deactivateDevice method,
      * it returns false.
-     * For this test case DeviceRepository and RoomRepository are being doubled.
+     * For this test case DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are being doubled.
      */
     @Test
     void deactivateDevice_WhenNullDeviceDTOID_ShouldReturnFalse() {
@@ -87,7 +91,9 @@ class DeactivateDeviceCTRLTest {
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -102,7 +108,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when an invalid device ID is provided in the DeviceDTO to deactivateDevice method,
      * it returns false. By invalid (empty, empty with blank spaces and null)
-     * For this test case DeviceRepository and RoomRepository are being doubled.
+     * For this test case DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are being doubled.
      */
     @Test
     void deactivateDevice_WhenInvalidDeviceID_ShouldReturnFalse() {
@@ -123,7 +129,9 @@ class DeactivateDeviceCTRLTest {
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -143,7 +151,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when a non-convertible UUID string is provided in the DeviceDTO to deactivateDevice method,
      * it returns false.
-     * For this test case DeviceRepository and RoomRepository are being doubled.
+     * For this test case DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are being doubled.
      */
     @Test
     void deactivateDevice_WhenNonConvertibleUUIDtoString_ShouldReturnFalse() {
@@ -161,7 +169,9 @@ class DeactivateDeviceCTRLTest {
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -176,7 +186,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * This test case verifies that when a non-existing device is provided in the DeviceDTO to the `deactivateDevice` method,
      * it returns false.
-     * Doubles for DeviceRepository and RoomRepository are utilized in this test case.
+     * Doubles for DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are utilized in this test case.
      * The behavior of DeviceRepository is conditioned to return null when the `findByID()` method is invoked.
      * This behavior (returning null), although it's already the default behavior of Mockito if not explicitly set, is induced
      * here for clarity.
@@ -203,7 +213,9 @@ class DeactivateDeviceCTRLTest {
 
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -218,7 +230,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when a device is already deactivated and provided in the DeviceDTO to deactivateDevice method,
      * it returns false.
-     * Doubles for DeviceRepository and RoomRepository are utilized in this test case.
+     * Doubles for DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are utilized in this test case.
      * The behavior of DeviceRepository is conditioned to return the correct Device when the `findByID(DeviceIDVI)` method is invoked.
      */
 
@@ -250,7 +262,9 @@ class DeactivateDeviceCTRLTest {
 
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -277,7 +291,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when an activated device exists and is provided in the DeviceDTO to deactivateDevice method,
      * it returns False after successful deactivation.
-     * Doubles for DeviceRepository and RoomRepository are utilized in this test case.
+     * Doubles for DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are utilized in this test case.
      * The behavior of DeviceRepository is conditioned to return the correct Device when the `findByID(DeviceIDVI)` method is invoked.
      * The behavior of DeviceRepository is conditioned to return false when update(device) method is invoked.
      */
@@ -311,7 +325,9 @@ class DeactivateDeviceCTRLTest {
 
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);
@@ -335,7 +351,7 @@ class DeactivateDeviceCTRLTest {
     /**
      * Test case to verify that when an activated device exists and is provided in the DeviceDTO to deactivateDevice method,
      * it returns False after successful deactivation.
-     * Doubles for DeviceRepository and RoomRepository are utilized in this test case.
+     * Doubles for DeviceRepository, RoomRepository, SensorRepository and ActuatorRepository are utilized in this test case.
      * The behavior of DeviceRepository is conditioned to return the correct Device when the `findByID(DeviceIDVI)` method is invoked.
      * The behavior of DeviceRepository is conditioned to return true when update(device) method is invoked.
      */
@@ -369,7 +385,9 @@ class DeactivateDeviceCTRLTest {
 
         RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactory, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
 
         // Creating DeactivateDeviceCTRL instance
         DeactivateDeviceCTRL deactivateDeviceCTRL = new DeactivateDeviceCTRL(deviceService);

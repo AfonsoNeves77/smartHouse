@@ -7,8 +7,10 @@ import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.vo.roomvo.*;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.RoomDTO;
+import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.persistence.SensorRepository;
 import smarthome.service.DeviceService;
 import smarthome.service.DeviceServiceImpl;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
@@ -35,13 +37,13 @@ class GetListOfDevicesCTRLTest {
      * @throws IllegalArgumentException if RoomService parameter is null
      */
     @Test
-    void whenRoomServiceIsNull_thenThrowsIllegalArgumentException(){
+    void whenDeviceServiceIsNull_thenThrowsIllegalArgumentException(){
         //Arrange
         String expected = "Invalid parameters.";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new GetListOfDevicesCTRL(null));
+                new GetListOfDevicesCTRL(null));
         String result = exception.getMessage();
 
         //Assert
@@ -63,7 +65,9 @@ class GetListOfDevicesCTRLTest {
         RoomRepository doubleRoomRepositoryMem = mock(RoomRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepositoryMem, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepositoryMem, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         //Act
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
@@ -88,7 +92,9 @@ class GetListOfDevicesCTRLTest {
         RoomRepository doubleRoomRepository = mock(RoomRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
@@ -129,7 +135,9 @@ class GetListOfDevicesCTRLTest {
         when(doubleDeviceRepository.findByRoomID(roomIDVO)).thenReturn(Collections.emptyList());
 
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
@@ -176,7 +184,9 @@ class GetListOfDevicesCTRLTest {
         when(doubleDeviceRepository.findByRoomID(any(RoomIDVO.class))).thenReturn(Collections.singletonList(device));
 
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
@@ -194,7 +204,7 @@ class GetListOfDevicesCTRLTest {
         assertEquals(expectedDeviceModel, deviceDTOList.get(0).getDeviceModel());
         assertEquals(roomID, deviceDTOList.get(0).getRoomID());
         assertEquals("true", deviceDTOList.get(0).getDeviceStatus());
-        }
+    }
 
     /**
      * Test case to verify that when a room has two devices, calling getListOfDevices() on the GetListOfDevicesCTRL
@@ -243,7 +253,9 @@ class GetListOfDevicesCTRLTest {
         String expectedID1 = device1.getId().getID();
         String expectedID2 = device2.getId().getID();
 
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 
@@ -293,7 +305,9 @@ class GetListOfDevicesCTRLTest {
         RoomRepository doubleRoomRepository = mock(RoomRepository.class);
         DeviceRepository doubleDeviceRepository = mock(DeviceRepository.class);
         DeviceFactory deviceFactory = new DeviceFactoryImpl();
-        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository);
+        SensorRepository doubleSensorRepository = mock(SensorRepository.class);
+        ActuatorRepository doubleActuatorRepository = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(doubleRoomRepository, deviceFactory, doubleDeviceRepository, doubleSensorRepository, doubleActuatorRepository);
 
         GetListOfDevicesCTRL getListOfDevicesCTRL = new GetListOfDevicesCTRL(deviceService);
 

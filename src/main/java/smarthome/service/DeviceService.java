@@ -7,6 +7,7 @@ import smarthome.domain.vo.devicevo.DeviceNameVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface DeviceService {
@@ -15,4 +16,6 @@ public interface DeviceService {
     Optional<Device> deactivateDevice(DeviceIDVO deviceIDVO);
 
     List<Device> getListOfDevicesInARoom(RoomIDVO roomIDVO);
+
+    Map<String, List<Device>> getListOfDeviceByFunctionality();
 }
