@@ -8,11 +8,11 @@ import static java.lang.Integer.parseInt;
 /**
  * Assembler class for TimeConfigDTO objects.
  */
-public class TimeConfigAssembler {
+public class TimeConfigMapper {
 
     private static final String ERROR = "Invalid TimeConfigDTO";
 
-    private TimeConfigAssembler(){
+    private TimeConfigMapper(){
         // Private constructor to prevent instantiation of this utility class
     }
 
@@ -38,7 +38,7 @@ public class TimeConfigAssembler {
         if (timeConfigDTO==null){
             throw new IllegalArgumentException(ERROR);
         }
-        return new TimeStampVO(timeConfigDTO.iDate, timeConfigDTO.iTime);
+        return new TimeStampVO(timeConfigDTO.initialDate, timeConfigDTO.initialTime);
     }
 
     /**
@@ -50,7 +50,7 @@ public class TimeConfigAssembler {
         if (timeConfigDTO==null){
             throw new IllegalArgumentException(ERROR);
         }
-        return new TimeStampVO(timeConfigDTO.eDate, timeConfigDTO.eTime);
+        return new TimeStampVO(timeConfigDTO.endDate, timeConfigDTO.endTime);
     }
 
 }

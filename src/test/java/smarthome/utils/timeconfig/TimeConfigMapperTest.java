@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TimeConfigAssemblerTest {
+class TimeConfigMapperTest {
 
     /**
      * Tests the scenario when the DTO is null, expecting an IllegalArgumentException to be thrown.
@@ -26,11 +26,11 @@ class TimeConfigAssemblerTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                TimeConfigAssembler.createInitialTimeStamp(null));
+                TimeConfigMapper.createInitialTimeStamp(null));
         Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
-                TimeConfigAssembler.createFinalTimeStamp(null));
+                TimeConfigMapper.createFinalTimeStamp(null));
         Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
-                TimeConfigAssembler.createDeltaVO(null));
+                TimeConfigMapper.createDeltaVO(null));
         String result = exception.getMessage();
         String result2 = exception2.getMessage();
         String result3 = exception3.getMessage();
@@ -65,9 +65,9 @@ class TimeConfigAssemblerTest {
 
         TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime,deltaMin);
 
-        TimeStampVO initial = TimeConfigAssembler.createInitialTimeStamp(dto);
-        TimeStampVO end = TimeConfigAssembler.createFinalTimeStamp(dto);
-        DeltaVO delta = TimeConfigAssembler.createDeltaVO(dto);
+        TimeStampVO initial = TimeConfigMapper.createInitialTimeStamp(dto);
+        TimeStampVO end = TimeConfigMapper.createFinalTimeStamp(dto);
+        DeltaVO delta = TimeConfigMapper.createDeltaVO(dto);
 
         // Act
         LocalDateTime iStamp = initial.getValue();
@@ -101,10 +101,15 @@ class TimeConfigAssemblerTest {
         String expectedIStamp = iDate + "T" + iTime;
         String expectedEStamp = eDate + "T" + eTime;
 
-        TimeConfigDTO dto = new TimeConfigDTO(iDate,iTime,eDate,eTime);
+        TimeConfigDTO dto = TimeConfigDTO.builder()
+                .initialDate(iDate)
+                .initialTime(iTime)
+                .endDate(eDate)
+                .endTime(eTime)
+                .build();
 
-        TimeStampVO initial = TimeConfigAssembler.createInitialTimeStamp(dto);
-        TimeStampVO end = TimeConfigAssembler.createFinalTimeStamp(dto);
+        TimeStampVO initial = TimeConfigMapper.createInitialTimeStamp(dto);
+        TimeStampVO end = TimeConfigMapper.createFinalTimeStamp(dto);
 
         // Act
         LocalDateTime iStamp = initial.getValue();
