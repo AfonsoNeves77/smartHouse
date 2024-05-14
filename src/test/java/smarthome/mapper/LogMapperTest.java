@@ -7,8 +7,8 @@ import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
-import smarthome.mapper.dto.LogDTO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.mapper.dto.LogDTO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -99,14 +99,14 @@ class LogMapperTest {
         LogDTO logDTO = LogMapper.domainToDTO(log);
 
         // Act
-        String resultLogID = logDTO.logID();
+        String resultLogID = logDTO.getLogID();
         // Due to technical testing reasons, the result is truncated to minutes, due to technical reasons
-        String dateTime = logDTO.localDateTime();
+        String dateTime = logDTO.getTime();
         String resultTime = dateTime.substring(0, dateTime.lastIndexOf(":"));
-        String resultReading = logDTO.reading();
-        String resultSensorID = logDTO.sensorID();
-        String resultDeviceID = logDTO.deviceID();
-        String resultSensorTypeID = logDTO.sensorTypeID();
+        String resultReading = logDTO.getReading();
+        String resultSensorID = logDTO.getSensorID();
+        String resultDeviceID = logDTO.getDeviceID();
+        String resultSensorTypeID = logDTO.getSensorTypeID();
 
         // Assert
         assertEquals(logID,resultLogID);
@@ -178,23 +178,23 @@ class LogMapperTest {
         LogDTO resultLog2 = logDTOList.get(1);
 
         // Act
-        String resultLogID1 = resultLog1.logID();
+        String resultLogID1 = resultLog1.getLogID();
         // Due to technical testing reasons, the result is truncated to minutes, due to technical reasons
-        String dateTime1 = resultLog1.localDateTime();
+        String dateTime1 = resultLog1.getTime();
         String resultTime1 = dateTime1.substring(0, dateTime1.lastIndexOf(":"));
-        String resultReading1 = resultLog1.reading();
-        String resultSensorID1 = resultLog1.sensorID();
-        String resultDeviceID1 = resultLog1.deviceID();
-        String resultSensorTypeID1 = resultLog1.sensorTypeID();
+        String resultReading1 = resultLog1.getReading();
+        String resultSensorID1 = resultLog1.getSensorID();
+        String resultDeviceID1 = resultLog1.getDeviceID();
+        String resultSensorTypeID1 = resultLog1.getSensorTypeID();
 
-        String resultLogID2 = resultLog2.logID();
+        String resultLogID2 = resultLog2.getLogID();
         // Due to technical testing reasons, the result is truncated to minutes, due to technical reasons
-        String dateTime2 = resultLog2.localDateTime();
+        String dateTime2 = resultLog2.getTime();
         String resultTime2 = dateTime2.substring(0, dateTime1.lastIndexOf(":"));
-        String resultReading2 = resultLog2.reading();
-        String resultSensorID2 = resultLog2.sensorID();
-        String resultDeviceID2 = resultLog2.deviceID();
-        String resultSensorTypeID2 = resultLog2.sensorTypeID();
+        String resultReading2 = resultLog2.getReading();
+        String resultSensorID2 = resultLog2.getSensorID();
+        String resultDeviceID2 = resultLog2.getDeviceID();
+        String resultSensorTypeID2 = resultLog2.getSensorTypeID();
 
         // Assert
         assertEquals(logID1,resultLogID1);

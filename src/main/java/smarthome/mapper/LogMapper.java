@@ -37,15 +37,18 @@ public class LogMapper {
         if (log == null){
             throw new IllegalArgumentException("Invalid parameter");
         }
-        String logID = log.getId().getID();
-        LocalDateTime timeValue = log.getTime().getValue();
-        String formattedTime = timeValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")); // Formats the time onto a string with the desired format
-        String reading = log.getReading().getValue().toString();
-        String sensorID = log.getSensorID().getID();
-        String deviceID = log.getDeviceID().getID();
-        String sensorTypeID = log.getSensorTypeID().getID();
 
-        return new LogDTO(logID, formattedTime, reading, sensorID, deviceID, sensorTypeID);
+        LocalDateTime timeValue = log.getTime().getValue();
+        String formattedTime = timeValue.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+
+        return LogDTO.builder()
+                .logID(log.getId().getID())
+                .time(formattedTime)
+                .reading(log.getReading().getValue().toString())
+                .sensorID(log.getSensorID().getID())
+                .deviceID(log.getDeviceID().getID())
+                .sensorTypeID(log.getSensorTypeID().getID())
+                .build();
     }
 
     /**
@@ -61,13 +64,13 @@ public class LogMapper {
      * @return A list of LogDTO objects representing the data from the input Log objects.
      * @throws IllegalArgumentException If the provided iterable collection of Logs is null.
      */
-    public static List<LogDTO> domainToDTO (List<Log> listOfLogs) {
+    public static List<smarthome.mapper.dto.LogDTO> domainToDTO (List<Log> listOfLogs) {
         if (listOfLogs == null){
             throw new IllegalArgumentException("Invalid parameter");
         }
-        List<LogDTO> listOfLogDTO = new ArrayList<>();
+        List<smarthome.mapper.dto.LogDTO> listOfLogDTO = new ArrayList<>();
         for (Log log : listOfLogs) {
-            LogDTO logDTO = LogMapper.domainToDTO(log);
+            smarthome.mapper.dto.LogDTO logDTO = LogMapper.domainToDTO(log);
             listOfLogDTO.add(logDTO);
         }
         return listOfLogDTO;

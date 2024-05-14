@@ -30,12 +30,12 @@ class LogDTOTest {
         LogDTO logDTO = new LogDTO(logID,time,reading,sensorID,deviceID,sensorTypeID);
 
         // Act
-        String resultLogID = logDTO.logID();
-        String resultTime = logDTO.localDateTime();
-        String resultReading = logDTO.reading();
-        String resultSensorID = logDTO.sensorID();
-        String resultDeviceID = logDTO.deviceID();
-        String resultSensorTypeID = logDTO.sensorTypeID();
+        String resultLogID = logDTO.getLogID();
+        String resultTime = logDTO.getTime();
+        String resultReading = logDTO.getReading();
+        String resultSensorID = logDTO.getSensorID();
+        String resultDeviceID = logDTO.getDeviceID();
+        String resultSensorTypeID = logDTO.getSensorTypeID();
 
         // Assert
         assertEquals(logID,resultLogID);
@@ -59,12 +59,12 @@ class LogDTOTest {
         LogDTO logDTO = new LogDTO(null,null,null,null,null,null);
 
         // Act
-        String resultLogID = logDTO.logID();
-        String resultTime = logDTO.localDateTime();
-        String resultReading = logDTO.reading();
-        String resultSensorID = logDTO.sensorID();
-        String resultDeviceID = logDTO.deviceID();
-        String resultSensorTypeID = logDTO.sensorTypeID();
+        String resultLogID = logDTO.getLogID();
+        String resultTime = logDTO.getTime();
+        String resultReading = logDTO.getReading();
+        String resultSensorID = logDTO.getSensorID();
+        String resultDeviceID = logDTO.getDeviceID();
+        String resultSensorTypeID = logDTO.getSensorTypeID();
 
         // Assert
         assertNull(resultLogID);
