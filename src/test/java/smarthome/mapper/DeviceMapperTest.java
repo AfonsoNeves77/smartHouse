@@ -44,7 +44,7 @@ class DeviceMapperTest {
     @Test
     void ifCreateDeviceNameIsCalled_whenDeviceNameIsNull_thenExceptionIsThrown() {
         //Arrange
-        DeviceDTO deviceDTO = new DeviceDTO(null,null);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(null).deviceModel(null).build();
         String expected = "Invalid device name.";
 
         //Act

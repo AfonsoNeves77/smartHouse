@@ -68,7 +68,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
         when(doubleDeviceRepository.save(any(Device.class))).thenReturn(true);
 
@@ -126,7 +126,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
         when(doubleDeviceRepository.save(any(Device.class))).thenReturn(false);
 
@@ -181,7 +181,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
 
         AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
@@ -269,7 +269,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
         AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
@@ -320,7 +320,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName, deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
         AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
@@ -372,7 +372,7 @@ class AddDeviceToRoomCTRLTest {
         // arranges DeviceDTO
         String deviceName = "Top Load Washing Machine";
         String deviceModel = "Samsung WA50R5400AW";
-        DeviceDTO deviceDTO = new DeviceDTO(deviceName,deviceModel);
+        DeviceDTO deviceDTO = DeviceDTO.builder().deviceName(deviceName).deviceModel(deviceModel).build();
 
         AddDeviceToRoomCTRL ctrl = new AddDeviceToRoomCTRL(deviceService);
 
