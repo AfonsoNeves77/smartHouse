@@ -14,8 +14,8 @@ import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.service.LogServiceImpl;
-import smarthome.utils.timeconfig.TimeConfigDTO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.utils.timeconfig.TimeConfigDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String iTime = "16:00";
         String eDate = "2024-04-23";
         String eTime = "18:00";
-        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime);
+        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime,null);
 
         String placeHolder = "noImpact";
 
@@ -164,10 +164,10 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String eDate = "2024-04-22";
         String eTime = "18:00";
 
-        TimeConfigDTO timeConfigDTO1 = new TimeConfigDTO(null,null,null,null);
-        TimeConfigDTO timeConfigDTO2 = new TimeConfigDTO(iDate,iTime,eDate,"fail");
-        TimeConfigDTO timeConfigDTO3 = new TimeConfigDTO("fail",iTime,eDate,eTime);
-        TimeConfigDTO timeConfigDTO4 = new TimeConfigDTO(iDate, iTime, eDate, eTime);
+        TimeConfigDTO timeConfigDTO1 = new TimeConfigDTO(null,null,null,null,null);
+        TimeConfigDTO timeConfigDTO2 = new TimeConfigDTO(iDate,iTime,eDate,"fail",null);
+        TimeConfigDTO timeConfigDTO3 = new TimeConfigDTO("fail",iTime,eDate,eTime,null);
+        TimeConfigDTO timeConfigDTO4 = new TimeConfigDTO(iDate, iTime, eDate, eTime,null);
 
         //Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
@@ -225,7 +225,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String iTime = "16:00";
         String eDate = "2024-04-23";
         String eTime = "18:00";
-        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime);
+        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime,null);
 
         LocalDateTime initalT = LocalDateTime.parse("2024-04-23T16:00");
         LocalDateTime finalT = LocalDateTime.parse("2024-04-23T18:00");
@@ -281,7 +281,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         String iTime = "16:00:00";
         String eDate = "2024-04-23";
         String eTime = "18:00:00";
-        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime);
+        TimeConfigDTO timeConfigDTO = new TimeConfigDTO(iDate,iTime,eDate,eTime,null);
 
         String strInitialTimeStamp = "2024-04-23T16:00:00";
         LocalDateTime initialTime = LocalDateTime.parse(strInitialTimeStamp);
@@ -338,19 +338,19 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LogDTO logDTO2 = list.get(1);
 
         // Act
-        String expectedLogID1 = logDTO1.logID();
-        String expectedTimeStamp1 = logDTO1.localDateTime();
-        String expectedReading1 = logDTO1.reading();
-        String expectedSensorID1 = logDTO1.sensorID();
-        String expectedDeviceID1 = logDTO1.deviceID();
-        String expectedSensorTypeID1 = logDTO1.sensorTypeID();
+        String expectedLogID1 = logDTO1.getLogID();
+        String expectedTimeStamp1 = logDTO1.getTime();
+        String expectedReading1 = logDTO1.getReading();
+        String expectedSensorID1 = logDTO1.getSensorID();
+        String expectedDeviceID1 = logDTO1.getDeviceID();
+        String expectedSensorTypeID1 = logDTO1.getSensorTypeID();
 
-        String expectedLogID2 = logDTO2.logID();
-        String expectedTimeStamp2 = logDTO2.localDateTime();
-        String expectedReading2 = logDTO2.reading();
-        String expectedSensorID2 = logDTO2.sensorID();
-        String expectedDeviceID2 = logDTO2.deviceID();
-        String expectedSensorTypeID2 = logDTO2.sensorTypeID();
+        String expectedLogID2 = logDTO2.getLogID();
+        String expectedTimeStamp2 = logDTO2.getTime();
+        String expectedReading2 = logDTO2.getReading();
+        String expectedSensorID2 = logDTO2.getSensorID();
+        String expectedDeviceID2 = logDTO2.getDeviceID();
+        String expectedSensorTypeID2 = logDTO2.getSensorTypeID();
 
         // Assert
         assertEquals(expectedLogID1,strLogID1);

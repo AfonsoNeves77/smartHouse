@@ -20,8 +20,8 @@ import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.service.LogService;
 import smarthome.service.LogServiceImpl;
-import smarthome.utils.timeconfig.TimeConfigDTO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.utils.timeconfig.TimeConfigDTO;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

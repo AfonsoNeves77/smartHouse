@@ -41,9 +41,9 @@ public class GetMaxInstantaneousTemperatureDifferenceCTRL {
     public String getMaxInstantaneousTemperature(DeviceDTO outdoorDeviceDTO, DeviceDTO indoorDeviceDTO, TimeConfigDTO timeConfigDTO) {
         DeviceIDVO outdoorDeviceID = DeviceMapper.createDeviceID(outdoorDeviceDTO);
         DeviceIDVO indoorDeviceID = DeviceMapper.createDeviceID(indoorDeviceDTO);
-        TimeStampVO initialTimeStamp = TimeConfigAssembler.createInitialTimeStamp(timeConfigDTO);
-        TimeStampVO finalTimeStamp = TimeConfigAssembler.createFinalTimeStamp(timeConfigDTO);
-        DeltaVO delta = TimeConfigAssembler.createDeltaVO(timeConfigDTO);
+        TimeStampVO initialTimeStamp = TimeConfigMapper.createInitialTimeStamp(timeConfigDTO);
+        TimeStampVO finalTimeStamp = TimeConfigMapper.createFinalTimeStamp(timeConfigDTO);
+        DeltaVO delta = TimeConfigMapper.createDeltaVO(timeConfigDTO);
         return logService.getMaxInstantaneousTempDifference(outdoorDeviceID, indoorDeviceID, initialTimeStamp, finalTimeStamp, delta);
     }
 }
