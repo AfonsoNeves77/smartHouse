@@ -31,11 +31,11 @@ public class RoomMapper {
      * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomNameVO.
      */
     public static RoomNameVO createRoomNameVO(RoomDTO roomDTO)  {
-        if(roomDTO==null || roomDTO.roomName()==null || roomDTO.roomName().trim().isEmpty()){
+        if(roomDTO==null || roomDTO.getRoomName()==null || roomDTO.getRoomName().trim().isEmpty()){
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
-            return new RoomNameVO(roomDTO.roomName());
+            return new RoomNameVO(roomDTO.getRoomName());
         }
     }
 
@@ -48,13 +48,13 @@ public class RoomMapper {
      * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomDimensionsVO.
      */
     public static RoomDimensionsVO createRoomDimensionsVO(RoomDTO roomDTO) {
-        if(roomDTO==null || roomDTO.roomHeight()<0 || roomDTO.roomLength()<=0 || roomDTO.roomWidth()<=0){
+        if(roomDTO==null || roomDTO.getRoomHeight()<0 || roomDTO.getRoomLength()<=0 || roomDTO.getRoomWidth()<=0){
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
-            RoomHeightVO roomHeightVO = new RoomHeightVO(roomDTO.roomHeight());
-            RoomLengthVO roomLengthVO = new RoomLengthVO(roomDTO.roomLength());
-            RoomWidthVO roomWidthVO = new RoomWidthVO(roomDTO.roomWidth());
+            RoomHeightVO roomHeightVO = new RoomHeightVO(roomDTO.getRoomHeight());
+            RoomLengthVO roomLengthVO = new RoomLengthVO(roomDTO.getRoomLength());
+            RoomWidthVO roomWidthVO = new RoomWidthVO(roomDTO.getRoomWidth());
             return new RoomDimensionsVO(roomLengthVO, roomWidthVO, roomHeightVO);
         }
     }
@@ -72,7 +72,7 @@ public class RoomMapper {
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
-            return new RoomFloorVO(roomDTO.floor());
+            return new RoomFloorVO(roomDTO.getFloor());
         }
     }
 
@@ -85,12 +85,12 @@ public class RoomMapper {
      * @throws IllegalArgumentException In case RoomDTO is not valid to create a RoomIDVO.
      */
     public static RoomIDVO createRoomIDVO(RoomDTO roomDTO) {
-        if(roomDTO==null || roomDTO.id()==null || roomDTO.id().trim().isEmpty()){
+        if(roomDTO==null || roomDTO.getId()==null || roomDTO.getId().trim().isEmpty()){
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             // Converts String from the DTO into a UUID
-            UUID roomID = UUID.fromString(roomDTO.id());
+            UUID roomID = UUID.fromString(roomDTO.getId());
             return new RoomIDVO(roomID);
         }
     }
@@ -104,12 +104,12 @@ public class RoomMapper {
      * @throws IllegalArgumentException In case RoomDTO is not valid to create a HouseIDVO.
      */
     public static HouseIDVO createHouseIDVO(RoomDTO roomDTO) {
-        if(roomDTO==null || roomDTO.houseID()==null || roomDTO.houseID().trim().isEmpty()){
+        if(roomDTO==null || roomDTO.getHouseID()==null || roomDTO.getHouseID().trim().isEmpty()){
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
         else {
             // Converts String from the DTO into a UUID
-            UUID houseID = UUID.fromString(roomDTO.houseID());
+            UUID houseID = UUID.fromString(roomDTO.getHouseID());
             return new HouseIDVO(houseID);
         }
     }

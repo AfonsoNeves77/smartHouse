@@ -410,13 +410,13 @@ class RoomMapperTest {
         List<RoomDTO> result = RoomMapper.domainToDTO(List.of(roomDouble));
 
         // Assert
-        assertEquals(roomName, result.get(0).roomName());
-        assertEquals(floor, result.get(0).floor());
-        assertEquals(roomLength, result.get(0).roomLength());
-        assertEquals(roomWidth, result.get(0).roomWidth());
-        assertEquals(roomHeight, result.get(0).roomHeight());
-        assertEquals(roomID, result.get(0).id());
-        assertEquals(houseID, result.get(0).houseID());
+        assertEquals(roomName, result.get(0).getRoomName());
+        assertEquals(floor, result.get(0).getFloor());
+        assertEquals(roomLength, result.get(0).getRoomLength());
+        assertEquals(roomWidth, result.get(0).getRoomWidth());
+        assertEquals(roomHeight, result.get(0).getRoomHeight());
+        assertEquals(roomID, result.get(0).getId());
+        assertEquals(houseID, result.get(0).getHouseID());
     }
 
 

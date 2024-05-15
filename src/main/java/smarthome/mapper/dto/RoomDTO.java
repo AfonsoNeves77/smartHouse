@@ -1,9 +1,24 @@
 package smarthome.mapper.dto;
 
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
+
 /**
  * Represents a Data Transfer Object (DTO) for a room.
  * This DTO is used to transfer room information between different layers of the application.
  */
-public record RoomDTO(String id, String roomName, int floor, double roomHeight,
-                      double roomLength, double roomWidth, String houseID) {
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Builder
+@EqualsAndHashCode (callSuper = false)
+public class RoomDTO extends RepresentationModel<RoomDTO> {
+    private String id;
+    private String roomName;
+    private int floor;
+    private double roomHeight;
+    private double roomLength;
+    private double roomWidth;
+    private String houseID;
 }
