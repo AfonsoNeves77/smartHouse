@@ -1,18 +1,17 @@
 package smarthome.mapper.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
-/**
- * Represents a Data Transfer Object (DTO) for a location.
- * This DTO is used to transfer location information between different layers of the application.
- */
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
-public class LocationDTO extends RepresentationModel<LocationDTO> {
+@JsonPropertyOrder({"houseID"})
+public class HouseDTO extends RepresentationModel<HouseDTO> {
+    private String houseID;
     private String door;
     private String street;
     private String city;

@@ -1,6 +1,8 @@
 package smarthome.mapper;
 
+import smarthome.domain.house.House;
 import smarthome.domain.vo.housevo.*;
+import smarthome.mapper.dto.HouseDTO;
 import smarthome.mapper.dto.LocationDTO;
 
 public class HouseMapper {
@@ -15,6 +17,24 @@ public class HouseMapper {
             throw new IllegalArgumentException("LocationDTO is null");
         }
         return new LocationVO(createAddressVO(locationDTO), createGPSLocationVO(locationDTO));
+    }
+
+    /**
+     * Method to convert House Domain Object to HouseDTO
+     * @param house House object to be converted
+     * @return HouseDTO
+     */
+    public static HouseDTO domainToDto(House house){
+        return HouseDTO.builder()
+                .houseID(house.getId().getID())
+                .door(house.getLocation().getDoor())
+                .street(house.getLocation().getStreet())
+                .city(house.getLocation().getCity())
+                .country(house.getLocation().getCountry())
+                .postalCode(house.getLocation().getPostalCode())
+                .latitude(house.getLocation().getLatitude())
+                .longitude(house.getLocation().getLongitude())
+                .build();
     }
 
     /**
@@ -41,7 +61,7 @@ public class HouseMapper {
      * @return DoorVO
      */
     private static DoorVO createDoorVO(LocationDTO locationDTO) {
-        return new DoorVO(locationDTO.door());
+        return new DoorVO(locationDTO.getDoor());
     }
 
     /**
@@ -50,7 +70,7 @@ public class HouseMapper {
      * @return StreetVO
      */
     private static StreetVO createStreetVO(LocationDTO locationDTO) {
-        return new StreetVO(locationDTO.street());
+        return new StreetVO(locationDTO.getStreet());
     }
 
     /**
@@ -59,7 +79,7 @@ public class HouseMapper {
      * @return CityVO
      */
     private static CityVO createCityVO(LocationDTO locationDTO) {
-        return new CityVO(locationDTO.city());
+        return new CityVO(locationDTO.getCity());
     }
 
     /**
@@ -68,7 +88,7 @@ public class HouseMapper {
      * @return CountryVO
      */
     private static CountryVO createCountryVO(LocationDTO locationDTO) {
-        return new CountryVO(locationDTO.country());
+        return new CountryVO(locationDTO.getCountry());
     }
 
     /**
@@ -77,7 +97,7 @@ public class HouseMapper {
      * @return PostalCodeVO
      */
     private static PostalCodeVO createPostalCodeVO(LocationDTO locationDTO) {
-        return new PostalCodeVO(locationDTO.postalCode());
+        return new PostalCodeVO(locationDTO.getPostalCode());
     }
 
     /**
@@ -86,7 +106,7 @@ public class HouseMapper {
      * @return LatitudeVO
      */
     private static LatitudeVO createLatitudeVO(LocationDTO locationDTO) {
-        return new LatitudeVO(locationDTO.latitude());
+        return new LatitudeVO(locationDTO.getLatitude());
     }
 
     /**
@@ -95,7 +115,7 @@ public class HouseMapper {
      * @return LongitudeVO
      */
     private static LongitudeVO createLongitudeVO(LocationDTO locationDTO) {
-        return new LongitudeVO(locationDTO.longitude());
+        return new LongitudeVO(locationDTO.getLongitude());
     }
 
     /**
