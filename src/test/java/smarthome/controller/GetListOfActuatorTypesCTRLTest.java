@@ -77,10 +77,10 @@ class GetListOfActuatorTypesCTRLTest {
 
         //Assert
         assertEquals(4, result.size());
-        assertEquals(expectedActuatorTypeID1, result.get(0).actuatorTypeID());
-        assertEquals(expectedActuatorTypeID2, result.get(1).actuatorTypeID());
-        assertEquals(expectedActuatorTypeID3, result.get(2).actuatorTypeID());
-        assertEquals(expectedActuatorTypeID4, result.get(3).actuatorTypeID());
+        assertEquals(expectedActuatorTypeID1, result.get(0).getActuatorTypeID());
+        assertEquals(expectedActuatorTypeID2, result.get(1).getActuatorTypeID());
+        assertEquals(expectedActuatorTypeID3, result.get(2).getActuatorTypeID());
+        assertEquals(expectedActuatorTypeID4, result.get(3).getActuatorTypeID());
     }
 
     /**

@@ -1,10 +1,15 @@
 package smarthome.service;
 
+import smarthome.domain.actuatortype.ActuatorType;
+import smarthome.domain.actuatortype.ActuatorTypeFactory;
 import smarthome.domain.actuatortype.ActuatorTypeFactoryImpl;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.persistence.ActuatorTypeRepository;
 import smarthome.persistence.mem.ActuatorTypeRepositoryMem;
 import org.junit.jupiter.api.Test;
 
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -20,7 +25,7 @@ class ActuatorTypeServiceImplTest {
     void whenGivenANullRepository_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
-        ActuatorTypeFactoryImpl v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeFactory v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -40,7 +45,7 @@ class ActuatorTypeServiceImplTest {
     void whenGivenANullFactory_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
-        ActuatorTypeRepositoryMem memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeRepository memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -60,8 +65,8 @@ class ActuatorTypeServiceImplTest {
     void whenGivenANullFilepath_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
-        ActuatorTypeRepositoryMem memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
-        ActuatorTypeFactoryImpl v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeRepository memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
 
 
         // Act
@@ -82,8 +87,8 @@ class ActuatorTypeServiceImplTest {
     void whenGivenAnEmptyFilepath_throwsIllegalArgument(){
         // Arrange
         String expected = "Invalid repository";
-        ActuatorTypeRepositoryMem memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
-        ActuatorTypeFactoryImpl v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeRepository memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
         String emptyFilePath = " ";
 
         // Act
@@ -104,8 +109,8 @@ class ActuatorTypeServiceImplTest {
     void whenGivenWrongFilepath_throwsIllegalArgument(){
         // Arrange
         String expected = "Filepath non existent";
-        ActuatorTypeRepositoryMem memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
-        ActuatorTypeFactoryImpl v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeRepository memActuatorTypeRepositoryDouble = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory v1ActuatorTypeFactoryDouble = mock(ActuatorTypeFactoryImpl.class);
         String filepath = "WrongFilePath";
 
         // Act
@@ -131,9 +136,9 @@ class ActuatorTypeServiceImplTest {
     @Test
     void whenActuatorTypeIsPresent_returnsTrue() {
         // Arrange
-        ActuatorTypeRepositoryMem repository = mock(ActuatorTypeRepositoryMem.class);
-        ActuatorTypeFactoryImpl factory = mock(ActuatorTypeFactoryImpl.class);
-        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
+        ActuatorTypeRepository repository = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory factory = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeService service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
 
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
         when(repository.isPresent(id)).thenReturn(true);
@@ -159,9 +164,9 @@ class ActuatorTypeServiceImplTest {
     @Test
     void whenActuatorTypeIsNotPresent_returnsFalse() {
         // Arrange
-        ActuatorTypeRepositoryMem repository = mock(ActuatorTypeRepositoryMem.class);
-        ActuatorTypeFactoryImpl factory = mock(ActuatorTypeFactoryImpl.class);
-        ActuatorTypeServiceImpl service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
+        ActuatorTypeRepository repository = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory factory = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeService service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
 
         ActuatorTypeIDVO id = mock(ActuatorTypeIDVO.class);
         when(repository.isPresent(id)).thenReturn(false);
@@ -171,5 +176,36 @@ class ActuatorTypeServiceImplTest {
 
         // Assert
         assertFalse(result);
+    }
+
+
+    /**
+     * Tests that the 'getListOfActuatorTypes' method returns a list of actuator types.
+     * This test ensures that the service layer can retrieve a list of actuator types from the repository.
+     * Creating a 'mock' of ActuatorTypeRepository to simulate the presence of actuator types.
+     * Setting up the ActuatorTypeService with mocked dependencies to handle repository interactions.
+     * Mocking the ActuatorType objects to serve as the expected result of the method.
+     * The test asserts that the method returns a list of actuator types, confirming the service's functionality.
+     */
+    @Test
+    void whenGetListOfActuatorTypes_returnsListOfActuatorTypes() {
+        // Arrange
+        ActuatorTypeRepository repository = mock(ActuatorTypeRepositoryMem.class);
+        ActuatorTypeFactory factory = mock(ActuatorTypeFactoryImpl.class);
+        ActuatorTypeService service = new ActuatorTypeServiceImpl(repository, factory, "config.properties");
+        ActuatorType switchActuator = mock(ActuatorType.class);
+        ActuatorType rollerBlindActuator = mock(ActuatorType.class);
+        ActuatorType decimalValueActuator = mock(ActuatorType.class);
+        ActuatorType integerValueActuator = mock(ActuatorType.class);
+        List<ActuatorType> actuatorTypes = List.of(switchActuator, rollerBlindActuator, decimalValueActuator, integerValueActuator);
+        when(repository.findAll()).thenReturn(actuatorTypes);
+        int size = 4;
+
+        // Act
+        List<ActuatorType> result = service.getListOfActuatorTypes();
+
+        // Assert
+        assertEquals(size, result.size());
+        assertEquals(actuatorTypes, result);
     }
 }

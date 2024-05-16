@@ -36,7 +36,7 @@ public class ActuatorTypeMapper {
         if (actuatorTypeDTO == null) {
             throw new IllegalArgumentException(ERRORMESSAGE);
         }
-        String actuatorType = actuatorTypeDTO.actuatorTypeID();
+        String actuatorType = actuatorTypeDTO.getActuatorTypeID();
         return new ActuatorTypeIDVO(actuatorType);
     }
 
