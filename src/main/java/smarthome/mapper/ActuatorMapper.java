@@ -1,5 +1,6 @@
 package smarthome.mapper;
 
+import smarthome.domain.actuator.Actuator;
 import smarthome.mapper.dto.ActuatorDTO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
@@ -84,5 +85,28 @@ public class ActuatorMapper {
             UUID deviceID = UUID.fromString(actuatorDTO.getDeviceID());
             return new DeviceIDVO(deviceID);
         }
+    }
+
+
+    /**
+     * Method to convert a domain Actuator object to a DTO ActuatorDTO object.
+     * It throws an IllegalArgumentException if the Actuator object is null.
+     *
+     * @param actuator Actuator object
+     * @return ActuatorDTO object
+     */
+    public static ActuatorDTO domainToDTO(Actuator actuator) {
+        if (actuator == null) {
+            throw new IllegalArgumentException("Invalid actuator, DTO cannot be created");
+        }
+        return ActuatorDTO.builder()
+                .actuatorId(actuator.getId().getID())
+                .actuatorName(actuator.getActuatorName().getValue())
+                .actuatorType(actuator.getActuatorTypeID().getID())
+                .deviceID(actuator.getDeviceID().getID())
+                .lowerLimit(actuator.getLowerLimit())
+                .upperLimit(actuator.getUpperLimit())
+                .precision(actuator.getPrecision())
+                .build();
     }
 }

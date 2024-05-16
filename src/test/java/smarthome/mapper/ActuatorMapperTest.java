@@ -1,16 +1,16 @@
 package smarthome.mapper;
 
+import smarthome.domain.actuator.Actuator;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.mapper.dto.ActuatorDTO;
-import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
-import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
+import java.lang.reflect.Array;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -76,8 +76,12 @@ class ActuatorMapperTest {
 //        Arrange
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
-        String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
+        String deviceID = UUID.randomUUID().toString();
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .build();
 //        Act
         ActuatorNameVO actuatorNameVO = ActuatorMapper.createActuatorNameVO(actuatorDTO);
 //        Assert
@@ -94,7 +98,11 @@ class ActuatorMapperTest {
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .build();
 //        Act
         ActuatorTypeIDVO actuatorTypeIDVO = ActuatorMapper.createActuatorTypeIDVO(actuatorDTO);
 //        Assert
@@ -111,7 +119,11 @@ class ActuatorMapperTest {
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "123e4567-e89b-12d3-a456-111111111111";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .build();
 //        Act
         DeviceIDVO deviceIDVO = ActuatorMapper.createDeviceIDVO(actuatorDTO);
 //        Assert
@@ -132,7 +144,13 @@ class ActuatorMapperTest {
         String deviceID = "frt3-567p-32za";
         String lowerLimit = "10";
         String upperLimit = "30";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .lowerLimit(lowerLimit)
+                .upperLimit(upperLimit)
+                .build();
 //        Act
         Settings integerSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
 //        Assert
@@ -156,7 +174,14 @@ class ActuatorMapperTest {
         String lowerLimit = "10.3";
         String upperLimit = "30.2";
         String precision = "0.1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, precision);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .lowerLimit(lowerLimit)
+                .upperLimit(upperLimit)
+                .precision(precision)
+                .build();
 //        Act
         Settings decimalSettingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
 //        Assert
@@ -176,11 +201,43 @@ class ActuatorMapperTest {
         String expectedActuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "frt3-567p-32za";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(expectedActuatorName, actuatorType, deviceID);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .build();
 //        Act
         Settings settingsVO = ActuatorMapper.createSettingsVO(actuatorDTO);
 //        Assert
         assertNull(settingsVO);
+    }
+
+    /**
+     * This test verifies that if the createSettingsVO method receives an ActuatorDTO object with invalid limits
+     * (not a number) it returns null.
+     */
+    @Test
+    void givenInvalidActuatorDTO_WhenCreateSettingsVO_ThenReturnNull() {
+        // Arrange
+        String expectedActuatorName = "Smart Thermostat";
+        String actuatorType = "Thermostat";
+        String deviceID = "frt3-567p-32za";
+        String invalidLowerLimit = "invalid";
+        String invalidUpperLimit = "invalid";
+        String invalidPrecision = "invalid";
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .lowerLimit(invalidLowerLimit)
+                .upperLimit(invalidUpperLimit)
+                .precision(invalidPrecision)
+                .build();
+        // Act
+        Settings result = ActuatorMapper.createSettingsVO(actuatorDTO);
+
+        // Assert
+        assertNull(result);
     }
 
     /**
@@ -267,7 +324,7 @@ class ActuatorMapperTest {
         }
     }
 
-/**
+    /**
      * Verifies when a valid DTO is received (not null), IntegerSettingsVO is created, and when getValue() is called on it,
      * the expected lower and upper limits in a string format are retrieved.
      * ActuatorMapper Class has two collaborators in this scenario, ActuatorDTO and IntegerSettingsVO classes. To isolate
@@ -332,5 +389,161 @@ class ActuatorMapperTest {
             assertEquals(upperLimit, expectedValues[1].toString());
             assertEquals(precision, expectedValues[2].toString());
         }
+    }
+
+    /**
+     * This test verifies that if the domainToDTO method receives a null Actuator object, it throws an
+     * IllegalArgumentException.
+     */
+    @Test
+    void givenNullActuator_whenDomainToDtoMethodCalled_thenThrowsException() {
+        // Arrange
+        Actuator actuator = null;
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.domainToDTO(actuator));
+        // Assert
+        assertEquals("Invalid actuator, DTO cannot be created", exception.getMessage());
+    }
+
+    /**
+     * This test verifies that the domainToDTO method returns an ActuatorDTO object with the correct values when
+     * the Actuator object has no settings. All the attributes of the Actuator object are mocked and the expected
+     * behaviour set. Then the ActuatorDTO object is created with the actuator double.
+     * Finally, the values of the ActuatorDTO object are compared with the expected values.
+     */
+    @Test
+    void givenActuatorWithNoSettings_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
+        // Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        String actuatorName = "Smart Thermostat";
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+        String actuatorType = "Thermostat";
+        when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
+        when(deviceIDVO.getID()).thenReturn(deviceID);
+
+        Actuator actuator = mock(Actuator.class);
+        when(actuator.getId()).thenReturn(actuatorIDVO);
+        when(actuator.getActuatorName()).thenReturn(actuatorNameVO);
+        when(actuator.getActuatorTypeID()).thenReturn(actuatorTypeIDVO);
+        when(actuator.getDeviceID()).thenReturn(deviceIDVO);
+
+
+        // Act
+        ActuatorDTO actuatorDTO = ActuatorMapper.domainToDTO(actuator);
+
+        //Assert
+        assertEquals(actuatorID, actuatorDTO.getActuatorId());
+        assertEquals(actuatorName, actuatorDTO.getActuatorName());
+        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(deviceID, actuatorDTO.getDeviceID());
+    }
+
+    /**
+     * This test verifies that the domainToDTO method returns an ActuatorDTO object with the correct values when
+     * the Actuator object has settings but no precision. All the attributes of the Actuator object are mocked and the
+     * expected behaviour set. Then the ActuatorDTO object is created with the actuator double.
+     * Finally, the values of the ActuatorDTO object are compared with the expected values.
+     */
+    @Test
+    void givenActuatorWithSettingsButNoPrecision_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
+        // Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        String actuatorName = "Smart Thermostat";
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+        String actuatorType = "Thermostat";
+        when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
+        when(deviceIDVO.getID()).thenReturn(deviceID);
+        Settings settings = mock(Settings.class);
+        Integer lowerLimit = 10;
+        Integer upperLimit = 30;
+        Integer[] values = {lowerLimit, upperLimit};
+        when(settings.getValue()).thenReturn(values);
+        when(settings.getValue()).thenReturn(values);
+
+
+        Actuator actuator = mock(Actuator.class);
+        when(actuator.getId()).thenReturn(actuatorIDVO);
+        when(actuator.getActuatorName()).thenReturn(actuatorNameVO);
+        when(actuator.getActuatorTypeID()).thenReturn(actuatorTypeIDVO);
+        when(actuator.getDeviceID()).thenReturn(deviceIDVO);
+        when(actuator.getLowerLimit()).thenReturn("10");
+        when(actuator.getUpperLimit()).thenReturn("30");
+        when(actuator.getPrecision()).thenReturn(null);
+
+
+        // Act
+        ActuatorDTO actuatorDTO = ActuatorMapper.domainToDTO(actuator);
+
+        //Assert
+        assertEquals(actuatorID, actuatorDTO.getActuatorId());
+        assertEquals(actuatorName, actuatorDTO.getActuatorName());
+        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(deviceID, actuatorDTO.getDeviceID());
+        assertEquals(lowerLimit.toString(), actuatorDTO.getLowerLimit());
+        assertEquals(upperLimit.toString(), actuatorDTO.getUpperLimit());
+    }
+
+    /**
+     * This test verifies that the domainToDTO method returns an ActuatorDTO object with the correct values when
+     * the Actuator object has settings and precision. All the attributes of the Actuator object are mocked and the
+     * expected behaviour set. Then the ActuatorDTO object is created with the actuator double.
+     * Finally, the values of the ActuatorDTO object are compared with the expected values.
+     */
+    @Test
+    void givenActuatorWithSettings_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
+        // Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        String actuatorName = "Smart Thermostat";
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
+        String actuatorType = "Thermostat";
+        when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
+        when(deviceIDVO.getID()).thenReturn(deviceID);
+        Settings settings = mock(Settings.class);
+        Double lowerLimit = 10.0;
+        Double upperLimit = 30.0;
+        Double precision = 0.1;
+        Double[] values = {lowerLimit, upperLimit, precision};
+        when(settings.getValue()).thenReturn(values);
+
+
+        Actuator actuator = mock(Actuator.class);
+        when(actuator.getId()).thenReturn(actuatorIDVO);
+        when(actuator.getActuatorName()).thenReturn(actuatorNameVO);
+        when(actuator.getActuatorTypeID()).thenReturn(actuatorTypeIDVO);
+        when(actuator.getDeviceID()).thenReturn(deviceIDVO);
+        when(actuator.getLowerLimit()).thenReturn("10.0");
+        when(actuator.getUpperLimit()).thenReturn("30.0");
+        when(actuator.getPrecision()).thenReturn("0.1");
+
+
+        // Act
+        ActuatorDTO actuatorDTO = ActuatorMapper.domainToDTO(actuator);
+
+        //Assert
+        assertEquals(actuatorID, actuatorDTO.getActuatorId());
+        assertEquals(actuatorName, actuatorDTO.getActuatorName());
+        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(deviceID, actuatorDTO.getDeviceID());
+        assertEquals(lowerLimit.toString(), actuatorDTO.getLowerLimit());
+        assertEquals(upperLimit.toString(), actuatorDTO.getUpperLimit());
+        assertEquals(precision.toString(), actuatorDTO.getPrecision());
     }
 }
