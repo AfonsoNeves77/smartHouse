@@ -137,7 +137,11 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -239,7 +243,13 @@ class AddActuatorToDeviceCTRLTest {
         String actuatorNameVO = "Actuator1";
         String upperLimit = "2";
         String downLimit = "1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -350,7 +360,14 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "2.1";
         String downLimit = "1.1";
         String precision = "0.1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit,precision);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .precision(precision)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -436,7 +453,14 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "0.5";
         String downLimit = "0.6";
         String precision = "0.1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),downLimit,upperLimit,precision);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .precision(precision)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -498,7 +522,14 @@ class AddActuatorToDeviceCTRLTest {
         String upperLimit = "0.5";
         String downLimit = "0.3";
         String precision = "-0.1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),upperLimit,downLimit,precision);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .precision(precision)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -560,7 +591,13 @@ class AddActuatorToDeviceCTRLTest {
         String actuatorNameVO = "Actuator1";
         String upperLimit = "1";
         String downLimit = "3";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(),upperLimit,downLimit);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -624,7 +661,11 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -685,7 +726,10 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceID);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -752,7 +796,11 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -813,7 +861,13 @@ class AddActuatorToDeviceCTRLTest {
         String actuatorNameVO = "Actuator1";
         String upperLimit = "0.9";
         String downLimit = "0.1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID(), upperLimit, downLimit);
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .lowerLimit(downLimit)
+                                            .upperLimit(upperLimit)
+                                            .build();
 
         //Act
         boolean result = addActuatorToDeviceCTRL.addActuatorToDevice(actuatorDTO, actuatorTypeDTO, deviceDTO);
@@ -879,7 +933,11 @@ class AddActuatorToDeviceCTRLTest {
 
         //ActuatorDTO initialization
         String actuatorNameVO = "Actuator1";
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorNameVO, actuatorTypeID, deviceIDVO1.getID());
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                                            .actuatorName(actuatorNameVO)
+                                            .actuatorType(actuatorTypeID)
+                                            .deviceID(deviceIDVO1.getID())
+                                            .build();
 
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeID);
 
