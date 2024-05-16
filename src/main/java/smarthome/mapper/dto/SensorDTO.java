@@ -1,8 +1,23 @@
 package smarthome.mapper.dto;
 
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 /**
- * Represents a Data Transfer Object (DTO) for a sensor.
- * This DTO is used to transfer sensor information between different layers of the application.
+ * Data Transfer Object (DTO) class for Sensor.
+ * This class extends {@link RepresentationModel} which includes links to other resources.
+ * The SensorDTO is used to transfer data between different parts of the application,
+ * or between applications, and can be used to map domain objects to values that can be used in the view.
  */
-public record SensorDTO(String sensorName) {
+@EqualsAndHashCode(callSuper = false)
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class SensorDTO extends RepresentationModel<SensorDTO> {
+    String sensorID;
+    String sensorName;
+    String deviceID;
+    String sensorTypeID;
+
+
 }

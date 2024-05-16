@@ -2,62 +2,162 @@ package smarthome.mapper.dto;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
-/**
- * SensorDTO is currently used only to receive external information in DTO format, containing only the intended sensor
- * name, when there is an attempt to add a new sensor to the system. Since the information comes from the outside, anything
- * is expected. DTO can contain invalid information for the system, but should be the system to handle it. Given this,
- * 3 test scenarios are presented below, where two of them create DTOs that contain invalid information for the system.
- */
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+
 class SensorDTOTest {
+
     /**
-     * Verifies that a SensorDTO is created with a valid sensor name for the system. Value returned when getSensorName()
-     * method is invoked in the DTO corresponding to the expected one.
+     * Test case for creating a SensorDTO and getting the sensor ID.
+     * The test creates a SensorDTO with a specific sensor ID and then checks if the returned sensor ID matches the input.
      */
     @Test
-    void givenValidStringSensorName_SensorDTOIsCreated_WhenGetSensorName_ShouldReturnExpectedSensorName(){
+    void createSensorDTO_WhenGetSensorID_ThenShouldReturnSensorIDAsString() {
         //Arrange
-        String sensorName = "Vapor pressure sensor";
-        SensorDTO dto = new SensorDTO(sensorName);
+        String sensorID = UUID.randomUUID().toString();
+        String sensorName = "Temperature";
+        String deviceID = UUID.randomUUID().toString();
+        String sensorTypeID = "TemperatureSensor";
 
         //Act
-        String result = dto.sensorName();
+        SensorDTO sensorDTO = new SensorDTO(sensorID, sensorName, deviceID, sensorTypeID);
 
-        //
-        assertEquals(sensorName, result);
+        //Assert
+        assertEquals(sensorID, sensorDTO.getSensorID());
     }
 
     /**
-     * Verifies that a SensorDTO is created with an invalid sensor name for the system (null). When getSensorName()
-     * method is invoked in the DTO, a null string is returned.
+     * Test case for creating a SensorDTO and getting the sensor name.
+     * The test creates a SensorDTO with a specific sensor name and then checks if the returned sensor name matches the input.
      */
     @Test
-    void givenNullStringSensorName_SensorDTOIsCreated_WhenGetSensorName_ShouldReturnNull(){
+    void createSensorDTO_WhenGetSensorName_ThenShouldReturnSensorNameAsString() {
         //Arrange
-        SensorDTO dto = new SensorDTO(null);
+        String sensorID = UUID.randomUUID().toString();
+        String sensorName = "Temperature";
+        String deviceID = UUID.randomUUID().toString();
+        String sensorTypeID = "TemperatureSensor";
 
         //Act
-        String result = dto.sensorName();
+        SensorDTO sensorDTO = new SensorDTO(sensorID, sensorName, deviceID, sensorTypeID);
 
-        //
-        assertNull(result);
+        //Assert
+        assertEquals(sensorName, sensorDTO.getSensorName());
     }
 
     /**
-     * Verifies that a SensorDTO is created with an invalid sensor name for the system (blank). When getSensorName()
-     * method is invoked in the DTO, a blank string is returned.
+     * Test case for creating a SensorDTO and getting the device ID.
+     * The test creates a SensorDTO with a specific device ID and then checks if the returned device ID matches the input.
      */
     @Test
-    void givenBlankStringSensorName_SensorDTOIsCreated_WhenGetSensorName_ShouldBlankString(){
+    void createSensorDTO_WhenGetDeviceID_ThenShouldReturnDeviceIDAsString() {
         //Arrange
-        String sensorName = "   ";
-        SensorDTO dto = new SensorDTO(sensorName);
+        String sensorID = UUID.randomUUID().toString();
+        String sensorName = "Temperature";
+        String deviceID = UUID.randomUUID().toString();
+        String sensorTypeID = "TemperatureSensor";
 
         //Act
-        String result = dto.sensorName();
+        SensorDTO sensorDTO = new SensorDTO(sensorID, sensorName, deviceID, sensorTypeID);
 
-        //
-        assertEquals(sensorName, result);
+        //Assert
+        assertEquals(deviceID, sensorDTO.getDeviceID());
+    }
+
+    /**
+     * Test case for creating a SensorDTO and getting the sensor type ID.
+     * The test creates a SensorDTO with a specific sensor type ID and then checks if the returned sensor type ID matches the input.
+     */
+    @Test
+    void createSensorDTO_WhenGetSensorTypeID_ThenShouldReturnSensorTypeIDAsString() {
+        //Arrange
+        String sensorID = UUID.randomUUID().toString();
+        String sensorName = "Temperature";
+        String deviceID = UUID.randomUUID().toString();
+        String sensorTypeID = "TemperatureSensor";
+
+        //Act
+        SensorDTO sensorDTO = new SensorDTO(sensorID, sensorName, deviceID, sensorTypeID);
+
+        //Assert
+        assertEquals(sensorTypeID, sensorDTO.getSensorTypeID());
+    }
+
+    /**
+     * Test case for the no-args constructor of the SensorDTO class.
+     * This test verifies that a new SensorDTO object created with the no-args constructor has all its fields set to null.
+     */
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyObject() {
+        //Act
+        SensorDTO sensorDTO = new SensorDTO();
+
+        //Assert
+        assertNull(sensorDTO.getSensorID());
+        assertNull(sensorDTO.getSensorName());
+        assertNull(sensorDTO.getDeviceID());
+        assertNull(sensorDTO.getSensorTypeID());
+    }
+
+    /**
+     * Test case for the equals() and hashCode() methods of the SensorDTO class.
+     * This test verifies that two SensorDTO objects with the same data are considered equal and have the same hash code.
+     */
+    @Test
+    void equalsAndHashCode_ShouldConsiderTwoObjectsWithSameDataAsEqual() {
+        //Arrange
+        String sensorID = "1";
+        String sensorName = "Temperature";
+        String deviceID = "1";
+        String sensorTypeID = "TemperatureSensor";
+
+        //Act
+        SensorDTO sensorDTO1 = SensorDTO.builder()
+                .sensorID(sensorID)
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        SensorDTO sensorDTO2 = SensorDTO.builder()
+                .sensorID(sensorID)
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        //Assert
+        assertEquals(sensorDTO1, sensorDTO2);
+        assertEquals(sensorDTO1.hashCode(), sensorDTO2.hashCode());
+    }
+
+    /**
+     * Test case for the builder() method of the SensorDTO class.
+     * This test verifies that the builder creates a SensorDTO object with the given data.
+     */
+    @Test
+    void builder_ShouldCreateObjectWithGivenData() {
+        //Arrange
+        String sensorID = "1";
+        String sensorName = "Temperature";
+        String deviceID = "1";
+        String sensorTypeID = "TemperatureSensor";
+
+        //Act
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorID(sensorID)
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        //Assert
+        assertEquals(sensorID, sensorDTO.getSensorID());
+        assertEquals(sensorName, sensorDTO.getSensorName());
+        assertEquals(deviceID, sensorDTO.getDeviceID());
+        assertEquals(sensorTypeID, sensorDTO.getSensorTypeID());
     }
 }

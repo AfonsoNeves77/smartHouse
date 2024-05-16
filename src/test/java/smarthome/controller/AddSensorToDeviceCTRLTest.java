@@ -1,17 +1,11 @@
 package smarthome.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import smarthome.domain.device.Device;
-import smarthome.domain.device.DeviceFactory;
-import smarthome.domain.device.DeviceFactoryImpl;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
 import smarthome.domain.sensor.SensorFactoryImpl;
-import smarthome.domain.sensortype.SensorTypeFactory;
-import smarthome.domain.sensortype.SensorTypeFactoryImpl;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
-import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.SensorDTO;
 import smarthome.mapper.dto.SensorTypeDTO;
@@ -19,9 +13,7 @@ import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.SensorRepository;
 import smarthome.persistence.SensorTypeRepository;
 import smarthome.service.SensorService;
-import smarthome.service.SensorTypeService;
 import smarthome.service.SensorServiceImpl;
-import smarthome.service.SensorTypeServiceImpl;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.devicevo.DeviceStatusVO;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
@@ -115,9 +107,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -181,9 +173,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -246,9 +238,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -311,9 +303,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -376,9 +368,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -441,9 +433,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -505,9 +497,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -570,9 +562,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -635,9 +627,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -700,9 +692,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -765,9 +757,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -830,9 +822,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
@@ -889,8 +881,9 @@ class AddSensorToDeviceCTRLTest {
         SensorTypeDTO sensorTypeDTO = new SensorTypeDTO(sensorTypeID,unit);
 
         //SensorDTO initialization
-        String sensorNameVO = "Sensor1";
-        SensorDTO sensorDTO = new SensorDTO(sensorNameVO);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
         //Act
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO,sensorTypeDTO,sensorDTO);
@@ -942,8 +935,9 @@ class AddSensorToDeviceCTRLTest {
         SensorTypeDTO sensorTypeDTO = new SensorTypeDTO(sensorTypeID,unit);
 
         //SensorDTO initialization
-        String sensorNameVO = "Sensor1";
-        SensorDTO sensorDTO = new SensorDTO(sensorNameVO);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
         //Act
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO,sensorTypeDTO,sensorDTO);
@@ -1000,8 +994,9 @@ class AddSensorToDeviceCTRLTest {
         when(doubleSensorTypeRepository.isPresent(sensorTypeIDVO)).thenReturn(false);
 
         //SensorDTO initialization
-        String sensorNameVO = "Sensor1";
-        SensorDTO sensorDTO = new SensorDTO(sensorNameVO);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
         //Act
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO,sensorTypeDTO,sensorDTO);
@@ -1026,7 +1021,11 @@ class AddSensorToDeviceCTRLTest {
         SensorService sensorService = new SensorServiceImpl(doubleDeviceRepository, doubleSensorTypeRepository, doubleSensorRepository, sensorFactory);
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
         SensorTypeDTO sensorTypeDTO = new SensorTypeDTO("TemperatureSensor", "C");
-        SensorDTO sensorDTO = new SensorDTO("Sensor1");
+
+        //SensorDTO initialization
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
         // Act
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(null, sensorTypeDTO, sensorDTO);
@@ -1050,7 +1049,11 @@ class AddSensorToDeviceCTRLTest {
         SensorService sensorService = new SensorServiceImpl(doubleDeviceRepository, doubleSensorTypeRepository, doubleSensorRepository, sensorFactory);
         AddSensorToDeviceCTRL addSensorToDeviceCTRL = new AddSensorToDeviceCTRL(sensorService);
         DeviceDTO deviceDTO = new DeviceDTO("1", "Device1", "Model1", "true", "roomID");
-        SensorDTO sensorDTO = new SensorDTO("Sensor1");
+
+        //SensorDTO initialization
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
         // Act
         boolean result = addSensorToDeviceCTRL.addSensorToDevice(deviceDTO, null, sensorDTO);
@@ -1135,9 +1138,9 @@ class AddSensorToDeviceCTRLTest {
 
 
         //SensorDTO initialization
-        SensorNameVO sensorNameVO = new SensorNameVO("Sensor1");
-        String sensorName = sensorNameVO.getValue();
-        SensorDTO sensorDTO = new SensorDTO(sensorName);
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName("Sensor1")
+                .build();
 
 
         //Act
