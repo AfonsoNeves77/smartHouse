@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface HouseService {
 
-    House addHouse(LocationVO locationVO);
+    Optional<House> addHouse(LocationVO locationVO);
 
-    Optional<LocationVO> updateLocation(LocationVO locationVO);
+    Optional<House> updateLocation(LocationVO locationVO);
+
+    House getFirstHouse();
 }
