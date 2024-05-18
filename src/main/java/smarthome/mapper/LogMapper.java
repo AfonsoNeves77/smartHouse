@@ -1,15 +1,27 @@
 package smarthome.mapper;
 
+import lombok.Setter;
 import smarthome.domain.log.Log;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SensorValueObject;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.logvo.LogIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.dto.LogDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class LogMapper {
 
+    private static final String ERRORMESSAGE = "LogDTO cannot be null.";
+    @Setter
+    private static SensorValueFactory sensorValueFactory;
     /**
      * Private constructor to prevent instantiation of the LogMapper class.
      * <p>
@@ -18,6 +30,91 @@ public class LogMapper {
      */
     private LogMapper(){
         // Created to hide implicit public constructor
+    }
+
+    /**
+     * Creates a {@code LogIDVO} instance from the given {@code LogDTO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @return a {@code LogIDVO} created from the log ID in the {@code logDTO}
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static LogIDVO createLogIDVO (LogDTO logDTO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return new LogIDVO(UUID.fromString(logDTO.getLogID()));
+    }
+
+    /**
+     * Creates a {@code DeviceIDVO} instance from the given {@code LogDTO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @return a {@code DeviceIDVO} created from the device ID in the {@code logDTO}
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static DeviceIDVO createDeviceIDVO (LogDTO logDTO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return new DeviceIDVO(UUID.fromString(logDTO.getDeviceID()));
+    }
+
+    /**
+     * Creates a {@code SensorIDVO} instance from the given {@code LogDTO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @return a {@code SensorIDVO} created from the sensor ID in the {@code logDTO}
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static SensorIDVO createSensorIDVO (LogDTO logDTO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return new SensorIDVO(UUID.fromString(logDTO.getSensorID()));
+    }
+
+    /**
+     * Creates a {@code SensorTypeIDVO} instance from the given {@code LogDTO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @return a {@code SensorTypeIDVO} created from the device ID in the {@code logDTO}
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static SensorTypeIDVO createSensorTypeIDVO (LogDTO logDTO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return new SensorTypeIDVO(logDTO.getSensorTypeID());
+    }
+
+    /**
+     * Creates a {@code SensorValueObject} from the given {@code LogDTO} and {@code SensorTypeIDVO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @param sensorTypeIDVO the sensor type ID value object, must not be null
+     * @return a {@code SensorValueObject} created from the reading in the {@code logDTO} and the specified sensor type
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static SensorValueObject<?> createReading (LogDTO logDTO, SensorTypeIDVO sensorTypeIDVO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return sensorValueFactory.createSensorValue(logDTO.getReading(), sensorTypeIDVO);
+    }
+
+    /**
+     * Creates a {@code TimeStampVO} instance from the given {@code LogDTO}.
+     *
+     * @param logDTO the log data transfer object, must not be null
+     * @return a {@code TimeStampVO} created from the time in the {@code logDTO}
+     * @throws IllegalArgumentException if {@code logDTO} is null
+     */
+    public static TimeStampVO createTimeStampVO (LogDTO logDTO){
+        if (logDTO == null){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        return new TimeStampVO(LocalDateTime.parse(logDTO.getTime()));
     }
 
     /**
