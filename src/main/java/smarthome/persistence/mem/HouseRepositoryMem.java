@@ -6,6 +6,7 @@ import smarthome.persistence.HouseRepository;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 public class HouseRepositoryMem implements HouseRepository {
 
@@ -63,15 +64,15 @@ public class HouseRepositoryMem implements HouseRepository {
 
     /**
      * Getter method to retrieve the first House
-     * @return Firsthouse
+     * @return An Optional with the first found House entity, an empty Optional if there is no House in the map.
      */
-    public House getFirstHouse(){
+    public Optional<House> getFirstHouse(){
         Iterator<House> iterator = this.data.values().iterator();
         if(!iterator.hasNext()){
-            return null;
+            return Optional.empty();
         }
         else {
-            return iterator.next();
+            return Optional.of(iterator.next());
         }
     }
     /**

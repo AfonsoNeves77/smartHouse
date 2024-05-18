@@ -44,7 +44,7 @@ public class HouseServiceImpl implements HouseService {
      * It calls the save method of the HouseRepository object to save the House object.
      *
      * @param locationVO LocationVO object
-     * @return House object
+     * @return Optional House object, which may be empty in case House fails to be saved.
      */
     public Optional<House> addHouse(LocationVO locationVO) {
         if (locationVO == null) {
@@ -61,29 +61,30 @@ public class HouseServiceImpl implements HouseService {
      * Method to update the location of the House.
      * It throws an IllegalArgumentException if the LocationVO object is null.
      * First, it calls the getFirstHouse method to get the first House object.
-     * If the House object is null, it throws an IllegalArgumentException.
-     * If the House object is not null, it calls the configureLocation method of the House object to update the location.
-     * It calls the update method of the HouseRepository object to update the House object.
-     * It returns an Optional object with the updated LocationVO object.
-     * It throws an IllegalArgumentException if the update operation is not successful.
+     * If the House Optional is empty, it returns an empty optional.
+     * If the House Optional is not empty, it calls the configureLocation() method on the House object to update its location.
+     * It calls the update() method of the HouseRepository object to update the House object.
+     * It returns an Optional object with the updated House object.
+     * Returns an empty optional in case House fails to be updated.
      *
      * @param locationVO LocationVO object
-     * @return Optional object with the updated LocationVO object or an empty Optional object
-     * if the update operation is not successful
+     * @return Optional object with the updated House object or an empty Optional if the update operation is not
+     * successful
      */
 
     public Optional<House> updateLocation(LocationVO locationVO) {
         if (locationVO == null) {
             throw new IllegalArgumentException("Invalid location");
         }
-        House house = getFirstHouse();
-        if (house == null) {
-            throw new IllegalArgumentException("House not found");
+        Optional<House> house = getFirstHouse();
+        if (house.isEmpty()) {
+            return Optional.empty();
         } else {
-            house.configureLocation(locationVO);
-            boolean result = houseRepository.update(house);
+            House houseToUpdate = house.get();
+            houseToUpdate.configureLocation(locationVO);
+            boolean result = houseRepository.update(houseToUpdate);
             if (result) {
-                return Optional.of(house);
+                return Optional.of(houseToUpdate);
             } else {
                 return Optional.empty();
             }
@@ -91,12 +92,12 @@ public class HouseServiceImpl implements HouseService {
     }
 
     /**
-     * Method to get the first House object.
+     * Method to get the first and only House object.
      * It calls the getFirstHouse method of the HouseRepository object to get the first House object.
      *
-     * @return House object
+     * @return Optional House object
      */
-    public House getFirstHouse() {
+    public Optional<House> getFirstHouse() {
         return houseRepository.getFirstHouse();
     }
 }

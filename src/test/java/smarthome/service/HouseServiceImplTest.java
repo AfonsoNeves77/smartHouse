@@ -22,7 +22,6 @@ class HouseServiceImplTest {
     /**
      * Test case to check if IllegalArgumentException is thrown when HouseRepository is null
      */
-
     @Test
     void givenNullHouseRepository_whenHouseServiceIsCreated_thenThrowIllegalArgumentException() {
 //        Arrange
@@ -93,27 +92,24 @@ class HouseServiceImplTest {
     }
 
     /**
-     * Test case to check if IllegalArgumentException is thrown when LocationVO is valid but there is no House in the
+     * Test case to check if an empty optional is returned when LocationVO is valid but there is no House in the
      * repository.
      */
     @Test
-    void whenUpdateLocationIsInvokedButThereIsNoHouse_thenShouldThrowIllegalArgumentException() {
+    void whenUpdateLocationIsInvokedButThereIsNoHouse_thenShouldReturnAnEmptyOptional() {
 //        Arrange
         HouseRepository houseRepository = mock(HouseRepository.class);
-        when(houseRepository.getFirstHouse()).thenReturn(null);
+        when(houseRepository.getFirstHouse()).thenReturn(Optional.empty());
         HouseFactory houseFactory = mock(HouseFactory.class);
 
         HouseService houseService = new HouseServiceImpl(houseRepository, houseFactory);
         LocationVO locationVO = mock(LocationVO.class);
 
-        String expectedMessage = "House not found";
-
 //        Act
-        Exception exception = assertThrows(IllegalArgumentException.class, ()
-                -> houseService.updateLocation(locationVO));
-        String actualMessage = exception.getMessage();
+        Optional<House> result = houseService.updateLocation(locationVO);
+
 //        Assert
-        assertEquals(expectedMessage, actualMessage);
+        assertTrue(result.isEmpty());
     }
 
     /**
@@ -126,7 +122,7 @@ class HouseServiceImplTest {
         House houseDouble = mock(House.class);
 
         HouseRepository houseRepository = mock(HouseRepository.class);
-        when(houseRepository.getFirstHouse()).thenReturn(houseDouble);
+        when(houseRepository.getFirstHouse()).thenReturn(Optional.of(houseDouble));
         when(houseRepository.update(houseDouble)).thenReturn(true);
         HouseFactory houseFactory = mock(HouseFactory.class);
 
@@ -143,6 +139,7 @@ class HouseServiceImplTest {
 
     /**
      * Test case to check if an empty optional is returned, i.e, update location does not succeed.
+     * In this case, house update fails during the transaction on the repository side.
      */
     @Test
     void whenUpdateLocationIsInvoked_AndConfigurationDoesNotSucceed_thenShouldReturnEmptyOptional() {
@@ -150,7 +147,7 @@ class HouseServiceImplTest {
         House houseDouble = mock(House.class);
 
         HouseRepository houseRepository = mock(HouseRepository.class);
-        when(houseRepository.getFirstHouse()).thenReturn(houseDouble);
+        when(houseRepository.getFirstHouse()).thenReturn(Optional.of(houseDouble));
         when(houseRepository.update(houseDouble)).thenReturn(false);
         HouseFactory houseFactory = mock(HouseFactory.class);
 
@@ -222,20 +219,20 @@ class HouseServiceImplTest {
         HouseFactory houseFactory = mock(HouseFactory.class);
 
         HouseRepository houseRepository = mock(HouseRepository.class);
-        when(houseRepository.getFirstHouse()).thenReturn(houseDouble);
+        when(houseRepository.getFirstHouse()).thenReturn(Optional.of(houseDouble));
 
         HouseService houseService = new HouseServiceImpl(houseRepository, houseFactory);
 
 //        Act
-        House result = houseService.getFirstHouse();
+        Optional<House> result = houseService.getFirstHouse();
 
 //        Assert
-        assertNotNull(result);
-        assertEquals(houseDouble, result);
+        assertTrue(result.isPresent());
+        assertEquals(houseDouble, result.get());
     }
 
     /**
-     * Test that asserts when there is no House in the repository, a null is retrieved.
+     * Test that asserts when there is no House in the repository, an empty optional is retrieved.
      */
     @Test
     void whenGetFirstHouseIsInvoked_ThenShouldReturnNullHouse(){
@@ -243,15 +240,15 @@ class HouseServiceImplTest {
         HouseFactory houseFactory = mock(HouseFactory.class);
 
         HouseRepository houseRepository = mock(HouseRepository.class);
-        when(houseRepository.getFirstHouse()).thenReturn(null);
+        when(houseRepository.getFirstHouse()).thenReturn(Optional.empty());
 
         HouseService houseService = new HouseServiceImpl(houseRepository, houseFactory);
 
 //        Act
-        House result = houseService.getFirstHouse();
+        Optional<House> result = houseService.getFirstHouse();
 
 //        Assert
-        assertNull(result);
+        assertTrue(result.isEmpty());
     }
 
 }

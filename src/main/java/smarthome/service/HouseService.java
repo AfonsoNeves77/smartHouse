@@ -11,5 +11,5 @@ public interface HouseService {
 
     Optional<House> updateLocation(LocationVO locationVO);
 
-    House getFirstHouse();
+    Optional<House> getFirstHouse();
 }

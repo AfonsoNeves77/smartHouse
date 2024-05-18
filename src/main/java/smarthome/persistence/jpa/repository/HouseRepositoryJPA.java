@@ -178,18 +178,19 @@ public class HouseRepositoryJPA implements HouseRepository {
 
     /**
      * Retrieves the first House entity from the database.
-     * @return The first House entity, null if the database is empty or any RunTimeException occurred.
+     * @return An Optional with the first found House entity, an empty optional if the database is empty or any
+     * RunTimeException occurred.
      */
 
     @Override
-    public House getFirstHouse() {
+    public Optional<House> getFirstHouse() {
         try(EntityManager em = entityManagerFactory.createEntityManager())  {
             Query query = em.createQuery(QUERY).setMaxResults(1);
             HouseDataModel houseDataModel = (HouseDataModel) query.getSingleResult();
 
-            return HouseAssembler.toDomain(houseFactory, houseDataModel);
+            return Optional.of(HouseAssembler.toDomain(houseFactory, houseDataModel));
         }catch (RuntimeException e){
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -200,11 +201,8 @@ public class HouseRepositoryJPA implements HouseRepository {
 
     @Override
     public HouseIDVO getFirstHouseIDVO() {
-        House house = getFirstHouse();
-        if(house !=null){
-            return house.getId();
-        }
-        return null;
+        Optional<House> house = getFirstHouse();
+        return house.map(House::getId).orElse(null);
     }
 
     /**

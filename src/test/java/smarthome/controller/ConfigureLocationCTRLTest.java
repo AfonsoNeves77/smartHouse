@@ -11,6 +11,7 @@ import smarthome.persistence.HouseRepository;
 import smarthome.service.HouseService;
 import smarthome.service.HouseServiceImpl;
 
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -71,7 +72,7 @@ class ConfigureLocationCTRLTest {
      * indicating a successful update of the house's location.
      * This test also verifies that the updated location values match the expected values.
      * In this test case it's used a double of houseRepository, and it's behavior is conditioned when:
-     * 1. getFirstHouse() is invoked, it will be returned a created house instance;
+     * 1. getFirstHouse() is invoked, it will be returned an optional of the created house instance;
      * 2. update(house) is invoked, true will be returned;
      */
     @Test
@@ -105,7 +106,7 @@ class ConfigureLocationCTRLTest {
         LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
 
         //Conditioning house repository double to return the created house;
-        when(houseRepositoryDouble.getFirstHouse()).thenReturn(house);
+        when(houseRepositoryDouble.getFirstHouse()).thenReturn(Optional.of(house));
 
         //Conditioning house repository double to return true when update operation is invoked;
         when(houseRepositoryDouble.update(house)).thenReturn(true);
@@ -138,7 +139,7 @@ class ConfigureLocationCTRLTest {
      * Test method to verify that when updateLocation is invoked and there is not a house yet registered,
      * the updateLocation method in the ConfigureLocationCTRL returns false.
      * In this test case it's used a double of houseRepository, and it's behavior is conditioned when:
-     * 1. getFirstHouse() is invoked, it will be returned a created house instance;
+     * 1. getFirstHouse() is invoked, it will be returned an empty House optional;
      */
 
     @Test
@@ -154,7 +155,7 @@ class ConfigureLocationCTRLTest {
         double expectedLongitudeValue = -89.999;
 
         LocationDTO locationDTO1 = new LocationDTO(doorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
-        when(houseRepositoryDouble.getFirstHouse()).thenReturn(null);
+        when(houseRepositoryDouble.getFirstHouse()).thenReturn(Optional.empty());
 
         ConfigureLocationCTRL configureLocationCTRL = new ConfigureLocationCTRL(houseService);
 //        Act
@@ -168,7 +169,7 @@ class ConfigureLocationCTRLTest {
      * Test method to verify that when updateLocation is invoked and update method in house repository fails,
      * the updateLocation method in the ConfigureLocationCTRL returns false.
      * In this test case it's used a double of houseRepository, and it's behavior is conditioned when:
-     * 1. getFirstHouse() is invoked, it will be returned a created house instance;
+     * 1. getFirstHouse() is invoked, it will be returned an optional of the created house instance;
      * 2. update(house) is invoked, false will be returned, simulating updating failure from the repository;
      */
 
@@ -203,7 +204,7 @@ class ConfigureLocationCTRLTest {
         LocationDTO locationDTO1 = new LocationDTO(changedDoorNumber, streetName, cityName, countryName, postalCodeName, expectedLatitudeValue, expectedLongitudeValue);
 
         //Conditioning house repository double to return the created house;
-        when(houseRepositoryDouble.getFirstHouse()).thenReturn(house);
+        when(houseRepositoryDouble.getFirstHouse()).thenReturn(Optional.of(house));
 
         //Conditioning house repository double to return false when update operation is invoked;
         when(houseRepositoryDouble.update(house)).thenReturn(false);

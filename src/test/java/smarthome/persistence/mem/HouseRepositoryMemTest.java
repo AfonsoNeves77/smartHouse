@@ -7,6 +7,7 @@ import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.housevo.LocationVO;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -178,6 +179,12 @@ class HouseRepositoryMemTest {
         // Assert
         assertTrue(isPresent);
     }
+
+    /**
+     * Test for HouseRepository
+     * Test to verify that House is successfully retrieved as expected. LocationVO is created with double attributes and
+     * their behaviour is manipulated.
+     */
     @Test
     void givenHouse_getFirstHouse(){
         //Arrange
@@ -197,11 +204,17 @@ class HouseRepositoryMemTest {
 
         //Act
 
-        House resultHouse = repository.getFirstHouse();
+        Optional<House> resultHouse = repository.getFirstHouse();
 
         //Assert
-        assertEquals(expectedHouse, resultHouse);
+        assertTrue(resultHouse.isPresent());
+        assertEquals(expectedHouse, resultHouse.get());
     }
+
+    /**
+     * Test to verify that House ID is successfully retrieved as expected. LocationVO is created with double attributes
+     * and their behaviour is manipulated.
+     */
     @Test
     void givenHouse_getFirstHouseIDVO(){
         //Arrange
@@ -224,15 +237,23 @@ class HouseRepositoryMemTest {
         //Assert
         assertEquals(expectedHouse.getId(),result);
     }
+
+    /**
+     * Test to verify that House is not retrieved, as expected, since the repository is empty.
+     */
     @Test
     void givenNothing_getHouse(){
         //Arrange
         HouseRepositoryMem repository = new HouseRepositoryMem();
         //act
-        House result = repository.getFirstHouse();
+        Optional<House> result = repository.getFirstHouse();
         //Assert
-        assertNull(result);
+        assertTrue(result.isEmpty());
     }
+
+    /**
+     * Test to verify that House ID is null, as expected, since the repository is empty.
+     */
     @Test
     void givenNothing_getHouseIDVO(){
         //Arrange

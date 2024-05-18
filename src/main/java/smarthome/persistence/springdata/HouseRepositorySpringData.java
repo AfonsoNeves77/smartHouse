@@ -120,21 +120,21 @@ public class HouseRepositorySpringData implements HouseRepository {
      * In the business model only one house is expected so by finding all houses and accessing
      * the first element, it's being obtained the first house.
 
-     * @return The first house entity if found, otherwise null.
+     * @return The first and only house entity if found, wrapped in a House Optional, otherwise an empty Optional.
      */
 
     @Override
-    public House getFirstHouse() {
+    public Optional<House> getFirstHouse() {
         try{
             List<HouseDataModel> houseDataModelList = this.iHouseRepositorySpringData.findAll();
 
             if(!houseDataModelList.isEmpty()){
                 HouseDataModel houseDataModel = houseDataModelList.get(0);
-                return HouseAssembler.toDomain(houseFactory,houseDataModel);
+                return Optional.of(HouseAssembler.toDomain(houseFactory,houseDataModel));
             }
-            return null;
+            return Optional.empty();
         }catch (DataAccessException e){
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -146,11 +146,8 @@ public class HouseRepositorySpringData implements HouseRepository {
 
     @Override
     public HouseIDVO getFirstHouseIDVO() {
-        House house = getFirstHouse();
-        if(house!=null){
-            return house.getId();
-        }
-        return null;
+        Optional<House> house = getFirstHouse();
+        return house.map(House::getId).orElse(null);
     }
 
     /**
