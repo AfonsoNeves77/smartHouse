@@ -46,13 +46,15 @@ public class HouseServiceImpl implements HouseService {
      * @param locationVO LocationVO object
      * @return House object
      */
-    public House addHouse(LocationVO locationVO) {
+    public Optional<House> addHouse(LocationVO locationVO) {
         if (locationVO == null) {
             throw new IllegalArgumentException("Invalid location");
         }
         House house = houseFactory.createHouse(locationVO);
-        houseRepository.save(house);
-        return house;
+        if(houseRepository.save(house)){
+            return Optional.of(house);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -70,7 +72,7 @@ public class HouseServiceImpl implements HouseService {
      * if the update operation is not successful
      */
 
-    public Optional<LocationVO> updateLocation(LocationVO locationVO) {
+    public Optional<House> updateLocation(LocationVO locationVO) {
         if (locationVO == null) {
             throw new IllegalArgumentException("Invalid location");
         }
@@ -81,7 +83,7 @@ public class HouseServiceImpl implements HouseService {
             house.configureLocation(locationVO);
             boolean result = houseRepository.update(house);
             if (result) {
-                return Optional.of(house.getLocation());
+                return Optional.of(house);
             } else {
                 return Optional.empty();
             }
@@ -94,7 +96,7 @@ public class HouseServiceImpl implements HouseService {
      *
      * @return House object
      */
-    private House getFirstHouse() {
+    public House getFirstHouse() {
         return houseRepository.getFirstHouse();
     }
 }

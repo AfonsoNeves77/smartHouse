@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import smarthome.domain.house.House;
 import smarthome.domain.vo.housevo.LocationVO;
 import smarthome.mapper.HouseMapper;
 import smarthome.mapper.dto.LocationDTO;
@@ -42,8 +43,8 @@ public class ConfigureLocationCTRL {
     public boolean updateLocation(LocationDTO locationDTO) {
         try {
             LocationVO locationVO = HouseMapper.dtoToDomain(locationDTO);
-            Optional<LocationVO> optionalLocationVO = houseService.updateLocation(locationVO);
-            return optionalLocationVO.isPresent();
+            Optional<House> optionalHouse = houseService.updateLocation(locationVO);
+            return optionalHouse.isPresent();
         } catch (IllegalArgumentException e) {
             return false;
         }
