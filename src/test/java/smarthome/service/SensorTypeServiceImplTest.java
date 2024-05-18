@@ -1,6 +1,7 @@
 package smarthome.service;
 
 import smarthome.domain.sensortype.SensorTypeFactoryImpl;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.persistence.mem.SensorTypeRepositoryMem;
 import org.junit.jupiter.api.Test;
 
@@ -95,4 +96,37 @@ class SensorTypeServiceImplTest {
         // Assert
         assertEquals(expected,result);
     }
+
+    @Test
+    void givenValidSensorType_whenIsPresent_thenReturnTrue() {
+        // Arrange
+        SensorTypeRepositoryMem repository = mock(SensorTypeRepositoryMem.class);
+        SensorTypeFactoryImpl factory = mock(SensorTypeFactoryImpl.class);
+        String path = "config.properties";
+        SensorTypeServiceImpl sensorTypeService = new SensorTypeServiceImpl(repository, factory, path);
+        String sensorType = "Temperature";
+        SensorTypeIDVO sensorTypeID = new SensorTypeIDVO(sensorType);
+        when(repository.isPresent(sensorTypeID)).thenReturn(true);
+        // Act
+        boolean result = sensorTypeService.sensorTypeExists(sensorTypeID);
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    void givenInvalidSensorType_whenIsPresent_thenReturnFalse() {
+        // Arrange
+        SensorTypeRepositoryMem repository = mock(SensorTypeRepositoryMem.class);
+        SensorTypeFactoryImpl factory = mock(SensorTypeFactoryImpl.class);
+        String path = "config.properties";
+        SensorTypeServiceImpl sensorTypeService = new SensorTypeServiceImpl(repository, factory, path);
+        String sensorType = "Temperature";
+        SensorTypeIDVO sensorTypeID = new SensorTypeIDVO(sensorType);
+        when(repository.isPresent(sensorTypeID)).thenReturn(false);
+        // Act
+        boolean result = sensorTypeService.sensorTypeExists(sensorTypeID);
+        // Assert
+        assertFalse(result);
+    }
+
 }

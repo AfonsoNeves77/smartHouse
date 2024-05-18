@@ -93,6 +93,9 @@ public class SensorTypeServiceImpl implements SensorTypeService{
     private void populateRepository(String path) throws ConfigurationException {
         List<String> listOfTypes = getTypesFromConfig(path);
 
+        if (listOfTypes.isEmpty()) {
+            throw new ConfigurationException("No types found in configuration file");
+        }
         for (String string : listOfTypes){
             String[] splitString = splitStrings(string);
             SensorTypeIDVO type = new SensorTypeIDVO(splitString[0]);
@@ -112,6 +115,7 @@ public class SensorTypeServiceImpl implements SensorTypeService{
      * property is not found in the configuration. This exception is thrown to indicate an error with the configuration
      * file or property.
      */
+
     private List<String> getTypesFromConfig (String path) throws ConfigurationException {
         Configurations config = new Configurations();
         Configuration configuration = config.properties(path);
