@@ -362,6 +362,11 @@ class DeviceMapperTest {
         assertEquals(roomIDVODouble2.getID(), result.get(0).getRoomID());
     }
 
+    /**
+     * Test to verify that, when calling the domainToDTO method, the deviceDTO list is returned. The device list is empty.
+     * First, an empty list of devices is created and the expected size defined. Then, the domainToDTO method is called.
+     * Finally, the size of the result is compared with the expected size.
+     */
     @Test
     void domainToDTO_whenGivenAStrToDeviceMap_SuccessfullyConvertsDeviceToDTO(){
         // Arrange
@@ -465,5 +470,72 @@ class DeviceMapperTest {
         assertEquals(expectedSize,resultSize);
         assertEquals("name1",deviceDTO01name);
         assertEquals("roomid3",deviceDTO03roomId);
+    }
+
+    /**
+     * Test to verify that when a valid UUID string is provided, a DeviceIDVO is correctly created.
+     */
+    @Test
+    void whenCreateDeviceIDIsCalled_withValidUUIDString_thenDeviceIDVOIsReturned() {
+        // Arrange
+        String validUUIDString = UUID.randomUUID().toString();
+
+        // Act
+        DeviceIDVO result = DeviceMapper.createDeviceID(validUUIDString);
+
+        // Assert
+        assertEquals(validUUIDString, result.getID());
+    }
+
+    /**
+     * Test to verify that when a null string is provided, an IllegalArgumentException is thrown.
+     */
+    @Test
+    void whenCreateDeviceIDIsCalled_withNullString_thenExceptionIsThrown() {
+        // Arrange
+        String invalidString = null;
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(invalidString));
+        assertEquals("DeviceID cannot be null.", exception.getMessage());
+    }
+
+    /**
+     * Test to verify that when an empty string is provided, an IllegalArgumentException is thrown.
+     */
+    @Test
+    void whenCreateDeviceIDIsCalled_withEmptyString_thenExceptionIsThrown() {
+        // Arrange
+        String invalidString = "";
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(invalidString));
+        assertEquals("DeviceID cannot be null.", exception.getMessage());
+    }
+
+    /**
+     * Test to verify that when a blank string is provided, an IllegalArgumentException is thrown.
+     */
+    @Test
+    void whenCreateDeviceIDIsCalled_withBlankString_thenExceptionIsThrown() {
+        // Arrange
+        String invalidString = " ";
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(invalidString));
+        assertEquals("DeviceID cannot be null.", exception.getMessage());
+    }
+
+    /**
+     * Test to verify that when an invalid UUID string is provided, an IllegalArgumentException is thrown.
+     */
+    @Test
+    void whenCreateDeviceIDIsCalled_withInvalidUUIDString_thenExceptionIsThrown() {
+        // Arrange
+        String invalidUUIDString = "invalid-uuid-string";
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> DeviceMapper.createDeviceID(invalidUUIDString));
+        assertEquals("Invalid device ID", exception.getMessage());
     }
 }

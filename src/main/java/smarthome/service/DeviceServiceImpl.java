@@ -97,20 +97,39 @@ public class DeviceServiceImpl implements DeviceService {
         if (deviceIDVO == null) {
             throw new IllegalArgumentException("DeviceIDVO cannot be null.");
         }
-        if (!deviceRepository.isPresent(deviceIDVO)) {
-            throw new IllegalArgumentException("Device with ID: " + deviceIDVO + NOT_PRESENT_MESSAGE);
-        }
-        Device device = deviceRepository.findById(deviceIDVO);
-        if (!device.isActive()) {
-            throw new IllegalArgumentException("Device with ID: " + deviceIDVO + " is already deactivated.");
-        }
-        if (device.deactivateDevice() && deviceRepository.update(device)) {
-            return Optional.of(device);
-        }
 
+        Optional<Device> optionalDevice = getDeviceById(deviceIDVO);
+
+        if (optionalDevice.isPresent()) {
+            Device device = optionalDevice.get();
+            if (!device.isActive()) {
+                throw new IllegalArgumentException("Device with ID: " + deviceIDVO + " is already deactivated.");
+            }
+            if (device.deactivateDevice() && deviceRepository.update(device)) {
+                return Optional.of(device);
+            }
+            throw new IllegalArgumentException("Device could not be updated");
+        }
         return Optional.empty();
     }
 
+    /**
+     * Retrieves the device with the given ID.
+     * This method retrieves the device with the specified ID from the system.
+     * If the device is found, it returns an Optional containing the device. Otherwise, it returns an empty Optional.
+     *
+     * @param deviceIDVO The ID of the device to retrieve.
+     * @return An Optional containing the device with the specified ID if found, otherwise an empty Optional.
+     */
+    public Optional<Device> getDeviceById(DeviceIDVO deviceIDVO) {
+        if (deviceIDVO == null) {
+            throw new IllegalArgumentException("DeviceIDVO cannot be null.");
+        }
+        if (deviceRepository.isPresent(deviceIDVO)) {
+            return Optional.of(deviceRepository.findById(deviceIDVO));
+        }
+        return Optional.empty();
+    }
 
     /**
      * Retrieves the list of devices located in the room identified by the provided RoomIDVO.
@@ -154,17 +173,21 @@ public class DeviceServiceImpl implements DeviceService {
      */
     private LinkedHashMap<String,List<DeviceIDVO>> getMapDeviceIDBySensorType(){
         Iterable<Sensor> sensorList = sensorRepository.findAll();
-        LinkedHashMap<String,List<DeviceIDVO>> map = new LinkedHashMap<>();
-        for (Sensor sensor : sensorList){
-            String type = sensor.getSensorTypeID().getID();
-            DeviceIDVO deviceID = sensor.getDeviceID();
-            updateMap(map,type,deviceID);
+
+        if(sensorList != null){
+            LinkedHashMap<String,List<DeviceIDVO>> map = new LinkedHashMap<>();
+            for (Sensor sensor : sensorList){
+                String type = sensor.getSensorTypeID().getID();
+                DeviceIDVO deviceID = sensor.getDeviceID();
+                updateMap(map,type,deviceID);
+            }
+            return map;
         }
-        return map;
+        throw new IllegalArgumentException("Cannot access all sensors");
     }
 
     /**
-     * This method utilizes the actuator repository implementation to retrieve a complete list of actuators. It subsequently
+     * This method uses the actuator repository implementation to retrieve a complete list of actuators. It subsequently
      * iterates through each actuator object, extracting their actuatorTypeID and deviceID. These actuatorTypeIDs are then
      * mapped as keys in a map structure. For each unique actuatorTypeID, a corresponding list of DeviceIDs is created,
      * ensuring avoidance of duplicate deviceIDs per actuatorTypeID. The method's return value is a Map where each key
@@ -173,13 +196,17 @@ public class DeviceServiceImpl implements DeviceService {
      */
     private LinkedHashMap<String,List<DeviceIDVO>> getMapDeviceIDBySensorAndActuatorType(){
         Iterable<Actuator> actuatorList = actuatorRepository.findAll();
-        LinkedHashMap<String,List<DeviceIDVO>> map = new LinkedHashMap<>();
-        for (Actuator actuator : actuatorList){
-            String type = actuator.getActuatorTypeID().getID();
-            DeviceIDVO deviceID = actuator.getDeviceID();
-            updateMap(map, type, deviceID);
+
+        if(actuatorList != null){
+            LinkedHashMap<String,List<DeviceIDVO>> map = new LinkedHashMap<>();
+            for (Actuator actuator : actuatorList){
+                String type = actuator.getActuatorTypeID().getID();
+                DeviceIDVO deviceID = actuator.getDeviceID();
+                updateMap(map, type, deviceID);
+            }
+            return map;
         }
-        return map;
+        throw new IllegalArgumentException("Cannot access all actuators");
     }
 
     /**

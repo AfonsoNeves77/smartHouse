@@ -75,6 +75,15 @@ public class DeviceMapper {
         return new DeviceIDVO(id);
     }
 
+    /**
+     * Creates a new RoomIDVO object from the provided DeviceDTO object.
+     * Validates the provided DeviceDTO object to ensure it is not null
+     * Then ensures the room ID is valid, meaning not null, empty or blank.
+     * Then, instantiates a new UUID object from the provided room ID string.
+     *
+     * @param deviceDTO the DeviceDTO object to be converted to a RoomIDVO object
+     * @return a new RoomIDVO object created from the provided DeviceDTO object
+     */
     public static RoomIDVO createRoomIDVO(DeviceDTO deviceDTO) {
         if (deviceDTO == null) {
             throw new IllegalArgumentException(ERRORMESSAGE);
@@ -85,6 +94,59 @@ public class DeviceMapper {
         }
         UUID id = UUID.fromString(roomID);
         return new RoomIDVO(id);
+    }
+
+    /**
+     * Creates a new DeviceIDVO object from the provided device ID string.
+     * Validates the provided device ID string to ensure it is not null, empty or blank.
+     * Then, instantiates a new UUID object from the provided device ID string.
+     *
+     * @param deviceID the device ID string to be converted to a DeviceIDVO object
+     * @return a new DeviceIDVO object created from the provided device ID string
+     */
+    public static DeviceIDVO createDeviceID(String deviceID) {
+        if (deviceID == null || deviceID.trim().isEmpty()) {
+            throw new IllegalArgumentException("DeviceID cannot be null.");
+        }
+        UUID uuid = uuidFromString(deviceID);
+
+        if (uuid != null){
+            UUID id = UUID.fromString(deviceID);
+            return new DeviceIDVO(id);
+        }
+        throw new IllegalArgumentException("Invalid device ID");
+    }
+
+    /**
+     * Converts a device ID string to a UUID object. If the provided device ID string is not a valid UUID,
+     * this method returns null.
+     * @param deviceID the device ID string to be converted to a UUID object
+     * @return a UUID object created from the provided device ID string, or null if the device ID string is not a valid UUID
+     */
+    private static UUID uuidFromString(String deviceID) {
+        try{
+            return UUID.fromString(deviceID);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Creates a new RoomIDVO object from the provided room ID string.
+     * Validates the provided room ID string to ensure it is not null, empty or blank.
+     * Then, instantiates a new UUID object from the provided room ID string.
+     * @param roomID the room ID string to be converted to a RoomIDVO object
+     * @return a new RoomIDVO object created from the provided room ID string
+     */
+    public static RoomIDVO createRoomIDVO(String roomID) {
+        if(roomID.trim().isEmpty()){
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
+        else {
+            // Converts String from the DTO into a UUID
+            UUID room = UUID.fromString(roomID);
+            return new RoomIDVO(room);
+        }
     }
 
     /**
@@ -104,6 +166,13 @@ public class DeviceMapper {
         return deviceDTOList;
     }
 
+    /**
+     * Converts a Device domain object to a DeviceDTO Data Transfer Object. This method extracts relevant information
+     * such as device name, model, room ID, status, and ID from the provided Device domain object and creates a new
+     * DeviceDTO with this information. The DeviceDTO is then returned.
+     * @param device The Device domain object to be converted.
+     * @return A new DeviceDTO Data Transfer Object representing the converted device.
+     */
     public static DeviceDTO domainToDTO(Device device) {
         if (device == null) {
             throw new IllegalArgumentException("Device cannot be null.");

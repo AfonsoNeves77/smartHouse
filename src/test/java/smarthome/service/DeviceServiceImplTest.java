@@ -375,13 +375,13 @@ class DeviceServiceImplTest {
     }
 
     /**
-     * Test to verify that the deactivateDevice method throws an IllegalArgumentException
+     * Test to verify that the deactivateDevice method
      * when the DeviceIDVO does not exist in the DeviceRepository. The test arranges mock RoomRepository, DeviceFactoryImpl, DeviceRepository,
      * SensorRepository, ActuatorRepository and DeviceIDVO. It then sets the behavior of the DeviceRepository to return false when isPresent is called.
-     * It then asserts that an IllegalArgumentException is thrown when the deactivateDevice method is called. The test also verifies that the exception message matches the expected message.
+     * It then asserts that an empty optional is returned
      */
     @Test
-    void whenDeviceIsNotPresent_thenThrowsIllegalArgumentException() {
+    void whenDeviceIsNotPresent_thenShouldReturnEmptyOptional() {
         //Arrange
         RoomRepository roomRepository = mock(RoomRepository.class);
         DeviceFactoryImpl deviceFactory = mock(DeviceFactoryImpl.class);
@@ -390,17 +390,14 @@ class DeviceServiceImplTest {
         ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
         DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepository, deviceFactory, deviceRepository, sensorRepository, actuatorRepository);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String expected = "Device with ID: " + deviceIDVO + " is not present.";
 
         when(deviceRepository.isPresent(deviceIDVO)).thenReturn(false);
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, ()
-                -> deviceService.deactivateDevice(deviceIDVO));
-        String result = exception.getMessage();
+        Optional<Device> deviceOptional = deviceService.deactivateDevice(deviceIDVO);
 
         //Assert
-        assertEquals(expected, result);
+        assertTrue(deviceOptional.isEmpty());
     }
 
     /**
@@ -442,11 +439,11 @@ class DeviceServiceImplTest {
      * SensorRepository, ActuatorRepository, DeviceIDVO, and Device. It then sets the behavior of the DeviceRepository to return true when isPresent is called,
      * the behavior of the DeviceRepository to return the mock Device when findById is called, the behavior of the Device to return true when isActive is called,
      * the behavior of the Device to return false when deactivateDevice is called, and the behavior of the DeviceRepository to return true when update is called.
-     * It then asserts that the result of the deactivateDevice method is an empty Optional.
+     * It then asserts that deactivateDevice method throws and Illegal Argument Exception.
      */
 
     @Test
-    void whenDeviceIsNotDeactivated_thenReturnsEmptyOptional() {
+    void whenDeviceIsNotDeactivated_thenThrowsIllegalArgumentException() {
         //Arrange
         RoomRepository roomRepository = mock(RoomRepository.class);
         DeviceFactoryImpl deviceFactory = mock(DeviceFactoryImpl.class);
@@ -461,13 +458,14 @@ class DeviceServiceImplTest {
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);
         when(device.isActive()).thenReturn(true);
         when(device.deactivateDevice()).thenReturn(false);
-        when(deviceRepository.update(device)).thenReturn(true);
+        String result = "Device could not be updated";
 
-        //Act
-        Optional<Device> result = deviceService.deactivateDevice(deviceIDVO);
+        //Act + //Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> deviceService.deactivateDevice(deviceIDVO));
+        String expected = exception.getMessage();
 
         //Assert
-        assertTrue(result.isEmpty());
+        assertEquals(expected, result);
     }
 
     /**
@@ -476,11 +474,11 @@ class DeviceServiceImplTest {
      * SensorRepository, ActuatorRepository, DeviceIDVO, and Device. It then sets the behavior of the DeviceRepository to return true when isPresent is called,
      * the behavior of the DeviceRepository to return the mock Device when findById is called, the behavior of the Device to return true when isActive is called,
      * the behavior of the Device to return true when deactivateDevice is called, and the behavior of the DeviceRepository to return false when update is called.
-     * It then asserts that the result of the deactivateDevice method is an empty Optional.
+     * It then asserts that the result of deactivateDevice method throws and Illegal Argument Exception.
      */
 
     @Test
-    void whenDeviceIsNotUpdated_thenReturnsEmptyOptional() {
+    void whenDeviceIsNotUpdated_thenThrowsIllegalArgumentException() {
         //Arrange
         RoomRepository roomRepository = mock(RoomRepository.class);
         DeviceFactoryImpl deviceFactory = mock(DeviceFactoryImpl.class);
@@ -490,6 +488,7 @@ class DeviceServiceImplTest {
         DeviceServiceImpl deviceService = new DeviceServiceImpl(roomRepository, deviceFactory, deviceRepository, sensorRepository, actuatorRepository);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         Device device = mock(Device.class);
+        String result = "Device could not be updated";
 
         when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);
@@ -497,11 +496,13 @@ class DeviceServiceImplTest {
         when(device.deactivateDevice()).thenReturn(true);
         when(deviceRepository.update(device)).thenReturn(false);
 
-        //Act
-        Optional<Device> result = deviceService.deactivateDevice(deviceIDVO);
+        //Act + //Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> deviceService.deactivateDevice(deviceIDVO));
+        String expected = exception.getMessage();
 
         //Assert
-        assertTrue(result.isEmpty());
+        assertEquals(expected, result);
+
     }
 
     /**
@@ -625,6 +626,15 @@ class DeviceServiceImplTest {
     }
 
     //GETLISTOFDEVICEBYFUNCTIONALITY METHOD TESTS
+
+    /**
+     * This test verifies the functionality of the getListOfDevicesByFunctionality method in the DeviceService class.
+     * It ensures that the method correctly associates devices with their respective functionalities and returns a map
+     * where each key represents a functionality and each value is a list of devices associated with that functionality.
+     * The test sets up various doubled dependencies, conditions their behavior, and then invokes the
+     * getListOfDevicesByFunctionality method to obtain the result. It then compares the result with the expected
+     * functionalities and associated device lists.
+     */
 
     @Test
     void whenNoSensorsOrActuators_thenReturnsEmptyMap() {
@@ -866,5 +876,110 @@ class DeviceServiceImplTest {
         assertEquals(listFour,fourthLineList);
         assertEquals(listOne,fifthLineList);
         assertEquals(listTwo,sixthLineList);
+    }
+
+    /**
+     *
+     * This test verifies the functionality of the getListOfDevicesByFunctionality method in the DeviceService class.
+     * It ensures that the method throws an IllegalArgumentException when the SensorRepository returns null.
+
+     * The test sets up various doubled dependencies, conditions their behavior, and then invokes the
+     * getListOfDevicesByFunctionality method to trigger the exception. It then compares the exception message with
+     * the expected message.
+
+     * Regarding behavior conditioning, every step of the test is commented for better analysis.
+     */
+
+    @Test
+    void getListOfDevicesByFunctionality_WhenSensorRepositoryReturnsNull_ShouldThrowIllegalArgumentException() {
+        //Arrange
+
+        //Doubling all device service dependencies
+        RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
+        DeviceFactory deviceFactoryDouble = mock(DeviceFactory.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+
+        //Initialize device service with previously doubled dependencies
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactoryDouble, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
+
+        //Conditioning sensor repository double to return null
+        when(sensorRepositoryDouble.findAll()).thenReturn(null);
+        String expected = "Cannot access all sensors";
+
+        //Act + Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, deviceService::getListOfDeviceByFunctionality);
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected,result);
+
+    }
+
+    /**
+     *
+     * This test verifies the functionality of the getListOfDevicesByFunctionality method in the DeviceService class.
+     * It ensures that the method throws an IllegalArgumentException when the ActuatorRepository returns null.
+
+     * The test sets up various doubled dependencies, conditions their behavior, and then invokes the
+     * getListOfDevicesByFunctionality method to trigger the exception. It then compares the exception message with
+     * the expected message.
+
+     * Regarding behavior conditioning, every step of the test is commented for better analysis.
+     */
+
+    @Test
+    void getListOfDevicesByFunctionality_WhenActuatorRepositoryReturnsNull_ShouldThrowIllegalArgumentException() {
+        //Arrange
+        List<Sensor> sensorList = new ArrayList<>();
+
+        //Doubling all device service dependencies
+        RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
+        DeviceFactory deviceFactoryDouble = mock(DeviceFactory.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+
+        //Initialize device service with previously doubled dependencies
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactoryDouble, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
+
+        //Conditioning actuator repository double to return a previously created sensor doubles list
+        when(sensorRepositoryDouble.findAll()).thenReturn(sensorList);
+
+        //Conditioning sensor repository double to return null
+        when(actuatorRepositoryDouble.findAll()).thenReturn(null);
+        String expected = "Cannot access all actuators";
+
+        //Act + Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, deviceService::getListOfDeviceByFunctionality);
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected,result);
+
+    }
+
+    /**
+     * Test to verify that the getDeviceById method throws an IllegalArgumentException when the DeviceIDVO parameter is null.
+     * The test arranges mock RoomRepository, DeviceFactoryImpl, DeviceRepository, SensorRepository, and ActuatorRepository.
+     * It then asserts that an IllegalArgumentException is thrown when the getDeviceById method is called with a null DeviceIDVO.
+     * The test also verifies that the exception message matches the expected message.
+     */
+    @Test
+    void givenNullDeviceID_whenDeactivateDevice_thenThrowIllegalArgumentException() {
+//         Arrange
+        RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
+        DeviceFactory deviceFactoryDouble = mock(DeviceFactory.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        ActuatorRepository actuatorRepositoryDouble = mock(ActuatorRepository.class);
+        DeviceService deviceService = new DeviceServiceImpl(roomRepositoryDouble, deviceFactoryDouble, deviceRepositoryDouble, sensorRepositoryDouble, actuatorRepositoryDouble);
+        String expected = "DeviceIDVO cannot be null.";
+//        Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> deviceService.getDeviceById(null));
+//        Assert
+        String result = exception.getMessage();
+        assertEquals(expected, result);
     }
 }

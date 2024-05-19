@@ -18,4 +18,6 @@ public interface DeviceService {
     List<Device> getListOfDevicesInARoom(RoomIDVO roomIDVO);
 
     Map<String, List<Device>> getListOfDeviceByFunctionality();
+
+    Optional<Device> getDeviceById(DeviceIDVO deviceIDVO);
 }
