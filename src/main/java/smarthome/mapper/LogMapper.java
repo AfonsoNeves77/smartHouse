@@ -1,8 +1,11 @@
 package smarthome.mapper;
 
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import smarthome.domain.log.Log;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactoryImpl;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
@@ -17,17 +20,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+/**
+ * Utility class for mapping between Log domain objects and LogDTO data transfer objects.
+ * <p>
+ * This class provides static methods to convert between domain model objects (Log, DeviceIDVO, SensorIDVO, etc.)
+ * and their corresponding DTO representations (LogDTO). It also includes methods to create value objects from
+ * LogDTO attributes.
+ * </p>
+ */
 public class LogMapper {
 
-    private static final String ERRORMESSAGE = "LogDTO cannot be null.";
+
+    /**
+     * Factory for creating sensor value objects.
+     * <p>
+     * This static field holds an instance of {@code SensorValueFactory}, which is used to create instances
+     * of {@code SensorValueObject} based on the sensor type and reading.
+     * </p>
+     * <p>
+     * The {@code @Setter} annotation from Lombok generates a static setter method for this field,
+     * allowing it to be set externally, typically by the Spring framework.
+     * </p>
+     */
     @Setter
     private static SensorValueFactory sensorValueFactory;
+    private static final String ERRORMESSAGE = "LogDTO cannot be null.";
+
+
+
     /**
      * Private constructor to prevent instantiation of the LogMapper class.
      * <p>
      * This constructor is created to hide the implicit public constructor, preventing instantiation
      * of the LogMapper class from outside the class itself or its nested classes.
      */
+
     private LogMapper(){
         // Created to hide implicit public constructor
     }
@@ -161,7 +189,7 @@ public class LogMapper {
      * @return A list of LogDTO objects representing the data from the input Log objects.
      * @throws IllegalArgumentException If the provided iterable collection of Logs is null.
      */
-    public static List<smarthome.mapper.dto.LogDTO> domainToDTO (List<Log> listOfLogs) {
+    public static List<LogDTO> domainToDTO (List<Log> listOfLogs) {
         if (listOfLogs == null){
             throw new IllegalArgumentException("Invalid parameter");
         }

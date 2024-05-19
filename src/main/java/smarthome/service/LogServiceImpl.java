@@ -3,9 +3,13 @@ package smarthome.service;
 import org.springframework.stereotype.Service;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
+import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
@@ -15,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -24,6 +29,7 @@ public class LogServiceImpl implements LogService {
     private final LogRepository logRepository;
     private final DeviceRepository deviceRepository;
     private final RoomRepository roomRepository;
+    private final LogFactory logFactory;
 
     /**
      * Constructor for LogServiceImpl.
@@ -32,14 +38,47 @@ public class LogServiceImpl implements LogService {
      * @param roomRepository the repository used for data access
      * @throws IllegalArgumentException if the logRepository is null
      */
-    public LogServiceImpl(LogRepository logRepository, DeviceRepository deviceRepository, RoomRepository roomRepository) {
-        if (areParamsNull(logRepository, deviceRepository, roomRepository)) {
+    public LogServiceImpl(LogRepository logRepository, DeviceRepository deviceRepository, RoomRepository roomRepository, LogFactory logFactory){
+        if (areParamsNull(logRepository, deviceRepository, roomRepository, logFactory)) {
             throw new IllegalArgumentException("Repository cannot be null.");
         }
         this.logRepository = logRepository;
         this.deviceRepository = deviceRepository;
         this.roomRepository = roomRepository;
+        this.logFactory = logFactory;
     }
+
+    /**
+     * Adds a new log entry to the log repository.
+     * <p>
+     * This method creates a new {@code Log} object using the provided sensor value, sensor ID, device ID,
+     * and sensor type ID.
+     * It first validates that none of the parameters are null. If any parameter is null, it throws
+     * an {@code IllegalArgumentException}.
+     * After validation, it uses the {@code LogFactory} to create a {@code Log} object and attempts to save it to
+     * the log repository.
+     * If the log is successfully saved, it returns an {@code Optional} containing the {@code Log} object. If the
+     * log cannot be saved, it returns an empty {@code Optional}.
+     * </p>
+     *
+     * @param value the sensor value associated with the log, must not be null
+     * @param sensor the sensor ID associated with the log, must not be null
+     * @param device the device ID associated with the log, must not be null
+     * @param sensorType the sensor type ID associated with the log, must not be null
+     * @return an {@code Optional<Log>} containing the log if it was successfully added, or an empty {@code Optional} if the log could not be added
+     * @throws IllegalArgumentException if any of the parameters are null
+     */
+    public Optional<Log> addLog(SensorValueObject<?> value, SensorIDVO sensor, DeviceIDVO device, SensorTypeIDVO sensorType){
+        if (areParamsNull(value, sensor, device, sensorType)) {
+            throw new IllegalArgumentException("Invalid parameters");
+        }
+        Log log = logFactory.createLog(value, sensor, device, sensorType);
+        if (logRepository.save(log)) {
+            return Optional.of(log);
+        }
+        return Optional.empty();
+    }
+
 
     /**
      * Retrieves all logs associated with a specific device within a given time period.
@@ -50,7 +89,7 @@ public class LogServiceImpl implements LogService {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public List<Log> findReadingsFromDeviceInATimePeriod(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
+    public List<Log> findReadingsFromDeviceInATimePeriod (DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
         if (areParamsNull(deviceID)) {
             throw new IllegalArgumentException("Invalid parameters");
         }

@@ -3,12 +3,15 @@ package smarthome.service;
 import org.junit.jupiter.api.Test;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
+import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
@@ -16,10 +19,7 @@ import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,31 +37,184 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
-                -> new LogServiceImpl(null, deviceRepository, roomRepository));
+                -> new LogServiceImpl(null, deviceRepository, roomRepository,logFactory));
         String result1 = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, ()
-                -> new LogServiceImpl(logRepository, null, roomRepository));
+                -> new LogServiceImpl(logRepository, null, roomRepository,logFactory));
         String result2 = exception2.getMessage();
 
         Exception exception3 = assertThrows(IllegalArgumentException.class, ()
-                -> new LogServiceImpl(logRepository, deviceRepository, null));
+                -> new LogServiceImpl(logRepository, deviceRepository, null,logFactory));
         String result3 = exception3.getMessage();
+
+        Exception exception4 = assertThrows(IllegalArgumentException.class, ()
+                -> new LogServiceImpl(logRepository, deviceRepository, roomRepository,null));
+        String result4 = exception4.getMessage();
 
         // Assert
         assertEquals(expected,result1);
         assertEquals(expected,result2);
         assertEquals(expected,result3);
+        assertEquals(expected,result4);
     }
 
     /**
-     * Test to verify that IllegalArgumentException is thrown when given null parameters.
+     * Test to verify that IllegalArgumentException is thrown when given null parameters for addLog method.
      */
     @Test
-    void whenGivenNullParameters_throwsIllegalArgumentException(){
+    void whenGivenNullParameters_addLogThrowsIllegalArgumentException(){
+        // Arrange
+        String expected = "Invalid parameters";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorValueObject<?> value = mock(SensorValueObject.class);
+        SensorIDVO sensor = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> service.addLog(null,sensor,deviceID,sensorType));
+        String result1 = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> service.addLog(value,null,deviceID,sensorType));
+        String result2 = exception2.getMessage();
+
+        Exception exception3 = assertThrows(IllegalArgumentException.class, ()
+                -> service.addLog(value,sensor,null,sensorType));
+        String result3 = exception3.getMessage();
+
+        Exception exception4 = assertThrows(IllegalArgumentException.class, ()
+                -> service.addLog(value,sensor,deviceID,null));
+        String result4 = exception4.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expected,result2);
+        assertEquals(expected,result3);
+        assertEquals(expected,result4);
+    }
+
+    /**
+     * Test to verify that IllegalArgumentException is thrown when the log factory throws an IllegalArgumentException.
+     */
+    @Test
+    void whenLogFactoryThrowsIllegalArgument_addLogPropagatesIllegalArgumentException() {
+        // Arrange
+        String expected = "Invalid parameters";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorValueObject<?> value = mock(SensorValueObject.class);
+        SensorIDVO sensor = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+
+        IllegalArgumentException exception = mock(IllegalArgumentException.class);
+
+        when(exception.getMessage()).thenReturn(expected);
+
+        when(logFactory.createLog(value, sensor, deviceID, sensorType)).thenThrow(exception);
+
+
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        // Act
+        Exception exceptionResult = assertThrows(IllegalArgumentException.class, ()
+                -> service.addLog(value,sensor,deviceID,sensorType));
+        String result = exceptionResult.getMessage();
+
+        //Assert
+        assertEquals(expected,result);
+
+    }
+
+    /**
+     * Test to verify that when the log is unsuccessfully saved, the method addLog returns an Optional empty.
+     */
+    @Test
+    void whenSaveReturnsFalse_addLogReturnsOptionalEmpty() {
+        // Arrange
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorValueObject<?> value = mock(SensorValueObject.class);
+        SensorIDVO sensor = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        Log log = mock(Log.class);
+
+        when(logFactory.createLog(value, sensor, deviceID, sensorType)).thenReturn(log);
+        when(logRepository.save(log)).thenReturn(false);
+
+        Optional<Log> expected = Optional.empty();
+        // Act
+        Optional<Log> result = service.addLog(value, sensor, deviceID, sensorType);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test to verify that when the log is successfully saved, the method addLog returns an Optional
+     * with the created log.
+     */
+    @Test
+    void whenAddLogSuccessfullyCreatesAndSavesALog_returnsOptionalWithCreatedLog() {
+        // Arrange
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SensorValueObject<?> value = mock(SensorValueObject.class);
+        SensorIDVO sensor = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorType = mock(SensorTypeIDVO.class);
+
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        Log log = mock(Log.class);
+
+        when(logFactory.createLog(value, sensor, deviceID, sensorType)).thenReturn(log);
+        when(logRepository.save(log)).thenReturn(true);
+
+        Optional<Log> expected = Optional.of(log);
+        // Act
+        Optional<Log> result = service.addLog(value, sensor, deviceID, sensorType);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+        /**
+         * Test to verify that IllegalArgumentException is thrown when given null parameters.
+         */
+    @Test
+    void whenGivenNullParameters_findReadingsThrowsIllegalArgumentException(){
         // Arrange
         String expected = "Invalid parameters";
         String expectedTimeStamp = "Invalid Time Stamps";
@@ -69,10 +222,11 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         TimeStampVO initialTime = mock(TimeStampVO.class);
         TimeStampVO finalTime = mock(TimeStampVO.class);
-        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
@@ -103,17 +257,18 @@ class LogServiceImplTest {
      * throws an IllegalArgumentException.
      */
     @Test
-    void whenGivenInvalidTimeStamps_throwsIllegalArgumentException(){
+    void whenGivenInvalidTimeStamps_findReadingsThrowsIllegalArgumentException(){
         // Arrange
         String expected = "Invalid Time Stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         TimeStampVO initialTime = mock(TimeStampVO.class);
         TimeStampVO finalTime = mock(TimeStampVO.class);
-        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         LocalDateTime from = mock(LocalDateTime.class);
         LocalDateTime to = mock(LocalDateTime.class);
@@ -149,10 +304,11 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         TimeStampVO initialTime = mock(TimeStampVO.class);
         TimeStampVO finalTime = mock(TimeStampVO.class);
-        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         LocalDateTime from = mock(LocalDateTime.class);
         LocalDateTime to = mock(LocalDateTime.class);
@@ -183,10 +339,11 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
         DeviceIDVO deviceID = mock(DeviceIDVO.class);
         TimeStampVO initialTime = mock(TimeStampVO.class);
         TimeStampVO finalTime = mock(TimeStampVO.class);
-        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         LocalDateTime from = mock(LocalDateTime.class);
         LocalDateTime to = mock(LocalDateTime.class);
@@ -226,7 +383,8 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         String expected = "Invalid Parameters";
 
         // Act
@@ -252,7 +410,8 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         String expected = "Invalid Parameters";
 
         // Act
@@ -280,7 +439,8 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         String expected = "Invalid Parameters";
 
         // Act
@@ -316,7 +476,8 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         String expected = "Invalid Parameters";
 
         // Act
@@ -346,8 +507,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -391,8 +553,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -450,8 +613,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -519,8 +683,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -597,8 +762,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -708,8 +874,9 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         Device deviceOut = mock(Device.class);
         when(deviceRepository.findById(deviceIdOut)).thenReturn(deviceOut);
@@ -828,6 +995,7 @@ class LogServiceImplTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
 
         Room outdoorRoom = mock(Room.class);
         RoomDimensionsVO outdoorDimensions = mock(RoomDimensionsVO.class);
@@ -861,7 +1029,7 @@ class LogServiceImplTest {
         TimeStampVO initialTime = mock(TimeStampVO.class);
         TimeStampVO finalTime = mock(TimeStampVO.class);
         DeltaVO deltaVO = mock(DeltaVO.class);
-        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         LocalDateTime from = mock(LocalDateTime.class);
         LocalDateTime to = mock(LocalDateTime.class);

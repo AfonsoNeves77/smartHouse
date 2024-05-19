@@ -2,6 +2,7 @@ package smarthome.controller;
 
 import org.junit.jupiter.api.Test;
 import smarthome.domain.log.Log;
+import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.HumidityValue;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -72,7 +73,8 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         GetLogByDeviceIDAndTimeFrameCTRL getLogByDeviceIDAndTimeFrameCTRL =
                 new GetLogByDeviceIDAndTimeFrameCTRL(logService);
 
@@ -144,7 +146,8 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
 
         GetLogByDeviceIDAndTimeFrameCTRL getLogByDeviceIDAndTimeFrameCTRL =
                 new GetLogByDeviceIDAndTimeFrameCTRL(logService);
@@ -236,7 +239,8 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initalTimeStamp, finalTimeStamp))
                 .thenReturn(new ArrayList<>());
 
@@ -322,7 +326,8 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initialTimeStamp, finalTimeStamp))
                 .thenReturn(logList);
 

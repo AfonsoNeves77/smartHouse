@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
+import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -46,7 +47,8 @@ class GetMaxInstantaneousTemperatureDifferenceCTRLTest {
         logRepository = mock(LogRepository.class);
         deviceRepository = mock(DeviceRepository.class);
         roomRepository = mock(RoomRepository.class);
-        logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository);
+        LogFactory logFactory = mock(LogFactory.class);
+        logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
         ctrl = new GetMaxInstantaneousTemperatureDifferenceCTRL(logService);
     }
 

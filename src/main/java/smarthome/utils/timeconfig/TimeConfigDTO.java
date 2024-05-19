@@ -5,7 +5,6 @@ import org.springframework.hateoas.RepresentationModel;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Builder
 @Getter
 public class TimeConfigDTO extends RepresentationModel<TimeConfigDTO> {
