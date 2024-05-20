@@ -104,7 +104,7 @@ class LogCTRLWebTest {
         // Create the resulting DTOs
         LogDTO logDTO1 = LogDTO.builder()
                 .logID(logID1.getID())
-                .time(time1.getValue().toString())
+                .time(time1.getValue().truncatedTo(ChronoUnit.SECONDS).toString())
                 .reading(reading1.getValue().toString())
                 .sensorID(sensorID1.getID())
                 .deviceID(deviceID.getID())
@@ -113,7 +113,7 @@ class LogCTRLWebTest {
 
         LogDTO logDTO2 = LogDTO.builder()
                 .logID(logID2.getID())
-                .time(time2.getValue().toString())
+                .time(time2.getValue().truncatedTo(ChronoUnit.SECONDS).toString())
                 .reading(reading2.getValue().toString())
                 .sensorID(sensorID2.getID())
                 .deviceID(deviceID.getID())
