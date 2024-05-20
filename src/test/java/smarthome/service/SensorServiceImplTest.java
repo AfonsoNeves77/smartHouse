@@ -1,11 +1,13 @@
 package smarthome.service;
 
+import org.junit.jupiter.api.Test;
 import smarthome.domain.device.Device;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
 import smarthome.domain.sensor.SensorFactoryImpl;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.SensorRepository;
@@ -13,12 +15,12 @@ import smarthome.persistence.SensorTypeRepository;
 import smarthome.persistence.mem.DeviceRepositoryMem;
 import smarthome.persistence.mem.SensorRepositoryMem;
 import smarthome.persistence.mem.SensorTypeRepositoryMem;
-import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +30,7 @@ class SensorServiceImplTest {
      * This test ensures that the constructor throws an Illegal Argument exception when receiving an invalid DeviceRepository
      */
     @Test
-    void whenGivenAnInvalidDeviceRepository_ConstructorThrowsIllegalArgument(){
+    void whenGivenAnInvalidDeviceRepository_ConstructorThrowsIllegalArgument() {
         // Arrange
         SensorTypeRepositoryMem sensorTypeRepositoryMem = mock(SensorTypeRepositoryMem.class);
         SensorRepositoryMem sensorRepositoryMem = mock(SensorRepositoryMem.class);
@@ -37,18 +39,18 @@ class SensorServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new SensorServiceImpl(null, sensorTypeRepositoryMem,sensorRepositoryMem,factory));
+                new SensorServiceImpl(null, sensorTypeRepositoryMem, sensorRepositoryMem, factory));
         String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
      * This test ensures that the constructor throws an Illegal Argument exception when receiving an invalid SensorTypeRepository
      */
     @Test
-    void whenGivenAnInvalidSensorTypeRepository_ConstructorThrowsIllegalArgument(){
+    void whenGivenAnInvalidSensorTypeRepository_ConstructorThrowsIllegalArgument() {
         // Arrange
         DeviceRepositoryMem deviceRepository = mock(DeviceRepositoryMem.class);
         SensorRepositoryMem sensorRepositoryMem = mock(SensorRepositoryMem.class);
@@ -57,18 +59,18 @@ class SensorServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new SensorServiceImpl(deviceRepository, null,sensorRepositoryMem,factory));
+                new SensorServiceImpl(deviceRepository, null, sensorRepositoryMem, factory));
         String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
      * This test ensures that the constructor throws an Illegal Argument exception when receiving an invalid SensorRepository
      */
     @Test
-    void whenGivenAnInvalidSensorRepository_ConstructorThrowsIllegalArgument(){
+    void whenGivenAnInvalidSensorRepository_ConstructorThrowsIllegalArgument() {
         // Arrange
         DeviceRepositoryMem deviceRepository = mock(DeviceRepositoryMem.class);
         SensorTypeRepositoryMem sensorTypeRepositoryMem = mock(SensorTypeRepositoryMem.class);
@@ -77,18 +79,18 @@ class SensorServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new SensorServiceImpl(deviceRepository, sensorTypeRepositoryMem,null,factory));
+                new SensorServiceImpl(deviceRepository, sensorTypeRepositoryMem, null, factory));
         String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
      * This test ensures that the constructor throws an Illegal Argument exception when receiving an invalid Factory
      */
     @Test
-    void whenGivenAnInvalidFactory_ConstructorThrowsIllegalArgument(){
+    void whenGivenAnInvalidFactory_ConstructorThrowsIllegalArgument() {
         // Arrange
         DeviceRepositoryMem deviceRepository = mock(DeviceRepositoryMem.class);
         SensorTypeRepositoryMem sensorTypeRepositoryMem = mock(SensorTypeRepositoryMem.class);
@@ -97,11 +99,11 @@ class SensorServiceImplTest {
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new SensorServiceImpl(deviceRepository, sensorTypeRepositoryMem,sensorRepositoryMem,null));
+                new SensorServiceImpl(deviceRepository, sensorTypeRepositoryMem, sensorRepositoryMem, null));
         String result = exception.getMessage();
 
         // Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -113,7 +115,7 @@ class SensorServiceImplTest {
      * A result string is created from the exception message and, finally, the expected message compared to the result.
      */
     @Test
-    void whenAddSensorMethodCalled_ifSensorNameIsNull_thenThrowsIllegalArgumentException(){
+    void whenAddSensorMethodCalled_ifSensorNameIsNull_thenThrowsIllegalArgumentException() {
         //Arrange
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeId = mock(SensorTypeIDVO.class);
@@ -122,17 +124,17 @@ class SensorServiceImplTest {
         SensorRepository sensorRepository = mock(SensorRepository.class);
         SensorFactory sensorFactory = mock(SensorFactory.class);
 
-        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository,sensorTypeRepository,sensorRepository,sensorFactory);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
 
         String expected = "SensorName, DeviceIDVO and SensorTypeIDVO must not be null.";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(null, deviceId,sensorTypeId));
+                sensorService.addSensor(null, deviceId, sensorTypeId));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -142,28 +144,28 @@ class SensorServiceImplTest {
      */
 
     @Test
-    void addSensor_WhenNullDeviceIDVO_ShouldThrowIllegalArgumentExceptionWithExpectedMessage(){
+    void addSensor_WhenNullDeviceIDVO_ShouldThrowIllegalArgumentExceptionWithExpectedMessage() {
         //Arrange
         String expected = "SensorName, DeviceIDVO and SensorTypeIDVO must not be null.";
         //Doubling the objects necessary to instantiate SensorServiceImpl
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
         SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
-        SensorFactory sensorFactoryDouble= mock(SensorFactory.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
 
         //Sensor service implementation instantiation
-        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble,sensorTypeRepositoryDouble,sensorRepositoryDouble,sensorFactoryDouble);
+        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble, sensorRepositoryDouble, sensorFactoryDouble);
 
         SensorNameVO sensorNameVODouble = mock(SensorNameVO.class);
         SensorTypeIDVO sensorTypeIDVODouble = mock(SensorTypeIDVO.class);
 
         //Act + Assert -> Assertion of the expected exception and storing the thrown exception message
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorNameVODouble,null,sensorTypeIDVODouble));
+                sensorService.addSensor(sensorNameVODouble, null, sensorTypeIDVODouble));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -172,28 +174,28 @@ class SensorServiceImplTest {
      * In this test case, all dependencies of sensor service implementation are doubled.
      */
     @Test
-    void addSensor_WhenNullSensorTypeIDVO_ShouldThrowIllegalArgumentExceptionWithExpectedMessage(){
+    void addSensor_WhenNullSensorTypeIDVO_ShouldThrowIllegalArgumentExceptionWithExpectedMessage() {
         //Arrange
         String expected = "SensorName, DeviceIDVO and SensorTypeIDVO must not be null.";
         //Doubling the objects necessary to instantiate SensorServiceImpl
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
         SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
-        SensorFactory sensorFactoryDouble= mock(SensorFactory.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
 
         //Sensor service implementation instantiation
-        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble,sensorTypeRepositoryDouble,sensorRepositoryDouble,sensorFactoryDouble);
+        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble, sensorRepositoryDouble, sensorFactoryDouble);
 
         SensorNameVO sensorNameVODouble = mock(SensorNameVO.class);
         DeviceIDVO deviceIDVODouble = mock(DeviceIDVO.class);
 
         //Act + Assert -> Assertion of the expected exception and storing the thrown exception message
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorNameVODouble,deviceIDVODouble,null));
+                sensorService.addSensor(sensorNameVODouble, deviceIDVODouble, null));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -206,16 +208,16 @@ class SensorServiceImplTest {
      */
 
     @Test
-    void addSensor_WhenNonExistingDevice_ShouldThrowIllegalArgumentExceptionWithExpectedMessage(){
+    void addSensor_WhenNonExistingDevice_ShouldThrowIllegalArgumentExceptionWithExpectedMessage() {
         //Arrange
         //Doubling the objects necessary to instantiate SensorServiceImpl
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
         SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
-        SensorFactory sensorFactoryDouble= mock(SensorFactory.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
 
         //Sensor service implementation instantiation
-        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble,sensorTypeRepositoryDouble,sensorRepositoryDouble,sensorFactoryDouble);
+        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble, sensorRepositoryDouble, sensorFactoryDouble);
 
         //Doubling the objects necessary to addSensor method
         SensorNameVO sensorNameVODouble = mock(SensorNameVO.class);
@@ -234,11 +236,11 @@ class SensorServiceImplTest {
 
         //Act + Assert -> Assertion of the expected exception and storing the thrown exception message
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorNameVODouble,deviceIDVODouble,sensorTypeIDVODouble));
+                sensorService.addSensor(sensorNameVODouble, deviceIDVODouble, sensorTypeIDVODouble));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -249,16 +251,16 @@ class SensorServiceImplTest {
      */
 
     @Test
-    void addSensor_WhenDeactivatedDevice_ShouldThrowIllegalArgumentExceptionWithExpectedMessage(){
+    void addSensor_WhenDeactivatedDevice_ShouldThrowIllegalArgumentExceptionWithExpectedMessage() {
         //Arrange
         //Doubling the objects necessary to instantiate SensorServiceImpl
         DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
         SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
         SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
-        SensorFactory sensorFactoryDouble= mock(SensorFactory.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
 
         //Sensor service implementation instantiation
-        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble,sensorTypeRepositoryDouble,sensorRepositoryDouble,sensorFactoryDouble);
+        SensorService sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble, sensorRepositoryDouble, sensorFactoryDouble);
 
         //Doubling the objects necessary to addSensor method
         SensorNameVO sensorNameVODouble = mock(SensorNameVO.class);
@@ -282,11 +284,11 @@ class SensorServiceImplTest {
 
         //Act + Assert -> Assertion of the expected exception and storing the thrown exception message
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorNameVODouble,deviceIDVODouble,sensorTypeIDVODouble));
+                sensorService.addSensor(sensorNameVODouble, deviceIDVODouble, sensorTypeIDVODouble));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
 
@@ -303,7 +305,7 @@ class SensorServiceImplTest {
      * A result string is created from the exception message and, finally, the expected message compared to the result.
      */
     @Test
-    void whenAddSensorMethodCalled_ifSensorTypeIsNotPresent_thenThrowsIllegalArgumentException(){
+    void whenAddSensorMethodCalled_ifSensorTypeIsNotPresent_thenThrowsIllegalArgumentException() {
         //Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
@@ -320,17 +322,17 @@ class SensorServiceImplTest {
         SensorRepository sensorRepository = mock(SensorRepository.class);
         SensorFactory sensorFactory = mock(SensorFactory.class);
 
-        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository,sensorTypeRepository,sensorRepository,sensorFactory);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
 
         String expected = "Sensor type with ID UbiquitySensor is not present.";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorName,deviceId,sensorTypeId));
+                sensorService.addSensor(sensorName, deviceId, sensorTypeId));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -348,7 +350,7 @@ class SensorServiceImplTest {
      * Finally, the expected message is compared to the result.
      */
     @Test
-    void whenAddSensorMethodCalled_ifSensorIsNotCreated_thenReturnsIllegalArgumentException(){
+    void whenAddSensorMethodCalled_ifSensorIsNotCreated_thenReturnsIllegalArgumentException() {
         //Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
@@ -367,19 +369,19 @@ class SensorServiceImplTest {
         IllegalArgumentException argException = new IllegalArgumentException("Sensor is null");
         when(sensorRepository.save(sensor)).thenThrow(argException);
         SensorFactory sensorFactory = mock(SensorFactory.class);
-        when(sensorFactory.createSensor(sensorName,deviceId,sensorTypeId)).thenReturn(sensor);
+        when(sensorFactory.createSensor(sensorName, deviceId, sensorTypeId)).thenReturn(sensor);
 
         String expected = "Sensor is null";
 
-        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository,sensorTypeRepository,sensorRepository,sensorFactory);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                sensorService.addSensor(sensorName,deviceId,sensorTypeId));
+                sensorService.addSensor(sensorName, deviceId, sensorTypeId));
         String result = exception.getMessage();
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -393,7 +395,7 @@ class SensorServiceImplTest {
      * being these compared to assert the test.
      */
     @Test
-    void whenAddSensorMethodCalled_ifSensorIsNotSaved_thenReturnsEmptyOptional(){
+    void whenAddSensorMethodCalled_ifSensorIsNotSaved_thenReturnsEmptyOptional() {
         //Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
@@ -411,17 +413,17 @@ class SensorServiceImplTest {
         SensorRepository sensorRepository = mock(SensorRepository.class);
         when(sensorRepository.save(sensor)).thenReturn(false);
         SensorFactory sensorFactory = mock(SensorFactory.class);
-        when(sensorFactory.createSensor(sensorName,deviceId,sensorTypeId)).thenReturn(sensor);
+        when(sensorFactory.createSensor(sensorName, deviceId, sensorTypeId)).thenReturn(sensor);
 
         Optional<Sensor> expected = Optional.empty();
 
-        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository,sensorTypeRepository,sensorRepository,sensorFactory);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
 
         //Act
-        Optional<Sensor> result = sensorService.addSensor(sensorName,deviceId,sensorTypeId);
+        Optional<Sensor> result = sensorService.addSensor(sensorName, deviceId, sensorTypeId);
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -435,7 +437,7 @@ class SensorServiceImplTest {
      * method, being these compared to assert the test.
      */
     @Test
-    void whenAddSensorMethodCalled_ifSensorIsSaved_thenReturnsOptional(){
+    void whenAddSensorMethodCalled_ifSensorIsSaved_thenReturnsOptional() {
         //Arrange
         SensorNameVO sensorName = mock(SensorNameVO.class);
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
@@ -453,16 +455,96 @@ class SensorServiceImplTest {
         SensorRepository sensorRepository = mock(SensorRepository.class);
         when(sensorRepository.save(sensor)).thenReturn(true);
         SensorFactory sensorFactory = mock(SensorFactory.class);
-        when(sensorFactory.createSensor(sensorName,deviceId,sensorTypeId)).thenReturn(sensor);
+        when(sensorFactory.createSensor(sensorName, deviceId, sensorTypeId)).thenReturn(sensor);
 
         Optional<Sensor> expected = Optional.of(sensor);
 
-        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository,sensorTypeRepository,sensorRepository,sensorFactory);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
 
         //Act
-        Optional<Sensor> result = sensorService.addSensor(sensorName,deviceId,sensorTypeId);
+        Optional<Sensor> result = sensorService.addSensor(sensorName, deviceId, sensorTypeId);
 
         //Assert
-        assertEquals(expected,result);
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test case for the method getSensorById in the SensorServiceImpl class.
+     * This test case checks if the method throws an IllegalArgumentException when the SensorIDVO parameter is null.
+     * The expected behavior is that the method throws an IllegalArgumentException with the message "SensorIDVO must not be null."
+     */
+    @Test
+    void whenGetSensorByIdMethodCalled_ifSensorIDVOIsNull_thenThrowsIllegalArgumentException() {
+        //Arrange
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble, sensorRepositoryDouble, sensorFactoryDouble);
+
+        String expected = "SensorIDVO must not be null.";
+
+        //Act + Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                sensorService.getSensorById(null));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test case for the method getSensorById in the SensorServiceImpl class.
+     * This test case checks if the method returns an empty Optional when the sensor with the provided SensorIDVO is not present in the repository.
+     * The expected behavior is that the method returns an empty Optional.
+     */
+    @Test
+    void whenGetSensorByIdMethodCalled_ifSensorIsNotPresent_thenReturnsEmptyOptional() {
+        //Arrange
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        SensorRepository sensorRepository = mock(SensorRepository.class);
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(false);
+
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepository = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactory = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
+
+        Optional<Sensor> expected = Optional.empty();
+
+        //Act
+        Optional<Sensor> result = sensorService.getSensorById(sensorIDVO);
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test case for the method getSensorById in the SensorServiceImpl class.
+     * This test case checks if the method returns an Optional containing the sensor when the sensor with the provided SensorIDVO is present in the repository.
+     * The expected behavior is that the method returns an Optional containing the sensor.
+     */
+    @Test
+    void whenGetSensorByIdMethodCalled_ifSensorIsPresent_thenReturnsOptionalWithSensor() {
+        //Arrange
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        SensorRepository sensorRepository = mock(SensorRepository.class);
+        Sensor sensor = mock(Sensor.class);
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepository = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactory = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepository, sensorTypeRepository, sensorRepository, sensorFactory);
+
+        Optional<Sensor> expected = Optional.of(sensor);
+
+        //Act
+        Optional<Sensor> result = sensorService.getSensorById(sensorIDVO);
+
+        //Assert
+        assertEquals(expected, result);
     }
 }
+

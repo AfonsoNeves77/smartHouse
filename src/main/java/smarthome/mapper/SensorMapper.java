@@ -4,6 +4,7 @@ package smarthome.mapper;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.mapper.dto.SensorDTO;
 
@@ -78,6 +79,24 @@ public class SensorMapper {
         String sensorTypeID = sensorDTO.getSensorTypeID();
         return new SensorTypeIDVO(sensorTypeID);
     }
+
+    /**
+     * This method is responsible for creating a SensorIDVO from a sensor ID string.
+     * It first checks if the provided sensor ID string is not null, throwing an IllegalArgumentException if it is.
+     * Then, it converts the sensor ID string to a UUID and creates a SensorIDVO with this UUID.
+     *
+     * @param sensorID The string representing the ID of the Sensor to create a SensorIDVO from.
+     * @return A SensorIDVO with the UUID equivalent of the provided sensor ID string.
+     * @throws IllegalArgumentException if the provided sensor ID string is null.
+     */
+    public static SensorIDVO createSensorIDVO(String sensorID) {
+        if (sensorID == null) {
+            throw new IllegalArgumentException("Invalid sensor ID");
+        }
+        UUID id = UUID.fromString(sensorID);
+        return new SensorIDVO(id);
+    }
+
 
     /**
      * Checks if a device ID is a valid UUID.

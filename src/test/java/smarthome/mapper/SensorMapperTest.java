@@ -318,4 +318,41 @@ class SensorMapperTest {
         //Assert
         assertEquals(expected, result);
     }
+
+    /**
+     * Test case for the createSensorIDVO method of the SensorMapper class when the input sensor ID is null.
+     * This test verifies that the method throws an IllegalArgumentException when the input sensor ID is null.
+     * The expected behavior is that the method throws an IllegalArgumentException with the message "Invalid sensor ID."
+     */
+    @Test
+    void givenNullSensorID_WhenCreateSensorIDVOIsInvoked_ThenShouldThrowIllegalArgumentException() {
+        //Arrange
+        String sensorID = null;
+        String expected = "Invalid sensor ID";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> SensorMapper.createSensorIDVO(sensorID));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test case for the createSensorIDVO method of the SensorMapper class when the input sensor ID is null.
+     * This test verifies that the method throws an IllegalArgumentException when the input sensor ID is null.
+     * The expected behavior is that the method throws an IllegalArgumentException with the message "Invalid sensor ID."
+     */
+    @Test
+    void givenValidSensorID_WhenCreateSensorIDVOIsInvoked_ThenShouldReturnSensorIDVO() {
+        //Arrange
+        String sensorID = "1fa85f64-5717-4562-b3fc-2c963f66afa6";
+        SensorIDVO expected = new SensorIDVO(UUID.fromString(sensorID));
+
+        //Act
+        SensorIDVO result = SensorMapper.createSensorIDVO(sensorID);
+
+        //Assert
+        assertEquals(expected.getID(), result.getID());
+    }
 }
