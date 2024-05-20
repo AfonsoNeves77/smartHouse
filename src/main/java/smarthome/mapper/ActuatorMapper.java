@@ -1,12 +1,9 @@
 package smarthome.mapper;
 
 import smarthome.domain.actuator.Actuator;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.mapper.dto.ActuatorDTO;
-import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
-import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
@@ -72,7 +69,7 @@ public class ActuatorMapper {
 
         /**
      * Method to create a DeviceIDVO object from an ActuatorDTO object.
-     * It throws an IllegalArgumentException if the ActuatorDTO object is null.
+     * It throws an IllegalArgumentException if the ActuatorDTO object is null or if the deviceID attribute is null.
      *
      * @param actuatorDTO ActuatorDTO object
      * @return DeviceIDVO object
@@ -82,6 +79,9 @@ public class ActuatorMapper {
         if (actuatorDTO == null) {
             throw new IllegalArgumentException(ERRORMESSAGE);
         } else {
+            if(actuatorDTO.getDeviceID() == null) {
+                throw new IllegalArgumentException("Device ID cannot be null");
+            }
             UUID deviceID = UUID.fromString(actuatorDTO.getDeviceID());
             return new DeviceIDVO(deviceID);
         }
@@ -108,5 +108,19 @@ public class ActuatorMapper {
                 .upperLimit(actuator.getUpperLimit())
                 .precision(actuator.getPrecision())
                 .build();
+    }
+
+    /**
+     * Method to create an ActuatorIDVO object from an ActuatorDTO object.
+     * It throws an IllegalArgumentException if the ActuatorDTO object is null.
+     * @param actuatorId String
+     * @return ActuatorIDVO object
+     */
+    public static ActuatorIDVO createActuatorIDVO(String actuatorId) {
+        if(actuatorId == null){
+            throw new IllegalArgumentException("ActuatorID cannot be null");
+        }
+        UUID id = UUID.fromString(actuatorId);
+        return new ActuatorIDVO(id);
     }
 }

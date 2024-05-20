@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
 import smarthome.domain.device.Device;
+import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.ActuatorTypeRepository;
 import smarthome.persistence.DeviceRepository;
@@ -110,6 +111,26 @@ public class ActuatorServiceImpl implements ActuatorService{
      */
     private boolean isActuatorTypePresent(ActuatorTypeIDVO actuatorTypeIDVO){
         return actuatorTypeRepository.isPresent(actuatorTypeIDVO);
+    }
+
+    /**
+     * This method retrieves an Actuator from the repository based on the provided ActuatorIDVO.
+     * It first checks if the ActuatorIDVO is null and throws an IllegalArgumentException if it is.
+     * It then queries the ActuatorRepository to retrieve the Actuator based on the provided IDVO.
+     * If the Actuator is found, it is wrapped in an Optional and returned. If the Actuator is not found, an empty
+     * Optional is returned.
+     * @param actuatorIDVO The Value Object representing the ID of the Actuator to retrieve.
+     * @return An Optional containing the Actuator if it is found, or an empty Optional if it is not found.
+     */
+
+    public Optional<Actuator> getActuatorById(ActuatorIDVO actuatorIDVO){
+        if (actuatorIDVO == null){
+            throw new IllegalArgumentException("ActuatorIDVO cannot be null");
+        }
+        if (actuatorRepository.isPresent(actuatorIDVO)){
+            return Optional.of(actuatorRepository.findById(actuatorIDVO));
+        }
+        return Optional.empty();
     }
 
     /**

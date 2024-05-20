@@ -3,6 +3,7 @@ package smarthome.service;
 import smarthome.domain.actuator.*;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -436,5 +437,107 @@ class ActuatorServiceImplTest {
 
         // Assert
         assertEquals(expected, result);
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is null, the getActuatorById method should throw an
+     * IllegalArgumentException.
+     * First it creates mocks of the DeviceRepository, ActuatorTypeRepository, ActuatorFactory and ActuatorRepository.
+     * Then, it creates an ActuatorServiceImpl instance with the mocked dependencies.
+     * Next, it creates an expected string with the error message.
+     * It then creates an exception variable that is assigned the result of the getActuatorById method called with a
+     * null argument and retrieves the message of the exception to a string variable.
+     * Finally, it asserts that the expected string is equal to the result of the exception message.
+     */
+    @Test
+    void givenNullActuatorIDVO_whenGetActuatorByIDCalled_thenReturnsIllegalArgumentException() {
+        //Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        String expected = "ActuatorIDVO cannot be null";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                actuatorService.getActuatorById(null));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is not present in the ActuatorRepository it returns an empty
+     * Optional.
+     * It creates mocks of the DeviceRepository, ActuatorTypeRepository, ActuatorFactory and ActuatorRepository.
+     * Next, it creates an ActuatorIDVO mock and sets the behavior of the ActuatorRepository to return false when
+     * the isPresent method is called with the ActuatorIDVO as an argument.
+     * Then, it creates an ActuatorServiceImpl instance with the mocked dependencies.
+     * After that, it creates an Optional variable and assigns the result of the getActuatorById method called with the
+     * ActuatorIDVO as an argument.
+     * Finally, it asserts that the Optional is empty.
+     */
+    @Test
+    void givenNonExistentActuatorIDVO_whenGetActuatorByIDCalled_thenReturnsEmptyOptional() {
+        //Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
+
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        //Act
+        Optional<Actuator> result = actuatorService.getActuatorById(actuatorIDVO);
+
+        //Assert
+        assertTrue(result.isEmpty());
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is present in the ActuatorRepository it returns an Optional with the
+     * Actuator.
+     * It creates mocks of the DeviceRepository, ActuatorTypeRepository, ActuatorFactory and ActuatorRepository.
+     * Next, it creates an ActuatorIDVO mock and an Actuator mock.
+     * Then, it sets the behavior of the ActuatorRepository to return true when the isPresent method is called with the
+     * ActuatorIDVO as an argument, and to return the actuator double when the findById method is called with the
+     * ActuatorIDVO as an argument.
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies.
+     * It then creates an Optional variable and assigns the result of the getActuatorById method called with the
+     * ActuatorIDVO as an argument.
+     * Finally, it asserts that the Optional is present and that is equal to the actuator double.
+     */
+    @Test
+    void givenExistentActuatorIDVO_whenGetActuatorByIDCalled_thenReturnsActuatorOptional() {
+        //Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        Actuator actuatorDouble = mock(Actuator.class);
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuatorDouble);
+
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        //Act
+        Optional<Actuator> result = actuatorService.getActuatorById(actuatorIDVO);
+
+        //Assert
+        assertTrue(result.isPresent());
+        assertEquals(actuatorDouble, result.get());
     }
 }

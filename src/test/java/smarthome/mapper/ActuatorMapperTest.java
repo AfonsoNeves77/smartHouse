@@ -53,7 +53,8 @@ class ActuatorMapperTest {
 
     /**
      * Test to verify that an exception is thrown when the ActuatorDTO object is null.
-     * Should throw an IllegalArgumentException with the message "Invalid DTO, ActuatorDTO cannot be null" since it fails to create a DeviceIDVO object.
+     * Should throw an IllegalArgumentException with the message "Invalid DTO, ActuatorDTO cannot be null" since
+     * it fails to create a DeviceIDVO object.
      */
 
     @Test
@@ -65,6 +66,34 @@ class ActuatorMapperTest {
 //        Assert
         String resultingMessage = exception.getMessage();
         assertEquals(expectedMessage, resultingMessage);
+    }
+
+    /**
+     * This test verifies that an exception is thrown if the actuatorDTO exists but the deviceId is null.
+     * It should throw an Illegal Argument Exception with the message "Device ID cannot be null" since it fails to
+     * create the DeviceIDVO object.
+     */
+    @Test
+    void givenActuatorDTOWithNullDeviceID_whenCreateDeviceIDVOMethodCall_thenThrowsException() {
+        //Arrange
+        String expectedActuatorName = "Smart Thermostat";
+        String actuatorType = "Thermostat";
+        String deviceID = null;
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder()
+                .actuatorName(expectedActuatorName)
+                .actuatorType(actuatorType)
+                .deviceID(deviceID)
+                .build();
+
+        String expected = "Device ID cannot be null";
+
+        //Act
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createDeviceIDVO(actuatorDTO));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
     }
 
     /**
@@ -399,11 +428,17 @@ class ActuatorMapperTest {
     void givenNullActuator_whenDomainToDtoMethodCalled_thenThrowsException() {
         // Arrange
         Actuator actuator = null;
+        String expected = "Invalid actuator, DTO cannot be created";
+
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.domainToDTO(actuator));
+        String result = exception.getMessage();
+
         // Assert
-        assertEquals("Invalid actuator, DTO cannot be created", exception.getMessage());
+        assertEquals(expected, result);
     }
+
+
 
     /**
      * This test verifies that the domainToDTO method returns an ActuatorDTO object with the correct values when
@@ -414,17 +449,21 @@ class ActuatorMapperTest {
     @Test
     void givenActuatorWithNoSettings_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
         // Arrange
-        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
-        when(actuatorIDVO.getID()).thenReturn(actuatorID);
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
         String actuatorName = "Smart Thermostat";
-        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         String actuatorType = "Thermostat";
+        String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
         when(deviceIDVO.getID()).thenReturn(deviceID);
 
         Actuator actuator = mock(Actuator.class);
@@ -453,25 +492,29 @@ class ActuatorMapperTest {
     @Test
     void givenActuatorWithSettingsButNoPrecision_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
         // Arrange
-        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
-        when(actuatorIDVO.getID()).thenReturn(actuatorID);
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
         String actuatorName = "Smart Thermostat";
-        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         String actuatorType = "Thermostat";
+        String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
         when(deviceIDVO.getID()).thenReturn(deviceID);
-        Settings settings = mock(Settings.class);
+
         Integer lowerLimit = 10;
         Integer upperLimit = 30;
         Integer[] values = {lowerLimit, upperLimit};
-        when(settings.getValue()).thenReturn(values);
-        when(settings.getValue()).thenReturn(values);
 
+        Settings settings = mock(Settings.class);
+        when(settings.getValue()).thenReturn(values);
 
         Actuator actuator = mock(Actuator.class);
         when(actuator.getId()).thenReturn(actuatorIDVO);
@@ -504,23 +547,29 @@ class ActuatorMapperTest {
     @Test
     void givenActuatorWithSettings_whenDomainToDtoMethodCalled_thenReturnActuatorDTO() {
         // Arrange
-        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         String actuatorID = "123e4567-e89b-12d3-a456-426614174000";
-        when(actuatorIDVO.getID()).thenReturn(actuatorID);
-        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
         String actuatorName = "Smart Thermostat";
-        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
-        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         String actuatorType = "Thermostat";
+        String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        when(actuatorIDVO.getID()).thenReturn(actuatorID);
+
+        ActuatorNameVO actuatorNameVO = mock(ActuatorNameVO.class);
+        when(actuatorNameVO.getValue()).thenReturn(actuatorName);
+
+        ActuatorTypeIDVO actuatorTypeIDVO = mock(ActuatorTypeIDVO.class);
         when(actuatorTypeIDVO.getID()).thenReturn(actuatorType);
+
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String deviceID = "123e4567-e89b-12d3-a456-426614174000";
         when(deviceIDVO.getID()).thenReturn(deviceID);
-        Settings settings = mock(Settings.class);
+
         Double lowerLimit = 10.0;
         Double upperLimit = 30.0;
         Double precision = 0.1;
         Double[] values = {lowerLimit, upperLimit, precision};
+
+        Settings settings = mock(Settings.class);
         when(settings.getValue()).thenReturn(values);
 
 
@@ -545,5 +594,80 @@ class ActuatorMapperTest {
         assertEquals(lowerLimit.toString(), actuatorDTO.getLowerLimit());
         assertEquals(upperLimit.toString(), actuatorDTO.getUpperLimit());
         assertEquals(precision.toString(), actuatorDTO.getPrecision());
+    }
+
+    /**
+     * This test verifies that if the createActuatorIDVO method receives a null actuatorId, it throws an
+     * IllegalArgumentException.
+     * First it sets tha actuatorID string to null and defines the expected message.
+     * Then it creates an exception by calling the createActuatorIDVO method with the null actuatorID string, and
+     * defines a result string with the message retrieved from the exception.
+     * Finally, it compares the expected message with the result message.
+     */
+    @Test
+    void givenNullActuatorId_whenCreateActuatorIDVOMethodCalled_thenReturnIllegalArgumentExpression() {
+        // Arrange
+        String actuatorId = null;
+        String expected = "ActuatorID cannot be null";
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createActuatorIDVO(actuatorId));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * This test verifies that if the createActuatorIDVO method receives an invalid actuatorId, it throws an
+     * IllegalArgumentException.
+     * First it sets tha actuatorID string to "invalid" and defines the expected message.
+     * Then it creates an exception by calling the createActuatorIDVO method with the invalid actuatorID string, and
+     * defines a result string with the message retrieved from the exception.
+     * Finally, it compares the expected message with the result message.
+     */
+    @Test
+    void givenInvalidActuatorId_whenCreateActuatorIDVOMethodCalled_theReturnIllegalArgumentExpression() {
+        //Arrange
+        String actuatorId = "invalid";
+        String expected = "Invalid UUID string: invalid";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                ActuatorMapper.createActuatorIDVO(actuatorId));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * This test verifies that the createActuatorIDVO method returns an ActuatorIDVO object with the correct ID when
+     * a valid actuatorId is received. The actuatorId string is set to a valid UUID string and the expected size of
+     * the list of mocked construction is set to one.
+     * Then, the construction is mocked and the behaviour of the ActuatorIDVO object is set to return a string equal to
+     * the actuatorId's string.
+     * After this, the createActuatorIDVO method is called with the actuatorId string and the ID of the
+     * ActuatorIDVO object retrieved and compared with the expected ID, as well as the size of the list of mocked
+     * constructions.
+     */
+    @Test
+    void givenActuatorId_whenCreateActuatorIDVOMethodCalled_thenReturnActuatorIDVO() {
+        // Arrange
+        String actuatorId = "123e4567-e89b-12d3-a456-426614174002";
+        int listSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatuorIDVO = mockConstruction(ActuatorIDVO.class, (mock, context) ->
+                when(mock.getID()).thenReturn("123e4567-e89b-12d3-a456-426614174002"))) {
+
+            // Act
+            ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorId);
+            List<ActuatorIDVO> listOfMockedActuatorIDVO = mockedActuatuorIDVO.constructed();
+
+            // Assert
+
+            assertEquals(listSize, listOfMockedActuatorIDVO.size());
+            assertEquals(actuatorId, actuatorIDVO.getID());
+        }
     }
 }
