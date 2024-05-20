@@ -87,9 +87,9 @@ class LogCTRLWebTest {
 
         // Create the Json body
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).toString();
+        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
@@ -158,9 +158,9 @@ class LogCTRLWebTest {
 
         // Create the Json body
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).toString();
+        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
         String timeConfigJson = String.format(
                 "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\"}",
@@ -192,11 +192,11 @@ class LogCTRLWebTest {
 
         // Create the Json body
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).toString();
+        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
-        String initialTimeFail = LocalTime.now().toString();
+        String initialTimeFail = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
         String timeConfigJson1 = String.format(
                 "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\"}",
@@ -279,9 +279,9 @@ class LogCTRLWebTest {
 
         // Create the Json body
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).toString();
+        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
@@ -374,9 +374,9 @@ class LogCTRLWebTest {
         Iterable<Log> inLog = List.of(log2);
 
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).toString();
+        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -472,9 +472,9 @@ class LogCTRLWebTest {
         Iterable<Log> inLog = List.of(log2);
 
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).toString();
+        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         String deltaMin = "1";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -553,9 +553,9 @@ class LogCTRLWebTest {
         when(deviceRepository.findById(inDeviceIDVO)).thenReturn(inDevice);
 
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).toString();
+        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -630,9 +630,9 @@ class LogCTRLWebTest {
         DeviceIDVO inDeviceIDVO = inDevice.getId();
 
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).toString();
+        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         String deltaMin = "5";
 
 
@@ -712,9 +712,9 @@ class LogCTRLWebTest {
         when(deviceRepository.findById(inDeviceIDVO)).thenReturn(inDevice);
 
         String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).toString();
+        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
         String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);

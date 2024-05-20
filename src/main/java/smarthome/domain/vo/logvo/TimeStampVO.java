@@ -4,6 +4,7 @@ import smarthome.domain.vo.ValueObject;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 /**
@@ -24,7 +25,8 @@ public class TimeStampVO implements ValueObject<LocalDateTime> {
             throw new IllegalArgumentException(ERROR);
         }
         try{
-            this.timeStamp = parseDateTime(date, time);
+            LocalDateTime timeStampToTruncate = parseDateTime(date, time);
+            this.timeStamp = timeStampToTruncate.truncatedTo(ChronoUnit.SECONDS);
         } catch (DateTimeException e){
             throw new IllegalArgumentException(ERROR);
         }
@@ -39,7 +41,7 @@ public class TimeStampVO implements ValueObject<LocalDateTime> {
         if(localDateTime==null){
             throw new IllegalArgumentException(ERROR);
         }
-        this.timeStamp = localDateTime;
+        this.timeStamp = localDateTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
     /**
