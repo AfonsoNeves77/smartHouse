@@ -6,22 +6,24 @@ import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
+import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.logvo.TimeStampVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
-import smarthome.domain.vo.DeltaVO;
-import smarthome.domain.vo.logvo.TimeStampVO;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static java.lang.Integer.parseInt;
 
 @Service
 public class LogServiceImpl implements LogService {
@@ -304,4 +306,18 @@ public class LogServiceImpl implements LogService {
     }
 
 
+    /**
+     * Reads the sensor ID from a file.
+     *
+     * @return The sensor ID read from the file as String.
+     */
+    private String readSensorIdFromFile() {
+        String sensorId = "";
+        try {
+            sensorId = new String(Files.readAllBytes(Paths.get("sensorId.txt")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sensorId;
+    }
 }

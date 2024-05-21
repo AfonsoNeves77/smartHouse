@@ -8,6 +8,7 @@ import smarthome.domain.device.Device;
 import smarthome.domain.house.House;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.AveragePowerConsumptionSensor;
+import smarthome.domain.sensor.EnergyConsumptionSensor;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.TemperatureSensor;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
@@ -21,6 +22,10 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.persistence.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 /**
@@ -48,6 +53,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
     SensorRepository sensorRepository;
 
     ActuatorRepository actuatorRepository;
+
 
     public ApplicationBootstrap(HouseRepository houseRepository, RoomRepository roomRepository, DeviceRepository deviceRepository,
                                 SensorRepository sensorRepository, ActuatorRepository actuatorRepository){
@@ -112,10 +118,15 @@ public class ApplicationBootstrap implements CommandLineRunner {
                 new DeviceModelVO("RB-370"),
                 new RoomIDVO(UUID.fromString(indoorRoomId)));
 
+        Device gridPowerMeter = new Device(new DeviceNameVO("Grid Power Meter"),
+                new DeviceModelVO("e-Redes"),
+                new RoomIDVO(UUID.fromString(indoorRoomId)));
+
         deviceRepository.save(powerMeter);
         deviceRepository.save(outdoorDevice);
         deviceRepository.save(indoorDeviceOne);
         deviceRepository.save(indoorDeviceTwo);
+        deviceRepository.save(gridPowerMeter);
 
         //Add Temperature Sensors and Power Consumption Sensor:
         String powerMeterDeviceId = powerMeter.getId().getID();
@@ -138,9 +149,23 @@ public class ApplicationBootstrap implements CommandLineRunner {
                 new DeviceIDVO(UUID.fromString(indoorDevIdOne)),
                 new SensorTypeIDVO("TemperatureSensor"));
 
+        EnergyConsumptionSensor energyConsumptionSensor = new EnergyConsumptionSensor(
+                new SensorNameVO("Energy Consumption Sensor"),
+                new DeviceIDVO(UUID.fromString(gridPowerMeter.getId().getID())),
+                new SensorTypeIDVO("EnergyConsumptionSensor"));
+
         sensorRepository.save(avgPowerConsumptionSensor);
         sensorRepository.save(outTempSensor);
         sensorRepository.save(inTempSensor);
+        sensorRepository.save(energyConsumptionSensor);
+
+        String sensorId = avgPowerConsumptionSensor.getId().getID();
+        try {
+            Files.write(Paths.get("sensorId.txt"), sensorId.getBytes(), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         //Add Roller Blind Actuator:
         Actuator rollerBlindActuator = new RollerBlindActuator(
