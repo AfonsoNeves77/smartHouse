@@ -1,6 +1,7 @@
 package smarthome.mapper;
 
 import smarthome.domain.room.Room;
+import smarthome.mapper.dto.DeviceDTO;
 import smarthome.mapper.dto.RoomDTO;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
@@ -9,6 +10,7 @@ import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import smarthome.mapper.dto.SensorDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,15 @@ class RoomMapperTest {
         roomLength = 5.6;
         roomWidth = 3.2;
         houseID = "00000000-0000-0000-0000-000000000000";
-        roomDTO = new RoomDTO(roomID, roomName, floor, roomHeight, roomLength, roomWidth, houseID);
+        roomDTO = RoomDTO.builder()
+                .id(roomID)
+                .roomName(roomName)
+                .floor(floor)
+                .roomHeight(roomHeight)
+                .roomLength(roomLength)
+                .roomWidth(roomWidth)
+                .houseID(houseID)
+                .build();
     }
 
 
@@ -160,7 +170,15 @@ class RoomMapperTest {
         double roomLength1 = 0;
         double roomWidth1 = 0;
         String houseID1 = "00000000-0000-0000-0000-000000000000";
-        RoomDTO room1DTO = new RoomDTO(roomID1, roomName1, floor1, roomHeight1, roomLength1, roomWidth1, houseID1);
+        RoomDTO room1DTO = RoomDTO.builder()
+                .id(roomID1)
+                .roomName(roomName1)
+                .floor(floor1)
+                .roomHeight(roomHeight1)
+                .roomLength(roomLength1)
+                .roomWidth(roomWidth1)
+                .houseID(houseID1)
+                .build();
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
@@ -175,7 +193,7 @@ class RoomMapperTest {
      * thrown when creating a RoomDimensionsVO object.
      */
     @Test
-    void whenCreateRoomDimensionsVOisCalledWithInvalidBorderDTOValues_ThrowsIllegalArgumentException(){
+    void whenCreateRoomDimensionsVOisCalledWithInvalidBorderDTOValues_ThrowsIllegalArgumentException() {
         // Arrange
         String roomID1 = "123e4567-e89b-12d3-a456-426655440000";
         String roomName1 = "BedRoom";
@@ -184,7 +202,15 @@ class RoomMapperTest {
         double roomLength1 = -1;
         double roomWidth1 = -1;
         String houseID1 = "00000000-0000-0000-0000-000000000000";
-        RoomDTO room1DTO = new RoomDTO(roomID1, roomName1, floor1, roomHeight1, roomLength1, roomWidth1, houseID1);
+        RoomDTO room1DTO = RoomDTO.builder()
+                .id(roomID1)
+                .roomName(roomName1)
+                .floor(floor1)
+                .roomHeight(roomHeight1)
+                .roomLength(roomLength1)
+                .roomWidth(roomWidth1)
+                .houseID(houseID1)
+                .build();
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
@@ -207,7 +233,15 @@ class RoomMapperTest {
         double roomLength1 = 1;
         double roomWidth1 = 1;
         String houseID1 = "00000000-0000-0000-0000-000000000000";
-        RoomDTO room1DTO = new RoomDTO(roomID1, roomName1, floor1, roomHeight1, roomLength1, roomWidth1, houseID1);
+        RoomDTO room1DTO = RoomDTO.builder()
+                .id(roomID1)
+                .roomName(roomName1)
+                .floor(floor1)
+                .roomHeight(roomHeight1)
+                .roomLength(roomLength1)
+                .roomWidth(roomWidth1)
+                .houseID(houseID1)
+                .build();
 
         // Act
         RoomDimensionsVO dimensionsVO = RoomMapper.createRoomDimensionsVO(room1DTO);
@@ -215,8 +249,6 @@ class RoomMapperTest {
         // Assert
         assertNotNull(dimensionsVO);
     }
-
-
 
 
     /**
@@ -233,7 +265,6 @@ class RoomMapperTest {
         // Assert
         assertEquals(expected, result.getID());
     }
-
 
 
     /**
@@ -291,7 +322,7 @@ class RoomMapperTest {
      * to a list of RoomDTO objects with the same size
      */
     @Test
-    void whenDomainToDTOisCalled_ThenExpectedListOfRoomsDTOExpectedSizeIsOf1(){
+    void whenDomainToDTOisCalled_ThenExpectedListOfRoomsDTOExpectedSizeIsOf1() {
         // Arrange
         RoomNameVO nameDouble = mock(RoomNameVO.class);
         RoomFloorVO floorDouble = mock(RoomFloorVO.class);
@@ -323,10 +354,10 @@ class RoomMapperTest {
      * to a list of RoomDTO objects with the same size
      */
     @Test
-    void whenDomainToDTOisCalled_ThenExpectedListOfRoomsDTOExpectedSizeIsOf2(){
+    void whenDomainToDTOisCalled_ThenExpectedListOfRoomsDTOExpectedSizeIsOf2() {
         // Arrange
 
-            // Mock dependencies inside Room.
+        // Mock dependencies inside Room.
         RoomNameVO nameDouble = mock(RoomNameVO.class);
         RoomFloorVO floorDouble = mock(RoomFloorVO.class);
         RoomDimensionsVO roomDimensionsDouble = mock(RoomDimensionsVO.class);
@@ -338,7 +369,7 @@ class RoomMapperTest {
         HouseIDVO houseIDDouble2 = mock(HouseIDVO.class);
         RoomIDVO roomIDDouble2 = mock(RoomIDVO.class);
 
-            // Mock One Room and stub to return mocked VOs.
+        // Mock One Room and stub to return mocked VOs.
         Room roomDouble = mock(Room.class);
         when(roomDouble.getFloor()).thenReturn(floorDouble);
         when(roomDouble.getRoomDimensions()).thenReturn(roomDimensionsDouble);
@@ -346,7 +377,7 @@ class RoomMapperTest {
         when(roomDouble.getHouseID()).thenReturn(houseIDDouble);
         when(roomDouble.getId()).thenReturn(roomIDDouble);
 
-            // Mock Another Room and stub to return mocked VOs.
+        // Mock Another Room and stub to return mocked VOs.
         Room roomDouble2 = mock(Room.class);
         when(roomDouble2.getFloor()).thenReturn(floorDouble2);
         when(roomDouble2.getRoomDimensions()).thenReturn(roomDimensionsDouble2);
@@ -354,7 +385,7 @@ class RoomMapperTest {
         when(roomDouble2.getHouseID()).thenReturn(houseIDDouble2);
         when(roomDouble2.getId()).thenReturn(roomIDDouble2);
 
-            // Create a list of Rooms and add the mocked Rooms.
+        // Create a list of Rooms and add the mocked Rooms.
         List<Room> listOfRooms = new ArrayList<>();
         listOfRooms.add(roomDouble);
         listOfRooms.add(roomDouble2);
@@ -380,14 +411,14 @@ class RoomMapperTest {
 
         // Arrange
 
-            // Mock dependencies inside Room
+        // Mock dependencies inside Room
         RoomFloorVO mockRoomFloorVO = mock(RoomFloorVO.class);
         RoomDimensionsVO mockRoomDimensionsVO = mock(RoomDimensionsVO.class);
         RoomNameVO mockRoomNameVO = mock(RoomNameVO.class);
         RoomIDVO mockRoomIDVO = mock(RoomIDVO.class);
         HouseIDVO mockHouseIDVO = mock(HouseIDVO.class);
 
-            // Arrange stubbing for the methods to return specific values
+        // Arrange stubbing for the methods to return specific values
         when(mockRoomFloorVO.getValue()).thenReturn(2);
         when(mockRoomDimensionsVO.getRoomLength()).thenReturn(5.6);
         when(mockRoomDimensionsVO.getRoomWidth()).thenReturn(3.2);
@@ -396,7 +427,7 @@ class RoomMapperTest {
         when(mockRoomIDVO.getID()).thenReturn("123e4567-e89b-12d3-a456-426655440000");
         when(mockHouseIDVO.getID()).thenReturn("00000000-0000-0000-0000-000000000000");
 
-            //  Mock Room object and stub to return mocked VO's.
+        //  Mock Room object and stub to return mocked VO's.
         Room roomDouble = mock(Room.class);
         when(roomDouble.getFloor()).thenReturn(mockRoomFloorVO);
         when(roomDouble.getRoomDimensions()).thenReturn(mockRoomDimensionsVO);
@@ -404,7 +435,7 @@ class RoomMapperTest {
         when(roomDouble.getId()).thenReturn(mockRoomIDVO);
         when(roomDouble.getHouseID()).thenReturn(mockHouseIDVO);
 
-            // Expected values are in BeforeEach Setup
+        // Expected values are in BeforeEach Setup
 
         // Act
         List<RoomDTO> result = RoomMapper.domainToDTO(List.of(roomDouble));
@@ -434,7 +465,15 @@ class RoomMapperTest {
         double roomLength = 0;
         double roomWidth = 0;
         String houseID = "00000000-0000-0000-0000-000000000000";
-        RoomDTO roomDTOWithZeroDimensions = new RoomDTO(roomID, roomName, floor, roomHeight, roomLength, roomWidth, houseID);
+        RoomDTO roomDTOWithZeroDimensions = RoomDTO.builder()
+                .id(roomID)
+                .roomName(roomName)
+                .floor(floor)
+                .roomHeight(roomHeight)
+                .roomLength(roomLength)
+                .roomWidth(roomWidth)
+                .houseID(houseID)
+                .build();
         String expectedMessage = "RoomDTO is invalid";
 
         // Act
@@ -536,15 +575,58 @@ class RoomMapperTest {
 
     /**
      * Helper method to assert that an IllegalArgumentException is thrown for given room dimensions, aiding in code reuse across multiple tests.
-     * @param height Room height to test.
-     * @param length Room length to test.
-     * @param width Room width to test.
+     *
+     * @param height  Room height to test.
+     * @param length  Room length to test.
+     * @param width   Room width to test.
      * @param message Error message expected when an exception is thrown.
      */
     private void assertThrowsIllegalArgumentExceptionForRoomDimensions(double height, double length, double width, String message) {
-        RoomDTO roomDTO = new RoomDTO("id", "name", 2, height, length, width, "houseID");
+        RoomDTO roomDTO = RoomDTO.builder()
+                .id("id")
+                .roomName("name")
+                .floor(2)
+                .roomHeight(height)
+                .roomLength(length)
+                .roomWidth(width)
+                .houseID("houseID")
+                .build();
         Exception exception = assertThrows(IllegalArgumentException.class, () -> RoomMapper.createRoomDimensionsVO(roomDTO));
         assertEquals(ERRORMESSAGE, exception.getMessage(), message);
     }
 
+    @Test
+    void testBuilderToString() {
+        // Arrange
+        RoomDTO.RoomDTOBuilder builder = RoomDTO.builder()
+                .id("id")
+                .roomName("name")
+                .floor(2)
+                .roomHeight(0)
+                .roomLength(1)
+                .roomWidth(2)
+                .houseID("houseID");
+
+        // Act
+        String result = builder.toString();
+
+        // Assert
+        String expected = "RoomDTO.RoomDTOBuilder(id=id, roomName=name, floor=2, roomHeight=0.0, roomLength=1.0, roomWidth=2.0, houseID=houseID)";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void noArgsConstructor_ShouldCreateEmptyObject() {
+        //Act
+        RoomDTO roomDTO = new RoomDTO();
+
+        //Assert
+        assertNull(roomDTO.getId());
+        assertNull(roomDTO.getRoomName());
+        assertNull(roomDTO.getHouseID());
+        assertEquals(roomDTO.getRoomWidth(),0);
+        assertEquals(roomDTO.getRoomHeight(),0);
+        assertEquals(roomDTO.getRoomLength(),0);
+        assertEquals(roomDTO.getFloor(),0);
+    }
 }

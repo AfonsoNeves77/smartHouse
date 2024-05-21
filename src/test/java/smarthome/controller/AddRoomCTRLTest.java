@@ -309,4 +309,101 @@ class AddRoomCTRLTest {
         // Assert
         assertFalse(result);
     }
+
+    /**
+     * Test case to verify that when the method to add a room is called and the addition of the room fails to save it,
+     * the method should return false.
+     *
+     * The test performs the following steps:
+     * 1. Initializes a unique house ID.
+     * 2. Initializes a room and adds it to a list of rooms.
+     * 3. Mocks RoomRepository and HouseRepository objects with predefined behaviors for their methods.
+     * 4. Initializes service and factory objects required for the test.
+     * 5. Initializes location information including the address and GPS coordinates.
+     * 6. Calls the method to add a house with the provided location information.
+     * 7. Initializes a RoomDTO object with room details.
+     * 8. Initializes RoomServiceImpl.
+     * 9. Initializes the controller for adding a room.
+     * 10. Calls the method to add a room.
+     * 11. Asserts that the result of adding the room is false.
+     */
+    @Test
+    void whenAddRoomIsCalledAndAddRoomFailsToSaveTheRoom_ThenReturnsFalse() {
+
+        // Arrange
+        // Initializing houseID
+        HouseIDVO houseID = new HouseIDVO(UUID.randomUUID());
+
+        // Initializing room1 and add to a List
+        List<Room> roomList = new ArrayList<>();
+        Iterable<Room> roomIterable = roomList;
+        RoomNameVO roomName = new RoomNameVO("bedRoom");
+        RoomFloorVO floor = new RoomFloorVO(2);
+        RoomLengthVO roomLenght = new RoomLengthVO(2.2);
+        RoomWidthVO roomWidth = new RoomWidthVO(5.0);
+        RoomHeightVO roomHeight = new RoomHeightVO(4.5);
+        RoomDimensionsVO dimensions1 = new RoomDimensionsVO(roomLenght,roomWidth,roomHeight);
+        Room room1 = new Room(roomName,floor, dimensions1, houseID);
+        roomList.add(room1);
+
+        // Mocks to RoomRepository and HouseRepository with predefined behaviors for its methods
+        RoomRepository roomRepositoryDouble = mock(RoomRepository.class);
+        when(roomRepositoryDouble.save(any(Room.class))).thenReturn(false);
+        when(roomRepositoryDouble.findAll()).thenReturn(roomIterable);
+        HouseRepository houseRepositoryDouble = mock(HouseRepository.class);
+        when(houseRepositoryDouble.getFirstHouseIDVO()).thenReturn(houseID);
+        when(houseRepositoryDouble.save(any(House.class))).thenReturn(true);
+
+        // Initializing RoomFactoryImpl
+        RoomFactoryImpl roomFactoryImpl = new RoomFactoryImpl();
+
+        // Initializing HouseServiceImpl
+        HouseFactoryImpl houseFactoryImpl = new HouseFactoryImpl();
+        HouseServiceImpl houseServiceImpl = new HouseServiceImpl(houseRepositoryDouble, houseFactoryImpl);
+
+        // Initializing LocationVO
+        String door = "1";
+        DoorVO doorVO = new DoorVO(door);
+        String street = "Rua de Santa Catarina";
+        StreetVO streetVO = new StreetVO(street);
+        String city = "Porto";
+        CityVO cityVO = new CityVO(city);
+        String country = "Portugal";
+        CountryVO countryVO = new CountryVO(country);
+        String postalCode = "PT-4000-009";
+        PostalCodeVO postalCodeVO = new PostalCodeVO(postalCode);
+        double latitude = 41.14961;
+        LatitudeVO latitudeVO = new LatitudeVO(latitude);
+        double longitude = -8.61099;
+        LongitudeVO longitudeVO = new LongitudeVO(longitude);
+        AddressVO addressVO = new AddressVO(doorVO, streetVO, cityVO, countryVO, postalCodeVO);
+        GpsVO gspVO = new GpsVO(latitudeVO, longitudeVO);
+        LocationVO locationVO = new LocationVO(addressVO, gspVO);
+
+        //AddHouse called in HouseServiceImpl
+        houseServiceImpl.addHouse(locationVO);
+
+        //Initializing RoomDTO
+        String roomName1 = "bedRoom";
+        int floor1 = 2;
+        double roomHeight1 = 4.5;
+        double roomLength1 = 2.2;
+        double roomWidth1 = 5.0;
+        RoomDTO roomDTO = new RoomDTO(null, roomName1,floor1,roomHeight1, roomLength1, roomWidth1, null);
+
+        //Initializing RoomServiceImpl
+        RoomServiceImpl roomServiceImpl = new RoomServiceImpl(houseRepositoryDouble, roomRepositoryDouble, roomFactoryImpl);
+
+        //Initializing controller
+        AddRoomCTRL addRoomCTRL = new AddRoomCTRL(roomServiceImpl);
+
+        // Act
+        boolean result = addRoomCTRL.addRoom(roomDTO);
+
+        // Assert
+
+
+        assertFalse(result);
+
+    }
 }

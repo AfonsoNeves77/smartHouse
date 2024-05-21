@@ -6,6 +6,7 @@ import smarthome.domain.room.RoomFactory;
 import smarthome.domain.vo.housevo.HouseIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomFloorVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.roomvo.RoomNameVO;
 import smarthome.persistence.HouseRepository;
 import smarthome.persistence.RoomRepository;
@@ -20,6 +21,7 @@ public class RoomServiceImpl implements RoomService {
     private final HouseRepository houseRepository;
     private final RoomRepository roomRepository;
     private final RoomFactory roomFactory;
+    private static final String NOT_PRESENT_MESSAGE = " is not present.";
 
     /**
      * Constructor for RoomService. It takes a RoomRepository and a RoomFactory as parameters and encapsulates them.
@@ -86,4 +88,21 @@ public class RoomServiceImpl implements RoomService {
         }
         return false;
     }
+    /**
+     * This method checks if the room with the given roomId exists in the repository. If the room
+     * is found, it returns an Optional containing the Room object. If the room is not found,
+     * it returns an empty Optional.
+     *
+     * @param roomId the ID of the room to be found, represented by RoomIDVO.
+     * @return an Optional containing the Room if found, otherwise an empty Optional.
+     */
+
+    public Optional<Room> findById(RoomIDVO roomId) {
+        if(!roomRepository.isPresent(roomId)){
+            return Optional.empty();
+        }
+        return Optional.of(roomRepository.findById(roomId));
+    }
+
 }
+

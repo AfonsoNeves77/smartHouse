@@ -19,6 +19,8 @@ import java.util.UUID;
  * Each public static method in this class corresponds to a specific component of a Room, allowing for
  * targeted conversion of individual attributes between the Room and RoomDTO representations.
  */
+
+
 public class RoomMapper {
 
     private static final String ERRORMESSAGE = "RoomDTO is invalid";
@@ -135,7 +137,7 @@ public class RoomMapper {
      * @param room  Room object to be converted.
      * @return  RoomDTO object.
      */
-    private static RoomDTO convertRoomToDTO (Room room){
+    public static RoomDTO convertRoomToDTO (Room room){
         int roomFloor = room.getFloor().getValue();
         double roomHeight = room.getRoomDimensions().getRoomHeight();
         double roomLength = room.getRoomDimensions().getRoomLength();

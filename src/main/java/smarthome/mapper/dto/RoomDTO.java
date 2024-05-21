@@ -12,7 +12,6 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @Getter
 @Builder
-@EqualsAndHashCode (callSuper = false)
 public class RoomDTO extends RepresentationModel<RoomDTO> {
     private String id;
     private String roomName;
