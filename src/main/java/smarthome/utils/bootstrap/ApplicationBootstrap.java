@@ -22,10 +22,6 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.persistence.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 /**
@@ -159,12 +155,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
         sensorRepository.save(inTempSensor);
         sensorRepository.save(energyConsumptionSensor);
 
-        String sensorId = avgPowerConsumptionSensor.getId().getID();
-        try {
-            Files.write(Paths.get("sensorId.txt"), sensorId.getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.setProperty("Grid Power Meter sensor", energyConsumptionSensor.getId().getID());
 
 
         //Add Roller Blind Actuator:
