@@ -14,6 +14,9 @@ import smarthome.domain.device.Device;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.TemperatureSensor;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.domain.vo.sensorvo.SensorNameVO;
@@ -23,6 +26,8 @@ import smarthome.persistence.SensorRepository;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,9 +53,27 @@ public class SensorCTRLWebTest {
     private SensorRepository sensorRepository;
 
     /**
+     * This test verifies that when a SensorCTRLWeb is constructed with a null SensorService,
+     * an IllegalArgumentException is thrown with the expected message.
+     */
+    @Test
+    void givenNullSensorService_whenConstructingSensorCTRLWeb_thenThrowIllegalArgumentException() {
+        //Arrange
+        String expected = "Invalid service";
+
+        //Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new SensorCTRLWeb(null));
+        String result = exception.getMessage();
+
+        //Assert
+        assertEquals(expected, result);
+
+    }
+
+    /**
      * This test verifies that when a GET request is made with a valid sensor ID,
      * the response contains the expected sensor data and a status of OK (200).
-     * The test sets up a mock sensor with a known ID, name, device ID, and sensor type ID.
+     * The test sets up a sensor with a valid ID, name, device ID, and sensor type ID.
      * It then expects that the sensor repository will return this sensor when queried with the sensor ID.
      * The test performs a GET request with the sensor ID and asserts that the response status is OK and the body contains the expected sensor data.
      */
@@ -91,12 +114,12 @@ public class SensorCTRLWebTest {
     /**
      * This test verifies that when a GET request is made with a sensor ID that does not exist in the sensor repository,
      * the response status is NOT FOUND (404).
-     * The test sets up a mock sensor with a known ID, name, device ID, and sensor type ID.
+     * The test sets up a  sensor with a valid ID, name, device ID, and sensor type ID.
      * It then expects that the sensor repository will return false when queried with the sensor ID.
      * The test performs a GET request with the sensor ID and asserts that the response status is NOT FOUND.
      */
     @Test
-    void givenNotSavedDeviceID_whenGetSensorByID_thenReturnNotFoundCode() throws Exception {
+    void givenNotSavedSensorID_whenGetSensorByID_thenReturnNotFoundCode() throws Exception {
         //Arrange
         String sensorID = "1fa85f64-5717-4562-b3fc-2c963f66afa6";
         String sensorName = "Sensor1";
@@ -126,7 +149,7 @@ public class SensorCTRLWebTest {
      * The test performs a GET request with a null sensor ID and asserts that the response status is BAD REQUEST.
      */
     @Test
-    void givenInvalidDeviceId_whenGetSensorByID_thenReturnBadRequestCode() throws Exception {
+    void givenInvalidSensorId_whenGetSensorByID_thenReturnBadRequestCode() throws Exception {
         //Arrange
         SensorIDVO sensorIDVO = null;
 
@@ -142,12 +165,12 @@ public class SensorCTRLWebTest {
     /**
      * This test verifies that when a POST request is made with a valid sensor DTO and the sensor is successfully saved,
      * the response contains the expected sensor data and a status of CREATED (201).
-     * The test sets up a mock sensor DTO with a known name, device ID, and sensor type ID.
+     * The test sets up a sensor DTO with a valid name, device ID, and sensor type ID.
      * It then expects that the sensor repository will return true when the sensor is saved.
      * The test performs a POST request with the sensor DTO and asserts that the response status is CREATED and the body contains the expected sensor data.
      */
     @Test
-    void givenValidDeviceDTO_whenAddSensorToDevice_thenReturnCreatedCode() throws Exception {
+    void givenValidSensorDTO_whenAddSensorToDevice_thenReturnCreatedCode() throws Exception {
         //Arrange
         String sensorName = "Sensor1";
         String deviceID = "1fa85f64-5717-4562-b3fc-2c963f66afa6";
@@ -190,7 +213,7 @@ public class SensorCTRLWebTest {
     /**
      * This test verifies that when a POST request is made with a valid sensor DTO but the device does not exist in the device repository,
      * the response status is BAD REQUEST (400).
-     * The test sets up a mock sensor DTO with a known name, device ID, and sensor type ID.
+     * The test sets up a sensor DTO with a valid name, device ID, and sensor type ID.
      * It then expects that the device repository will return false when queried with the device ID.
      * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
      */
@@ -226,11 +249,11 @@ public class SensorCTRLWebTest {
     /**
      * This test verifies that when a POST request is made with an invalid sensor DTO (null sensor type ID in this case),
      * the response status is BAD REQUEST (400).
-     * The test sets up a mock sensor DTO with a known name and device ID, but a null sensor type ID.
+     * The test sets up a sensor DTO with a valid name and device ID, but a null sensor type ID.
      * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
      */
     @Test
-    void givenInvalidDeviceDTO_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+    void givenInvalidSensorDTO_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
         //Arrange
         String sensorName = "Sensor1";
         String deviceID = "2fa85f64-5717-4562-b3fc-2c963f66afa6";
@@ -252,14 +275,216 @@ public class SensorCTRLWebTest {
     }
 
     /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (null sensor name in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with a null sensor name, but valid device ID and sensor type ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenNullSensorName_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String deviceID = "2fa85f64-5717-4562-b3fc-2c963f66afa6";
+        String sensorTypeID = "TemperatureSensor";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(null)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (null device ID in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with a valid sensor name and sensor type ID, but a null device ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenNullDeviceId_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = "Sensor1";
+        String sensorTypeID = "TemperatureSensor";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(null)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (empty sensor name in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with an empty sensor name, but valid device ID and sensor type ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenInvalidSensorName_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = " ";
+        String deviceID = "2fa85f64-5717-4562-b3fc-2c963f66afa6";
+        String sensorTypeID = "TemperatureSensor";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (empty device ID in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with a valid sensor name and sensor type ID, but an empty device ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenInvalidDeviceId_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = "Sensor1";
+        String deviceID = "zzz";
+        String sensorTypeID = "TemperatureSensor";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (empty sensor type ID in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with a valid sensor name and device ID, but an empty sensor type ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenInvalidSensorType_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = "Sensor1";
+        String deviceID = "2fa85f64-5717-4562-b3fc-2c963f66afa6";
+        String sensorTypeID = "TemperatureSensorz";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (empty sensor type ID in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with a valid sensor name and device ID, but an empty sensor type ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenEmptySensorType_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = "Sensor1";
+        String deviceID = "2fa85f64-5717-4562-b3fc-2c963f66afa6";
+        String sensorTypeID = " ";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test verifies that when a POST request is made with an invalid sensor DTO (empty sensor name in this case),
+     * the response status is BAD REQUEST (400).
+     * The test sets up a sensor DTO with an empty sensor name, but valid device ID and sensor type ID.
+     * The test performs a POST request with the sensor DTO and asserts that the response status is BAD REQUEST.
+     */
+    @Test
+    void givenEmptySensorId_whenAddSensorToDevice_thenReturnBadRequestCode() throws Exception {
+        //Arrange
+        String sensorName = "Sensor1";
+        String deviceID = " ";
+        String sensorTypeID = "TemperatureSensor";
+        SensorDTO sensorDTO = SensorDTO.builder()
+                .sensorName(sensorName)
+                .deviceID(deviceID)
+                .sensorTypeID(sensorTypeID)
+                .build();
+
+        String sensorAsJSON = objectMapper.writeValueAsString(sensorDTO);
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/sensors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(sensorAsJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+
+    /**
      * This test verifies that when a POST request is made with a valid sensor DTO but the sensor fails to save,
      * the response status is UNPROCESSABLE ENTITY (422).
-     * The test sets up a mock sensor DTO with a known name, device ID, and sensor type ID.
+     * The test sets up a sensor DTO with a valid name, device ID, and sensor type ID.
      * It then expects that the sensor repository will return false when the sensor is saved.
      * The test performs a POST request with the sensor DTO and asserts that the response status is UNPROCESSABLE ENTITY.
      */
     @Test
-    void givenValidDeviceDTO_whenSavingFails_thenReturnUnprocessableEntityCode() throws Exception {
+    void givenValidSensorDTO_whenSavingFails_thenReturnUnprocessableEntityCode() throws Exception {
         //Arrange
         String sensorName = "Sensor1";
         String deviceID = "1fa85f64-5717-4562-b3fc-2c963f66afa6";
@@ -267,9 +492,15 @@ public class SensorCTRLWebTest {
 
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
 
-        Device device = mock(Device.class);
-        when(device.isActive()).thenReturn(true);
-        when(device.getId()).thenReturn(deviceIDVO);
+        String deviceName = "Device Name";
+        String deviceModel = "Device Model";
+        String deviceRoomID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+
+        DeviceNameVO deviceNameVO = new DeviceNameVO(deviceName);
+        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceModel);
+        RoomIDVO deviceRoomIDVO = new RoomIDVO(UUID.fromString(deviceRoomID));
+
+        Device device = new Device(deviceNameVO, deviceModelVO, deviceRoomIDVO);
 
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);
 
@@ -297,7 +528,7 @@ public class SensorCTRLWebTest {
     /**
      * This test verifies that when a POST request is made with a valid sensor DTO but the sensor already exists,
      * the response status is UNPROCESSABLE ENTITY (422).
-     * The test sets up a mock sensor DTO with a known name, device ID, and sensor type ID.
+     * The test sets up a sensor DTO with a valid name, device ID, and sensor type ID.
      * It then expects that the sensor repository will return false when the sensor is saved.
      * The test performs a POST request with the sensor DTO and asserts that the response status is UNPROCESSABLE ENTITY.
      */
@@ -310,9 +541,15 @@ public class SensorCTRLWebTest {
 
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
 
-        Device device = mock(Device.class);
-        when(device.isActive()).thenReturn(true);
-        when(device.getId()).thenReturn(deviceIDVO);
+        String deviceName = "Device Name";
+        String deviceModel = "Device Model";
+        String deviceRoomID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+
+        DeviceNameVO deviceNameVO = new DeviceNameVO(deviceName);
+        DeviceModelVO deviceModelVO = new DeviceModelVO(deviceModel);
+        RoomIDVO deviceRoomIDVO = new RoomIDVO(UUID.fromString(deviceRoomID));
+
+        Device device = new Device(deviceNameVO, deviceModelVO, deviceRoomIDVO);
 
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);
 
