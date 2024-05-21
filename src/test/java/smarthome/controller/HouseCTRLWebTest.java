@@ -80,6 +80,8 @@ class HouseCTRLWebTest {
         Link expLinkConfigureLocation = linkTo(HouseCTRLWeb.class).withRel("configureLocation");
         Link expLinklistDevsByFunctionality = linkTo(methodOn(DeviceCTRLWeb.class)
                 .getDevicesByFunctionality()).withRel("listDevicesByFunctionality");
+        Link expLinkListRooms = linkTo(methodOn(RoomCTRLWeb.class)
+                .getListOfRooms()).withRel("listRooms");
 
         //Act + Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/house")
@@ -98,7 +100,9 @@ class HouseCTRLWebTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.configureLocation.href")
                         .value(expLinkConfigureLocation.getHref()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.listDevicesByFunctionality.href")
-                        .value(expLinklistDevsByFunctionality.getHref()));
+                        .value(expLinklistDevsByFunctionality.getHref()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.listRooms.href")
+                        .value(expLinkListRooms.getHref()));
     }
 
     /**

@@ -7,7 +7,6 @@ import smarthome.domain.actuator.RollerBlindActuator;
 import smarthome.domain.device.Device;
 import smarthome.domain.house.House;
 import smarthome.domain.room.Room;
-import smarthome.domain.sensor.AveragePowerConsumptionSensor;
 import smarthome.domain.sensor.EnergyConsumptionSensor;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.TemperatureSensor;
@@ -31,9 +30,9 @@ import java.util.UUID;
  * A default House is added for its location to be configured as desired;
  * Three Rooms are added in order to add strategic devices to meet use cases needs (Electrical Circuit Room, Garden
  * and Kitchen);
- * Three Devices are added, one to each Room mentioned above. A Power Meter Device, two Devices that have the
+ * Three Devices are added, one to each Room mentioned above. A Grid Power Meter, two Devices that have the
  * capacity to measure the surrounding temperature, and another one that adjusts the roller blinds;
- * An Average Power Consumption Sensor is added to the Power Meter Device;
+ * An Energy Consumption Sensor is added to the Power Meter Device;
  * The temperature controller Devices get a Temperature Sensor;
  * An Actuator is placed on the roller blind Device controller.
  */
@@ -98,10 +97,6 @@ public class ApplicationBootstrap implements CommandLineRunner {
         String outdoorRoomId = outdoorRoom.getId().getID();
         String indoorRoomId = indoorRoom.getId().getID();
 
-        Device powerMeter = new Device(new DeviceNameVO("Electric Power Meter"),
-                new DeviceModelVO("XP-Y568"),
-                new RoomIDVO(UUID.fromString(electricalRoomId)));
-
         Device outdoorDevice = new Device(new DeviceNameVO("Garden Temperature Controller"),
                 new DeviceModelVO("WS-5050"),
                 new RoomIDVO(UUID.fromString(outdoorRoomId)));
@@ -116,24 +111,18 @@ public class ApplicationBootstrap implements CommandLineRunner {
 
         Device gridPowerMeter = new Device(new DeviceNameVO("Grid Power Meter"),
                 new DeviceModelVO("e-Redes"),
-                new RoomIDVO(UUID.fromString(indoorRoomId)));
+                new RoomIDVO(UUID.fromString(electricalRoomId)));
 
-        deviceRepository.save(powerMeter);
         deviceRepository.save(outdoorDevice);
         deviceRepository.save(indoorDeviceOne);
         deviceRepository.save(indoorDeviceTwo);
         deviceRepository.save(gridPowerMeter);
 
         //Add Temperature Sensors and Power Consumption Sensor:
-        String powerMeterDeviceId = powerMeter.getId().getID();
         String outdoorDevId = outdoorDevice.getId().getID();
         String indoorDevIdOne = indoorDeviceOne.getId().getID();
         String indoorDevIdTwo = indoorDeviceTwo.getId().getID();
-
-        Sensor avgPowerConsumptionSensor = new AveragePowerConsumptionSensor(
-                new SensorNameVO("Average Power Meter"),
-                new DeviceIDVO(UUID.fromString(powerMeterDeviceId)),
-                new SensorTypeIDVO("AveragePowerConsumptionSensor"));
+        String gripPowerDevId = gridPowerMeter.getId().getID();
 
         Sensor outTempSensor = new TemperatureSensor(
                 new SensorNameVO("Outdoor Temperature Sensor"),
@@ -147,10 +136,9 @@ public class ApplicationBootstrap implements CommandLineRunner {
 
         EnergyConsumptionSensor energyConsumptionSensor = new EnergyConsumptionSensor(
                 new SensorNameVO("Energy Consumption Sensor"),
-                new DeviceIDVO(UUID.fromString(gridPowerMeter.getId().getID())),
+                new DeviceIDVO(UUID.fromString(gripPowerDevId)),
                 new SensorTypeIDVO("EnergyConsumptionSensor"));
 
-        sensorRepository.save(avgPowerConsumptionSensor);
         sensorRepository.save(outTempSensor);
         sensorRepository.save(inTempSensor);
         sensorRepository.save(energyConsumptionSensor);

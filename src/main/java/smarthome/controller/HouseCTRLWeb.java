@@ -30,7 +30,7 @@ public class HouseCTRLWeb {
     /**
      * Constructs a new HouseCTRLWeb object with the specified HouseService which is autowired by construction injection.
      *
-     * @param houseService The DeviceService to be used by the controller.
+     * @param houseService The HouseService to be used by the controller.
      */
     public HouseCTRLWeb(HouseService houseService){
         this.houseService = houseService;
@@ -40,7 +40,7 @@ public class HouseCTRLWeb {
      * Spring Boot controller method that handles HTTP GET requests. It is responsible for fetching the details of the
      * first and only House object from the service layer, mapping it to a HouseDTO object, and then returning it.
      * The endpoint is accessible via a GET request to /house.
-     * @return Response body with and HouseDTO and an OK HTTP status code (200). In case there is no House stored in
+     * @return Response body with a HouseDTO and an OK HTTP status code (200). In case there is no House stored in
      * the system, a NOT FOUND HTTP Status Code (404) is sent back.
      */
     @GetMapping(path = "")
@@ -60,9 +60,8 @@ public class HouseCTRLWeb {
                 .configureLocation(null)).withRel("configureLocation");
         houseDTO.add(updateLocation);
 
-        //missing links:
-        //Link listRooms = linkTo(methodOn(RoomCTRLWeb.class).getRooms().withRel("listRooms");
-        //houseDTO.add(listRooms);
+        Link listRooms = linkTo(methodOn(RoomCTRLWeb.class).getListOfRooms()).withRel("listRooms");
+        houseDTO.add(listRooms);
 
         Link listDevicesByFunctionality = linkTo(methodOn(DeviceCTRLWeb.class)
                 .getDevicesByFunctionality()).withRel("listDevicesByFunctionality");
@@ -73,9 +72,15 @@ public class HouseCTRLWeb {
 
 
     /**
-     *
-     * @param locationDTO Request Body with location data to be used to update the House Location.
-     * @return
+     * Spring Boot controller method that handles HTTP PATCH requests. It receives a LocationDTO with the required
+     * information for the update and sends it to the service layer. In case configuration succeeds, a House Optional
+     * is returned and its content is mapped to a HouseDTO object and put in the Response Body.
+     * The endpoint is accessible via a PATCH request to /house.
+     * @param locationDTO Request Body with location data to be used to configure the House Location.
+     * @return Successful update: Response body with a HouseDTO and an OK HTTP status code (200).
+     * In case there is no House stored in the system or the update operation transaction fails in the persistence
+     * layer, an UNPROCESSABLE ENTITY HTTP Status Code (422) is sent back, with no Response Body.
+     * In case an invalid Request Body is received, a BAD REQUEST HTTP Status Code (400) is sent back, with no Response Body.
      */
     @PatchMapping(path = "")
     public ResponseEntity<HouseDTO> configureLocation(@RequestBody LocationDTO locationDTO){
