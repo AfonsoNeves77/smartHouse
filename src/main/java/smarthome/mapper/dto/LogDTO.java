@@ -8,10 +8,10 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor // Generates a constructor with all arguments
 @Getter
 public class LogDTO extends RepresentationModel<LogDTO> {
-        String logID;
-        String time;
-        String reading;
-        String sensorID;
-        String deviceID;
-        String sensorTypeID;
+        private String logID;
+        private String time;
+        private String reading;
+        private String sensorID;
+        private String deviceID;
+        private String sensorTypeID;
 }

@@ -7,7 +7,6 @@ import org.springframework.hateoas.RepresentationModel;
  * Represents a Data Transfer Object (DTO) for a location.
  * This DTO is used to transfer location information between different layers of the application.
  */
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -8,16 +8,13 @@ import org.springframework.hateoas.RepresentationModel;
  * The SensorDTO is used to transfer data between different parts of the application,
  * or between applications, and can be used to map domain objects to values that can be used in the view.
  */
-@EqualsAndHashCode(callSuper = false)
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SensorDTO extends RepresentationModel<SensorDTO> {
-    String sensorID;
-    String sensorName;
-    String deviceID;
-    String sensorTypeID;
-
-
+    private String sensorID;
+    private String sensorName;
+    private String deviceID;
+    private String sensorTypeID;
 }

@@ -3,7 +3,6 @@ package smarthome.mapper.dto;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

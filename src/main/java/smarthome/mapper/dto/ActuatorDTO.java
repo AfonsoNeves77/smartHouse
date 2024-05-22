@@ -10,18 +10,17 @@ import org.springframework.hateoas.RepresentationModel;
 
  */
 
-@EqualsAndHashCode(callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class ActuatorDTO extends RepresentationModel<ActuatorDTO>{
 
-    String actuatorId;
-    String actuatorName;
-    String actuatorType;
-    String deviceID;
-    String lowerLimit;
-    String upperLimit;
-    String precision;
+    private String actuatorId;
+    private String actuatorName;
+    private String actuatorType;
+    private String deviceID;
+    private String lowerLimit;
+    private String upperLimit;
+    private String precision;
 }

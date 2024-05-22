@@ -9,10 +9,9 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 public class TimeConfigDTO extends RepresentationModel<TimeConfigDTO> {
 
-    String initialDate;
-    String initialTime;
-    String endDate;
-    String endTime;
-    String deltaMin;
-
+    private String initialDate;
+    private String initialTime;
+    private String endDate;
+    private String endTime;
+    private String deltaMin;
 }

@@ -3,8 +3,6 @@ package smarthome.utils.timeconfig;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
 
-import static java.lang.Integer.parseInt;
-
 /**
  * Assembler class for TimeConfigDTO objects.
  */
@@ -26,7 +24,7 @@ public class TimeConfigMapper {
         if (timeConfigDTO==null){
             throw new IllegalArgumentException(ERROR);
         }
-        return new DeltaVO(timeConfigDTO.deltaMin);
+        return new DeltaVO(timeConfigDTO.getDeltaMin());
     }
 
     /**
@@ -38,7 +36,7 @@ public class TimeConfigMapper {
         if (timeConfigDTO==null){
             throw new IllegalArgumentException(ERROR);
         }
-        return new TimeStampVO(timeConfigDTO.initialDate, timeConfigDTO.initialTime);
+        return new TimeStampVO(timeConfigDTO.getInitialDate(), timeConfigDTO.getInitialTime());
     }
 
     /**
@@ -50,7 +48,7 @@ public class TimeConfigMapper {
         if (timeConfigDTO==null){
             throw new IllegalArgumentException(ERROR);
         }
-        return new TimeStampVO(timeConfigDTO.endDate, timeConfigDTO.endTime);
+        return new TimeStampVO(timeConfigDTO.getEndDate(), timeConfigDTO.getEndTime());
     }
 
 }
