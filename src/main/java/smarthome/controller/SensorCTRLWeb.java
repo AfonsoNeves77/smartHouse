@@ -72,10 +72,10 @@ public class SensorCTRLWeb {
 
                 //previous operation failed, we return an error message.
             } else {
-                return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -104,10 +104,10 @@ public class SensorCTRLWeb {
                 sensorDTO.add(selfLink);
                 return new ResponseEntity<>(sensorDTO, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

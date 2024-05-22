@@ -69,10 +69,10 @@ public class DeviceCTRLWeb {
 
                 return new ResponseEntity<>(deviceDTO, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -103,9 +103,9 @@ public class DeviceCTRLWeb {
 
                 return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
             }
-            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -135,7 +135,7 @@ public class DeviceCTRLWeb {
 
             return new ResponseEntity<>(deviceDTOCollectionModel, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -144,7 +144,7 @@ public class DeviceCTRLWeb {
      * <p>
      * This endpoint deactivates a device identified by its unique ID. The device is deactivated
      * based on the provided ID. If the device is found and successfully deactivated, a response
-     * containing the deactivated device information is returned with HTTP status code 201 (Created).
+     * containing the deactivated device information is returned with HTTP status code 200 (Ok).
      * If the device with the provided ID does not exist, a response with HTTP status code 404
      * (Not Found) is returned. If the provided ID is invalid, a response with HTTP status code 422
      * (Unprocessable Entity) is returned.
@@ -171,10 +171,10 @@ public class DeviceCTRLWeb {
 
                 return new ResponseEntity<>(deviceWebDTO, HttpStatus.OK);
             }
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -214,7 +214,7 @@ public class DeviceCTRLWeb {
 
             return new ResponseEntity<>(collectionModel, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
