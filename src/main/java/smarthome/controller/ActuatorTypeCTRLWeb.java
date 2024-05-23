@@ -22,10 +22,22 @@ public class ActuatorTypeCTRLWeb {
 
     private final ActuatorTypeService actuatorTypeService;
 
+    /**
+     * Web controller for the actuatorType aggregate.
+     * This controller is responsible for handling HTTP requests related to actuator types.
+     * It provides an endpoint for retrieving a list of all actuator types available in the system.
+     * The controller delegates the processing of the request to the ActuatorTypeService.
+     */
     public ActuatorTypeCTRLWeb(ActuatorTypeService actuatorTypeService) {
         this.actuatorTypeService = actuatorTypeService;
     }
 
+
+    /**
+     * Retrieves a list of all actuator types available in the system.
+     *
+     * @return A response entity containing a list of actuator types with a self-link.
+     */
     @GetMapping()
     public ResponseEntity<CollectionModel<ActuatorTypeDTO>> getActuatorTypes() {
         List<ActuatorType> actuatorTypes = actuatorTypeService.getListOfActuatorTypes();

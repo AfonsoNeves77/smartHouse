@@ -6,6 +6,8 @@ import smarthome.mapper.dto.ActuatorDTO;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,6 +36,13 @@ public class ActuatorMapper {
         }
     }
 
+    /**
+     * Method to create a Settings object from an ActuatorDTO object.
+     * It throws an IllegalArgumentException if the ActuatorDTO object is null.
+     *
+     * @param actuatorDTO ActuatorDTO object
+     * @return Settings object
+     */
     public static Settings createSettingsVO(ActuatorDTO actuatorDTO) {
         String lowerLimit = actuatorDTO.getLowerLimit();
         String upperLimit = actuatorDTO.getUpperLimit();
@@ -67,7 +76,7 @@ public class ActuatorMapper {
         }
     }
 
-        /**
+    /**
      * Method to create a DeviceIDVO object from an ActuatorDTO object.
      * It throws an IllegalArgumentException if the ActuatorDTO object is null or if the deviceID attribute is null.
      *
@@ -79,7 +88,7 @@ public class ActuatorMapper {
         if (actuatorDTO == null) {
             throw new IllegalArgumentException(ERRORMESSAGE);
         } else {
-            if(actuatorDTO.getDeviceID() == null) {
+            if (actuatorDTO.getDeviceID() == null) {
                 throw new IllegalArgumentException("Device ID cannot be null");
             }
             UUID deviceID = UUID.fromString(actuatorDTO.getDeviceID());
@@ -111,16 +120,51 @@ public class ActuatorMapper {
     }
 
     /**
+     * Converts a list of Actuator domain objects to a list of ActuatorDTO.
+     * This method iterates through the provided list of Actuator domain objects, extracts relevant information
+     * and creates a new list of ActuatorDTOs with this information.
+     *
+     * @param actuators The list of Actuator domain objects to be converted.
+     * @return A new list of ActuatorDTO Data Transfer Objects representing the converted actuators.
+     */
+    public static List<ActuatorDTO> domainToDTO(List<Actuator> actuators) {
+        List<ActuatorDTO> actuatorDTOList = new ArrayList<>();
+        for (Actuator actuator : actuators) {
+            ActuatorDTO actuatorDTO = domainToDTO(actuator);
+            actuatorDTOList.add(actuatorDTO);
+        }
+        return actuatorDTOList;
+    }
+
+    /**
      * Method to create an ActuatorIDVO object from an ActuatorDTO object.
      * It throws an IllegalArgumentException if the ActuatorDTO object is null.
+     *
      * @param actuatorId String
      * @return ActuatorIDVO object
      */
     public static ActuatorIDVO createActuatorIDVO(String actuatorId) {
-        if(actuatorId == null){
+        if (actuatorId == null) {
             throw new IllegalArgumentException("ActuatorID cannot be null");
         }
         UUID id = UUID.fromString(actuatorId);
         return new ActuatorIDVO(id);
+    }
+
+    /**
+     * Creates a new DeviceIDVO object from the provided device ID string.
+     * Validates the provided device ID string to ensure it is not null, empty or blank.
+     * Then, instantiates a new UUID object from the provided device ID string.
+     *
+     * @param deviceId the device ID string to be converted to a DeviceIDVO object
+     * @return a new DeviceIDVO object created from the provided device ID string
+     */
+    public static DeviceIDVO createDeviceIDVOFromString(String deviceId) {
+        if (deviceId.trim().isEmpty()) {
+            throw new IllegalArgumentException("DeviceID cannot be null");
+        } else {
+            UUID id = UUID.fromString(deviceId);
+            return new DeviceIDVO(id);
+        }
     }
 }

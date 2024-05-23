@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -669,5 +670,72 @@ class ActuatorMapperTest {
             assertEquals(listSize, listOfMockedActuatorIDVO.size());
             assertEquals(actuatorId, actuatorIDVO.getID());
         }
+    }
+
+    /**
+     * Test to verify that, when calling the domainToDTO method, the actuatorDTO list is returned.
+     * First, the actuatorNameVO, deviceIDVO, actuatorIDVO and actuatorTypeIDVO are mocked.
+     * Then, the actuatorDouble is mocked and the intended behavior is mimicked.
+     * This process is repeated for the actuatorDouble2.
+     * Afterward, a list of actuators is created, the mocked actuators added to the list and the expected size defined.
+     * Finally, the domainToDTO method is called and the VOs of both doubles compared with the expected mocks.
+     */
+    @Test
+    void whenDomainToDTOIsCalled_ThenReturnActuatorDTOList() {
+        //Arrange
+        ActuatorIDVO actuatorIDVODouble = mock(ActuatorIDVO.class);
+        ActuatorTypeIDVO actuatorTypeIDVODouble = mock(ActuatorTypeIDVO.class);
+        ActuatorNameVO actuatorNameVODouble = mock(ActuatorNameVO.class);
+        DeviceIDVO deviceIDVODouble = mock(DeviceIDVO.class);
+
+        Actuator actuatorDouble = mock(Actuator.class);
+        when(actuatorDouble.getId()).thenReturn(actuatorIDVODouble);
+        when(actuatorDouble.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble);
+        when(actuatorDouble.getActuatorName()).thenReturn(actuatorNameVODouble);
+        when(actuatorDouble.getDeviceID()).thenReturn(deviceIDVODouble);
+
+        ActuatorIDVO actuatorIDVODouble2 = mock(ActuatorIDVO.class);
+        ActuatorTypeIDVO actuatorTypeIDVODouble2 = mock(ActuatorTypeIDVO.class);
+        ActuatorNameVO actuatorNameVODouble2 = mock(ActuatorNameVO.class);
+        DeviceIDVO deviceIDVODouble2 = mock(DeviceIDVO.class);
+
+        Actuator actuatorDouble2 = mock(Actuator.class);
+        when(actuatorDouble2.getId()).thenReturn(actuatorIDVODouble2);
+        when(actuatorDouble2.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble2);
+        when(actuatorDouble2.getActuatorName()).thenReturn(actuatorNameVODouble2);
+        when(actuatorDouble2.getDeviceID()).thenReturn(deviceIDVODouble2);
+
+        List<Actuator> actuatorList = new ArrayList<>();
+        actuatorList.add(actuatorDouble);
+        actuatorList.add(actuatorDouble2);
+
+        int expectedListSize = 2;
+
+        //Act
+        List<ActuatorDTO> result = ActuatorMapper.domainToDTO(actuatorList);
+
+        //Assert
+        assertEquals(expectedListSize, result.size());
+        assertEquals(actuatorNameVODouble.getValue(), result.get(0).getActuatorName());
+        assertEquals(actuatorTypeIDVODouble.getID(), result.get(0).getActuatorType());
+        assertEquals(deviceIDVODouble2.getID(), result.get(1).getDeviceID());
+    }
+
+    /**
+     * Test to verify that, when calling the CreateDeviceIDVOFromString method, with an empty string, an
+     * IllegalArgumentException is thrown.
+     */
+    @Test
+    void whenCreateDeviceIDVOFromStringWithEmptyString_ThenThrowIllegalArgumentException() {
+        // Arrange
+        String deviceID = "";
+        String expectedMessage = "DeviceID cannot be null";
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createDeviceIDVOFromString(deviceID));
+        String resultingMessage = exception.getMessage();
+
+        // Assert
+        assertEquals(expectedMessage, resultingMessage);
     }
 }

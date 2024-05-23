@@ -36,6 +36,14 @@ class ActuatorTypeCTRLWebTest {
     @MockBean
     private ActuatorTypeRepository actuatorTypeRepository;
 
+
+    /**
+     * This test ensures that the GetListOfActuatorTypesWebCTRL controller returns a list of actuator types when a valid
+     * service is provided.
+     *
+     * @throws Exception If an error occurs during the test.
+     * @assert: The controller returns a list of actuator types and those sensor types are correctly mapped to DTOs.
+     */
     @Test
     void whenGetActuatorTypes_thenReturnListOfActuatorTypes() throws Exception {
         ActuatorTypeIDVO actuatorTypeIDVO1 = new ActuatorTypeIDVO("SwitchActuator");

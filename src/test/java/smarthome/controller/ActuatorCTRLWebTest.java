@@ -13,10 +13,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import smarthome.domain.actuator.Actuator;
-import smarthome.domain.actuator.DecimalValueActuator;
-import smarthome.domain.actuator.IntegerValueActuator;
-import smarthome.domain.actuator.SwitchActuator;
+import smarthome.domain.actuator.*;
+import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
@@ -33,12 +31,15 @@ import smarthome.persistence.ActuatorTypeRepository;
 import smarthome.persistence.DeviceRepository;
 import smarthome.service.ActuatorService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -1331,5 +1332,233 @@ public class ActuatorCTRLWebTest {
                 .andExpect(jsonPath("$._links.self").exists())
                 .andExpect(jsonPath("$._links.self.href").value(expectedLink.getHref()))
                 .andReturn();
+    }
+
+
+    /**
+     * This test method tests the getActuatorsByDeviceID endpoint in the ActuatorsCTRLWeb class. It tests the endpoint by
+     * providing a valid device ID and checking if the response contains the correct actuator information. The test mocks
+     * the repository layer to return a list of actuators when the findByDeviceID method is called with the provided device ID.
+     * The test expects the response to have an HTTP status of 200 (OK) and the correct actuator information in the
+     * response body.
+     *
+     * @throws Exception if there is an error in the test execution
+     */
+    @Test
+    void givenDeviceID_whenGetActuatorsByDeviceID_thenReturnActuatorDTOCollection() throws Exception {
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        String firstActuatorName = "Actuator 1";
+        String firstActuatorTypeID = "RollerBlindActuator";
+        String firstActuatorDeviceID = deviceID;
+
+        ActuatorNameVO firstActuatorNameVO = new ActuatorNameVO(firstActuatorName);
+        ActuatorTypeIDVO firstActuatorTypeIDVO = new ActuatorTypeIDVO(firstActuatorTypeID);
+
+        Actuator firstActuator = new RollerBlindActuator(firstActuatorNameVO, firstActuatorTypeIDVO, deviceIDVO);
+
+        String secondActuatorName = "Actuator 2";
+        String secondActuatorTypeID = "SwitchActuator";
+        String secondActuatorDeviceID = deviceID;
+
+        ActuatorNameVO secondActuatorNameVO = new ActuatorNameVO(secondActuatorName);
+        ActuatorTypeIDVO secondActuatorTypeIDVO = new ActuatorTypeIDVO(secondActuatorTypeID);
+
+        Actuator secondActuator = new SwitchActuator(secondActuatorNameVO, secondActuatorTypeIDVO, deviceIDVO);
+
+        List<Actuator> actuators = new ArrayList<>();
+        actuators.add(firstActuator);
+        actuators.add(secondActuator);
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
+        when(actuatorRepository.findByDeviceID(deviceIDVO)).thenReturn(actuators);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.actuatorDTOList").exists())
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[0].actuatorName").value(firstActuatorName))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[0].actuatorType").value(firstActuatorTypeID))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[0].deviceID").value(firstActuatorDeviceID))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[0]._links.self").exists())
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[1].actuatorName").value(secondActuatorName))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[1].actuatorType").value(secondActuatorTypeID))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[1].deviceID").value(secondActuatorDeviceID))
+                .andExpect(jsonPath("$._embedded.actuatorDTOList[1]._links.self").exists())
+                .andExpect(jsonPath("$._links.self").exists())
+                .andReturn();
+    }
+
+    /**
+     * This test method tests the getActuatorsByDeviceID endpoint in the ActuatorsCTRLWeb class. It tests the endpoint by
+     * providing a valid device ID that does not have any actuators associated with it. The test mocks the repository layer
+     * to return an empty list of actuators when the findByDeviceID method is called with the provided device ID. The test
+     * expects the response to have an HTTP status of 200 (OK) and no response body.
+     *
+     * @throws Exception if there is an error in the test execution
+     */
+    @Test
+    void givenDeviceIDWithNoActuators_whenGetActuatorsByDeviceID_thenReturnEmptyActuatorDTOCollection() throws Exception {
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        Iterable<Actuator> actuators = Collections.emptyList();
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
+        when(actuatorRepository.findByDeviceID(deviceIDVO)).thenReturn(actuators);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    /**
+     * This test method tests the getActuatorsByDeviceID endpoint in the ActuatorsCTRLWeb class. It tests the endpoint by
+     * providing a non-existent device ID and checking if the response contains an HTTP status of 400 (Bad Request). The
+     * test mocks the repository layer to return false when the isPresent method is called with the provided device ID.
+     * The test expects the response to have an HTTP status of 400 (Bad Request) and no response body.
+     *
+     * @throws Exception if there is an error in the test execution
+     */
+    @Test
+    void givenNonExistentDeviceID_whenGetActuatorsByDeviceID_thenReturnBadRequest() throws Exception {
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(false);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * This test method tests the getActuatorsByDeviceID endpoint in the ActuatorsCTRLWeb class. It tests the endpoint by
+     * providing a device ID with null parameters and checking if the response contains an HTTP status of 400 (Bad Request).
+     * The test expects the response to have an HTTP status of 400 (Bad Request) and no response body.
+     *
+     * @throws Exception if there is an error in the test execution
+     */
+    @Test
+    void givenNullDeviceID_whenGetActuatorsByDeviceID_thenReturnBadRequest() throws Exception {
+        //Arrange
+        String deviceID = null;
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    /**
+     * Test method to verify closing the roller blind actuator functionality.
+     * This method tests the functionality of closing a roller blind actuator by sending a PATCH request
+     * to the "/actuators/{actuatorId}" endpoint. It initializes the actuatorIDVO and sets up the necessary
+     * double behavior for the actuator repository to simulate a successful scenario where the actuator is present,
+     * found, and successfully closed.
+     * The test then performs the PATCH request using MockMvc and verifies that the response
+     * status is 200 (OK).
+     *
+     * @throws Exception If an error occurs during the test execution related with mockMVC request to endpoint
+     */
+
+    @Test
+    void givenValidActuatorId_whenCloseRollerBlind_thenReturnOk() throws Exception {
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        RollerBlindActuator actuator = new RollerBlindActuator(new ActuatorNameVO("Actuator"), new ActuatorTypeIDVO("RollerBlindActuator"), new DeviceIDVO(UUID.randomUUID()));
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Test method to verify closing the roller blind actuator functionality.
+     * This method tests the functionality of closing a roller blind actuator by sending a PATCH request
+     * to the "/actuators/{actuatorId}" endpoint. It initializes the actuatorIDVO and sets up the necessary
+     * double behavior for the actuator repository to simulate a failure scenario where the actuator is present,
+     * found, but its type is not a RollerBlindActuator and therefore cannot be closed.
+     * The test then performs the PATCH request using MockMvc and verifies that the response
+     * status is 422 (UNPROCESSABLE ENTITY).
+     *
+     * @throws Exception If an error occurs during the test execution related with mockMVC request to endpoint
+     */
+    @Test
+    void givenValidActuatorIdButInvalidActuatorType_whenCloseRollerBlind_thenReturnUnprocessableEntity() throws Exception {
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        SwitchActuator actuator = new SwitchActuator(new ActuatorNameVO("Actuator"), new ActuatorTypeIDVO("SwitchActuator"), new DeviceIDVO(UUID.randomUUID()));
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    /**
+     * Test method to verify closing the roller blind actuator functionality.
+     * This method tests the functionality of closing a roller blind actuator by sending a PATCH request
+     * to the "/actuators/{actuatorId}" endpoint. The string actuatorId is set to an empty string and so the
+     * test verifies that the response status is 400 (BAD REQUEST).
+     *
+     * @throws Exception If an error occurs during the test execution related with mockMVC request to endpoint
+     */
+    @Test
+    void givenInvalidActuatorId_whenCloseRollerBlind_thenReturnBadRequest() throws Exception {
+        String actuatorId = " ";
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test method to verify closing the roller blind actuator functionality.
+     * This method tests the functionality of closing a roller blind actuator by sending a PATCH request
+     * to the "/actuators/{actuatorId}" endpoint. The string actuatorId is valid but belongs to a non-existent
+     * actuator and so the test verifies that the response status is 400 (BAD REQUEST).     *
+     *
+     * @throws Exception If an error occurs during the test execution related with mockMVC request to endpoint
+     */
+    @Test
+    void givenNonExistentActuatorId_whenCloseRollerBlind_thenReturnBadRequest() throws Exception {
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
