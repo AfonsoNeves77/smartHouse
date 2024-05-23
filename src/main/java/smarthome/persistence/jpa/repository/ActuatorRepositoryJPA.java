@@ -1,15 +1,15 @@
 package smarthome.persistence.jpa.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.assembler.ActuatorAssembler;
+import smarthome.mapper.assembler.DeviceAssembler;
 import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.jpa.datamodel.ActuatorDataModel;
+import smarthome.persistence.jpa.datamodel.DeviceDataModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -135,5 +135,24 @@ public class ActuatorRepositoryJPA implements ActuatorRepository {
      */
     private boolean isNull(Object object){
         return object == null;
+    }
+
+
+    /**
+     * Retrieves all Actuator entities from a device in the database.
+     *
+     * @param deviceID The ID of the device to retrieve Actuators from.
+     * @return A List containing all actuator entities from a given device.
+     */
+    @Override
+    public Iterable<Actuator> findByDeviceID(DeviceIDVO deviceID) {
+        try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
+            TypedQuery<ActuatorDataModel> query = em.createQuery("SELECT a FROM ActuatorDataModel a WHERE a.deviceID = :deviceID", ActuatorDataModel.class);
+            query.setParameter("deviceID", deviceID.getID());
+            List<ActuatorDataModel> list = query.getResultList();
+            return ActuatorAssembler.toDomainList(actuatorFactory, list);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
     }
 }

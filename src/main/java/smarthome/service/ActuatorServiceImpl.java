@@ -1,8 +1,11 @@
 package smarthome.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
+import smarthome.domain.actuator.RollerBlindActuator;
+import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.persistence.ActuatorRepository;
@@ -13,26 +16,30 @@ import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ActuatorServiceImpl implements ActuatorService{
+public class ActuatorServiceImpl implements ActuatorService {
     private final DeviceRepository deviceRepository;
     private final ActuatorTypeRepository actuatorTypeRepository;
     private final ActuatorFactory actuatorFactory;
     private final ActuatorRepository actuatorRepository;
+    private ActuatorExternalService actuatorExternalService;
 
     /**
      * Constructs an instance of V1ActuatorService with the provided dependencies.
-     * @param actuatorFactory   The factory responsible for creating Actuators.
+     *
+     * @param actuatorFactory    The factory responsible for creating Actuators.
      * @param actuatorRepository The repository storing and retrieving Actuators.
      * @throws IllegalArgumentException if either factoryActuator or ActuatorRepository is null.
      */
 
     public ActuatorServiceImpl(DeviceRepository deviceRepository, ActuatorTypeRepository actuatorTypeRepository,
-                               ActuatorFactory actuatorFactory, ActuatorRepository actuatorRepository){
+                               ActuatorFactory actuatorFactory, ActuatorRepository actuatorRepository) {
 
-        if(areParamsNull(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository)){
+        if (areParamsNull(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository)) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
 
@@ -53,21 +60,22 @@ public class ActuatorServiceImpl implements ActuatorService{
      * calling the save method of the ActuatorRepository with the new Actuator as the parameter.
      * If the save operation is successful (returns true), the newActuator is wrapped in an Optional and returned.
      * If the save operation is not successful (returns false), an empty Optional is returned.
-     * @param actuatorNameVO The name of the Actuator to be added. This parameter cannot be null.
+     *
+     * @param actuatorNameVO   The name of the Actuator to be added. This parameter cannot be null.
      * @param actuatorTypeIDVO The type ID of the Actuator to be added. This parameter cannot be null and the Actuator
      *                         type must be present in the system.
-     * @param deviceIDVO The ID of the Device to which the Actuator belongs. This parameter cannot be null and the
-     *                   Device must be active.
-     * @param settings The settings for the Actuator.
+     * @param deviceIDVO       The ID of the Device to which the Actuator belongs. This parameter cannot be null and the
+     *                         Device must be active.
+     * @param settings         The settings for the Actuator.
      * @return If the save operation is successful (returns true), the newActuator is wrapped in an Optional and
      * returned. If the save operation is not successful (returns false), an empty Optional is returned.
      * @throws IllegalArgumentException if any of the parameters are null, if the Device is not active, or if the
-     * Actuator type is not present.
+     *                                  Actuator type is not present.
      */
     public Optional<Actuator> addActuator(ActuatorNameVO actuatorNameVO, ActuatorTypeIDVO actuatorTypeIDVO,
-                                          DeviceIDVO deviceIDVO, Settings settings){
+                                          DeviceIDVO deviceIDVO, Settings settings) {
 
-        if (areParamsNull(actuatorNameVO,actuatorTypeIDVO,deviceIDVO)) {
+        if (areParamsNull(actuatorNameVO, actuatorTypeIDVO, deviceIDVO)) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
         if (!isDeviceActive(deviceIDVO)) {
@@ -77,12 +85,73 @@ public class ActuatorServiceImpl implements ActuatorService{
             throw new IllegalArgumentException("Actuator type is not present");
         }
 
-        Actuator newActuator = this.actuatorFactory.createActuator(actuatorNameVO,actuatorTypeIDVO,
-                                                                    deviceIDVO,settings);
-        if (this.actuatorRepository.save(newActuator)){
+        Actuator newActuator = this.actuatorFactory.createActuator(actuatorNameVO, actuatorTypeIDVO,
+                deviceIDVO, settings);
+        if (this.actuatorRepository.save(newActuator)) {
             return Optional.of(newActuator);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Closes the RollerBlind Actuator with the provided ActuatorIDVO.
+     * This method retrieves the Actuator from the repository based on the provided ActuatorIDVO.
+     * If the Actuator is found, it checks if the Actuator is of type RollerBlindActuator. If it is, it executes the
+     * close command on the Actuator using the ActuatorExternalService and passes the position as 0.
+     * If the Actuator is not of type RollerBlindActuator, the method returns false. If the Actuator is not found,
+     * the method returns false. If the close command is executed successfully, the method returns true.
+     *
+     * @param actuatorIDVO The Value Object representing the ID of the Actuator to close.
+     * @return true if the Actuator is closed successfully, false otherwise.
+     */
+    public boolean closeRollerBlind(ActuatorIDVO actuatorIDVO) {
+        try {
+            if (!actuatorRepository.isPresent(actuatorIDVO)) {
+                throw new IllegalArgumentException("Actuator not found");
+            }
+            Actuator actuator = actuatorRepository.findById(actuatorIDVO);
+            String actuatorType = "RollerBlindActuator";
+            String actuatorTypeID = actuator.getActuatorTypeID().getID();
+            if (actuatorTypeID.equals(actuatorType)) {
+                int position = 0;
+                return ((RollerBlindActuator) actuator).executeCommand(actuatorExternalService, position);
+            }
+            return false;
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves the list of actuators located in the device identified by the provided DeviceIDVO.
+     * This method queries the system to fetch all actuators associated with the specified device.
+     *
+     * @param deviceIDVO The Value Object representing the ID of the device to retrieve actuators from.
+     * @return The list of actuators located in the specified device.
+     * It returns an empty list if no actuators are found or if the specified device does not exist.
+     */
+    public List<Actuator> getListOfActuatorsInADevice(DeviceIDVO deviceIDVO) {
+        if (deviceIDVO == null) {
+            throw new IllegalArgumentException("Device ID cannot be null");
+        }
+        if (!deviceRepository.isPresent(deviceIDVO)) {
+            throw new IllegalArgumentException("Device not found");
+        }
+        Iterable<Actuator> actuatorIterable = this.actuatorRepository.findByDeviceID(deviceIDVO);
+        List<Actuator> actuatorList = new ArrayList<>();
+        actuatorIterable.forEach(actuatorList::add);
+        return actuatorList;
+    }
+
+    /**
+     * Setter method for the ActuatorExternalService to provide setter injection of this component, needed for a specific
+     * method in the service.
+     *
+     * @param actuatorExternalService The ActuatorExternalService to be set.
+     */
+    @Autowired
+    public void setActuatorExternalService(ActuatorExternalService actuatorExternalService) {
+        this.actuatorExternalService = actuatorExternalService;
     }
 
     /**
@@ -90,14 +159,15 @@ public class ActuatorServiceImpl implements ActuatorService{
      * This method queries the DeviceRepository to retrieve the Device based on the given ID.
      * If the Device is found and marked as active, it returns true, indicating the Device is active.
      * If the Device is not found or is not marked as active, it returns false.
+     *
      * @param deviceIDVO The Value Object representing the ID of the Device to check.
      * @return true if the Device is active, false otherwise or if the Device is not found.
      */
-    private boolean isDeviceActive(DeviceIDVO deviceIDVO){
-        try{
+    private boolean isDeviceActive(DeviceIDVO deviceIDVO) {
+        try {
             Device device = deviceRepository.findById(deviceIDVO);
             return device.isActive();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return false;
         }
     }
@@ -105,11 +175,12 @@ public class ActuatorServiceImpl implements ActuatorService{
     /**
      * Checks if an ActuatorType with the provided ActuatorTypeIDVO is present in the system.
      * This method queries the ActuatorTypeRepository to determine the presence of the ActuatorType.
+     *
      * @param actuatorTypeIDVO The Value Object representing the ID of the ActuatorType to check.
      * @return true if the ActuatorType is present in the system, false otherwise. It returns false if the ActuatorType
      * is not found or if the repository is unable to provide the information.
      */
-    private boolean isActuatorTypePresent(ActuatorTypeIDVO actuatorTypeIDVO){
+    private boolean isActuatorTypePresent(ActuatorTypeIDVO actuatorTypeIDVO) {
         return actuatorTypeRepository.isPresent(actuatorTypeIDVO);
     }
 
@@ -119,15 +190,16 @@ public class ActuatorServiceImpl implements ActuatorService{
      * It then queries the ActuatorRepository to retrieve the Actuator based on the provided IDVO.
      * If the Actuator is found, it is wrapped in an Optional and returned. If the Actuator is not found, an empty
      * Optional is returned.
+     *
      * @param actuatorIDVO The Value Object representing the ID of the Actuator to retrieve.
      * @return An Optional containing the Actuator if it is found, or an empty Optional if it is not found.
      */
 
-    public Optional<Actuator> getActuatorById(ActuatorIDVO actuatorIDVO){
-        if (actuatorIDVO == null){
+    public Optional<Actuator> getActuatorById(ActuatorIDVO actuatorIDVO) {
+        if (actuatorIDVO == null) {
             throw new IllegalArgumentException("ActuatorIDVO cannot be null");
         }
-        if (actuatorRepository.isPresent(actuatorIDVO)){
+        if (actuatorRepository.isPresent(actuatorIDVO)) {
             return Optional.of(actuatorRepository.findById(actuatorIDVO));
         }
         return Optional.empty();
@@ -142,9 +214,9 @@ public class ActuatorServiceImpl implements ActuatorService{
      * @param params The parameters to be checked for nullity.
      * @return true if all parameters are non-null, false otherwise.
      */
-    private boolean areParamsNull(Object... params){
-        for (Object param : params){
-            if (param == null){
+    private boolean areParamsNull(Object... params) {
+        for (Object param : params) {
+            if (param == null) {
                 return true;
             }
         }

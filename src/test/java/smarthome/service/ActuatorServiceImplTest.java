@@ -1,6 +1,8 @@
 package smarthome.service;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import smarthome.domain.actuator.*;
+import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
@@ -13,11 +15,13 @@ import smarthome.persistence.DeviceRepository;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ActuatorServiceImplTest {
 
@@ -63,7 +67,7 @@ class ActuatorServiceImplTest {
         assertThrowsIllegalArgumentExceptionWithNullParameter(null,actuatorTypeRepository,
                                                                 actuatorFactory,actuatorRepository);
     }
-
+//
     /**
      *The following test verifies that if ActuatorTypeRepository parameter is null then ActuatorService instantiation
      * should throw an Illegal Argument Exception with the message "Invalid Parameters".
@@ -539,5 +543,228 @@ class ActuatorServiceImplTest {
         //Assert
         assertTrue(result.isPresent());
         assertEquals(actuatorDouble, result.get());
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is valid and is of the type RollerBlind it executes the command
+     * to close the RollerBlind and returns true.
+     * First, it creates a mockBean of the ActuatorExternalService. Then it creates mocks of the ActuatorIDVO, Actuator,
+     * DeviceRepository, ActuatorTypeRepository, ActuatorFactory and ActuatorRepository.
+     * Then, it sets the behavior of the ActuatorRepository to return the actuator double when the
+     * findById method is called with the ActuatorIDVO as an argument.
+     * Next, it sets the behavior of the actuator double to return a new ActuatorTypeIDVO of type "RollerBlindActuator".
+     * Then, it sets the behavior of the actuator double to return true when the executeCommand method is called with
+     * the ActuatorExternalService and 0 as arguments.
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
+     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
+     * Finally, it asserts that the result is true.
+     */
+    @MockBean
+    ActuatorExternalService actuatorExternalService;
+
+    @Test
+    void whenCloseRollerBlindWithValidActuator_ThenReturnsTrue() {
+        //Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        RollerBlindActuator actuator = mock(RollerBlindActuator.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
+        when(actuator.executeCommand(this.actuatorExternalService, 0)).thenReturn(true);
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
+        //Act
+        boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
+        //Assert
+        assertTrue(result);
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is valid and is of the type RollerBlind it executes the command
+     * to close the RollerBlind, but the execute command operation fails and returns false.
+     * It creates mocks of the ActuatorIDVO, Actuator, DeviceRepository, ActuatorTypeRepository, ActuatorFactory and
+     * ActuatorRepository. Then, it sets the behavior of the ActuatorRepository to return the actuator double when the
+     * findById method is called with the ActuatorIDVO as an argument.
+     * Next, it sets the behavior of the actuator double to return a new ActuatorTypeIDVO of type "RollerBlindActuator".
+     * Then, it sets the behavior of the actuator double to return false when the executeCommand method is called with
+     * the ActuatorExternalService and 0 as arguments.
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
+     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
+     * Finally, it asserts that the result is false.
+     */
+    @Test
+    void whenCloseRollerBlindWithValidActuator_executeCommandFails_thenReturnsFalse() {
+        //Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        RollerBlindActuator actuator = mock(RollerBlindActuator.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
+        when(actuator.executeCommand(this.actuatorExternalService, 0)).thenReturn(false);
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
+        //Act
+        boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
+        //Assert
+        assertFalse(result);
+    }
+
+    /**
+     * This test verifies that if the ActuatorIDVO is valid but is not of the type RollerBlind then the method returns
+     * false. It creates mocks of the ActuatorIDVO, Actuator, DeviceRepository, ActuatorTypeRepository, ActuatorFactory
+     * and ActuatorRepository.
+     * Then, it sets the behavior of the ActuatorRepository to return true when the isPresent method is called and to return
+     * the actuator double when the findById method is called with the ActuatorIDVO as an argument.
+     * Next, it sets the behavior of the actuator double to return a new ActuatorTypeIDVO of type "SwitchActuator".
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
+     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
+     * Finally, it asserts that the result is false.
+     */
+    @Test
+    void whenCloseRollerBlindWithInvalidActuatorType_ThenReturnsFalse() {
+        //Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        Actuator actuator = mock(RollerBlindActuator.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("SwitchActuator"));
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
+        //Act
+        boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
+        //Assert
+        assertFalse(result);
+    }
+
+    /**
+     * This test verifies that if the Actuator is null  then the method returns false.
+     * It creates mocks of the ActuatorIDVO, Actuator, DeviceRepository, ActuatorTypeRepository, ActuatorFactory
+     * and ActuatorRepository.
+     * Then, it sets the behavior of the ActuatorRepository to return the actuator double when the findById method is
+     * called with the ActuatorIDVO as an argument.
+     * Next, it sets the behavior ActuatorRepository to return null when the findById method is called with the
+     * ActuatorIDVO as an argument.
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
+     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
+     * Finally, it asserts that the result is false.
+     */
+    @Test
+    void whenCloseRollerBlindWithNullActuator_ThenReturnFalse() {
+        // Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(null);
+
+        // Act
+        boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
+
+        // Assert
+        assertFalse(result);
+    }
+
+
+    /**
+     * This test verifies that if the actuator doesn't exist in the system then the method returns false.
+     * It creates mocks of the ActuatorIDVO, DeviceRepository, ActuatorTypeRepository, ActuatorFactory and ActuatorRepository.
+     * Then, it sets the behavior of the ActuatorRepository to return null when the findById method is called with the
+     * ActuatorIDVO as an argument.
+     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
+     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
+     * Finally, it asserts that the result is false.
+     */
+    @Test
+    void whenCloseRollerBlindWithNonExistentActuator_ThenThrowsIllegalArgumentException() {
+        //Arrange
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(null);
+        ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
+
+        //Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> actuatorService.closeRollerBlind(actuatorIDVO));
+    }
+
+
+    /**
+     * This test verifies that if the ActuatorIDVO is null, the getListOfActuatorsInADevice method should throw an
+     * IllegalArgumentException.
+     */
+    @Test
+    void whenDeviceIDVOIsNull_thenThrowsIllegalArgumentException() {
+        // Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        ActuatorService service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> service.getListOfActuatorsInADevice(null));
+    }
+
+    /**
+     * This test verifies that if the device is not present in the system, the method GetListOfActuatorsInADevice
+     * should throw an IllegalArgumentException.
+     */
+    @Test
+    void whenDeviceIsNotPresent_thenThrowsIllegalArgumentException() {
+        // Arrange
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(false);
+        ActuatorService service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> service.getListOfActuatorsInADevice(deviceIDVO));
+    }
+
+    /**
+     * This test verifies that if the device is present in the system, the method GetListOfActuatorsInADevice should
+     * return a list of actuators in that device.
+     */
+    @Test
+    void whenGetListOfActuatorsInADevice_thenReturnListOfActuators() {
+        // Arrange
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+        List<Actuator> actuators = Collections.singletonList(mock(Actuator.class));
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
+        when(actuatorRepository.findByDeviceID(deviceIDVO)).thenReturn(actuators);
+        ActuatorService service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act
+        List<Actuator> result = service.getListOfActuatorsInADevice(deviceIDVO);
+
+        // Assert
+        assertEquals(actuators, result);
     }
 }

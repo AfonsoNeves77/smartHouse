@@ -1,11 +1,13 @@
 package smarthome.domain.actuator.externalservices;
 
+import org.springframework.stereotype.Component;
+
 /**
  * SimHardwareAct serves as an abstraction representing an external hardware entity that interacts with the system.
  * It encapsulates the functionality and behavior of the hardware component that the associated objects act upon.
  */
 
-
+@Component
 public class SimHardwareAct implements ActuatorExternalService{
 
     /**

@@ -2,9 +2,13 @@ package smarthome.persistence.mem;
 
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.persistence.ActuatorRepository;
 
-import java.util.LinkedHashMap;
+import java.util.*;
+import java.util.stream.Collectors;
+
+
 
 public class ActuatorRepositoryMem implements ActuatorRepository {
 
@@ -66,5 +70,17 @@ public class ActuatorRepositoryMem implements ActuatorRepository {
         if(actuator == null)
             return false;
         return !isPresent((ActuatorIDVO) actuator.getId());
+    }
+
+    /**
+     * Finds all actuators in a device by its device ID.
+     *
+     * @param deviceID Device ID
+     * @return Iterable of Actuators
+     */
+    public List<Actuator> findByDeviceID(DeviceIDVO deviceID) {
+        return actuatorMap.values().stream()
+                .filter(actuator -> deviceID.equals(actuator.getDeviceID()))
+                .collect(Collectors.toList());
     }
 }

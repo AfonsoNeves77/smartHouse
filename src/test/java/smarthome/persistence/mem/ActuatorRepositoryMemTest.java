@@ -4,6 +4,9 @@ import smarthome.domain.actuator.Actuator;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -254,6 +257,62 @@ class ActuatorRepositoryMemTest {
 
         //Arrange
         assertFalse(result);
+    }
+
+    /**
+     * This test case verifies that a list of actuators associated with a given device ID
+     * is returned when the device ID is present in the repository.
+     */
+    @Test
+    void givenAValidDeviceID_whenFindByDeviceID_ShouldReturnListOfActuators() {
+        //Arrange
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+
+        Actuator actuatorDoubleOne = mock(Actuator.class);
+        Actuator actuatorDoubleTwo = mock(Actuator.class);
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        when(actuatorDoubleOne.getId()).thenReturn(actuatorIDVO);
+        ActuatorIDVO actuatorIDVO2 = mock(ActuatorIDVO.class);
+        when(actuatorDoubleTwo.getId()).thenReturn(actuatorIDVO2);
+
+        ActuatorRepositoryMem repository = new ActuatorRepositoryMem();
+        repository.save(actuatorDoubleOne);
+        repository.save(actuatorDoubleTwo);
+
+        when(actuatorDoubleOne.getDeviceID()).thenReturn(deviceIDVO);
+        when(actuatorDoubleTwo.getDeviceID()).thenReturn(deviceIDVO);
+
+        //Act
+        List<Actuator> actuators = repository.findByDeviceID(deviceIDVO);
+
+        //Assert
+        assertEquals(2, actuators.size());
+        assertTrue(actuators.contains(actuatorDoubleOne));
+        assertTrue(actuators.contains(actuatorDoubleTwo));
+    }
+
+    /**
+     * This test case verifies that an empty list of actuators is returned when the device ID is not present in the
+     * repository.
+     */
+    @Test
+    void givenNonExistentDeviceID_whenFindByDeviceID_ShouldReturnEmptyList() {
+        //Arrange
+        Actuator actuatorDoubleOne = mock(Actuator.class);
+        Actuator actuatorDoubleTwo = mock(Actuator.class);
+
+        ActuatorRepositoryMem repository = new ActuatorRepositoryMem();
+        repository.save(actuatorDoubleOne);
+        repository.save(actuatorDoubleTwo);
+
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+
+        //Act
+        List<Actuator> actuators = repository.findByDeviceID(deviceIDVO);
+
+        //Assert
+        assertEquals(0, actuators.size());
     }
 
 }

@@ -5,10 +5,12 @@ import org.springframework.stereotype.Repository;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.assembler.ActuatorAssembler;
 import smarthome.persistence.ActuatorRepository;
 import smarthome.persistence.jpa.datamodel.ActuatorDataModel;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -110,5 +112,22 @@ public class ActuatorRepositorySpringData implements ActuatorRepository {
             return false;
         }
         return findById(id) != null;
+    }
+
+    /**
+     * Finds actuators associated with a specific device ID.
+     *
+     * @param deviceID The ID of the device to search for actuators.
+     * @return A list of actuators associated with the specified device ID. If no devices are found or if an error occurs
+     * during the search, an empty list is returned.
+     */
+    @Override
+    public Iterable<Actuator> findByDeviceID(DeviceIDVO deviceID) {
+        try {
+            Iterable<ActuatorDataModel> actuatorDataModelIterable = this.iActuatorRepositorySpringData.findByDeviceID(deviceID.getID());
+            return ActuatorAssembler.toDomainList(this.actuatorFactory, actuatorDataModelIterable);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
     }
 }
