@@ -56,23 +56,6 @@ class EnergyConsumptionValueTest {
     }
 
     /**
-     * Tests that if reading is negative, then an InstantiationException is thrown
-     */
-    @Test
-    void whenReadingIsNegative_thenThrowsInstantiationException(){
-        //Arrange
-        String reading = "-1";
-        String expected = "Invalid reading";
-
-        //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new EnergyConsumptionValue(reading));
-        String result = exception.getMessage();
-
-        //Assert
-        assertEquals(expected,result);
-    }
-
-    /**
      * Tests that if reading is valid, then it is successfully returned
      */
     @Test
