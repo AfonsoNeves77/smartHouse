@@ -23,13 +23,12 @@ public class EnergyConsumptionValue implements SensorValueObject<Integer> {
      * @return boolean
      */
     private boolean validateReading(String reading) {
-        double valueOfReading;
         try {
-            valueOfReading = parseInt(reading);
+            parseInt(reading);
         } catch (NumberFormatException | NullPointerException e) {
             return false;
         }
-        return valueOfReading >= 0;
+        return true;
     }
 
     public Integer getValue() {
