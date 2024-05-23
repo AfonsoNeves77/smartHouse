@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.device.Device;
 import smarthome.domain.house.House;
+import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.Sensor;
 import smarthome.persistence.*;
@@ -39,6 +40,9 @@ class ApplicationBootstrapTest {
     @MockBean
     private ActuatorRepository actuatorRepository;
 
+    @MockBean
+    private LogRepository logRepository;
+
 
     /**
      * Test to verify the application bootstrap process, ensuring that specific data is persisted during application
@@ -52,9 +56,10 @@ class ApplicationBootstrapTest {
     void whenBootstrapRuns_ThenShouldSaveHouse() {
         verify(houseRepository, times(1)).save(any(House.class));
         verify(roomRepository, times(3)).save(any(Room.class));
-        verify(deviceRepository, times(4)).save(any(Device.class));
-        verify(sensorRepository, times(3)).save(any(Sensor.class));
+        verify(deviceRepository, times(5)).save(any(Device.class));
+        verify(sensorRepository, times(4)).save(any(Sensor.class));
         verify(actuatorRepository, times(1)).save(any(Actuator.class));
+        verify(logRepository, times(16)).save(any(Log.class));
     }
 
 
