@@ -391,7 +391,7 @@ public class LogServiceImpl implements LogService {
      */
     private Log getMaxValue (Iterable<Log> list){
         int peakGridConsumption = (int) list.iterator().next().getReading().getValue();
-        Log biggestReadingLog = null;
+        Log biggestReadingLog = list.iterator().next();
         for (Log log : list) {
             int powerGridValue = (int) log.getReading().getValue();
             if (powerGridValue >= peakGridConsumption) {

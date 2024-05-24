@@ -49,25 +49,6 @@ public class LogCTRLWeb {
         this.logService = logService;
     }
 
-    @PostMapping
-    public ResponseEntity<LogDTO> createLog(@RequestBody LogDTO log) {
-        DeviceIDVO deviceId = LogMapper.createDeviceIDVO(log);
-        SensorIDVO sensorId = LogMapper.createSensorIDVO(log);
-        SensorTypeIDVO sensorTypeId = LogMapper.createSensorTypeIDVO(log);
-        SensorValueObject<?> value = LogMapper.createReading(log, sensorTypeId);
-        try {
-            Optional<Log> logDomain = logService.addLog(value, sensorId, deviceId, sensorTypeId);
-            if (logDomain.isPresent()) {
-                LogDTO logDTO = LogMapper.domainToDTO(logDomain.get());
-                return new ResponseEntity<>(logDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     /**
      * Finds readings for a specific device within a time period.
      * <p>

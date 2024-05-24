@@ -1244,7 +1244,47 @@ class LogServiceImplTest {
         when(powerGridLog2.getSensorID()).thenReturn(powerGridSensorID2);
         when(powerGridLog2.getSensorTypeID()).thenReturn(powerGridSensorTypeID2);
 
-        List<Log> powerGridLogs = Arrays.asList(powerGridLog1, powerGridLog2);
+        LogIDVO powerGridLogID3 = mock(LogIDVO.class);
+        when(powerGridLogID3.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime3 = mock(TimeStampVO.class);
+        when(powerGridTime3.getValue()).thenReturn(LocalDateTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading3 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading3.getValue()).thenReturn(10);
+        DeviceIDVO powerGridDeviceID3 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID3.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID3 = mock(SensorIDVO.class);
+        when(powerGridSensorID3.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID3 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID3.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog3 = mock(Log.class);
+        when(powerGridLog3.getReading()).thenReturn(powerGridReading3);
+        when(powerGridLog3.getTime()).thenReturn(powerGridTime3);
+        when(powerGridLog3.getId()).thenReturn(powerGridLogID3);
+        when(powerGridLog3.getDeviceID()).thenReturn(powerGridDeviceID3);
+        when(powerGridLog3.getSensorID()).thenReturn(powerGridSensorID3);
+        when(powerGridLog3.getSensorTypeID()).thenReturn(powerGridSensorTypeID3);
+
+        LogIDVO powerGridLogID4 = mock(LogIDVO.class);
+        when(powerGridLogID4.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime4 = mock(TimeStampVO.class);
+        when(powerGridTime4.getValue()).thenReturn(LocalDateTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading4 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading4.getValue()).thenReturn(-3);
+        DeviceIDVO powerGridDeviceID4 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID4.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID4 = mock(SensorIDVO.class);
+        when(powerGridSensorID4.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID4 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID4.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog4 = mock(Log.class);
+        when(powerGridLog4.getReading()).thenReturn(powerGridReading4);
+        when(powerGridLog4.getTime()).thenReturn(powerGridTime4);
+        when(powerGridLog4.getId()).thenReturn(powerGridLogID4);
+        when(powerGridLog4.getDeviceID()).thenReturn(powerGridDeviceID4);
+        when(powerGridLog4.getSensorID()).thenReturn(powerGridSensorID4);
+        when(powerGridLog4.getSensorTypeID()).thenReturn(powerGridSensorTypeID4);
+
+        List<Log> powerGridLogs = Arrays.asList(powerGridLog1, powerGridLog2, powerGridLog3, powerGridLog4);
 
         System.setProperty("Grid Power Meter device", powerGridDeviceID);
         System.setProperty("Grid Power Meter sensor type", sensorTypeID);
@@ -1443,7 +1483,47 @@ class LogServiceImplTest {
         when(powerGridLog2.getSensorID()).thenReturn(powerGridSensorID2);
         when(powerGridLog2.getSensorTypeID()).thenReturn(powerGridSensorTypeID2);
 
-        List<Log> powerGridLogs = List.of(powerGridLog1, powerGridLog2);
+        LogIDVO powerGridLogID3 = mock(LogIDVO.class);
+        when(powerGridLogID3.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime3 = mock(TimeStampVO.class);
+        when(powerGridTime3.getValue()).thenReturn(LocalDateTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading3 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading3.getValue()).thenReturn(30);
+        DeviceIDVO powerGridDeviceID3 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID3.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID3 = mock(SensorIDVO.class);
+        when(powerGridSensorID3.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID3 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID3.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog3 = mock(Log.class);
+        when(powerGridLog3.getReading()).thenReturn(powerGridReading3);
+        when(powerGridLog3.getTime()).thenReturn(powerGridTime3);
+        when(powerGridLog3.getId()).thenReturn(powerGridLogID3);
+        when(powerGridLog3.getDeviceID()).thenReturn(powerGridDeviceID3);
+        when(powerGridLog3.getSensorID()).thenReturn(powerGridSensorID3);
+        when(powerGridLog3.getSensorTypeID()).thenReturn(powerGridSensorTypeID3);
+
+        LogIDVO powerGridLogID4 = mock(LogIDVO.class);
+        when(powerGridLogID4.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime4 = mock(TimeStampVO.class);
+        when(powerGridTime4.getValue()).thenReturn(LocalDateTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading4 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading4.getValue()).thenReturn(20);
+        DeviceIDVO powerGridDeviceID4 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID4.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID4 = mock(SensorIDVO.class);
+        when(powerGridSensorID4.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID4 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID4.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog4 = mock(Log.class);
+        when(powerGridLog4.getReading()).thenReturn(powerGridReading4);
+        when(powerGridLog4.getTime()).thenReturn(powerGridTime4);
+        when(powerGridLog4.getId()).thenReturn(powerGridLogID4);
+        when(powerGridLog4.getDeviceID()).thenReturn(powerGridDeviceID4);
+        when(powerGridLog4.getSensorID()).thenReturn(powerGridSensorID4);
+        when(powerGridLog4.getSensorTypeID()).thenReturn(powerGridSensorTypeID4);
+
+        List<Log> powerGridLogs = List.of(powerGridLog1, powerGridLog2, powerGridLog3, powerGridLog4);
 
 
         when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime))
