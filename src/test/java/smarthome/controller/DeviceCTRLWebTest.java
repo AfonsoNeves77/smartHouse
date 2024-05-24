@@ -45,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -101,7 +102,14 @@ public class DeviceCTRLWebTest {
 
         Device device = new Device(deviceIDVO, deviceNameVO, deviceModelVO, deviceStatusVO, roomIDVO);
 
-        Link expectedLink = linkTo(DeviceCTRLWeb.class).slash(deviceID).withSelfRel();
+        Link expectedSelfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDeviceById(deviceID)).withSelfRel();
+        Link expectedDeactivateLink = linkTo(methodOn(DeviceCTRLWeb.class).deactivateDevice(deviceID)).withRel("deactivateDevice");
+        Link expectedAddSensorLink = linkTo(methodOn(SensorCTRLWeb.class).addSensorToDevice(null)).withRel("addSensor");
+        Link expectedSensorTypeLink = linkTo(methodOn(SensorTypeCTRLWeb.class).getSensorTypes()).withRel("getSensorType");
+        Link expectedAddActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuator(null)).withRel("addActuator");
+        Link expectedListOfActuatorsLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorsByDeviceID(deviceID)).withRel("getActuatorsByDeviceId");
+        Link expectedActuatorTypeLink = linkTo(methodOn(ActuatorTypeCTRLWeb.class).getActuatorTypes()).withRel("getActuatorType");
+        Link expectedFindReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadingsInAPeriod(deviceID, null)).withRel("findReadingsInAPeriod");
 
         when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);
@@ -116,7 +124,14 @@ public class DeviceCTRLWebTest {
                 .andExpect(jsonPath("$.deviceStatus").value("true"))
                 .andExpect(jsonPath("$.roomID").value(roomID))
                 .andExpect(jsonPath("$._links.self").exists())
-                .andExpect(jsonPath("$._links.self.href").value(expectedLink.getHref()))
+                .andExpect(jsonPath("$._links.self.href").value(expectedSelfLink.getHref()))
+                .andExpect(jsonPath("$._links.deactivateDevice.href").value(expectedDeactivateLink.getHref()))
+                .andExpect(jsonPath("$._links.addSensor.href").value(expectedAddSensorLink.getHref()))
+                .andExpect(jsonPath("$._links.getSensorType.href").value(expectedSensorTypeLink.getHref()))
+                .andExpect(jsonPath("$._links.addActuator.href").value(expectedAddActuatorLink.getHref()))
+                .andExpect(jsonPath("$._links.getActuatorsByDeviceId.href").value(expectedListOfActuatorsLink.getHref()))
+                .andExpect(jsonPath("$._links.getActuatorType.href").value(expectedActuatorTypeLink.getHref()))
+                .andExpect(jsonPath("$._links.findReadingsInAPeriod.href").value(expectedFindReadingsLink.getHref()))
                 .andReturn();
     }
 
@@ -386,6 +401,12 @@ public class DeviceCTRLWebTest {
         deviceList.add(firstDevice);
         deviceList.add(secondDevice);
 
+        Link expectedFirstDeviceSelfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDeviceById(firstDevice.getId().getID())).withSelfRel();
+        Link expectedSecondDeviceSelfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDeviceById(secondDevice.getId().getID())).withSelfRel();
+        Link expectedSelfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDevicesByRoomId(roomID)).withSelfRel();
+        Link expectedAddDeviceLink = linkTo(methodOn(DeviceCTRLWeb.class).addDeviceToRoom(null)).withRel("addDevice");
+
+
         when(roomRepository.isPresent(roomIDVO)).thenReturn(true);
         when(deviceRepository.findByRoomID(roomIDVO)).thenReturn(deviceList);
 //         Act + Assert
@@ -398,12 +419,13 @@ public class DeviceCTRLWebTest {
                 .andExpect(jsonPath("$._embedded.deviceDTOList[0].deviceName").value(firstDeviceName))
                 .andExpect(jsonPath("$._embedded.deviceDTOList[0].deviceModel").value(firstDeviceModel))
                 .andExpect(jsonPath("$._embedded.deviceDTOList[0].roomID").value(firstDeviceRoomID))
-                .andExpect(jsonPath("$._embedded.deviceDTOList[0]._links.self").exists())
+                .andExpect(jsonPath("$._embedded.deviceDTOList[0]._links.self.href").value(expectedFirstDeviceSelfLink.getHref()))
                 .andExpect(jsonPath("$._embedded.deviceDTOList[1].deviceName").value(secondDeviceName))
                 .andExpect(jsonPath("$._embedded.deviceDTOList[1].deviceModel").value(secondDeviceModel))
                 .andExpect(jsonPath("$._embedded.deviceDTOList[1].roomID").value(secondDeviceRoomID))
-                .andExpect(jsonPath("$._embedded.deviceDTOList[1]._links.self").exists())
-                .andExpect(jsonPath("$._links.self").exists())
+                .andExpect(jsonPath("$._embedded.deviceDTOList[1]._links.self.href").value(expectedSecondDeviceSelfLink.getHref()))
+                .andExpect(jsonPath("$._links.self.href").value(expectedSelfLink.getHref()))
+                .andExpect(jsonPath("$._links.addDevice.href").value(expectedAddDeviceLink.getHref()))
                 .andReturn();
     }
 

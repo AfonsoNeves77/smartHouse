@@ -67,6 +67,27 @@ public class DeviceCTRLWeb {
                 Link selfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDeviceById(deviceDTO.getDeviceID())).withSelfRel();
                 deviceDTO.add(selfLink);
 
+                Link deactivateLink = linkTo(methodOn(DeviceCTRLWeb.class).deactivateDevice(deviceDTO.getDeviceID())).withRel("deactivateDevice");
+                deviceDTO.add(deactivateLink);
+
+                Link addSensorLink = linkTo(methodOn(SensorCTRLWeb.class).addSensorToDevice(null)).withRel("addSensor");
+                deviceDTO.add(addSensorLink);
+
+                Link sensorTypeLink = linkTo(methodOn(SensorTypeCTRLWeb.class).getSensorTypes()).withRel("getSensorType");
+                deviceDTO.add(sensorTypeLink);
+
+                Link addActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuator(null)).withRel("addActuator");
+                deviceDTO.add(addActuatorLink);
+
+                Link listOfActuatorsLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorsByDeviceID(deviceDTO.getDeviceID())).withRel("getActuatorsByDeviceId");
+                deviceDTO.add(listOfActuatorsLink);
+
+                Link actuatorTypeLink = linkTo(methodOn(ActuatorTypeCTRLWeb.class).getActuatorTypes()).withRel("getActuatorType");
+                deviceDTO.add(actuatorTypeLink);
+
+                Link findReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadingsInAPeriod(deviceDTO.getDeviceID(), null)).withRel("findReadingsInAPeriod");
+                deviceDTO.add(findReadingsLink);
+
                 return new ResponseEntity<>(deviceDTO, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -132,6 +153,9 @@ public class DeviceCTRLWeb {
             CollectionModel<DeviceDTO> deviceDTOCollectionModel = CollectionModel.of(deviceDTOList);
             Link selfLink = linkTo(methodOn(DeviceCTRLWeb.class).getDevicesByRoomId(id)).withSelfRel();
             deviceDTOCollectionModel.add(selfLink);
+
+            Link addDeviceLink = linkTo(methodOn(DeviceCTRLWeb.class).addDeviceToRoom(null)).withRel("addDevice");
+            deviceDTOCollectionModel.add(addDeviceLink);
 
             return new ResponseEntity<>(deviceDTOCollectionModel, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
