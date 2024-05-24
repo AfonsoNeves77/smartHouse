@@ -17,10 +17,7 @@ import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LogServiceImpl implements LogService {
@@ -301,4 +298,108 @@ public class LogServiceImpl implements LogService {
 
         return from.isAfter(to) || to.isAfter(LocalDateTime.now());
     }
+
+
+    /**
+     * Retrieves the peak power consumption of the house within the specified time period.
+     * The method performs several checks to ensure that the input parameters are valid and that there are available logs
+     * within the specified time frame. If valid logs are found, it calculates the peak power consumption considering all
+     * logs from the grid power meter and power source devices within the specified delta time window.
+     *
+     * @param start the start timestamp of the period, represented as a TimeStampVO object.
+     * @param end the end timestamp of the period, represented as a TimeStampVO object.
+     * @param delta the delta value to define the time window for matching logs, represented as a DeltaVO object.
+     * @return a String message with the peak power consumption or an error message if no valid logs are found.
+     * @throws IllegalArgumentException if the parameters are invalid or the timestamps are not valid.
+     */
+    public String getPeakPowerConsumption(TimeStampVO start, TimeStampVO end, DeltaVO delta) {
+        if (areParamsNull(start, end, delta)) {
+            throw new IllegalArgumentException("Invalid parameters");
+        }
+        // Checks if the initial date time and final date time are valid, and that the final date time is not in the future
+        // and that the initial date is before the final date.
+        if(areTimeStampsInvalid(start, end)){
+            throw new IllegalArgumentException("Invalid Time Stamps");
+        }
+
+        // Retrieves the Power Grid Meter deviceID and its sensorTypeID from the system properties
+        // and queries the database for logs from the Grid Power Meter within the specified time frame.
+        // Also, queries the database for logs from Power Source Devices that have the same SensorType but
+        // are not the Grid Power Meter, and that have negative readings, within the specified time frame.
+        String deviceID = System.getProperty("Grid Power Meter device");
+        String sensorTypeID = System.getProperty("Grid Power Meter sensor type");
+        Iterable<Log> powerGridLogs = logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, start, end);
+        Iterable<Log> powerSourceLogs = logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, start, end);
+
+        // Checks if there are no results for Logs from the Grid Power Meter, within the time frame provided.
+        if(!powerGridLogs.iterator().hasNext()){
+            return "There are no records available from the Grid Power Meter for the given period";
+        }
+
+        // Checks if there are any Power Source Devices from the query, and, if
+        // not, retrieves the peak consumption from the Grid Power Meter Only.
+        if(!powerSourceLogs.iterator().hasNext()){
+            Log maxValueLog = getMaxValue(powerGridLogs);
+            return "The Peak Power Consumption from the Grid within the selected Period was " + maxValueLog.getReading().getValue() +
+                    " Wh which happened at " + maxValueLog.getTime().getValue() + " (No Power Source Device Logs were found within the selected period)";
+        }
+
+        int peakConsumption = 0;
+        String instantTime = null;
+        boolean foundInstantLogMatch = false;
+
+        // Checks the power grid device and all power source devices for logs/records that are within the defined delta
+        // (in case there are records/logs found in the query)
+        // Compares the two logs to get the peak power consumption and the instant where it happened
+        for (Log powerGridLog : powerGridLogs) {
+            TimeStampVO gridTime = powerGridLog.getTime();
+            int totalValue = (int) powerGridLog.getReading().getValue();
+
+            for (Log powerSourceLog : powerSourceLogs) {
+                TimeStampVO sourceTime = powerSourceLog.getTime();
+
+                if (isWithinTimeWindow(gridTime, sourceTime, delta)) {
+                    int sourceValue = (int) powerSourceLog.getReading().getValue();
+                    totalValue += Math.abs(sourceValue);
+                    foundInstantLogMatch = true;
+
+                }
+            }
+            if (totalValue>peakConsumption){
+                peakConsumption = totalValue;
+                instantTime = powerGridLog.getTime().getValue().toString();
+            }
+        }
+        // Checks if the foundInstantLogMatch variable has not been altered since it has been initialized
+        // In case the variable has not been altered (is still false) it means there were no matches
+        // in the same instant (instant is defined by the delta)
+        // In case the variable is true, it means that there were matches found that are in the same instant
+        // and retrieves the peak consumption of all the instantaneous readings, as well as the instant time when
+        // that occurred.
+        if(!foundInstantLogMatch){
+            return "Readings were found within the provided time span, but with no instant matches within the delta provided";
+        } else{
+            return "The Peak Power Consumption of the House within the selected Period was of " + peakConsumption+ " Wh which happened at " + instantTime;
+        }
+    }
+
+    /**
+     * Retrieves the log with the maximum reading value from the provided list of logs.
+     *
+     * @param list an Iterable of Log objects.
+     * @return the Log object with the maximum reading value.
+     */
+    private Log getMaxValue (Iterable<Log> list){
+        int peakGridConsumption = (int) list.iterator().next().getReading().getValue();
+        Log biggestReadingLog = null;
+        for (Log log : list) {
+            int powerGridValue = (int) log.getReading().getValue();
+            if (powerGridValue >= peakGridConsumption) {
+                peakGridConsumption = powerGridValue;
+                biggestReadingLog = log;
+            }
+        }
+        return biggestReadingLog;
+    }
+
 }

@@ -5,9 +5,14 @@ import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.devicevo.DeviceModelVO;
+import smarthome.domain.vo.devicevo.DeviceNameVO;
+import smarthome.domain.vo.devicevo.DeviceStatusVO;
+import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
@@ -19,6 +24,7 @@ import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -1056,4 +1062,424 @@ class LogServiceImplTest {
         assertEquals(expected,result1);
         assertEquals(expected,result2);
     }
+
+    @Test
+    void whenGivenNullParameters_getPeakPowerConsumptionThrowsIllegalArgumentException(){
+        // Arrange
+        String expected = "Invalid parameters";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        TimeStampVO start = mock(TimeStampVO.class);
+        TimeStampVO end = mock(TimeStampVO.class);
+        DeltaVO delta = mock(DeltaVO.class);
+
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(null,end, delta));
+        String result1 = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(start, null, delta));
+        String result2 = exception2.getMessage();
+
+        Exception exception3 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(start, end, null));
+        String result3 = exception3.getMessage();
+
+        Exception exception4 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(null, null,null));
+        String result4 = exception4.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expected,result2);
+        assertEquals(expected,result3);
+        assertEquals(expected,result4);
+    }
+
+    /**
+     * Tests the behavior of the getPeakPowerConsumption method in LogServiceImpl
+     * when given invalid timestamps, ensuring it throws an IllegalArgumentException
+     * with the message "Invalid Time Stamps".
+     */
+    @Test
+    void whenGivenInvalidTimeStamps_getPeakPowerConsumptionThrowsIllegalArgumentException(){
+        // Arrange
+        String expected = "Invalid Time Stamps";
+
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+        DeltaVO delta = mock(DeltaVO.class);
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        LocalDateTime from = mock(LocalDateTime.class);
+        LocalDateTime to = mock(LocalDateTime.class);
+        LocalDateTime placeholder = mock(LocalDateTime.class);
+
+        when(from.isAfter(to)).thenReturn(true);
+        when(to.isAfter(placeholder)).thenReturn(true);
+
+        when(initialTime.getValue()).thenReturn(from);
+        when(finalTime.getValue()).thenReturn(to);
+
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(initialTime,finalTime, delta));
+        String result1 = exception1.getMessage();
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> service.getPeakPowerConsumption(initialTime,finalTime, delta));
+        String result2 = exception2.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expected,result2);
+    }
+
+    @Test
+    void whenGetPeakPowerConsumptionIsCalled_ifPowerGridMeterDeviceLogEmpty_ThenReturnsAppropriateStringMessage() {
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        when(initialTime.getValue()).thenReturn(LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        when(finalTime.getValue()).thenReturn(LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.SECONDS));
+        DeltaVO delta = mock(DeltaVO.class);
+        String deviceID = "12345";
+        String sensorTypeID = "EnergyConsumptionSensor";
+
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialTime, finalTime))
+                .thenReturn(Collections.emptyList());
+
+        String expectedMessage = "There are no records available from the Grid Power Meter for the given period";
+
+        // Act
+        String result = logService.getPeakPowerConsumption(initialTime, finalTime, delta);
+
+        // Assert
+        assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption method in LogServiceImpl
+     * when the power grid meter device log is empty for the specified time period.
+     * <p>
+     * This test ensures that the method returns an appropriate string message
+     * when no records are available from the Grid Power Meter for the given period.
+     * </p>
+     */
+    @Test
+    void whenGetPeakPowerConsumptionIsCalled_ifPowerSourceDeviceLogEmpty_ThenReturnsPeakGridPowerMeterConsumptionStringMessage() {
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        when(initialTime.getValue()).thenReturn(LocalDateTime.now().minusHours(10).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        when(finalTime.getValue()).thenReturn(LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.SECONDS));
+        DeltaVO delta = mock(DeltaVO.class);
+        String powerGridDeviceID = "12345";
+        String sensorTypeID = "EnergyConsumptionSensor";
+
+        LogIDVO powerGridLogID1 = mock(LogIDVO.class);
+        when(powerGridLogID1.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime1 = mock(TimeStampVO.class);
+        when(powerGridTime1.getValue()).thenReturn(LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading1 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading1.getValue()).thenReturn(20);
+        DeviceIDVO powerGridDeviceID1 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID1.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID1 = mock(SensorIDVO.class);
+        when(powerGridSensorID1.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID1 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID1.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog1 = mock(Log.class);
+        when(powerGridLog1.getReading()).thenReturn(powerGridReading1);
+        when(powerGridLog1.getTime()).thenReturn(powerGridTime1);
+        when(powerGridLog1.getId()).thenReturn(powerGridLogID1);
+        when(powerGridLog1.getDeviceID()).thenReturn(powerGridDeviceID1);
+        when(powerGridLog1.getSensorID()).thenReturn(powerGridSensorID1);
+        when(powerGridLog1.getSensorTypeID()).thenReturn(powerGridSensorTypeID1);
+
+        LogIDVO powerGridLogID2 = mock(LogIDVO.class);
+        when(powerGridLogID2.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime2 = mock(TimeStampVO.class);
+        when(powerGridTime2.getValue()).thenReturn(LocalDateTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading2 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading2.getValue()).thenReturn(30);
+        DeviceIDVO powerGridDeviceID2 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID2.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID2 = mock(SensorIDVO.class);
+        when(powerGridSensorID2.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID2 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID2.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog2 = mock(Log.class);
+        when(powerGridLog2.getReading()).thenReturn(powerGridReading2);
+        when(powerGridLog2.getTime()).thenReturn(powerGridTime2);
+        when(powerGridLog2.getId()).thenReturn(powerGridLogID2);
+        when(powerGridLog2.getDeviceID()).thenReturn(powerGridDeviceID2);
+        when(powerGridLog2.getSensorID()).thenReturn(powerGridSensorID2);
+        when(powerGridLog2.getSensorTypeID()).thenReturn(powerGridSensorTypeID2);
+
+        List<Log> powerGridLogs = Arrays.asList(powerGridLog1, powerGridLog2);
+
+        System.setProperty("Grid Power Meter device", powerGridDeviceID);
+        System.setProperty("Grid Power Meter sensor type", sensorTypeID);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime))
+                .thenReturn(Collections.emptyList());
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime))
+                .thenReturn(powerGridLogs);
+
+        String expectedMessage = "The Peak Power Consumption from the Grid within the selected Period was " + powerGridReading2.getValue() + " Wh which happened at " + powerGridTime2.getValue() + " (No Power Source Device Logs were found within the selected period)";
+
+        // Act
+        String result = logService.getPeakPowerConsumption(initialTime, finalTime, delta);
+
+        // Assert
+        assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption method in LogServiceImpl
+     * when there are no matching instant readings for the specified time period.
+     * <p>
+     * This test ensures that the method returns an appropriate string message
+     * when readings are found within the provided time span but with no instant matches
+     * within the provided delta.
+     * </p>
+     */
+    @Test
+    void whenGetPeakPowerConsumptionIsCalled_ifThereAreNoMatchingInstantReadings_ThenReturnsAppropriateStringMessage() {
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        when(initialTime.getValue()).thenReturn(LocalDateTime.now().minusMinutes(50).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        when(finalTime.getValue()).thenReturn(LocalDateTime.now().minusMinutes(1).truncatedTo(ChronoUnit.SECONDS));
+        DeltaVO delta = mock(DeltaVO.class);
+        when(delta.getValue()).thenReturn(5);
+        String powerGridDeviceID = "12345";
+        String sensorTypeID = "EnergyConsumptionSensor";
+
+        System.setProperty("Grid Power Meter device", powerGridDeviceID);
+        System.setProperty("Grid Power Meter sensor type", sensorTypeID);
+
+        LogIDVO powerGridLogID1 = mock(LogIDVO.class);
+        when(powerGridLogID1.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime1 = mock(TimeStampVO.class);
+        when(powerGridTime1.getValue()).thenReturn(LocalDateTime.now().minusMinutes(40).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading1 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading1.getValue()).thenReturn(20);
+        DeviceIDVO powerGridDeviceID1 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID1.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID1 = mock(SensorIDVO.class);
+        when(powerGridSensorID1.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID1 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID1.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog1 = mock(Log.class);
+        when(powerGridLog1.getReading()).thenReturn(powerGridReading1);
+        when(powerGridLog1.getTime()).thenReturn(powerGridTime1);
+        when(powerGridLog1.getId()).thenReturn(powerGridLogID1);
+        when(powerGridLog1.getDeviceID()).thenReturn(powerGridDeviceID1);
+        when(powerGridLog1.getSensorID()).thenReturn(powerGridSensorID1);
+        when(powerGridLog1.getSensorTypeID()).thenReturn(powerGridSensorTypeID1);
+
+        LogIDVO powerGridLogID2 = mock(LogIDVO.class);
+        when(powerGridLogID2.getID()).thenReturn("12456");
+        TimeStampVO powerGridTime2 = mock(TimeStampVO.class);
+        when(powerGridTime2.getValue()).thenReturn(LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading2 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading2.getValue()).thenReturn(30);
+        DeviceIDVO powerGridDeviceID2 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID2.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID2 = mock(SensorIDVO.class);
+        when(powerGridSensorID2.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID2 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID2.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog2 = mock(Log.class);
+        when(powerGridLog2.getReading()).thenReturn(powerGridReading2);
+        when(powerGridLog2.getTime()).thenReturn(powerGridTime2);
+        when(powerGridLog2.getId()).thenReturn(powerGridLogID2);
+        when(powerGridLog2.getDeviceID()).thenReturn(powerGridDeviceID2);
+        when(powerGridLog2.getSensorID()).thenReturn(powerGridSensorID2);
+        when(powerGridLog2.getSensorTypeID()).thenReturn(powerGridSensorTypeID2);
+
+        List<Log> powerGridLogs = List.of(powerGridLog1, powerGridLog2);
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime))
+                .thenReturn(powerGridLogs);
+
+        LogIDVO powerSourceLogID1 = mock(LogIDVO.class);
+        when(powerSourceLogID1.getID()).thenReturn("123456");
+        TimeStampVO powerSourceTime1 = mock(TimeStampVO.class);
+        when(powerSourceTime1.getValue()).thenReturn(LocalDateTime.now().minusMinutes(20).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerSourceReading1 = mock(EnergyConsumptionValue.class);
+        when(powerSourceReading1.getValue()).thenReturn(-10);
+        DeviceIDVO powerSourceDeviceID1 = mock(DeviceIDVO.class);
+        when(powerSourceDeviceID1.getID()).thenReturn("123456789");
+        SensorIDVO powerSourceSensorID1 = mock(SensorIDVO.class);
+        when(powerSourceSensorID1.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerSourceSensorTypeID1 = mock(SensorTypeIDVO.class);
+        when(powerSourceSensorTypeID1.getID()).thenReturn(sensorTypeID);
+        Log powerSourceLog1 = mock(Log.class);
+        when(powerSourceLog1.getReading()).thenReturn(powerSourceReading1);
+        when(powerSourceLog1.getTime()).thenReturn(powerSourceTime1);
+        when(powerSourceLog1.getId()).thenReturn(powerSourceLogID1);
+        when(powerSourceLog1.getDeviceID()).thenReturn(powerSourceDeviceID1);
+        when(powerSourceLog1.getSensorID()).thenReturn(powerSourceSensorID1);
+        when(powerSourceLog1.getSensorTypeID()).thenReturn(powerSourceSensorTypeID1);
+
+        List<Log> powerSourceLogs = List.of(powerSourceLog1);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime)).thenReturn(powerSourceLogs);
+
+        String expectedMessage = "Readings were found within the provided time span, but with no instant matches within the delta provided";
+
+        // Act
+        String result = logService.getPeakPowerConsumption(initialTime, finalTime, delta);
+
+        // Assert
+        assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption method in LogServiceImpl
+     * when there are matching instant readings for the specified time period.
+     * <p>
+     * This test ensures that the method returns a successful string message
+     * containing the peak power consumption of the house within the selected period.
+     * </p>
+     */
+    @Test
+    void whenGetPeakPowerConsumptionIsCalled_ifThereAreMatchingInstantReadings_ThenReturnsSuccessfulStringMessage() {
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+
+        LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        TimeStampVO initialTime = mock(TimeStampVO.class);
+        when(initialTime.getValue()).thenReturn(LocalDateTime.now().minusMinutes(10).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO finalTime = mock(TimeStampVO.class);
+        when(finalTime.getValue()).thenReturn(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        DeltaVO delta = mock(DeltaVO.class);
+        when(delta.getValue()).thenReturn(5);
+        String powerGridDeviceID = "12345";
+        String sensorTypeID = "EnergyConsumptionSensor";
+
+        System.setProperty("Grid Power Meter device", powerGridDeviceID);
+        System.setProperty("Grid Power Meter sensor type", sensorTypeID);
+
+        LogIDVO powerGridLogID1 = mock(LogIDVO.class);
+        when(powerGridLogID1.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime1 = mock(TimeStampVO.class);
+        when(powerGridTime1.getValue()).thenReturn(LocalDateTime.now().minusMinutes(2).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading1 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading1.getValue()).thenReturn(20);
+        DeviceIDVO powerGridDeviceID1 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID1.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID1 = mock(SensorIDVO.class);
+        when(powerGridSensorID1.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID1 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID1.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog1 = mock(Log.class);
+        when(powerGridLog1.getReading()).thenReturn(powerGridReading1);
+        when(powerGridLog1.getTime()).thenReturn(powerGridTime1);
+        when(powerGridLog1.getId()).thenReturn(powerGridLogID1);
+        when(powerGridLog1.getDeviceID()).thenReturn(powerGridDeviceID1);
+        when(powerGridLog1.getSensorID()).thenReturn(powerGridSensorID1);
+        when(powerGridLog1.getSensorTypeID()).thenReturn(powerGridSensorTypeID1);
+
+        LogIDVO powerGridLogID2 = mock(LogIDVO.class);
+        when(powerGridLogID2.getID()).thenReturn("123456");
+        TimeStampVO powerGridTime2 = mock(TimeStampVO.class);
+        when(powerGridTime2.getValue()).thenReturn(LocalDateTime.now().minusMinutes(8).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerGridReading2 = mock(EnergyConsumptionValue.class);
+        when(powerGridReading2.getValue()).thenReturn(30);
+        DeviceIDVO powerGridDeviceID2 = mock(DeviceIDVO.class);
+        when(powerGridDeviceID2.getID()).thenReturn(powerGridDeviceID);
+        SensorIDVO powerGridSensorID2 = mock(SensorIDVO.class);
+        when(powerGridSensorID2.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerGridSensorTypeID2 = mock(SensorTypeIDVO.class);
+        when(powerGridSensorTypeID2.getID()).thenReturn(sensorTypeID);
+        Log powerGridLog2 = mock(Log.class);
+        when(powerGridLog2.getReading()).thenReturn(powerGridReading2);
+        when(powerGridLog2.getTime()).thenReturn(powerGridTime2);
+        when(powerGridLog2.getId()).thenReturn(powerGridLogID2);
+        when(powerGridLog2.getDeviceID()).thenReturn(powerGridDeviceID2);
+        when(powerGridLog2.getSensorID()).thenReturn(powerGridSensorID2);
+        when(powerGridLog2.getSensorTypeID()).thenReturn(powerGridSensorTypeID2);
+
+        List<Log> powerGridLogs = List.of(powerGridLog1, powerGridLog2);
+
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, sensorTypeID, initialTime, finalTime))
+                .thenReturn(powerGridLogs);
+
+        LogIDVO powerSourceLogID1 = mock(LogIDVO.class);
+        when(powerSourceLogID1.getID()).thenReturn("123456");
+        TimeStampVO powerSourceTime1 = mock(TimeStampVO.class);
+        when(powerSourceTime1.getValue()).thenReturn(LocalDateTime.now().minusMinutes(4).truncatedTo(ChronoUnit.SECONDS));
+        SensorValueObject powerSourceReading1 = mock(EnergyConsumptionValue.class);
+        when(powerSourceReading1.getValue()).thenReturn(-5);
+        DeviceIDVO powerSourceDeviceID1 = mock(DeviceIDVO.class);
+        when(powerSourceDeviceID1.getID()).thenReturn("8229651651");
+        SensorIDVO powerSourceSensorID1 = mock(SensorIDVO.class);
+        when(powerSourceSensorID1.getID()).thenReturn("12456789");
+        SensorTypeIDVO powerSourceSensorTypeID1 = mock(SensorTypeIDVO.class);
+        when(powerSourceSensorTypeID1.getID()).thenReturn(sensorTypeID);
+        Log powerSourceLog1 = mock(Log.class);
+        when(powerSourceLog1.getReading()).thenReturn(powerSourceReading1);
+        when(powerSourceLog1.getTime()).thenReturn(powerSourceTime1);
+        when(powerSourceLog1.getId()).thenReturn(powerSourceLogID1);
+        when(powerSourceLog1.getDeviceID()).thenReturn(powerSourceDeviceID1);
+        when(powerSourceLog1.getSensorID()).thenReturn(powerSourceSensorID1);
+        when(powerSourceLog1.getSensorTypeID()).thenReturn(powerSourceSensorTypeID1);
+
+        List<Log> powerSourceLogs = List.of(powerSourceLog1);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(powerGridDeviceID, powerSourceSensorTypeID1.getID(), initialTime, finalTime)).thenReturn(powerSourceLogs);
+
+        String expectedMessage = "The Peak Power Consumption of the House within the selected Period was of " + Math.subtractExact((int) powerGridReading2.getValue(), (int) powerSourceReading1.getValue()) + " Wh which happened at " +powerGridTime2.getValue();
+
+        // Act
+        String result = logService.getPeakPowerConsumption(initialTime, finalTime, delta);
+
+        // Assert
+        assertEquals(expectedMessage, result);
+    }
+
 }
