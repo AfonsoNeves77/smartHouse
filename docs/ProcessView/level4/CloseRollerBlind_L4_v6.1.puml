@@ -20,7 +20,7 @@ participant "simHardwareAct:ActuatorExternalService" as AES
 [o-> R : POST /actuators/{actuatorId}
 activate R
 
-R -> ACW : closeRollerBlind(String actuatorId)
+R -> ACW : closeRollerBlind(actuatorId)
 activate ACW
 
 ACW -> AM : createActuatorIDVO(actuatorId)

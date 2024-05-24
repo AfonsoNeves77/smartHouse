@@ -15,7 +15,7 @@ participant "**<<component (C4)>>**\nServer" as SERVER
 participant "**<<component (C4)>>**\nDatabase" as DB
 
 
-[o-> SERVER : Close the roller blind with this ID
+[o-> SERVER : Use this actuator ID to close a roller blind
 activate SERVER
 
 SERVER -> DB: Verify if actuator exists
