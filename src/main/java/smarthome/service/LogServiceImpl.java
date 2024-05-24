@@ -16,9 +16,6 @@ import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -303,21 +300,5 @@ public class LogServiceImpl implements LogService {
         LocalDateTime to = end.getValue();
 
         return from.isAfter(to) || to.isAfter(LocalDateTime.now());
-    }
-
-
-    /**
-     * Reads the sensor ID from a file.
-     *
-     * @return The sensor ID read from the file as String.
-     */
-    private String readSensorIdFromFile() {
-        String sensorId = "";
-        try {
-            sensorId = new String(Files.readAllBytes(Paths.get("sensorId.txt")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sensorId;
     }
 }
