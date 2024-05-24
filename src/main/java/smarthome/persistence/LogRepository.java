@@ -4,6 +4,9 @@ import smarthome.domain.log.Log;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
+
+import java.util.Optional;
 
 /**
  * This interface defines the operations that a LogRepository must support.
@@ -21,4 +24,6 @@ public interface LogRepository extends Repository<LogIDVO, Log>{
      */
     Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to);
     Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end);
+    Iterable<Log> findByDeviceIDAndSensorTypeAndTimeBetween(String deviceID, String sensorType, TimeStampVO start, TimeStampVO end);
+    Iterable<Log> findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(String excludeDeviceID, String sensorType, TimeStampVO start, TimeStampVO end);
 }

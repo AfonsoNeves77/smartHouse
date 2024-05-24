@@ -7,6 +7,7 @@ import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
@@ -156,6 +157,63 @@ public class LogRepositorySpringData implements LogRepository {
             LocalDateTime endTime = end.getValue();
             Iterable<LogDataModel> listOfLogs = this.iLogRepositorySpringData.findByDeviceIDAndSensorTypeAndTimeBetween(deviceIDString, sensorType, startTime, endTime);
             return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, listOfLogs);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Finds and retrieves logs from the database for a specific device and sensor type within a given time range using Spring Data.
+     * This method performs validation on the input parameters to ensure they are not null. It converts the TimeStampVO
+     * objects to LocalDateTime before passing them to the Spring Data repository method.
+     * If any parameter is invalid or if a DataAccessException occurs during query execution, null is returned.
+     *
+     * @param deviceID the ID of the device to filter logs.
+     * @param sensorType the type of sensor to filter logs.
+     * @param start the start timestamp of the period, represented as a TimeStampVO object.
+     * @param end the end timestamp of the period, represented as a TimeStampVO object.
+     * @return an Iterable of Log objects that match the specified criteria, or null if no logs are found or a DataAccessException occurs.
+     * @throws IllegalArgumentException if any of the input parameters are null.
+     */
+    @Override
+    public Iterable<Log> findByDeviceIDAndSensorTypeAndTimeBetween(String deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
+        if (deviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+        try {
+            LocalDateTime startTime = start.getValue();
+            LocalDateTime endTime = end.getValue();
+            Iterable<LogDataModel> gridPowerMeterLogsDataModel = this.iLogRepositorySpringData.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorType, startTime, endTime);
+            return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, gridPowerMeterLogsDataModel);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Finds and retrieves logs from the database for a specific sensor type and time range, excluding logs from a specific device
+     * and with negative readings, using Spring Data. This method performs validation on the input parameters to ensure they are not null.
+     * It converts the TimeStampVO objects to LocalDateTime before passing them to the Spring Data repository method.
+     * If any parameter is invalid or if a DataAccessException occurs during query execution, null is returned.
+     *
+     * @param excludeDeviceID the ID of the device to exclude from the logs.
+     * @param sensorType the type of sensor to filter logs.
+     * @param start the start timestamp of the period, represented as a TimeStampVO object.
+     * @param end the end timestamp of the period, represented as a TimeStampVO object.
+     * @return an Iterable of Log objects that match the specified criteria, or null if no logs are found or a DataAccessException occurs.
+     * @throws IllegalArgumentException if any of the input parameters are null.
+     */
+    public Iterable<Log> findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(String excludeDeviceID, String sensorType, TimeStampVO start, TimeStampVO end){
+        if (excludeDeviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+        try {
+            LocalDateTime startTime = start.getValue();
+            LocalDateTime endTime = end.getValue();
+            Iterable<LogDataModel> powerSourceLogsDataModel = this.iLogRepositorySpringData.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(excludeDeviceID, sensorType, startTime, endTime);
+            return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, powerSourceLogsDataModel);
         } catch (DataAccessException e) {
             return null;
         }

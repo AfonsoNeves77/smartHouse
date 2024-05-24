@@ -9,6 +9,7 @@ import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
@@ -129,6 +130,7 @@ public class LogRepositoryJPA implements LogRepository {
         return Optional.ofNullable(em.find(LogDataModel.class, logIDVO.getID()));
     }
 
+
     /**
      * Retrieves all logs associated with a specific device within a given time period.
      *
@@ -188,4 +190,78 @@ public class LogRepositoryJPA implements LogRepository {
             return Collections.emptyList();
         }
     }
+
+
+    /**
+     * Finds and retrieves logs from the database for a specific device and sensor type within a given time range.
+     * This method performs validation on the input parameters to ensure they are not null. It uses an EntityManager
+     * to execute a query that selects logs matching the specified device ID, sensor type, and time range.
+     * If any parameter is invalid or if an error occurs during query execution, an empty list is returned.
+     *
+     * @param deviceID the ID of the device to filter logs.
+     * @param sensorType the type of sensor to filter logs.
+     * @param start the start timestamp of the period, represented as a TimeStampVO object.
+     * @param end the end timestamp of the period, represented as a TimeStampVO object.
+     * @return an Iterable of Log objects that match the specified criteria, or an empty list if no logs are found or an error occurs.
+     * @throws IllegalArgumentException if any of the input parameters are null.
+     */
+    public Iterable<Log> findByDeviceIDAndSensorTypeAndTimeBetween(String deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
+        if (deviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            Query query = em.createQuery("SELECT l FROM LogDataModel l WHERE l.deviceID = :deviceID AND l.sensorTypeID = :sensorTypeID AND l.time BETWEEN :start AND :end");
+            query.setParameter("deviceID", deviceID);
+            query.setParameter("sensorTypeID", sensorType);
+            query.setParameter("start", start.getValue());
+            query.setParameter("end", end.getValue());
+            List<LogDataModel> listOfLogs = query.getResultList();
+            return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
+    }
+
+
+    /**
+     * Finds and retrieves logs from the database for a specific sensor type and time range, excluding logs from a specific device,
+     * and with negative readings. This method performs validation on the input parameters to ensure they are not null. It uses an
+     * EntityManager to execute a query that selects logs matching the specified criteria.
+     * If any parameter is invalid or if an error occurs during query execution, an empty list is returned.
+     *
+     * @param excludeDeviceID the ID of the device to exclude from the logs.
+     * @param sensorType the type of sensor to filter logs.
+     * @param start the start timestamp of the period, represented as a TimeStampVO object.
+     * @param end the end timestamp of the period, represented as a TimeStampVO object.
+     * @return an Iterable of Log objects that match the specified criteria, or an empty list if no logs are found or an error occurs.
+     * @throws IllegalArgumentException if any of the input parameters are null.
+     */
+    public Iterable<Log> findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(String excludeDeviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
+        if (excludeDeviceID == null || sensorType == null || start == null || end == null) {
+            throw new IllegalArgumentException("Invalid parameters.");
+        }
+
+        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+            Query query = em.createQuery(
+                    "SELECT l FROM LogDataModel l " +
+                            "WHERE l.deviceID != :excludeDeviceID " +
+                            "AND l.sensorTypeID = :sensorTypeID " +
+                            "AND l.time BETWEEN :start AND :end " +
+                            "AND l.reading LIKE :negativeSign"  // Check if the reading contains the minus sign
+            );
+            query.setParameter("excludeDeviceID", excludeDeviceID);
+            query.setParameter("sensorTypeID", sensorType);
+            query.setParameter("start", start.getValue());
+            query.setParameter("end", end.getValue());
+            query.setParameter("negativeSign", "%-%");  // Pattern to match any string containing '-'
+            List<LogDataModel> listOfLogs = query.getResultList();
+            return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
+    }
+
+
+
 }

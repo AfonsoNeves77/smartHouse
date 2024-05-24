@@ -289,7 +289,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
         LogIDVO logID3 = new LogIDVO(UUID.randomUUID());
         Log log3 = new Log(logID3, date3, energyConsumption3, sensorID3, deviceID3, sensorTypeID3);
 
-        String reading4 = "3000";
+        String reading4 = "300";
         EnergyConsumptionValue energyConsumption4 = new EnergyConsumptionValue(reading4);
         SensorIDVO sensorID4 = gridPowerMeterEnergyConsumptionSensor.getId();
         DeviceIDVO deviceID4 = gridPowerMeter.getId();
@@ -307,7 +307,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
         LogIDVO logID5 = new LogIDVO(UUID.randomUUID());
         Log log5 = new Log(logID5, date5, energyConsumption5, sensorID5, deviceID5, sensorTypeID5);
 
-        String reading6 = "30";
+        String reading6 = "-30";
         EnergyConsumptionValue energyConsumption6 = new EnergyConsumptionValue(reading6);
         SensorIDVO sensorID6 = powerSourceEnergyConsumptionSensor.getId();
         DeviceIDVO deviceID6 = powerSource.getId();
@@ -316,7 +316,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
         LogIDVO logID6 = new LogIDVO(UUID.randomUUID());
         Log log6 = new Log(logID6, date6, energyConsumption6, sensorID6, deviceID6, sensorTypeID6);
 
-        String reading7 = "5";
+        String reading7 = "-5";
         EnergyConsumptionValue energyConsumption7 = new EnergyConsumptionValue(reading7);
         SensorIDVO sensorID7 = powerSourceEnergyConsumptionSensor.getId();
         DeviceIDVO deviceID7 = powerSource.getId();
@@ -325,7 +325,7 @@ public class ApplicationBootstrap implements CommandLineRunner {
         LogIDVO logID7 = new LogIDVO(UUID.randomUUID());
         Log log7 = new Log(logID7, date7, energyConsumption7, sensorID7, deviceID7, sensorTypeID7);
 
-        String reading8 = "5000";
+        String reading8 = "-50";
         EnergyConsumptionValue energyConsumption8 = new EnergyConsumptionValue(reading8);
         SensorIDVO sensorID8 = powerSourceEnergyConsumptionSensor.getId();
         DeviceIDVO deviceID8 = powerSource.getId();
