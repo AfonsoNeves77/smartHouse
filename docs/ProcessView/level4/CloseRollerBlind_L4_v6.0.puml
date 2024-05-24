@@ -17,7 +17,7 @@ participant ":Driver" as D
 participant "actuatorDataModel:ActuatorDataModel" as ADT
 participant "simHardwareAct:ActuatorExternalService" as AES
 
-[o-> R : PATCH /actuators/{actuatorId}
+[o-> R : POST /actuators/{actuatorId}
 activate R
 
 R -> ACW : closeRollerBlind(String actuatorId)
