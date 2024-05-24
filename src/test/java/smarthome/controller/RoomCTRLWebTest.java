@@ -88,8 +88,7 @@ public class RoomCTRLWebTest {
         Link expLinklistDevicesByRoomID = linkTo(methodOn(DeviceCTRLWeb.class)
                 .getDevicesByRoomId(roomID)).withRel("listDevicesByRoomID");
 
-        Link expLinkAddDeviceToRoom = linkTo(DeviceCTRLWeb.class).withRel("addDeviceToRoom");
-
+        Link expLinkAddDeviceToRoom = linkTo(methodOn(DeviceCTRLWeb.class).addDeviceToRoom(null)).withRel("addDevice");
 
         when(roomRepository.isPresent(roomIDVO)).thenReturn(true);
         when(roomRepository.findById(roomIDVO)).thenReturn(room);
@@ -109,7 +108,7 @@ public class RoomCTRLWebTest {
                 .andExpect(jsonPath("$._links.self.href").value(expectedLink.getHref()))
                 .andExpect(jsonPath("$._links.listDevicesByRoomID.href")
                         .value(expLinklistDevicesByRoomID.getHref()))
-                .andExpect(jsonPath("$._links.addDeviceToRoom.href")
+                .andExpect(jsonPath("$._links.addDevice.href")
                         .value(expLinkAddDeviceToRoom.getHref()))
                 .andReturn();
 

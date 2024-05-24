@@ -127,12 +127,11 @@ public class RoomCTRLWeb {
                 roomDTO.add(selfLink);
 
                 Link listDevicesByRoomID = linkTo(methodOn(DeviceCTRLWeb.class)
-                        .getDevicesByRoomId(roomID)).withRel("listDevicesByRoomID");
+                        .getDevicesByRoomId(roomDTO.getId())).withRel("listDevicesByRoomID");
                 roomDTO.add(listDevicesByRoomID);
 
-                Link addDeviceLink = linkTo(DeviceCTRLWeb.class).withRel("addDeviceToRoom");
+                Link addDeviceLink = linkTo(methodOn(DeviceCTRLWeb.class).addDeviceToRoom(null)).withRel("addDevice");
                 roomDTO.add(addDeviceLink);
-
 
                 return new ResponseEntity<>(roomDTO, HttpStatus.OK);
             } else {
