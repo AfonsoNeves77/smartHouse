@@ -1,0 +1,21 @@
+@startuml
+
+title Use Case - Close a Roller Blind \nProcess View Level 1\n Success Scenario
+autonumber
+
+actor "Power User/\nAdministrator" as A
+participant "**<<system (C4)>>**\nSmartHome" as AH
+
+
+A -> AH : I want to close a roller blind
+activate A
+activate AH
+AH --> A : Request actuator ID
+deactivate AH
+A -> AH : Provide actuator ID
+activate AH
+AH --> A : The actuator was closed
+deactivate AH
+deactivate A
+
+@enduml
