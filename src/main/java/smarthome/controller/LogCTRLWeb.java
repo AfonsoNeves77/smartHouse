@@ -6,9 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smarthome.domain.log.Log;
+import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.LogMapper;
 import smarthome.mapper.dto.LogDTO;
@@ -18,7 +21,7 @@ import smarthome.utils.timeconfig.TimeConfigMapper;
 
 
 import java.util.List;
-
+import java.util.Optional;
 
 /**
  * REST controller for managing logs in the Smart Home system.
@@ -46,6 +49,24 @@ public class LogCTRLWeb {
         this.logService = logService;
     }
 
+    @PostMapping
+    public ResponseEntity<LogDTO> createLog(@RequestBody LogDTO log) {
+        DeviceIDVO deviceId = LogMapper.createDeviceIDVO(log);
+        SensorIDVO sensorId = LogMapper.createSensorIDVO(log);
+        SensorTypeIDVO sensorTypeId = LogMapper.createSensorTypeIDVO(log);
+        SensorValueObject<?> value = LogMapper.createReading(log, sensorTypeId);
+        try {
+            Optional<Log> logDomain = logService.addLog(value, sensorId, deviceId, sensorTypeId);
+            if (logDomain.isPresent()) {
+                LogDTO logDTO = LogMapper.domainToDTO(logDomain.get());
+                return new ResponseEntity<>(logDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /**
      * Finds readings for a specific device within a time period.
@@ -109,6 +130,29 @@ public class LogCTRLWeb {
             return new ResponseEntity<>(maxTempDiff, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             // Return an error message, plus a status code
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    /**
+     * Handles HTTP GET requests to retrieve the peak power consumption of a house
+     * within a specified time period.
+     *
+     * @param timeConfigDTO the configuration object containing start time, end time, and delta values.
+     * @return a ResponseEntity containing a message with the peak power consumption or an error message.
+     */
+    @GetMapping("/peak-power-consumption")
+    public ResponseEntity<String> getPeakPowerConsumption(@RequestBody TimeConfigDTO timeConfigDTO) {
+        try {
+            TimeStampVO start = TimeConfigMapper.createInitialTimeStamp(timeConfigDTO);
+            TimeStampVO end = TimeConfigMapper.createFinalTimeStamp(timeConfigDTO);
+            DeltaVO delta = TimeConfigMapper.createDeltaVO(timeConfigDTO);
+            String peakPowerConsumption = logService.getPeakPowerConsumption(start, end, delta);
+            // Returns a message with the Peak Power Consumption of the House in a given period, plus a status code
+            return new ResponseEntity<>(peakPowerConsumption, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            // Returns an error message, plus a status code
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

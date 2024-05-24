@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -30,9 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -78,18 +77,18 @@ class LogCTRLWebTest {
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
         LogIDVO logID1 = new LogIDVO(UUID.randomUUID());
         LogIDVO logID2 = new LogIDVO(UUID.randomUUID());
-        TimeStampVO time1 = new TimeStampVO(LocalDateTime.now().minusHours(2).truncatedTo(ChronoUnit.SECONDS));
-        TimeStampVO time2 = new TimeStampVO(LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO time1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:00:30"));
+        TimeStampVO time2 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:10:00"));
         SensorValueObject<Double> reading1 = new TemperatureValue("23");
         SensorValueObject<Double> reading2 = new TemperatureValue("25");
         Log log1 = new Log(logID1, time1, reading1, sensorID1, deviceID, sensorType);
         Log log2 = new Log(logID2, time2, reading2, sensorID2, deviceID, sensorType);
 
         // Create the Json body
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:00";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:00";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
@@ -104,7 +103,7 @@ class LogCTRLWebTest {
         // Create the resulting DTOs
         LogDTO logDTO1 = LogDTO.builder()
                 .logID(logID1.getID())
-                .time(time1.getValue().truncatedTo(ChronoUnit.SECONDS).toString())
+                .time("2024-04-04T12:00:30")
                 .reading(reading1.getValue().toString())
                 .sensorID(sensorID1.getID())
                 .deviceID(deviceID.getID())
@@ -113,13 +112,12 @@ class LogCTRLWebTest {
 
         LogDTO logDTO2 = LogDTO.builder()
                 .logID(logID2.getID())
-                .time(time2.getValue().truncatedTo(ChronoUnit.SECONDS).toString())
+                .time("2024-04-04T12:10:00")
                 .reading(reading2.getValue().toString())
                 .sensorID(sensorID2.getID())
                 .deviceID(deviceID.getID())
                 .sensorTypeID(sensorType.getID())
                 .build();
-
 
 
         //Act & Assert
@@ -157,10 +155,11 @@ class LogCTRLWebTest {
         //Arrange
 
         // Create the Json body
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:00";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:00";
+
 
         String timeConfigJson = String.format(
                 "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\"}",
@@ -191,10 +190,10 @@ class LogCTRLWebTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
 
         // Create the Json body
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:00";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:00";
 
         String initialTimeFail = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
 
@@ -278,10 +277,10 @@ class LogCTRLWebTest {
         DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
 
         // Create the Json body
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusHours(3).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:00";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:00";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
@@ -295,13 +294,12 @@ class LogCTRLWebTest {
 
         //Act & Assert
         mockMvc.perform(get("/logs")
-                .param("deviceId", deviceID.getID())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(timeConfigJson))
+                        .param("deviceId", deviceID.getID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
     }
-
 
 
     /**
@@ -362,8 +360,8 @@ class LogCTRLWebTest {
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
         LogIDVO logID1 = new LogIDVO(UUID.randomUUID());
         LogIDVO logID2 = new LogIDVO(UUID.randomUUID());
-        TimeStampVO time1 = new TimeStampVO(LocalDateTime.now().minusMinutes(2).truncatedTo(ChronoUnit.SECONDS));
-        TimeStampVO time2 = new TimeStampVO(LocalDateTime.now().minusMinutes(1).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO time1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:00:30"));
+        TimeStampVO time2 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:04:30"));
         String time2Str = time2.getValue().toString();
         SensorValueObject<Double> outReadingVO = new TemperatureValue("23");
         SensorValueObject<Double> inReadingVO = new TemperatureValue("25");
@@ -373,10 +371,10 @@ class LogCTRLWebTest {
         Log log2 = new Log(logID2, time2, inReadingVO, sensorID2, inDeviceIDVO, sensorType);
         Iterable<Log> inLog = List.of(log2);
 
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -399,7 +397,7 @@ class LogCTRLWebTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(timeConfigJson))
                 .andExpect(status().isOk())
-                .andExpect(content().string("The Maximum Temperature Difference within the selected Period was of 2.0 Cº which happened at "+ time2Str));
+                .andExpect(content().string("The Maximum Temperature Difference within the selected Period was of 2.0 Cº which happened at " + time2Str));
     }
 
 
@@ -461,8 +459,8 @@ class LogCTRLWebTest {
         SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
         LogIDVO logID1 = new LogIDVO(UUID.randomUUID());
         LogIDVO logID2 = new LogIDVO(UUID.randomUUID());
-        TimeStampVO time1 = new TimeStampVO(LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.SECONDS));
-        TimeStampVO time2 = new TimeStampVO(LocalDateTime.now().minusMinutes(1).truncatedTo(ChronoUnit.SECONDS));
+        TimeStampVO time1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:00:30"));
+        TimeStampVO time2 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:04:30"));
         SensorValueObject<Double> outReadingVO = new TemperatureValue("23");
         SensorValueObject<Double> inReadingVO = new TemperatureValue("25");
 
@@ -471,10 +469,10 @@ class LogCTRLWebTest {
         Log log2 = new Log(logID2, time2, inReadingVO, sensorID2, inDeviceIDVO, sensorType);
         Iterable<Log> inLog = List.of(log2);
 
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
         String deltaMin = "1";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -552,10 +550,10 @@ class LogCTRLWebTest {
         when(deviceRepository.findById(outDeviceIDVO)).thenReturn(outDevice);
         when(deviceRepository.findById(inDeviceIDVO)).thenReturn(inDevice);
 
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -629,10 +627,10 @@ class LogCTRLWebTest {
         Device inDevice = new Device(deviceNameVO2, deviceModelVO2, inRoomIDVO);
         DeviceIDVO inDeviceIDVO = inDevice.getId();
 
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
         String deltaMin = "5";
 
 
@@ -711,10 +709,10 @@ class LogCTRLWebTest {
         when(deviceRepository.findById(outDeviceIDVO)).thenReturn(outDevice);
         when(deviceRepository.findById(inDeviceIDVO)).thenReturn(inDevice);
 
-        String initialDate = LocalDate.now().toString();
-        String initialTime = LocalTime.now().minusMinutes(30).truncatedTo(ChronoUnit.SECONDS).toString();
-        String endDate = LocalDate.now().toString();
-        String endTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
         String deltaMin = "5";
 
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
@@ -776,5 +774,334 @@ class LogCTRLWebTest {
 
     }
 
+    /**
+     * Tests the behavior of getPeakPowerConsumption endpoint in LogController
+     * when invalid timestamps are provided in the request.
+     * <p>
+     * This test verifies that the endpoint returns a Bad Request status
+     * when the provided timestamps are missing or in an invalid format.
+     * </p>
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenInvalidTimeStamps_getPeakPowerConsumptionReturnsBadRequestStatus() throws Exception {
+        //Arrange
 
+        // Create the Json body
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
+        String deltaMin = "5";
+
+        String initialTimeFail = LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString();
+
+        String timeConfigJson1 = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                null, initialTime, endDate, endTime, deltaMin
+        );
+
+        String timeConfigJson2 = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, null, endDate, endTime, deltaMin
+        );
+
+        String timeConfigJson3 = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, null, endTime, deltaMin
+        );
+
+        String timeConfigJson4 = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, endDate, null, deltaMin
+        );
+
+        String timeConfigJson5 = String.format(
+                "{\"initialTimeFail\":\"%s\",\"initialDate\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialTimeFail, initialDate, endDate, endTime, deltaMin
+        );
+
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson1))
+                .andExpect(status().isBadRequest());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson2))
+                .andExpect(status().isBadRequest());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson3))
+                .andExpect(status().isBadRequest());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson4))
+                .andExpect(status().isBadRequest());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson5))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption endpoint in LogController
+     * when no power grid logs are found within the specified time range.
+     * <p>
+     * This test ensures that the endpoint returns an appropriate string message
+     * indicating that there are no records available from the Grid Power Meter
+     * for the given period.
+     * </p>
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void whenNoPowerGridLogsAreFound_getPeakPowerConsumptionReturnsAppropriateStringMessage() throws Exception {
+        //Arrange
+
+        String expected = "There are no records available from the Grid Power Meter for the given period";
+
+        // Create the Json body
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
+        String deltaMin = "5";
+
+        String timeConfigJson = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, endDate, endTime, deltaMin
+        );
+
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        SensorTypeIDVO sensorType = new SensorTypeIDVO("PowerGridMeter");
+        TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
+        TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID.getID(), sensorType.getID(), initialSearch, finalSearch)).thenReturn(Collections.emptyList());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson))
+                .andExpect(content().string(expected))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption endpoint in LogController
+     * when only power grid logs are found within the specified time range
+     * and no power source logs are found.
+     * <p>
+     * This test ensures that the endpoint calculates the peak power consumption
+     * from the grid and returns an appropriate string message containing the
+     * peak power consumption value and the time it occurred, along with a message
+     * indicating that no power source device logs were found within the selected period.
+     * </p>
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void whenGridLogsAreFoundButNoPowerSourceLogs_getPeakPowerConsumptionCalculatesConsumptionAndReturnsAppropriateStringMessage() throws Exception {
+        //Arrange
+
+        // Create the Json body
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
+        String deltaMin = "5";
+
+        String timeConfigJson = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, endDate, endTime, deltaMin
+        );
+
+        TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
+        TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
+
+        LogIDVO powerGridLogID1 = new LogIDVO(UUID.randomUUID());
+        TimeStampVO powerGridTime1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T11:35:30"));
+        SensorValueObject powerGridReading1 = new EnergyConsumptionValue("23");
+        DeviceIDVO powerGridDeviceID1 = new DeviceIDVO(UUID.randomUUID());
+        SensorIDVO powerGridSensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorTypeIDVO powerGridSensorTypeID1 = new SensorTypeIDVO("ElectricEnergyConsumptionSensor");
+        Log powerGridLog1 = new Log(powerGridLogID1, powerGridTime1, powerGridReading1, powerGridSensorID1, powerGridDeviceID1, powerGridSensorTypeID1);
+
+        String deviceID = System.getProperty("Grid Power Meter device", powerGridDeviceID1.getID());
+        String sensorTypeID = System.getProperty("Grid Power Meter sensor type", powerGridSensorTypeID1.getID());
+
+        List<Log> listOfPowerGridLogs = new ArrayList<>();
+        listOfPowerGridLogs.add(powerGridLog1);
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerGridLogs);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(Collections.emptyList());
+
+        String expected = "The Peak Power Consumption from the Grid within the selected Period was " + powerGridLog1.getReading().getValue() +
+                " Wh which happened at " + powerGridLog1.getTime().getValue() + " (No Power Source Device Logs were found within the selected period)";
+
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson))
+                .andExpect(content().string(expected))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption endpoint in LogController
+     * when logs are found outside the delta range specified in the request.
+     * <p>
+     * This test ensures that the endpoint returns an appropriate string message
+     * indicating that readings were found within the provided time span but with no
+     * instant matches within the delta provided.
+     * </p>
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void whenLogsAreFoundOutsideTheDeltaRange_getPeakPowerConsumptionReturnsAppropriateStringMessage() throws Exception {
+        //Arrange
+
+        // Create the Json body
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
+        String deltaMin = "5";
+
+        String timeConfigJson = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, endDate, endTime, deltaMin
+        );
+
+        TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
+        TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
+
+        // Arranging PowerGridLogs and Stubbing the repository
+        LogIDVO powerGridLogID1 = new LogIDVO(UUID.randomUUID());
+        TimeStampVO powerGridTime1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T11:35:30"));
+        SensorValueObject powerGridReading1 = new EnergyConsumptionValue("23");
+        DeviceIDVO powerGridDeviceID1 = new DeviceIDVO(UUID.randomUUID());
+        SensorIDVO powerGridSensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorTypeIDVO powerGridSensorTypeID1 = new SensorTypeIDVO("ElectricEnergyConsumptionSensor");
+        Log powerGridLog1 = new Log(powerGridLogID1, powerGridTime1, powerGridReading1, powerGridSensorID1, powerGridDeviceID1, powerGridSensorTypeID1);
+
+        String deviceID = System.getProperty("Grid Power Meter device", powerGridDeviceID1.getID());
+        String sensorTypeID = System.getProperty("Grid Power Meter sensor type", powerGridSensorTypeID1.getID());
+
+        List<Log> listOfPowerGridLogs = new ArrayList<>();
+        listOfPowerGridLogs.add(powerGridLog1);
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerGridLogs);
+
+        // Arranging PowerSourceLogs and Stubbing the repository
+        LogIDVO powerSourceID1 = new LogIDVO(UUID.randomUUID());
+        TimeStampVO powerSourceTime1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:20:30"));
+        SensorValueObject powerSourceReading1 = new EnergyConsumptionValue("-3");
+        DeviceIDVO powerSourceDeviceID1 = new DeviceIDVO(UUID.randomUUID());
+        SensorIDVO powerSourceSensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorTypeIDVO powerSourceSensorTypeID1 = new SensorTypeIDVO("ElectricEnergyConsumptionSensor");
+        Log powerSourceLog1 = new Log(powerSourceID1, powerSourceTime1, powerSourceReading1, powerSourceSensorID1, powerSourceDeviceID1, powerSourceSensorTypeID1);
+
+        List<Log> listOfPowerSourceLogs = new ArrayList<>();
+        listOfPowerSourceLogs.add(powerSourceLog1);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerSourceLogs);
+
+        String expected = "Readings were found within the provided time span, but with no instant matches within the delta provided";
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson))
+                .andExpect(content().string(expected))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    /**
+     * Tests the behavior of getPeakPowerConsumption endpoint in LogController
+     * when logs from both power grid and power source are found within the specified time range.
+     * <p>
+     * This test ensures that the endpoint successfully calculates the peak power consumption
+     * and returns a string message containing the peak power consumption value and the time it occurred.
+     * </p>
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void whenLogsFromBothPowerGridAndSourceAreFoundAndWithinRange_getPeakPowerConsumptionSuccessfullyCalculatesPeakPowerAndReturnsStringMessage() throws Exception {
+        //Arrange
+
+        // Create the Json body
+        String initialDate = "2024-04-04";
+        String initialTime = "11:30:30";
+        String endDate = "2024-04-04";
+        String endTime = "12:30:30";
+        String deltaMin = "10";
+
+        String timeConfigJson = String.format(
+                "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\", \"deltaMin\":\"%s\"}",
+                initialDate, initialTime, endDate, endTime, deltaMin
+        );
+
+        TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
+        TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
+
+        // Arranging PowerGridLogs and stubbing the repository
+        LogIDVO powerGridLogID1 = new LogIDVO(UUID.randomUUID());
+        TimeStampVO powerGridTime1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:20:30"));
+        SensorValueObject powerGridReading1 = new EnergyConsumptionValue("23");
+        DeviceIDVO powerGridDeviceID1 = new DeviceIDVO(UUID.randomUUID());
+        SensorIDVO powerGridSensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorTypeIDVO powerGridSensorTypeID1 = new SensorTypeIDVO("ElectricEnergyConsumptionSensor");
+        Log powerGridLog1 = new Log(powerGridLogID1, powerGridTime1, powerGridReading1, powerGridSensorID1, powerGridDeviceID1, powerGridSensorTypeID1);
+
+        String deviceID = System.getProperty("Grid Power Meter device", powerGridDeviceID1.getID());
+        String sensorTypeID = System.getProperty("Grid Power Meter sensor type", powerGridSensorTypeID1.getID());
+
+        List<Log> listOfPowerGridLogs = new ArrayList<>();
+        listOfPowerGridLogs.add(powerGridLog1);
+
+        when(logRepository.findByDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerGridLogs);
+
+        // Arranging PowerSupplyLogs and stubbing the repository
+        LogIDVO powerSourceID1 = new LogIDVO(UUID.randomUUID());
+        TimeStampVO powerSourceTime1 = new TimeStampVO(LocalDateTime.parse("2024-04-04T12:16:30"));
+        SensorValueObject powerSourceReading1 = new EnergyConsumptionValue("-3");
+        DeviceIDVO powerSourceDeviceID1 = new DeviceIDVO(UUID.randomUUID());
+        SensorIDVO powerSourceSensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorTypeIDVO powerSourceSensorTypeID1 = new SensorTypeIDVO("ElectricEnergyConsumptionSensor");
+        Log powerSourceLog1 = new Log(powerSourceID1, powerSourceTime1, powerSourceReading1, powerSourceSensorID1, powerSourceDeviceID1, powerSourceSensorTypeID1);
+
+        List<Log> listOfPowerSourceLogs = new ArrayList<>();
+        listOfPowerSourceLogs.add(powerSourceLog1);
+
+        when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerSourceLogs);
+
+        String expected = "The Peak Power Consumption of the House within the selected Period was of 26 Wh which happened at " + powerGridTime1.getValue();
+
+        //Act & Assert
+        mockMvc.perform(get("/logs/peak-power-consumption")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(timeConfigJson))
+                .andExpect(content().string(expected))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
 }
