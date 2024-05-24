@@ -1,9 +1,9 @@
 @startuml
-title <size: 30> Switch Actuator v6.0\n<size: 25>Development View
+title <size: 30> Roller Blind Actuator v6.1\n<size: 25>Development view level 5 - class diagram
 
 skinparam linetype ortho
 
-note "<b>Only methods related to Switch Actuator are represented" as 1
+note "<b>Only methods related to Roller Blind \n<b>Actuator are represented" as 1
 
 interface Actuator {
     +getActuatorTypeID() : ActuatorTypeIDVO
@@ -23,18 +23,18 @@ interface ValueObject<T> {
     + getValue() : T
 }
 
-class SwitchActuator{
+class RollerBlindActuator{
     - actuatorID : ActuatorIDVO
     - actuatorName : ActuatorNameVO
     - actuatorTypeID : ActuatorTypeIDVO
     - deviceID : DeviceIDVO
 
-    + SwitchActuator(actuatorName : ActuatorNameVO,actuatorTypeID : ActuatorTypeIDVO,deviceID : DeviceIDVO)
-    + switchLoad(simHardwareAct : SimHardwareAct ) : boolean
+    + RollerBlindActuator(actuatorName : ActuatorNameVO,actuatorTypeID : ActuatorTypeIDVO,deviceID : DeviceIDVO)
+    + executeCommand(position : Integer, simHardwareAct : SimHardwareAct ) : boolean
 }
 
 class SimHardwareAct {
-
+    + executeIntegerCommandSim(position : Integer) : boolean
 }
 
 class ActuatorNameVO{
@@ -59,17 +59,17 @@ class DeviceIDVO{
 }
 
 interface ActuatorExternalService{
-    + executeCommand() : boolean
+    + executeIntegerCommandSim(position : Integer) : boolean
 }
 
 Actuator --up|> AggregateRoot
-Actuator <|.. SwitchActuator
-SimHardwareAct <..up SwitchActuator
+Actuator <|.. RollerBlindActuator
+SimHardwareAct <..up RollerBlindActuator
 SimHardwareAct ..|> ActuatorExternalService
-ActuatorNameVO --o SwitchActuator
-ActuatorIDVO --* SwitchActuator
-ActuatorTypeIDVO --o SwitchActuator
-DeviceIDVO --o SwitchActuator
+ActuatorNameVO --o RollerBlindActuator
+ActuatorIDVO --o RollerBlindActuator
+ActuatorTypeIDVO --o RollerBlindActuator
+DeviceIDVO --o RollerBlindActuator
 ValueObject <|.. ActuatorNameVO
 DomainID <|.. ActuatorIDVO
 DomainID <|.. ActuatorTypeIDVO

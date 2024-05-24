@@ -1,6 +1,7 @@
 @startuml
-title <size: 30> Sunrise Sensor v6.0\n<size: 25>Development View
+title <size: 30> Sunrise Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
+skinparam linetype ortho
 
 interface Sensor {
     + getSensorTypeID() : SensorTypeIDVO;
@@ -75,14 +76,14 @@ class DeviceIDVO {
 
 AggregateRoot <|-- Sensor
 Sensor <|.. SunriseSensor
-SunTimeCalculator <|.. SunriseSensor
+SunTimeCalculator <.. SunriseSensor
 SunTimeServices <|.. SunTimeCalculator
 
-SensorNameVO <-- SunriseSensor
-SensorIDVO -- SunriseSensor
-SunTimeValue --right SunriseSensor
-SensorTypeIDVO <-- SunriseSensor
-DeviceIDVO <-- SunriseSensor
+SensorNameVO --o SunriseSensor
+SensorIDVO --o SunriseSensor
+SunTimeValue <..right SunriseSensor
+SensorTypeIDVO --o SunriseSensor
+DeviceIDVO --o SunriseSensor
 
 ValueObject <|.. SensorNameVO
 DomainID <|.. SensorIDVO

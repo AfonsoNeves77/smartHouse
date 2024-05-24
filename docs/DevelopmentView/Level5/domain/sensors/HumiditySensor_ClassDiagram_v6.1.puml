@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> HumiditySensor v6.0\n<size: 25>Development View
+title <size: 30> HumiditySensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to \n<b>HumiditySensor are represented" as 1
 
@@ -78,12 +78,12 @@ interface Sensor {
 Sensor <|..left HumiditySensor
 SimHardware <.. HumiditySensor
 
-SensorNameVO <.. HumiditySensor
+SensorNameVO --o HumiditySensor
 SensorExternalServices <|..down SimHardware
-SensorIDVO --* HumiditySensor
-HumidityValue *--right HumiditySensor
-SensorTypeIDVO <.. HumiditySensor
-DeviceIDVO <.. HumiditySensor
+SensorIDVO --o HumiditySensor
+HumidityValue <..right HumiditySensor
+SensorTypeIDVO --o HumiditySensor
+DeviceIDVO --o HumiditySensor
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO

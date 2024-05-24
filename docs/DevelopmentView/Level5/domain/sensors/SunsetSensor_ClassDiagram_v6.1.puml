@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> SunsetSensor v6.0\n<size: 25>Development View
+title <size: 30> SunsetSensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Sunset \n<b> Sensor are represented" as 1
 
@@ -66,10 +66,10 @@ interface SunTimesServices {
 + computeSunset(date : String, gpsCoordinates : String) : ZonedDateTime
 }
 
-SunsetSensor *---down SensorIDVO
-SunsetSensor -down..> SensorTypeIDVO : <<has>>
-SunsetSensor -down..> DeviceIDVO : <<has>>
-SunsetSensor -left..> SensorNameVO : <<has>>
+SunsetSensor o-- SensorIDVO : <<has>>
+SunsetSensor o-- SensorTypeIDVO : <<has>>
+SunsetSensor o-- DeviceIDVO : <<has>>
+SunsetSensor o-- SensorNameVO : <<has>>
 SensorIDVO -down..|> DomainID
 SensorTypeIDVO -down..|> DomainID
 DeviceIDVO -down..|> DomainID

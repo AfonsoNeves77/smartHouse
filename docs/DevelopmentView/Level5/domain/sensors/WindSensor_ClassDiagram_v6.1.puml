@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> WindSensor v6.0\n<size: 25>Development View
+title <size: 30> WindSensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Wind \n<b> Sensor are represented" as 1
 
@@ -72,7 +72,7 @@ class SimHardware{
 }
 
 
-WindSensor *---down SensorIDVO
+WindSensor o---down SensorIDVO
 WindSensor o-- SensorTypeIDVO
 WindSensor o-- DeviceIDVO
 WindSensor o--left SensorNameVO

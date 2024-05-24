@@ -1,14 +1,16 @@
 @startuml
-title <size: 30> Integer Value Actuator v6.0\n<size: 25>Development View
+title <size: 30> Integer Value Actuator v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to\n<b>IntegerValueActuator are represented" as 1
 
 skinparam linetype ortho
 
-interface Actuator <<Root>>{
+interface Actuator {
     + getActuatorTypeID() : ActuatorTypeIDVO
     + getDeviceID() : DeviceIDVO
     + getActuatorName() : ActuatorNameVO
+    + getLowerLimit() : String
+    + getUpperLimit() : String
 }
 
 interface AggregateRoot{
@@ -38,6 +40,7 @@ class IntegerValueActuator <<Entity>>{
     - integerSettings : IntegerSettingsVO
 
     + IntegerValueActuator(actuatorName : ActuatorNameVO, actuatorTypeID : ActuatorTypeIDVO,\n deviceID : DeviceIDVO, settings : Settings)
+    + IntegerValueActuator(actuatorId : ActuatorIDVO, actuatorName : ActuatorNameVO, actuatorTypeID : ActuatorTypeIDVO,\n deviceID : DeviceIDVO, settings : Settings)
     + executeCommand(simHardwareAct : SimHardwareAct, value : int) : String
     - isValueWithinLimits(value : int) : boolean
 }
@@ -81,11 +84,11 @@ AggregateRoot <|-- Actuator
 Actuator <|.. IntegerValueActuator
 SimHardwareAct <.. IntegerValueActuator
 ActuatorExternalService <|.. SimHardwareAct
-ActuatorNameVO --* IntegerValueActuator : has a >
-ActuatorIDVO --* IntegerValueActuator : has a >
-ActuatorTypeIDVO --* IntegerValueActuator : has a >
-DeviceIDVO --* IntegerValueActuator : has a >
-IntegerSettingsVO --* IntegerValueActuator : has a >
+ActuatorNameVO --o IntegerValueActuator
+ActuatorIDVO --o IntegerValueActuator
+ActuatorTypeIDVO --o IntegerValueActuator
+DeviceIDVO --o IntegerValueActuator
+IntegerSettingsVO --o IntegerValueActuator
 ValueObject <|.. ActuatorNameVO
 Settings <|.. IntegerSettingsVO
 DomainID <|.. ActuatorIDVO

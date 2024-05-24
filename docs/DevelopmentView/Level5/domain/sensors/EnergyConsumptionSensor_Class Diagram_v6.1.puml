@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> EnergyConsumptionSensor v6.0\n<size: 25>Development View
+title <size: 30> EnergyConsumptionSensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 skinparam linetype ortho
 
@@ -86,12 +86,12 @@ class DeviceIDVO{
 Sensor <|..  EnergyConsumptionSensor
 SimHardware <.. EnergyConsumptionSensor : <<uses>>
 
-SensorNameVO <.. EnergyConsumptionSensor : <<has>>
-SensorIDVO --* EnergyConsumptionSensor
+SensorNameVO --o EnergyConsumptionSensor : <<has>>
+SensorIDVO --o EnergyConsumptionSensor
 SensorExternalServices <|..down SimHardware
 EnergyConsumptionValue <..right EnergyConsumptionSensor : <<creates>>
-SensorTypeIDVO <.. EnergyConsumptionSensor : <<has>>
-DeviceIDVO <.. EnergyConsumptionSensor : <<has>>
+SensorTypeIDVO --o EnergyConsumptionSensor : <<has>>
+DeviceIDVO --o EnergyConsumptionSensor : <<has>>
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO

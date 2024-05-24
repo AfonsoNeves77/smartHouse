@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> AveragePowerConsumptionSensor v6.0\n<size: 25>Development View
+title <size: 30> AveragePowerConsumptionSensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
 
@@ -66,10 +66,10 @@ interface AggregateRoot{
     + getID() : DomainID
 }
 
-AveragePowerConsumptionSensor *---down SensorIDVO
-AveragePowerConsumptionSensor -down..> SensorTypeIDVO : <<has>>
-AveragePowerConsumptionSensor -down..> DeviceIDVO : <<has>>
-AveragePowerConsumptionSensor -left..> SensorNameVO : <<has>>
+AveragePowerConsumptionSensor o-- SensorIDVO
+AveragePowerConsumptionSensor o-- SensorTypeIDVO : <<has>>
+AveragePowerConsumptionSensor o-- DeviceIDVO : <<has>>
+AveragePowerConsumptionSensor o-- SensorNameVO : <<has>>
 SensorIDVO -down..|> DomainID
 SensorTypeIDVO -down..|> DomainID
 DeviceIDVO -down..|> DomainID

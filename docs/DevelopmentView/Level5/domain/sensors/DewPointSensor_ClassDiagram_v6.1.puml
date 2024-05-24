@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Dew Point Sensor v6.0\n<size: 25>Development View
+title <size: 30> Dew Point Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
 
@@ -70,11 +70,11 @@ interface SensorExternalServices {
 + getValue(initialDate : String, finalDate : String) : String
 }
 
-DewPointSensor *---down SensorIDVO
-DewPointSensor -down..> SensorTypeIDVO : <<has>>
-DewPointSensor -down..> DeviceIDVO : <<has>>
-DewPointSensor -left..> SensorNameVO : <<has>>
-SensorIDVO -down..|> DomainID
+DewPointSensor o---down SensorIDVO
+DewPointSensor o--- SensorTypeIDVO : <<has>>
+DewPointSensor o--- DeviceIDVO : <<has>>
+DewPointSensor o--- SensorNameVO : <<has>>
+SensorIDVO ..|> DomainID
 SensorTypeIDVO -down..|> DomainID
 DeviceIDVO -down..|> DomainID
 SensorNameVO -left..|> ValueObject

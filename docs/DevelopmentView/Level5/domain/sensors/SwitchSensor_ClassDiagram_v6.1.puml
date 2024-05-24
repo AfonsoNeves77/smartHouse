@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Switch Sensor v6.0\n<size: 25>Development View
+title <size: 30> Switch Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to \n<b>HumiditySensor are represented" as 1
 
@@ -65,15 +65,18 @@ interface AggregateRoot {
     +getID() : DomainID
 }
 
+interface DomainID{
+}
+
 Sensor <|..left SwitchSensor
 SimHardware <.. SwitchSensor
 
-SensorNameVO <.. SwitchSensor
+SensorNameVO --o SwitchSensor
 SensorExternalServices <|..down SimHardware
-SensorIDVO ..> SwitchSensor
+SensorIDVO --o SwitchSensor
 SwitchValue <..right SwitchSensor
-SensorTypeIDVO <.. SwitchSensor
-DeviceIDVO <.. SwitchSensor
+SensorTypeIDVO --o SwitchSensor
+DeviceIDVO --o SwitchSensor
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO

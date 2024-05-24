@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> TemperatureSensor v6.0\n<size: 25>Development View
+title <size: 30> TemperatureSensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 skinparam linetype ortho
 
@@ -84,12 +84,12 @@ class DeviceIDVO{
 Sensor <|.. TemperatureSensor
 SimHardware <.. TemperatureSensor : <<uses>>
 
-SensorNameVO <.. TemperatureSensor : <<has>>
+SensorNameVO --o TemperatureSensor : <<has>>
 SensorExternalServices <|..down SimHardware
-SensorIDVO --* TemperatureSensor
+SensorIDVO --o TemperatureSensor
 TemperatureValue <..right TemperatureSensor : <<creates>>
-SensorTypeIDVO <.. TemperatureSensor : <<has>>
-DeviceIDVO <.. TemperatureSensor : <<has>>
+SensorTypeIDVO --o TemperatureSensor : <<has>>
+DeviceIDVO --o TemperatureSensor : <<has>>
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO

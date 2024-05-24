@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Solar Irradiance Sensor v6.0\n<size: 25>Development View
+title <size: 30> Solar Irradiance Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Solar \n<b>Irradiance Sensor are represented" as 1
 
@@ -82,7 +82,7 @@ DomainID <|.. SensorTypeIDVO
 DomainID <|.. DeviceIDVO
 ValueObject <|.up. SensorNameVO
 SensorNameVO "1" -left-o "1" SolarIrradianceSensor
-SensorIDVO "1" --* "1" SolarIrradianceSensor
+SensorIDVO "1" --o "1" SolarIrradianceSensor
 SensorTypeIDVO "1" --o "*" SolarIrradianceSensor
 DeviceIDVO "1" --o "*" SolarIrradianceSensor
 SensorExternalServices <|.. SimHardware

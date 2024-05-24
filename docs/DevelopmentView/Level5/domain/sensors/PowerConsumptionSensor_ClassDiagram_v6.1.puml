@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Power Consumption Sensor v6.0\n<size: 25>Development View
+title <size: 30> Power Consumption Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
 skinparam linetype ortho
 
@@ -79,11 +79,11 @@ Sensor <|..right PowerConsumptionSensor
 SimHardware <..up PowerConsumptionSensor
 SimHardware ..|> SensorExternalService
 
-SensorNameVO <.. PowerConsumptionSensor
-SensorIDVO --* PowerConsumptionSensor
-PowerConsumptionValue --left* PowerConsumptionSensor
-SensorTypeIDVO <.. PowerConsumptionSensor
-DeviceIDVO <.. PowerConsumptionSensor
+SensorNameVO --o PowerConsumptionSensor
+SensorIDVO --o PowerConsumptionSensor
+PowerConsumptionValue <..left PowerConsumptionSensor
+SensorTypeIDVO --o PowerConsumptionSensor
+DeviceIDVO --o PowerConsumptionSensor
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO

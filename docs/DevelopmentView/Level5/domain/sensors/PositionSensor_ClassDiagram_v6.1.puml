@@ -1,8 +1,9 @@
 Position Sensor Class Diagram
 
 @startuml
-title <size: 30> Position Sensor v6.0\n<size: 25>Development View
+title <size: 30> Position Sensor v6.1\n<size: 25>Development view level 5 - class diagram
 
+skinparam linetype ortho
 
 interface AggregateRoot {
     + getID() : DomainID
@@ -74,10 +75,10 @@ Sensor <|.. PositionSensor
 SensorExternalServices <|.. SimHardware
 PositionSensor .right.> PositionValue
 PositionSensor .left.> SimHardware
-PositionSensor "1" *--right "1" SensorNameVO
-PositionSensor "*" o-- "1" DeviceIDVO
-PositionSensor "1" *--down "1" SensorTypeIDVO
-PositionSensor "1" *--down "1" SensorIDVO
+PositionSensor  o--right  SensorNameVO
+PositionSensor o-- DeviceIDVO
+PositionSensor  o--down  SensorTypeIDVO
+PositionSensor  o--down  SensorIDVO
 DeviceIDVO ..|> DomainID
 SensorTypeIDVO ..|> DomainID
 SensorIDVO ..|> DomainID

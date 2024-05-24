@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Decimal Value Actuator v6.0\n <size: 25>Development View
+title <size: 30> Decimal Value Actuator v6.1\n <size: 25>Development view level 5 - class diagram
 
 note "<b>Only methods related to Decimal \n<b>Value Actuator are represented" as 1
 
@@ -9,6 +9,9 @@ interface Actuator {
     + getActuatorTypeID() : ActuatorTypeIDVO
     + getDeviceID() : DeviceIDVO
     + getActuatorName() : ActuatorNameVO
+    + getLowerLimit() : String
+    + getUpperLimit() : String
+    + getPrecision() : String
 }
 
 interface ActuatorExternalService{
@@ -38,6 +41,7 @@ class DecimalValueActuator {
     - decimalSettings : DecimalSettingsVO
 
     + DecimalValueActuator(actuatorName : ActuatorNameVO, actuatorTypeID : ActuatorTypeIDVO,\n deviceID : DeviceIDVO, settings : Settings)
+    + DecimalValueActuator(actuatorId : ActuatorIDVO, actuatorName : ActuatorNameVO, actuatorTypeID : ActuatorTypeIDVO,\n deviceID : DeviceIDVO, settings : Settings)
     + executeCommand(hardware : ActuatorExternalService, value : double) : String
     - isValueWithinLimits(value : double) : boolean
     - validValuePrecision(value : double, precision : double) : boolean
@@ -84,13 +88,13 @@ class DecimalSettingsVO {
 ValueObject <|-- Settings
 AggregateRoot <|-- Actuator
 Actuator <|.left. DecimalValueActuator
-SimHardwareAct <|.. DecimalValueActuator
+SimHardwareAct <.. DecimalValueActuator
 ActuatorExternalService <|.. SimHardwareAct
-ActuatorNameVO --* DecimalValueActuator
-ActuatorIDVO --* DecimalValueActuator
-ActuatorTypeIDVO --* DecimalValueActuator
-DeviceIDVO --* DecimalValueActuator
-DecimalSettingsVO --* DecimalValueActuator
+ActuatorNameVO --o DecimalValueActuator
+ActuatorIDVO --o DecimalValueActuator
+ActuatorTypeIDVO --o DecimalValueActuator
+DeviceIDVO --o DecimalValueActuator
+DecimalSettingsVO --o DecimalValueActuator
 ValueObject <|... ActuatorNameVO
 Settings <|... DecimalSettingsVO
 DomainID <|.. ActuatorIDVO
