@@ -1,7 +1,7 @@
 Position Sensor Class Diagram
 
 @startuml
-title <size: 30> Position Sensor - Class Diagram v5.1
+title <size: 30> Position Sensor v6.0\n<size: 25>Development View
 
 
 interface AggregateRoot {

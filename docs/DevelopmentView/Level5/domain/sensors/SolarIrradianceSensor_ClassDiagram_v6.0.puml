@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Solar Irradiance Sensor - Class Diagram v5.1
+title <size: 30> Solar Irradiance Sensor v6.0\n<size: 25>Development View
 
 note "<b>Only methods related to Solar \n<b>Irradiance Sensor are represented" as 1
 

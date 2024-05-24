@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Dew Point Sensor Class Diagram v5.0
+title <size: 30> Dew Point Sensor v6.0\n<size: 25>Development View
 
 note "<b>Only methods related to Average Power \n<b>Consumption Sensor are represented" as 1
 

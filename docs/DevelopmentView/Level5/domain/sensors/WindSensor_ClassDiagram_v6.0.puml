@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> WindSensor Class Diagram v5.1
+title <size: 30> WindSensor v6.0\n<size: 25>Development View
 
 note "<b>Only methods related to Wind \n<b> Sensor are represented" as 1
 

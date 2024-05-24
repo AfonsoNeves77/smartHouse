@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> DecimalValueActuator Class Diagram v5.1
+title <size: 30> Decimal Value Actuator v6.0\n <size: 25>Development View
 
 note "<b>Only methods related to Decimal \n<b>Value Actuator are represented" as 1
 
@@ -82,18 +82,18 @@ class DecimalSettingsVO {
 }
 
 ValueObject <|-- Settings
-AggregateRoot <|-left- Actuator
-Actuator <|.up. DecimalValueActuator
-SimHardwareAct <.. DecimalValueActuator
-ActuatorNameVO "1" --o "1" DecimalValueActuator
-ActuatorIDVO "1" --* "1" DecimalValueActuator
-ActuatorTypeIDVO "1" --o "*" DecimalValueActuator
-DeviceIDVO "1" --o "*" DecimalValueActuator
-DecimalSettingsVO "1" --o "1" DecimalValueActuator
+AggregateRoot <|-- Actuator
+Actuator <|.left. DecimalValueActuator
+SimHardwareAct <|.. DecimalValueActuator
+ActuatorExternalService <|.. SimHardwareAct
+ActuatorNameVO --* DecimalValueActuator
+ActuatorIDVO --* DecimalValueActuator
+ActuatorTypeIDVO --* DecimalValueActuator
+DeviceIDVO --* DecimalValueActuator
+DecimalSettingsVO --* DecimalValueActuator
 ValueObject <|... ActuatorNameVO
 Settings <|... DecimalSettingsVO
 DomainID <|.. ActuatorIDVO
 DomainID <|.. ActuatorTypeIDVO
 DomainID <|.. DeviceIDVO
-ActuatorExternalService <|.. SimHardwareAct
 @enduml

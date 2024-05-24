@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> SwitchActuator Class Diagram v5.1
+title <size: 30> Switch Actuator v6.0\n<size: 25>Development View
 
 skinparam linetype ortho
 

@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> EnergyConsumptionSensor Class Diagram v5.1
+title <size: 30> TemperatureSensor v6.0\n<size: 25>Development View
 
 skinparam linetype ortho
 
@@ -25,27 +25,29 @@ interface Sensor {
     + getSensorName() : SensorNameVO
 }
 
-class EnergyConsumptionSensor{
+interface SensorExternalServices{
+     + getValue() : String
+}
+
+class TemperatureSensor{
     - sensorName : SensorNameVO
     - deviceID : DeviceIDVO
     - sensorTypeID : SensorTypeIDVO
-    - sensorID : SensorIDVO
+    - temperatureSensorID : SensorIDVO
 
-
-
-    + EnergyConsumptionSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
+    + TemperatureSensor(sensorName : SensorNameVO, deviceID : DeviceIDVO, sensorTypeID : SensorTypeIDVO)
     + getID() : SensorIDVO
     + getSensorName() : SensorNameVO
     + getSensorTypeID() : SensorTypeIDVO
     + getDeviceID() : DeviceIDVO
-    + getReading(initialDate : String, finalDate : String, simHardware : SimHardware) : ValueObject<Integer>
+    + getReading(simHardware : SimHardware) : ValueObject<Double>
 }
 
-class EnergyConsumptionValue{
-    - primitiveValue : int
+class TemperatureValue{
+    - primitiveValue : double
 
-    + EnergyConsumptionValue(reading: String)
-    + getValue() : Integer
+    + TemperatureValue(reading: String)
+    + getValue() : Double
 }
 
 class SimHardware{
@@ -57,10 +59,6 @@ class SensorNameVO{
     - sensorName : String
     + SensorNameVO(sensorName : String)
     + getValue() : String
-}
-
-interface SensorExternalServices{
-     + getValue() : String
 }
 
 class SensorIDVO{
@@ -83,22 +81,22 @@ class DeviceIDVO{
 }
 
 
-Sensor <|..  EnergyConsumptionSensor
-SimHardware <.. EnergyConsumptionSensor : <<uses>>
+Sensor <|.. TemperatureSensor
+SimHardware <.. TemperatureSensor : <<uses>>
 
-SensorNameVO <.. EnergyConsumptionSensor : <<has>>
-SensorIDVO --* EnergyConsumptionSensor
+SensorNameVO <.. TemperatureSensor : <<has>>
 SensorExternalServices <|..down SimHardware
-EnergyConsumptionValue <..right EnergyConsumptionSensor : <<creates>>
-SensorTypeIDVO <.. EnergyConsumptionSensor : <<has>>
-DeviceIDVO <.. EnergyConsumptionSensor : <<has>>
+SensorIDVO --* TemperatureSensor
+TemperatureValue <..right TemperatureSensor : <<creates>>
+SensorTypeIDVO <.. TemperatureSensor : <<has>>
+DeviceIDVO <.. TemperatureSensor : <<has>>
 
 ValueObject <|.. SensorNameVO
 DomainID  <|.. SensorIDVO
 DomainID  <|.. SensorTypeIDVO
 DomainID  <|.. DeviceIDVO
 
-ValueObject <|.. EnergyConsumptionValue
+ValueObject <|.. TemperatureValue
 Sensor --|>AggregateRoot
 
 @enduml

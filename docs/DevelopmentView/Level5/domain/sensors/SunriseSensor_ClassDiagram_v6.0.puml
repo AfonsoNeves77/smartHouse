@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Sunrise Sensor - Class Diagram - v5.1
+title <size: 30> Sunrise Sensor v6.0\n<size: 25>Development View
 
 
 interface Sensor {
