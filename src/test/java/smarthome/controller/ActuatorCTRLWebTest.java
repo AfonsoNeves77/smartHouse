@@ -1491,7 +1491,7 @@ public class ActuatorCTRLWebTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -1517,7 +1517,7 @@ public class ActuatorCTRLWebTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
@@ -1535,7 +1535,7 @@ public class ActuatorCTRLWebTest {
     void givenInvalidActuatorId_whenCloseRollerBlind_thenReturnBadRequest() throws Exception {
         String actuatorId = " ";
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1556,7 +1556,7 @@ public class ActuatorCTRLWebTest {
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

@@ -150,7 +150,7 @@ public class ActuatorCTRLWeb {
      * @param actuatorId The unique identifier of the actuator to be closed.
      * @return ResponseEntity containing the appropriate HTTP status code.
      */
-    @PatchMapping("/{actuatorId}")
+    @PostMapping("/{actuatorId}")
     public ResponseEntity<Void> closeRollerBlind(@PathVariable("actuatorId") String actuatorId) {
         try {
             ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorId);
