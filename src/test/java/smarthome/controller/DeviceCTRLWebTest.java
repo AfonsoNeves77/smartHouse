@@ -106,7 +106,7 @@ public class DeviceCTRLWebTest {
         Link expectedDeactivateLink = linkTo(methodOn(DeviceCTRLWeb.class).deactivateDevice(deviceID)).withRel("deactivateDevice");
         Link expectedAddSensorLink = linkTo(methodOn(SensorCTRLWeb.class).addSensorToDevice(null)).withRel("addSensor");
         Link expectedSensorTypeLink = linkTo(methodOn(SensorTypeCTRLWeb.class).getSensorTypes()).withRel("getSensorType");
-        Link expectedAddActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuator(null)).withRel("addActuator");
+        Link expectedAddActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuatorToDevice(null)).withRel("addActuator");
         Link expectedListOfActuatorsLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorsByDeviceID(deviceID)).withRel("getActuatorsByDeviceId");
         Link expectedActuatorTypeLink = linkTo(methodOn(ActuatorTypeCTRLWeb.class).getActuatorTypes()).withRel("getActuatorType");
         Link expectedFindReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadingsInAPeriod(deviceID, null)).withRel("findReadingsInAPeriod");

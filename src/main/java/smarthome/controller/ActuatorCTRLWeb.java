@@ -13,7 +13,6 @@ import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.ActuatorMapper;
 import smarthome.mapper.dto.ActuatorDTO;
-import smarthome.mapper.dto.DeviceDTO;
 import smarthome.service.ActuatorService;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class ActuatorCTRLWeb {
      * @return ResponseEntity<ActuatorDTO>
      */
     @PostMapping("")
-    public ResponseEntity<ActuatorDTO> addActuator(@RequestBody ActuatorDTO actuatorDTO) {
+    public ResponseEntity<ActuatorDTO> addActuatorToDevice(@RequestBody ActuatorDTO actuatorDTO) {
         try {
             ActuatorNameVO actuatorNameVO = ActuatorMapper.createActuatorNameVO(actuatorDTO);
             ActuatorTypeIDVO actuatorTypeIDVO = ActuatorMapper.createActuatorTypeIDVO(actuatorDTO);

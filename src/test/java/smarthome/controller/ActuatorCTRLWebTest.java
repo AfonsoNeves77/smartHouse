@@ -98,7 +98,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullActuatorType_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullActuatorType_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -132,7 +132,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullDeviceId_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullDeviceId_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = null;
@@ -166,7 +166,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullActuatorName_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullActuatorName_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = null;
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -200,7 +200,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullLowerLimit_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullLowerLimit_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -239,7 +239,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithInvalidLowerLimit_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithInvalidLowerLimit_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -277,7 +277,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullUpperLimit_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullUpperLimit_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -316,7 +316,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithInvalidUpperLimit_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithInvalidUpperLimit_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -355,7 +355,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithLowerHigherThanUpperInteger_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithLowerHigherThanUpperInteger_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -393,7 +393,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithNullPrecision_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithNullPrecision_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -434,7 +434,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithInvalidPrecision_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithInvalidPrecision_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -475,7 +475,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithLowerHigherThanUpperDecimal_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithLowerHigherThanUpperDecimal_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -516,7 +516,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithPrecisionEqualToZero_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithPrecisionEqualToZero_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -557,7 +557,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenInvalidActuatorDTOWithPrecisionEqualToOne_whenAddActuatorCalled_thenReturnBadRequest() throws Exception {
+    void givenInvalidActuatorDTOWithPrecisionEqualToOne_whenAddActuatorToDeviceCalled_thenReturnBadRequest() throws Exception {
         //Arrange
         String actuatorName = "Blind Roller";
         String deviceId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
@@ -597,7 +597,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidDTO_whenAddActuatorCalled_ifActuatorTypeNotPresent_thenReturnBadRequest() throws Exception {
+    void givenValidDTO_whenAddActuatorCalled_ifActuatorToDeviceTypeNotPresent_thenReturnBadRequest() throws Exception {
 
         //Arrange
         String actuatorName = "Blind Roller";
@@ -645,7 +645,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalled_ifDeviceNotPresent_thenReturnUnprocessableEntityCode()
+    void givenValidActuatorDTO_whenAddActuatorToDeviceCalled_ifDeviceNotPresent_thenReturnUnprocessableEntityCode()
             throws Exception {
         //Arrange
         String deviceName = "Device Name";
@@ -709,7 +709,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalled_ifDeviceDeactivated_thenReturnBadRequest()
+    void givenValidActuatorDTO_whenAddActuatorToDeviceCalled_ifDeviceDeactivated_thenReturnBadRequest()
             throws Exception {
         //Arrange
         String deviceName = "Device Name";
@@ -774,7 +774,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalled_ifSavingFails_thenReturnUnprocessableEntityCode()
+    void givenValidActuatorDTO_whenAddActuatorToDeviceCalled_ifSavingFails_thenReturnUnprocessableEntityCode()
             throws Exception {
         //Arrange
         String deviceName = "Device Name";
@@ -837,7 +837,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalledForDecimalValueActuator_thenReturnCreatedCode() throws Exception {
+    void givenValidActuatorDTO_whenAddActuatorCalledForDecimalValueActuator_ToDevice_thenReturnCreatedCode() throws Exception {
         //Arrange
         String deviceName = "Device Name";
         String deviceModel = "Device Model";
@@ -906,7 +906,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalledForIntegerValueActuator_thenReturnCreatedCode() throws Exception {
+    void givenValidActuatorDTO_whenAddActuatorCalledForIntegerValueActuator_ToDevice_thenReturnCreatedCode() throws Exception {
         //Arrange
         String deviceName = "Device Name";
         String deviceModel = "Device Model";
@@ -972,7 +972,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalledForRollerBlindActuator_thenReturnCreatedCode() throws Exception {
+    void givenValidActuatorDTO_whenAddActuatorCalledForRollerBlindActuator_ToDevice_thenReturnCreatedCode() throws Exception {
         //Arrange
         String deviceName = "Device Name";
         String deviceModel = "Device Model";
@@ -1032,7 +1032,7 @@ public class ActuatorCTRLWebTest {
      * @throws Exception if any exception occurs during the execution of the request or the assertions
      */
     @Test
-    void givenValidActuatorDTO_whenAddActuatorCalledForSwitchActuator_thenReturnCreatedCode() throws Exception {
+    void givenValidActuatorDTO_whenAddActuatorCalledForSwitchActuator_ToDevice_thenReturnCreatedCode() throws Exception {
         //Arrange
         String deviceName = "Device Name";
         String deviceModel = "Device Model";

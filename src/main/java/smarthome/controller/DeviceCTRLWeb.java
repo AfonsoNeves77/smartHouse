@@ -76,7 +76,7 @@ public class DeviceCTRLWeb {
                 Link sensorTypeLink = linkTo(methodOn(SensorTypeCTRLWeb.class).getSensorTypes()).withRel("getSensorType");
                 deviceDTO.add(sensorTypeLink);
 
-                Link addActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuator(null)).withRel("addActuator");
+                Link addActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuatorToDevice(null)).withRel("addActuator");
                 deviceDTO.add(addActuatorLink);
 
                 Link listOfActuatorsLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorsByDeviceID(deviceDTO.getDeviceID())).withRel("getActuatorsByDeviceId");
