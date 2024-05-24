@@ -1,14 +1,13 @@
 package smarthome.mapper;
 
-import smarthome.domain.actuator.Actuator;
-import smarthome.domain.vo.actuatorvo.*;
-import smarthome.mapper.dto.ActuatorDTO;
-import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
+import smarthome.domain.actuator.Actuator;
+import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
+import smarthome.domain.vo.actuatorvo.*;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.mapper.dto.ActuatorDTO;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -158,6 +157,22 @@ class ActuatorMapperTest {
         DeviceIDVO deviceIDVO = ActuatorMapper.createDeviceIDVO(actuatorDTO);
 //        Assert
         assertEquals(deviceID, deviceIDVO.getID());
+    }
+
+    /**
+     * Test to verify that an exception is thrown when the ActuatorDTO object is null.
+     * Should throw an IllegalArgumentException with the message "ActuatorDTO cannot be null" since it fails to create a Settings object.
+     */
+
+    @Test
+    void givenNullActuatorDTO_WhenCreateSettingsVO_ThenReturnNullObject() {
+//        Arrange
+        String expectedMessage = "ActuatorDTO cannot be null.";
+//        Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createSettingsVO(null));
+//        Assert
+        String resultingMessage = exception.getMessage();
+        assertEquals(expectedMessage, resultingMessage);
     }
 
     /**

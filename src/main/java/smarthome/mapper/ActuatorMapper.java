@@ -44,6 +44,9 @@ public class ActuatorMapper {
      * @return Settings object
      */
     public static Settings createSettingsVO(ActuatorDTO actuatorDTO) {
+        if (actuatorDTO == null) {
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        }
         String lowerLimit = actuatorDTO.getLowerLimit();
         String upperLimit = actuatorDTO.getUpperLimit();
         String precision = actuatorDTO.getPrecision();
