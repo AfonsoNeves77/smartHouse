@@ -82,6 +82,10 @@ class HouseCTRLWebTest {
                 .getDevicesByFunctionality()).withRel("listDevicesByFunctionality");
         Link expLinkListRooms = linkTo(methodOn(RoomCTRLWeb.class)
                 .getListOfRooms()).withRel("listRooms");
+        Link expLinkGetMaxTemDiff = linkTo(methodOn(LogCTRLWeb.class)
+                .getMaxTempDiff(null, null, null)).withRel("getMaxTempDifference");
+        Link expectedPeakPowerConsumption = linkTo(methodOn(LogCTRLWeb.class)
+                .getPeakPowerConsumption(null)).withRel("getPeakPowerConsumption");
 
         //Act + Assert
         mockMvc.perform(MockMvcRequestBuilders.get("/house")
@@ -102,7 +106,11 @@ class HouseCTRLWebTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.listDevicesByFunctionality.href")
                         .value(expLinklistDevsByFunctionality.getHref()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.listRooms.href")
-                        .value(expLinkListRooms.getHref()));
+                        .value(expLinkListRooms.getHref()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.getMaxTempDifference.href")
+                        .value(expLinkGetMaxTemDiff.getHref()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.getPeakPowerConsumption.href").
+                        value(expectedPeakPowerConsumption.getHref()));
     }
 
     /**

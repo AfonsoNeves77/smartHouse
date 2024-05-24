@@ -67,9 +67,16 @@ public class HouseCTRLWeb {
                 .getDevicesByFunctionality()).withRel("listDevicesByFunctionality");
         houseDTO.add(listDevicesByFunctionality);
 
+        Link getMaxTempDifference = linkTo(methodOn(LogCTRLWeb.class)
+                .getMaxTempDiff(null, null, null)).withRel("getMaxTempDifference");
+        houseDTO.add(getMaxTempDifference);
+
+        Link getPeakPowerConsumption = linkTo(methodOn(LogCTRLWeb.class)
+                .getPeakPowerConsumption(null)).withRel("getPeakPowerConsumption");
+        houseDTO.add(getPeakPowerConsumption);
+
         return new ResponseEntity<>(houseDTO, HttpStatus.OK);
     }
-
 
     /**
      * Spring Boot controller method that handles HTTP PATCH requests. It receives a LocationDTO with the required
