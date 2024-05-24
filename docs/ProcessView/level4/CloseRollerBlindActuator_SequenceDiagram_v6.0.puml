@@ -13,9 +13,9 @@ participant ":ActuatorRepository" as AR
 participant ":ActuatorAssembler" as AA
 participant ":ActuatorFactory" as AF
 participant "actuator:Actuator" as A
-participant "simHardwareAct:ActuatorExternalService" as AES
 participant ":Driver" as D
 participant "actuatorDataModel:ActuatorDataModel" as ADT
+participant "simHardwareAct:ActuatorExternalService" as AES
 
 [o-> R : PATCH /actuators/{actuatorId}
 activate R
@@ -101,6 +101,10 @@ deactivate A
 
 A -> AES : executeCommandSim(position)
 activate AES
+
+note right: Abstracted operations as they\n assume external communication
+AES ->o] :
+
 AES --> A : **true**
 deactivate AES
 
