@@ -1,5 +1,5 @@
 @startuml
-title <size: 30> Use Case: Close Roller Blind Actuator v6.0\n Implementation view level 4 - class diagram
+title <size: 30> Use Case: Close Roller Blind Actuator v6.0\n Development view level 5 - class diagram
 
 note "<b>Only methods related to the \n 'close RollerBlind actuator' are represented" as N1
  skinparam linetype ortho
