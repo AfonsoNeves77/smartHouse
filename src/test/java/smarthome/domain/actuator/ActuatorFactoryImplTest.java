@@ -1,11 +1,8 @@
 package smarthome.domain.actuator;
 
 import org.junit.jupiter.api.BeforeAll;
-import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
-import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
@@ -35,7 +32,7 @@ class ActuatorFactoryImplTest {
     @Test
     void createSwitchActuator_WhenGetActuatorAttributes_ThenShouldReturnExpectedAttributes() throws ConfigurationException {
         //Arrange
-         ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
+        ActuatorFactoryImpl factory = new ActuatorFactoryImpl(filePath);
         ActuatorNameVO nameDouble = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeIdDouble = mock(ActuatorTypeIDVO.class);
         when(typeIdDouble.getID()).thenReturn("SwitchActuator");

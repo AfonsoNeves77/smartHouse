@@ -4,6 +4,7 @@ import smarthome.domain.actuator.externalservices.SimHardwareAct;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -23,9 +24,10 @@ class RollerBlindActuatorTest {
         //Arrange
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new RollerBlindActuator(null, actuatorTypeID, deviceIDVO));
+        Exception exception = assertThrows(IllegalArgumentException.class, ()
+                -> new RollerBlindActuator(null, actuatorTypeID, deviceIDVO));
         //Assert
         String result = exception.getMessage();
         assertEquals(expected, result);
@@ -41,9 +43,10 @@ class RollerBlindActuatorTest {
         //Arrange
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new RollerBlindActuator(actuatorName, null, deviceIDVO));
+        Exception exception = assertThrows(IllegalArgumentException.class, ()
+                -> new RollerBlindActuator(actuatorName, null, deviceIDVO));
         //Assert
         String result = exception.getMessage();
         assertEquals(expected, result);
@@ -59,7 +62,7 @@ class RollerBlindActuatorTest {
         //Arrange
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> new RollerBlindActuator(actuatorName, actuatorTypeID, null));
         //Assert
@@ -68,18 +71,9 @@ class RollerBlindActuatorTest {
     }
 
 
-    /**
-     * This test verifies that the executeCommand method returns true when the position is valid (between 0 and 100) and
-     * the command execution in the SimHardwareAct object is successful.
-     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return true when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
-     * After execution, it asserts that the result is true.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
+
     @Test
-    void whenValidPositionAndExecuteCommand_ThenReturnTrue(){
+    void whenValidPositionAndExecuteCommand_thenReturnsValue(){
         //Arrange
         int expectedIdDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
@@ -88,29 +82,60 @@ class RollerBlindActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(50)).thenReturn(true);
 
+        String expected = "50";
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 50);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, expected);
             //Assert
-            assertTrue(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
-
     }
 
+    @Test
+    void whenGivenNullSimHardware_executeCommandReturnsAppropriateMessage(){
+        //Arrange
+        int expectedIdDoubleSize = 1;
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(true);
 
-    /**
-     * This test verifies that the executeCommand method returns false when the position is invalid (over 100) and
-     * the command execution in the SimHardwareAct object is unsuccessful.
-     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return false when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
-     * After execution, it asserts that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
+        String expected = "Invalid hardware, could not execute command";
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            //Act
+            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            String result = rollerBlindActuator.executeCommand(null, "Will not get here");
+            //Assert
+            assertEquals(expected,result);
+            assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
+        }
+    }
+
+    @Test
+    void whenGivenUnparseableValue_executeCommandReturnsAppropriateMessage(){
+        //Arrange
+        int expectedIdDoubleSize = 1;
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(true);
+
+        String expected = "Invalid value, could not execute command";
+        try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            //Act
+            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, "I will fail");
+            //Assert
+            assertEquals(expected,result);
+            assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
+        }
+    }
+
     @Test
     void whenInvalidPositionOver100AndExecuteCommand_ThenReturnFalse(){
         //Arrange
@@ -120,27 +145,19 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(true);
+
+        String expected = "Invalid value, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 101);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, "101");
             //Assert
-            assertFalse(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
     }
 
 
-    /**
-     * This test verifies that the executeCommand method returns false when the position is invalid (under 0) and
-     * the command execution in the SimHardwareAct object is unsuccessful.
-     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return false when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
-     * After execution, it asserts that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
     @Test
     void whenInvalidPositionUnder0AndExecuteCommand_ThenReturnFalse(){
         //Arrange
@@ -150,29 +167,20 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(-1)).thenReturn(true);
+        String expected = "Invalid value, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, -1);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, "-1");
             //Assert
-            assertFalse(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
     }
 
 
-    /**
-     * This test verifies that the executeCommand method returns true when the position is 0 and
-     * the command execution in the SimHardwareAct object is successful.
-     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return true when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
-     * After execution, it asserts that the result is true.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
     @Test
-    void whenValidPositionEquals0AndExecuteCommand_ThenReturnTrue(){
+    void whenValidPositionEquals0AndExecuteCommand_ThenReturnValue(){
         //Arrange
         int expectedIdDoubleSize = 1;
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
@@ -180,27 +188,18 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(0)).thenReturn(true);
+        String expected = "0";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 0);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, expected);
             //Assert
-            assertTrue(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
     }
 
 
-    /**
-     * This test verifies that the executeCommand method returns true when the position is 100 and
-     * the command execution in the SimHardwareAct object is successful.
-     * It isolates all Actuators collaborators, and it conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return true when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the switchLoad method on it.
-     * After execution, it asserts that the result is true.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
     @Test
     void whenValidPositionEquals100AndExecuteCommand_ThenReturnTrue(){
         //Arrange
@@ -210,26 +209,19 @@ class RollerBlindActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(100)).thenReturn(true);
+
+        String expected = "100";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 100);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, expected);
             //Assert
-            assertTrue(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
     }
 
-    /**
-     * This test verifies that the executeCommand method returns false when the position is valid (between 0 and 100),
-     * but the command execution in the SimHardwareAct object fails.
-     * It isolates all Actuators collaborators and conditions the behavior of the executeCommandSim method of
-     * SimHardwareAct to return false when invoked.
-     * It then constructs a RollerBlindActuator object using the mocked objects and executes the executeCommand method on it.
-     * After execution, it asserts that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO,
-     * ensuring that the number of mocked constructions of these objects match the expected.
-     */
+
     @Test
     void whenValidPositionAndExecuteCommandFails_ThenReturnFalse() {
         // Arrange
@@ -240,12 +232,14 @@ class RollerBlindActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(50)).thenReturn(false);
 
+        String expected = "Hardware error: Value was not set";
+
         try (MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)) {
             // Act
             RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            boolean result = rollerBlindActuator.executeCommand(simHardwareAct, 50);
+            String result = rollerBlindActuator.executeCommand(simHardwareAct, "50");
             // Assert
-            assertFalse(result);
+            assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
     }
@@ -332,6 +326,21 @@ class RollerBlindActuatorTest {
         DeviceIDVO result = actuator.getDeviceID();
         // Assert
         assertEquals(deviceID,result);
+    }
+
+    @Test
+    void whenGetActuatorStatus_ReturnsDeviceStatusVOWithDefaultValue(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        RollerBlindActuator actuator = new RollerBlindActuator(name,type,deviceID);
+        String expected = "Default - 100";
+
+        // Act
+        String result = actuator.getActuatorStatus().getValue();
+        // Assert
+        assertEquals(expected,result);
     }
 
 }

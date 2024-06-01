@@ -69,7 +69,8 @@ class ActuatorDTOTest {
         String deviceID = UUID.randomUUID().toString();
 
         //Act
-        ActuatorDTO actuatorDTO = new ActuatorDTO(null, expectedActuatorName, actuatorType, deviceID, null, null, null);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(null, expectedActuatorName, actuatorType, deviceID,
+                null, null, null, null);
 
         //Assert
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
@@ -147,6 +148,7 @@ class ActuatorDTOTest {
         String deviceID = UUID.randomUUID().toString();
         String lowerLimit = "1";
         String upperLimit = "12";
+        String status = "I am valid";
 
         //Act
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
@@ -156,6 +158,7 @@ class ActuatorDTOTest {
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)
+                .status(status)
                 .build();
 
         //Assert
@@ -165,6 +168,7 @@ class ActuatorDTOTest {
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
+        assertEquals(status, actuatorDTO.getStatus());
     }
 
     /**
@@ -181,9 +185,10 @@ class ActuatorDTOTest {
         String deviceID = UUID.randomUUID().toString();
         String lowerLimit = "1";
         String upperLimit = "12";
+        String status = "I am valid";
 
         //Act
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorId, expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, null);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorId, expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, null, status);
 
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
@@ -209,6 +214,7 @@ class ActuatorDTOTest {
         String lowerLimit = "1.0";
         String upperLimit = "12.0";
         String precision = "2.0";
+        String status = "I am valid";
 
         //Act
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
@@ -219,6 +225,7 @@ class ActuatorDTOTest {
                                             .lowerLimit(lowerLimit)
                                             .upperLimit(upperLimit)
                                             .precision(precision)
+                                            .status(status)
                                             .build();
 
         //Assert
@@ -229,6 +236,7 @@ class ActuatorDTOTest {
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
         assertEquals(precision, actuatorDTO.getPrecision());
+        assertEquals(status, actuatorDTO.getStatus());
     }
 
     /**
@@ -246,9 +254,10 @@ class ActuatorDTOTest {
         String lowerLimit = "1.0";
         String upperLimit = "12.0";
         String precision = "2.0";
+        String status = "I am valid";
 
         //Act
-        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorId, expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, precision);
+        ActuatorDTO actuatorDTO = new ActuatorDTO(actuatorId, expectedActuatorName, actuatorType, deviceID, lowerLimit, upperLimit, precision, status);
 
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());

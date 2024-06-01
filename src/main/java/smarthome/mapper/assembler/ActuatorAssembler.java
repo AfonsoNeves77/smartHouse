@@ -30,6 +30,7 @@ public class ActuatorAssembler {
         String lowerLimit = actuatorDataModel.getLowerLimit();
         String upperLimit = actuatorDataModel.getUpperLimit();
         String precision = actuatorDataModel.getPrecision();
+        ActuatorStatusVO status = new ActuatorStatusVO(actuatorDataModel.getStatus());
         Settings settings = null;
         if (precision == null && lowerLimit != null && upperLimit != null) {
             settings = new IntegerSettingsVO(lowerLimit, upperLimit);
@@ -38,7 +39,7 @@ public class ActuatorAssembler {
         if (precision != null && lowerLimit != null && upperLimit != null) {
             settings = new DecimalSettingsVO(lowerLimit, upperLimit, precision);
         }
-        return actuatorFactory.createActuator(actuatorID, actuatorName, actuatorType, deviceID, settings);
+        return actuatorFactory.createActuator(actuatorID, actuatorName, actuatorType, deviceID, settings, status);
     }
 
     /**

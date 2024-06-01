@@ -7,6 +7,7 @@ import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.persistence.ActuatorRepository;
@@ -574,7 +575,7 @@ class ActuatorServiceImplTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
         when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
-        when(actuator.executeCommand(this.actuatorExternalService, 0)).thenReturn(true);
+        when(actuator.executeCommand(this.actuatorExternalService, "0")).thenReturn("0");
         ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
         //Act
         boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
@@ -582,19 +583,7 @@ class ActuatorServiceImplTest {
         assertTrue(result);
     }
 
-    /**
-     * This test verifies that if the ActuatorIDVO is valid and is of the type RollerBlind it executes the command
-     * to close the RollerBlind, but the execute command operation fails and returns false.
-     * It creates mocks of the ActuatorIDVO, Actuator, DeviceRepository, ActuatorTypeRepository, ActuatorFactory and
-     * ActuatorRepository. Then, it sets the behavior of the ActuatorRepository to return the actuator double when the
-     * findById method is called with the ActuatorIDVO as an argument.
-     * Next, it sets the behavior of the actuator double to return a new ActuatorTypeIDVO of type "RollerBlindActuator".
-     * Then, it sets the behavior of the actuator double to return false when the executeCommand method is called with
-     * the ActuatorExternalService and 0 as arguments.
-     * After that, it creates an ActuatorServiceImpl instance with the mocked dependencies. It then calls the
-     * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
-     * Finally, it asserts that the result is false.
-     */
+
     @Test
     void whenCloseRollerBlindWithValidActuator_executeCommandFails_thenReturnsFalse() {
         //Arrange
@@ -607,7 +596,7 @@ class ActuatorServiceImplTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
         when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
-        when(actuator.executeCommand(this.actuatorExternalService, 0)).thenReturn(false);
+        when(actuator.executeCommand(this.actuatorExternalService, "0")).thenReturn("I failed");
         ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
         //Act
         boolean result = actuatorService.closeRollerBlind(actuatorIDVO);

@@ -56,7 +56,6 @@ class ActuatorMapperTest {
      * Should throw an IllegalArgumentException with the message "Invalid DTO, ActuatorDTO cannot be null" since
      * it fails to create a DeviceIDVO object.
      */
-
     @Test
     void givenNullActuatorDTO_WhenCreateDeviceIDVO_ThenThrowException() {
 //        Arrange
@@ -64,6 +63,18 @@ class ActuatorMapperTest {
 //        Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> ActuatorMapper.createDeviceIDVO(null));
 //        Assert
+        String resultingMessage = exception.getMessage();
+        assertEquals(expectedMessage, resultingMessage);
+    }
+
+    @Test
+    void givenNullActuatorDTO_whenCreateActuatorStatusVO_thenThrowsException() {
+        // Arrange
+        String expectedMessage = "ActuatorDTO cannot be null.";
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, ()
+                -> ActuatorMapper.createActuatorStatusVO(null));
+        // Assert
         String resultingMessage = exception.getMessage();
         assertEquals(expectedMessage, resultingMessage);
     }
@@ -136,6 +147,26 @@ class ActuatorMapperTest {
         ActuatorTypeIDVO actuatorTypeIDVO = ActuatorMapper.createActuatorTypeIDVO(actuatorDTO);
 //        Assert
         assertEquals(actuatorType, actuatorTypeIDVO.getID());
+    }
+
+    /**
+     * Test case to verify the behavior of the createActuatorStatusVO method when given a valid ActuatorDTO.
+     * <p>
+     * Given a valid ActuatorDTO with a status,
+     * when the createActuatorStatusVO method is called with the ActuatorDTO,
+     * then it should return an ActuatorStatusVO with the same status,
+     * and the value obtained from the ActuatorStatusVO should match the expected status.
+     */
+    @Test
+    void givenValidActuatorDTO_createActuatorStatusVOReturnsActuatorStatusVO(){
+        // Arrange
+        String expected = "I will pass";
+        ActuatorDTO actuatorDTO = ActuatorDTO.builder().status(expected).build();
+        ActuatorStatusVO statusVO = ActuatorMapper.createActuatorStatusVO(actuatorDTO);
+        // Act
+        String result = statusVO.getValue();
+        // Assert
+        assertEquals(expected,result);
     }
 
     /**
@@ -469,6 +500,7 @@ class ActuatorMapperTest {
         String actuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+        String status = "I am valid";
 
         ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         when(actuatorIDVO.getID()).thenReturn(actuatorID);
@@ -482,11 +514,15 @@ class ActuatorMapperTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         when(deviceIDVO.getID()).thenReturn(deviceID);
 
+        ActuatorStatusVO actuatorStatusVO = mock(ActuatorStatusVO.class);
+        when(actuatorStatusVO.getValue()).thenReturn(status);
+
         Actuator actuator = mock(Actuator.class);
         when(actuator.getId()).thenReturn(actuatorIDVO);
         when(actuator.getActuatorName()).thenReturn(actuatorNameVO);
         when(actuator.getActuatorTypeID()).thenReturn(actuatorTypeIDVO);
         when(actuator.getDeviceID()).thenReturn(deviceIDVO);
+        when(actuator.getActuatorStatus()).thenReturn(actuatorStatusVO);
 
 
         // Act
@@ -512,6 +548,7 @@ class ActuatorMapperTest {
         String actuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+        String status = "I am valid";
 
         ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         when(actuatorIDVO.getID()).thenReturn(actuatorID);
@@ -524,6 +561,9 @@ class ActuatorMapperTest {
 
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         when(deviceIDVO.getID()).thenReturn(deviceID);
+
+        ActuatorStatusVO actuatorStatusVO = mock(ActuatorStatusVO.class);
+        when(actuatorStatusVO.getValue()).thenReturn(status);
 
         Integer lowerLimit = 10;
         Integer upperLimit = 30;
@@ -540,6 +580,7 @@ class ActuatorMapperTest {
         when(actuator.getLowerLimit()).thenReturn("10");
         when(actuator.getUpperLimit()).thenReturn("30");
         when(actuator.getPrecision()).thenReturn(null);
+        when(actuator.getActuatorStatus()).thenReturn(actuatorStatusVO);
 
 
         // Act
@@ -567,6 +608,7 @@ class ActuatorMapperTest {
         String actuatorName = "Smart Thermostat";
         String actuatorType = "Thermostat";
         String deviceID = "123e4567-e89b-12d3-a456-426614174001";
+        String status = "I am valid";
 
         ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
         when(actuatorIDVO.getID()).thenReturn(actuatorID);
@@ -579,6 +621,9 @@ class ActuatorMapperTest {
 
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         when(deviceIDVO.getID()).thenReturn(deviceID);
+
+        ActuatorStatusVO actuatorStatusVO = mock(ActuatorStatusVO.class);
+        when(actuatorStatusVO.getValue()).thenReturn(status);
 
         Double lowerLimit = 10.0;
         Double upperLimit = 30.0;
@@ -597,6 +642,7 @@ class ActuatorMapperTest {
         when(actuator.getLowerLimit()).thenReturn("10.0");
         when(actuator.getUpperLimit()).thenReturn("30.0");
         when(actuator.getPrecision()).thenReturn("0.1");
+        when(actuator.getActuatorStatus()).thenReturn(actuatorStatusVO);
 
 
         // Act
@@ -702,23 +748,27 @@ class ActuatorMapperTest {
         ActuatorTypeIDVO actuatorTypeIDVODouble = mock(ActuatorTypeIDVO.class);
         ActuatorNameVO actuatorNameVODouble = mock(ActuatorNameVO.class);
         DeviceIDVO deviceIDVODouble = mock(DeviceIDVO.class);
+        ActuatorStatusVO actuatorStatusVODouble = mock(ActuatorStatusVO.class);
 
         Actuator actuatorDouble = mock(Actuator.class);
         when(actuatorDouble.getId()).thenReturn(actuatorIDVODouble);
         when(actuatorDouble.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble);
         when(actuatorDouble.getActuatorName()).thenReturn(actuatorNameVODouble);
         when(actuatorDouble.getDeviceID()).thenReturn(deviceIDVODouble);
+        when(actuatorDouble.getActuatorStatus()).thenReturn(actuatorStatusVODouble);
 
         ActuatorIDVO actuatorIDVODouble2 = mock(ActuatorIDVO.class);
         ActuatorTypeIDVO actuatorTypeIDVODouble2 = mock(ActuatorTypeIDVO.class);
         ActuatorNameVO actuatorNameVODouble2 = mock(ActuatorNameVO.class);
         DeviceIDVO deviceIDVODouble2 = mock(DeviceIDVO.class);
+        ActuatorStatusVO actuatorStatusVODouble2 = mock(ActuatorStatusVO.class);
 
         Actuator actuatorDouble2 = mock(Actuator.class);
         when(actuatorDouble2.getId()).thenReturn(actuatorIDVODouble2);
         when(actuatorDouble2.getActuatorTypeID()).thenReturn(actuatorTypeIDVODouble2);
         when(actuatorDouble2.getActuatorName()).thenReturn(actuatorNameVODouble2);
         when(actuatorDouble2.getDeviceID()).thenReturn(deviceIDVODouble2);
+        when(actuatorDouble2.getActuatorStatus()).thenReturn(actuatorStatusVODouble2);
 
         List<Actuator> actuatorList = new ArrayList<>();
         actuatorList.add(actuatorDouble);

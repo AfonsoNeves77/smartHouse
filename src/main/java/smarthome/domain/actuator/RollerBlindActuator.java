@@ -5,6 +5,7 @@ import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class RollerBlindActuator implements AggregateRoot, Actuator {
     private final ActuatorTypeIDVO actuatorTypeID;
     private final DeviceIDVO deviceIDVO;
     private ActuatorNameVO actuatorName;
+    private ActuatorStatusVO actuatorStatusVO;
 
     /**
      * Constructs a new RollerBlindActuator with the provided actuatorName, actuatorTypeID, and deviceIDVO. Throws an
@@ -27,38 +29,65 @@ public class RollerBlindActuator implements AggregateRoot, Actuator {
      */
     public RollerBlindActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
         if (!parametersAreValid(actuatorName, actuatorTypeID, deviceIDVO)) {
-            throw new IllegalArgumentException("Invalid Parameters");
+            throw new IllegalArgumentException("Invalid parameters");
         }
         this.actuatorID = new ActuatorIDVO(UUID.randomUUID());
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
         this.actuatorName = actuatorName;
+        this.actuatorStatusVO = new ActuatorStatusVO("Default - 100");
     }
 
     /**
-     * Constructs a new RollerBlindActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
-     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
-     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     * Constructs a new RollerBlindActuator object with the specified actuatorID, actuator name, type, device ID and the
+     * settings interface. The input parameters were extracted from a DataModel of an existing actuator. Since the
+     * DataModel is created from an existing actuator, it is considered that all the parameters are valid, since they
+     * have been validated before persisting the actuator.
      */
-    public RollerBlindActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
+    public RollerBlindActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID,
+                               DeviceIDVO deviceIDVO, ActuatorStatusVO actuatorStatusVO) {
         this.actuatorID = actuatorID;
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
         this.actuatorName = actuatorName;
-    }
-    /**
-     * Executes the command to move the roller blind to the specified position. The position must be between 0 and 100.
-     * @param simHardwareAct The hardware simulator.
-     * @param position The position to move the roller blind to.
-     * @return true if the command was executed successfully, false otherwise.
-     */
-    public boolean executeCommand(ActuatorExternalService simHardwareAct, int position){
-        if (!validateCommand(position)) {
-            return false;
-        }
-        return simHardwareAct.executeIntegerCommandSim(position);
+        this.actuatorStatusVO = actuatorStatusVO;
     }
 
+    /**
+     * Executes a command on the actuator hardware with the specified string value.
+     * @param simHardwareAct the {@code ActuatorExternalService} instance to interact with the hardware.
+     * @param value the string representation of the value to be sent as a command to the actuator hardware.
+     * @return a string representing the command execution result:
+     *         - "Invalid hardware, could not execute command" if the hardware is null.
+     *         - "Invalid value, could not execute command" if the value cannot be parsed into an integer or does not
+     *         pass validation.
+     *         - "Hardware error: Value was not set" if there was an error setting the value on the hardware.
+     *         - The original string value if the command was successfully executed and the value was set.
+     */
+    public String executeCommand(ActuatorExternalService simHardwareAct, String value){
+        if (simHardwareAct == null) {
+            return "Invalid hardware, could not execute command";
+        }
+
+        // Attempts to parse value into double, in order to validate it and use as argument on the ExternalHardware
+        int parsedValue;
+
+        try {
+            parsedValue = Integer.parseInt(value);
+        } catch (NumberFormatException e){
+            return "Invalid value, could not execute command";
+        }
+
+        if (!validateCommand(parsedValue)) {
+            return "Invalid value, could not execute command";
+        }
+
+        if (!simHardwareAct.executeIntegerCommandSim(parsedValue)){
+            return "Hardware error: Value was not set";
+        }
+        this.actuatorStatusVO = new ActuatorStatusVO(value);
+        return value;
+    }
 
     /**
      * Simple getter method for the actuator ID.
@@ -116,6 +145,16 @@ public class RollerBlindActuator implements AggregateRoot, Actuator {
     @Override
     public ActuatorNameVO getActuatorName() {
         return this.actuatorName;
+    }
+
+    /**
+     * Retrieves the last saved status of the actuator.
+     *
+     * @return the current ActuatorStatusVO instance representing the status of the actuator.
+     */
+    @Override
+    public ActuatorStatusVO getActuatorStatus() {
+        return this.actuatorStatusVO;
     }
 
     /**

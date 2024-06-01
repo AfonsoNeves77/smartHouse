@@ -9,6 +9,7 @@ import smarthome.domain.actuator.Actuator;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.mapper.ActuatorMapper;

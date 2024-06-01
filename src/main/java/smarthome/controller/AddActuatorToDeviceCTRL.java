@@ -1,6 +1,7 @@
 package smarthome.controller;
 
 import smarthome.domain.actuator.Actuator;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.mapper.dto.ActuatorDTO;
 import smarthome.mapper.dto.ActuatorTypeDTO;
 import smarthome.mapper.dto.DeviceDTO;

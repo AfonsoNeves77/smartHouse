@@ -4,6 +4,7 @@ import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class SwitchActuator implements Actuator {
     private ActuatorNameVO actuatorName;
     private final ActuatorTypeIDVO actuatorTypeID;
     private final DeviceIDVO deviceIDVO;
+    private ActuatorStatusVO actuatorStatusVO;
 
     /**
      * Constructs a new SwitchActuator with the provided actuatorName, actuatorTypeID, and deviceIDVO.
@@ -33,24 +35,28 @@ public class SwitchActuator implements Actuator {
      */
     public SwitchActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
         if (!parametersAreValid(actuatorName, actuatorTypeID, deviceIDVO)) {
-            throw new IllegalArgumentException("Invalid Parameters");
+            throw new IllegalArgumentException("Invalid parameters");
         }
         this.actuatorID = new ActuatorIDVO(UUID.randomUUID());
         this.actuatorName = actuatorName;
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
+        this.actuatorStatusVO = new ActuatorStatusVO("Default: 1");
     }
 
     /**
-     * Constructs a new SwitchActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
-     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
-     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     * Constructs a new SwitchActuator object with the specified actuatorID, actuator name, type, device ID and the
+     * settings interface. The input parameters were extracted from a DataModel of an existing actuator. Since the
+     * DataModel is created from an existing actuator, it is considered that all the parameters are valid, since they
+     * have been validated before persisting the actuator.
      */
-    public SwitchActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
+    public SwitchActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID,
+                          DeviceIDVO deviceIDVO , ActuatorStatusVO actuatorStatusVO) {
         this.actuatorID = actuatorID;
         this.actuatorName = actuatorName;
         this.actuatorTypeID = actuatorTypeID;
         this.deviceIDVO = deviceIDVO;
+        this.actuatorStatusVO = actuatorStatusVO;
     }
 
     /**
@@ -61,22 +67,49 @@ public class SwitchActuator implements Actuator {
      * @param deviceIDVO     The ID of the device associated with the actuator.
      * @return true if all parameters are not null, false otherwise.
      */
-    private boolean parametersAreValid(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
+    private boolean parametersAreValid(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID,
+                                       DeviceIDVO deviceIDVO) {
         return actuatorName != null && actuatorTypeID != null && deviceIDVO != null;
     }
 
     /**
-     * Switches the load using the provided SimHardwareAct.
-     * SimHardwareAct is an abstraction that represents the external entity or "piece" of hardware this SwitchActuator is going
-     * to act upon.
-     * This function calls a method in SimHardwareAct class that executes the load switching command, this operation returns a boolean
-     * considering if the command was (or not) successfully executed. switchLoad() will return the output of that function.
-     *
-     * @param simHardwareAct The SimHardwareAct to use for executing the command.
-     * @return true if the command was executed successfully, false otherwise.
+     * Executes a command on the actuator hardware with the specified string value.
+     * @param simHardwareAct the {@code ActuatorExternalService} instance to interact with the hardware.
+     * @param value the string representation of the value to be sent as a command to the actuator hardware.
+     * @return a string representing the command execution result:
+     *         - "Invalid hardware, could not execute command" if the hardware is null.
+     *         - "Invalid value, could not execute command" if the value is invalid.
+     *         - "Hardware error: Value was not set" if there was an error setting the value on the hardware.
+     *         - The original string value if the command was successfully executed and the value was set.
      */
-    public boolean switchLoad(ActuatorExternalService simHardwareAct) {
-        return simHardwareAct.executeCommandSim();
+    public String executeCommand(ActuatorExternalService simHardwareAct, String value) {
+        if (simHardwareAct == null) {
+            return "Invalid hardware, could not execute command";
+        }
+        if (!isCommandValid(value)){
+            return "Invalid value, could not execute command";
+        }
+        if (!simHardwareAct.executeIntegerCommandSim(Integer.parseInt(value))){
+            return "Hardware error: Value was not set";
+        }
+        this.actuatorStatusVO = new ActuatorStatusVO(value);
+        return value;
+    }
+
+    /**
+     * Validates the input string to determine if it can be parsed as an integer and if it is either 0 or 1.
+     *
+     * @param inputValue the string representation of the value to be validated.
+     * @return {@code true} if the input string can be parsed as an integer and is either 0 or 1; {@code false}
+     * otherwise.
+     */
+    private boolean isCommandValid (String inputValue){
+        try{
+            int value = Integer.parseInt(inputValue);
+            return value == 1 || value == 0;
+        } catch (Exception e){
+            return false;
+        }
     }
 
     /**
@@ -114,6 +147,16 @@ public class SwitchActuator implements Actuator {
     @Override
     public ActuatorNameVO getActuatorName() {
         return this.actuatorName;
+    }
+
+    /**
+     * Retrieves the last saved status of the actuator.
+     *
+     * @return the current ActuatorStatusVO instance representing the status of the actuator.
+     */
+    @Override
+    public ActuatorStatusVO getActuatorStatus() {
+        return this.actuatorStatusVO;
     }
 
     /**

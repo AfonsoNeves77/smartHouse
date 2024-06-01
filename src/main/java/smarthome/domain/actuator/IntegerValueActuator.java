@@ -1,11 +1,8 @@
 package smarthome.domain.actuator;
 
 import smarthome.domain.actuator.externalservices.ActuatorExternalService;
-import smarthome.domain.vo.actuatorvo.Settings;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
-import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 
 import java.util.UUID;
@@ -16,16 +13,21 @@ public class IntegerValueActuator implements Actuator {
     private final DeviceIDVO deviceID;
     private final ActuatorIDVO actuatorID;
     private final IntegerSettingsVO integerSettings;
+    private ActuatorStatusVO actuatorStatusVO;
 
     /**
-     * Constructs a new IntSetRangeActuator object with the specified actuator name, type, device ID and the settings interface.
+     * Constructs a new IntSetRangeActuator object with the specified actuator name, type, device ID and the settings
+     * interface.
      * Validates the provided parameters to ensure they are not null.
      * Tries to cast the settings interface to an IntegerSettingsVO object.
      * Assigns a unique actuator ID using a randomly generated UUID.
+     * This constructor is used for new instances. By default, it creates an actuatorStatus object with a default value.
      */
-    public IntegerValueActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID, Settings settings){
+    public IntegerValueActuator(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID,
+                                Settings settings){
+
         if(areParamsNull(actuatorName, actuatorType, deviceID, settings)){
-            throw new IllegalArgumentException("Parameters cannot be null");
+            throw new IllegalArgumentException("Invalid parameters");
         }
         try{
             this.integerSettings = (IntegerSettingsVO) settings;
@@ -36,51 +38,68 @@ public class IntegerValueActuator implements Actuator {
         this.actuatorType = actuatorType;
         this.deviceID = deviceID;
         this.actuatorID = new ActuatorIDVO(UUID.randomUUID());
+        this.actuatorStatusVO = new ActuatorStatusVO("Initial reading");
     }
 
     /**
-     * Constructs a new IntSetRangeActuator object with the specified actuatorID, actuator name, type, device ID and the settings interface.
-     * the input parameters were extracted from a DataModel of an existing actuator. Since the DataModel is created from an existing actuator,
-     * it is considered that all the parameters are valid, since they have been validated before persisting the actuator.
+     * Constructs a new IntSetRangeActuator object with the specified actuatorID, actuator name, type, device ID and the
+     * settings interface. The input parameters were extracted from a DataModel of an existing actuator. Since the
+     * DataModel is created from an existing actuator, it is considered that all the parameters are valid, since they
+     * have been validated before persisting the actuator.
      * Tries to cast the settings interface to an IntegerSettingsVO object.
      */
-    public IntegerValueActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType, DeviceIDVO deviceID, Settings settings) {
+    public IntegerValueActuator(ActuatorIDVO actuatorID, ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorType,
+                                DeviceIDVO deviceID, Settings settings, ActuatorStatusVO actuatorStatusVO) {
         this.actuatorID = actuatorID;
         this.actuatorName = actuatorName;
         this.actuatorType = actuatorType;
         this.deviceID = deviceID;
         this.integerSettings = (IntegerSettingsVO) settings;
+        this.actuatorStatusVO = actuatorStatusVO;
     }
+
     /**
-     * This method executes the command on the actuator.
-     * To ensure the upper and lower limits have been already set, hence not null, the method throws an IllegalArgumentException if either are null.
-     * However, being both null by default when the actuator is created, verifying if the upperLimit is null is in this case redundant.
-     * It was chosen to keep the verification for consistency and to avoid potential future changes that could make the upperLimit null.
-     * It then verifies if the provided value is within the limits, by use of a private method, and throws an IllegalArgumentException if not.
-     * Furthermore, it verifies if the simHardwareAct is null and throws an IllegalArgumentException if so.
-     * The simHardwareAct is then used to execute the command with the provided value and the value of the actuator is set, altering the object's state to its last definition.
-     * The method returns true if the command is successfully executed, false otherwise.
-     * @param simHardwareAct the hardware actuator to execute the command on
-     * @param value the value to set the actuator to
-     * @return String with feedback
+     * Executes a command on the actuator hardware with the specified string value.
+     * @param simHardwareAct the {@code ActuatorExternalService} instance to interact with the hardware.
+     * @param value the string representation of the value to be sent as a command to the actuator hardware.
+     * @return a string representing the command execution result:
+     *         - "Invalid hardware, could not execute command" if the hardware is null.
+     *         - "Invalid value, could not execute command" if the value cannot be parsed into an integer or is not
+     *         within limits.
+     *         - "Hardware error: Value was not set" if there was an error setting the value on the hardware.
+     *         - The original string value if the command was successfully executed and the value was set.
      */
-    public String executeCommand(ActuatorExternalService simHardwareAct, int value) {
+    public String executeCommand(ActuatorExternalService simHardwareAct, String value) {
         if (simHardwareAct == null) {
             return "Invalid hardware, could not execute command";
         }
-        if (!isValueWithinLimits(value)) {
+
+        // Attempts to parse value into double, in order to validate it and use as argument on the ExternalHardware
+        int parsedValue;
+
+        try {
+            parsedValue = Integer.parseInt(value);
+        } catch (NumberFormatException e){
             return "Invalid value, could not execute command";
         }
-        if (simHardwareAct.executeIntegerCommandSim(value)) {
-            return "Value was set";
+
+        // Validates value is within limits
+        if (!isValueWithinLimits(parsedValue)) {
+            return "Invalid value, could not execute command";
         }
-        return "Error: Value was not set";
+
+        if (!simHardwareAct.executeIntegerCommandSim(parsedValue)) {
+            return "Hardware error: Value was not set";
+        }
+        this.actuatorStatusVO = new ActuatorStatusVO(value);
+        return value;
     }
 
 
 
     /**
-     * This method verifies if a given value is within the range of the pre-established limits for the present state of the actuator.
+     * This method verifies if a given value is within the range of the pre-established limits for the present state of
+     * the actuator.
      * @return true if the value is within the limits, false otherwise
      */
     private boolean isValueWithinLimits(int value){
@@ -127,6 +146,16 @@ public class IntegerValueActuator implements Actuator {
     }
 
     /**
+     * Retrieves the last saved status of the actuator.
+     *
+     * @return the current ActuatorStatusVO instance representing the status of the actuator.
+     */
+    @Override
+    public ActuatorStatusVO getActuatorStatus() {
+        return this.actuatorStatusVO;
+    }
+
+    /**
      * This method verifies if a given set of parameters are null.
      * @return true if any of the parameters are null, false otherwise
      */
@@ -138,7 +167,6 @@ public class IntegerValueActuator implements Actuator {
         }
         return false;
     }
-
 
     /**
      * Method to retrieve the settings of the actuator.
@@ -174,4 +202,5 @@ public class IntegerValueActuator implements Actuator {
      */
     public String getPrecision() {
         return null;}
+
 }

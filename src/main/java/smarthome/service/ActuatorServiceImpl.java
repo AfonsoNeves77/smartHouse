@@ -94,15 +94,11 @@ public class ActuatorServiceImpl implements ActuatorService {
     }
 
     /**
-     * Closes the RollerBlind Actuator with the provided ActuatorIDVO.
-     * This method retrieves the Actuator from the repository based on the provided ActuatorIDVO.
-     * If the Actuator is found, it checks if the Actuator is of type RollerBlindActuator. If it is, it executes the
-     * close command on the Actuator using the ActuatorExternalService and passes the position as 0.
-     * If the Actuator is not of type RollerBlindActuator, the method returns false. If the Actuator is not found,
-     * the method returns false. If the close command is executed successfully, the method returns true.
+     * Closes a roller blind actuator associated with the provided actuator ID.
      *
-     * @param actuatorIDVO The Value Object representing the ID of the Actuator to close.
-     * @return true if the Actuator is closed successfully, false otherwise.
+     * @param actuatorIDVO the ID of the actuator to close.
+     * @return {@code true} if the roller blind actuator was successfully closed and the executeCommand method
+     * returns "0" as a string (to signal 0% opened), indicating a successful operation; {@code false} otherwise.
      */
     public boolean closeRollerBlind(ActuatorIDVO actuatorIDVO) {
         try {
@@ -113,8 +109,8 @@ public class ActuatorServiceImpl implements ActuatorService {
             String actuatorType = "RollerBlindActuator";
             String actuatorTypeID = actuator.getActuatorTypeID().getID();
             if (actuatorTypeID.equals(actuatorType)) {
-                int position = 0;
-                return ((RollerBlindActuator) actuator).executeCommand(actuatorExternalService, position);
+                String result = actuator.executeCommand(actuatorExternalService,"0");
+                return (result.equals("0"));
             }
             return false;
         } catch (NullPointerException e) {

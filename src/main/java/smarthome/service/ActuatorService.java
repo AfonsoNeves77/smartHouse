@@ -2,6 +2,7 @@ package smarthome.service;
 
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
+import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import smarthome.domain.vo.actuatorvo.Settings;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorNameVO;

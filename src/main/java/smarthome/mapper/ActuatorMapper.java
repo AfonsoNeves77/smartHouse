@@ -99,6 +99,21 @@ public class ActuatorMapper {
         }
     }
 
+    /**
+     * Creates an instance of {@code ActuatorStatusVO} from the provided {@code ActuatorDTO}.
+     *
+     * @param actuatorDTO the {@code ActuatorDTO} instance containing the actuator status.
+     *                    Must not be {@code null}.
+     * @return a new instance of {@code ActuatorStatusVO} representing the status of the actuator.
+     * @throws IllegalArgumentException if {@code actuatorDTO} is {@code null}.
+     */
+    public static ActuatorStatusVO createActuatorStatusVO (ActuatorDTO actuatorDTO){
+        if (actuatorDTO == null) {
+            throw new IllegalArgumentException(ERRORMESSAGE);
+        } else {
+            return new ActuatorStatusVO(actuatorDTO.getStatus());
+        }
+    }
 
     /**
      * Method to convert a domain Actuator object to a DTO ActuatorDTO object.
@@ -119,6 +134,7 @@ public class ActuatorMapper {
                 .lowerLimit(actuator.getLowerLimit())
                 .upperLimit(actuator.getUpperLimit())
                 .precision(actuator.getPrecision())
+                .status(actuator.getActuatorStatus().getValue())
                 .build();
     }
 

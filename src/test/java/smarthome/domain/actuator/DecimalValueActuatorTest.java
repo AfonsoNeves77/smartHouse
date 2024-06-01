@@ -33,7 +33,7 @@ class DecimalValueActuatorTest {
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
         DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
 
-        double value = 5.6;
+        String value = "5.6";
         String expected = "Invalid hardware, could not execute command";
         int idListExpectedSize = 1;
 
@@ -65,7 +65,7 @@ class DecimalValueActuatorTest {
         when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.01});
         SimHardwareAct hardware = mock(SimHardwareAct.class);
 
-        double value = 5.678;
+        String value = "5.678";
         String expected = "Value out of actuator limits, could not execute command";
         int idListExpectedSize = 1;
 
@@ -97,7 +97,7 @@ class DecimalValueActuatorTest {
         when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.01});
         SimHardwareAct hardware = mock(SimHardwareAct.class);
 
-        double value = 10.6;
+        String value = "10.6";
         String expected = "Value out of actuator limits, could not execute command";
         int idListExpectedSize = 1;
 
@@ -132,8 +132,8 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
 
-        double value = 7.7777777;
-        String expected = "Value was rounded and set to 7.778";
+        String value = "7.7777777";
+        String expected = "7.778";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -165,8 +165,7 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
 
-        double value = 6.0;
-        String expected = "Value was set";
+        String value = "6.0";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -178,7 +177,38 @@ class DecimalValueActuatorTest {
             String result = actuator.executeCommand(hardware, value);
 
             //Assert
+            assertEquals(value, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    @Test
+    void givenValidValue_executeCommandReturnsValue_andStatusIsSet(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
+        when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.001});
+        SimHardwareAct hardware = mock(SimHardwareAct.class);
+        when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
+
+        String value = "7.7777777";
+        String expected = "7.778";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            DecimalValueActuator actuator = new DecimalValueActuator(actuatorName, typeId, deviceId, configurations);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(hardware, value);
+            String resultStatus = actuator.getActuatorStatus().getValue();
+
+            //Assert
             assertEquals(expected, result);
+            assertEquals(expected, resultStatus);
             assertEquals(idListExpectedSize, idList.size());
         }
     }
@@ -198,8 +228,7 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
 
-        double value = 9.0;
-        String expected = "Value was set";
+        String value = "9.0";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -211,7 +240,7 @@ class DecimalValueActuatorTest {
             String result = actuator.executeCommand(hardware, value);
 
             //Assert
-            assertEquals(expected, result);
+            assertEquals(value, result);
             assertEquals(idListExpectedSize, idList.size());
         }
     }
@@ -232,8 +261,7 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(true);
 
-        double value = 7.55;
-        String expected = "Value was set";
+        String value = "7.55";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -245,7 +273,7 @@ class DecimalValueActuatorTest {
             String result = actuator.executeCommand(hardware, value);
 
             //Assert
-            assertEquals(expected, result);
+            assertEquals(value, result);
             assertEquals(idListExpectedSize, idList.size());
         }
     }
@@ -265,8 +293,47 @@ class DecimalValueActuatorTest {
         SimHardwareAct hardware = mock(SimHardwareAct.class);
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(false);
 
-        double value = 7.7;
-        String expected = "Error: Value was not set";
+        String value = "7.7";
+        String expected = "Hardware error: Value was not set";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            DecimalValueActuator actuator = new DecimalValueActuator(actuatorName, typeId, deviceId, configurations);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(hardware, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    /**
+     * Test case to verify the behavior of the executeCommand method when given an unparseable value.
+     * <p>
+     * Given an ActuatorNameVO, ActuatorTypeIDVO, DeviceIDVO, and DecimalSettingsVO mocks,
+     * along with a SimHardwareAct mock with a failing executeDecimalCommand method,
+     * and an unparseable value,
+     * when the executeCommand method is called,
+     * then it should return "Invalid value, could not execute command",
+     * and the size of the constructed ActuatorIDVO list should be 1.
+     */
+    @Test
+    void givenUnparseableValue_executeCommandReturnsAppropriately(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
+        when(configurations.getValue()).thenReturn(new Double[]{6.0,9.0,0.01});
+        SimHardwareAct hardware = mock(SimHardwareAct.class);
+        when(hardware.executeDecimalCommand(anyDouble())).thenReturn(false);
+
+        String value = "I will fail";
+        String expected = "Invalid value, could not execute command";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -294,7 +361,7 @@ class DecimalValueActuatorTest {
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
         DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
 
-        String expected = "Invalid actuator parameters";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -316,7 +383,7 @@ class DecimalValueActuatorTest {
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
         DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
 
-        String expected = "Invalid actuator parameters";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -338,7 +405,7 @@ class DecimalValueActuatorTest {
         ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
         DecimalSettingsVO configurations = mock(DecimalSettingsVO.class);
 
-        String expected = "Invalid actuator parameters";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -360,7 +427,7 @@ class DecimalValueActuatorTest {
         ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
 
-        String expected = "Invalid actuator parameters";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->

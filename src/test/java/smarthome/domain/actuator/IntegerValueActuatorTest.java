@@ -34,7 +34,7 @@ class IntegerValueActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
 
-        String expected = "Parameters cannot be null";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -60,7 +60,7 @@ class IntegerValueActuatorTest {
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
 
-        String expected = "Parameters cannot be null";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -85,7 +85,7 @@ class IntegerValueActuatorTest {
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
-        String expected = "Parameters cannot be null";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -110,7 +110,7 @@ class IntegerValueActuatorTest {
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
-        String expected = "Parameters cannot be null";
+        String expected = "Invalid parameters";
 
         //Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -211,7 +211,7 @@ class IntegerValueActuatorTest {
         DeviceIDVO deviceId = mock(DeviceIDVO.class);
         IntegerSettingsVO configurations = mock(IntegerSettingsVO.class);
 
-        int value = 5;
+        String value = "5";
         String expected = "Invalid hardware, could not execute command";
         int idListExpectedSize = 1;
 
@@ -251,7 +251,35 @@ class IntegerValueActuatorTest {
         when(settings.getValue()).thenReturn(new Integer[]{5,10});
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
 
-        int value = 4;
+        String value = "4";
+        String expected = "Invalid value, could not execute command";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            IntegerValueActuator actuator = new IntegerValueActuator(actuatorName, typeId, deviceId, settings);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(simHardwareAct, value);
+
+            //Assert
+            assertEquals(expected, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    @Test
+    void givenUnparseableValue_executeCommandReturnsAppropriately(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
+        when(settings.getValue()).thenReturn(new Integer[]{5,10});
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+
+        String value = "I will fail";
         String expected = "Invalid value, could not execute command";
         int idListExpectedSize = 1;
 
@@ -283,7 +311,7 @@ class IntegerValueActuatorTest {
      * Finally, the expected message is compared with the result message and the expected size is compared with the size of the list.
      */
     @Test
-    void givenValueEqualToLowerLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValueWasSet(){
+    void givenValueEqualToLowerLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValue(){
         //Arrange
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
@@ -295,7 +323,7 @@ class IntegerValueActuatorTest {
         when(simHardwareAct.executeIntegerCommandSim(value)).thenReturn(true);
 
 
-        String expected = "Value was set";
+        String expected = "5";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -304,7 +332,7 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            String result = actuator.executeCommand(simHardwareAct, expected);
 
             //Assert
             assertEquals(expected, result);
@@ -327,7 +355,7 @@ class IntegerValueActuatorTest {
      * Finally, the expected message is compared with the result message and the expected size is compared with the size of the list.
      */
     @Test
-    void givenValueEqualToUpperLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValueWasSet(){
+    void givenValueEqualToUpperLimitConfiguration_WhenExecuteCommand_ThenShouldReturnValue(){
         //Arrange
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
@@ -338,8 +366,7 @@ class IntegerValueActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(value)).thenReturn(true);
 
-
-        String expected = "Value was set";
+        String expected = "10";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -348,7 +375,7 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            String result = actuator.executeCommand(simHardwareAct, expected);
 
             //Assert
             assertEquals(expected, result);
@@ -378,7 +405,7 @@ class IntegerValueActuatorTest {
         when(settings.getValue()).thenReturn(new Integer[]{5, 10});
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
 
-        int value = 11;
+        String value = "11";
         String expected = "Invalid value, could not execute command";
         int idListExpectedSize = 1;
 
@@ -421,8 +448,7 @@ class IntegerValueActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(anyInt())).thenReturn(true);
 
-        int value = 7;
-        String expected = "Value was set";
+        String value = "7";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -434,7 +460,37 @@ class IntegerValueActuatorTest {
             String result = actuator.executeCommand(simHardwareAct, value);
 
             //Assert
-            assertEquals(expected, result);
+            assertEquals(value, result);
+            assertEquals(idListExpectedSize, idList.size());
+        }
+    }
+
+    @Test
+    void givenAppropriateValue_executeCommandReturnsValue_StatusVoSavesItToo(){
+        //Arrange
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO typeId = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceId = mock(DeviceIDVO.class);
+        IntegerSettingsVO settings = mock(IntegerSettingsVO.class);
+        when(settings.getValue()).thenReturn(new Integer[]{5,10});
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+        when(simHardwareAct.executeIntegerCommandSim(anyInt())).thenReturn(true);
+
+        String value = "7";
+        int idListExpectedSize = 1;
+
+        try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
+
+            IntegerValueActuator actuator = new IntegerValueActuator(actuatorName, typeId, deviceId, settings);
+            List<ActuatorIDVO> idList = mockedActuatorId.constructed();
+
+            //Act
+            String result = actuator.executeCommand(simHardwareAct, value);
+            String statusResult = actuator.getActuatorStatus().getValue();
+
+            //Assert
+            assertEquals(value, result);
+            assertEquals(value, statusResult);
             assertEquals(idListExpectedSize, idList.size());
         }
     }
@@ -464,8 +520,8 @@ class IntegerValueActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(anyInt())).thenReturn(false);
 
-        int value = 8;
-        String expected = "Error: Value was not set";
+        String value = "8";
+        String expected = "Hardware error: Value was not set";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){

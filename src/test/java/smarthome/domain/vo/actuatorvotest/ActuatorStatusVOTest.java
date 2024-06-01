@@ -3,51 +3,53 @@ package smarthome.domain.vo.actuatorvotest;
 import smarthome.domain.vo.actuatorvo.ActuatorStatusVO;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ActuatorStatusVOTest {
 
-
     /**
-     * Test case to verify that when an ActuatorStatusVO is instantiated with true as status,
-     * the getValue method should return true.
-     * This test creates an ActuatorStatusVO object with a true value and verifies that the getValue method
-     * returns true as expected.
+     * Unit test for the ActuatorStatusVO constructor.
+     * <p>
+     * This test verifies that when an invalid argument (null or empty string) is provided
+     * to the constructor of ActuatorStatusVO, it throws an IllegalArgumentException with the expected message.
+     * </p>
      */
-
     @Test
-    void whenActuatorStatusInstantiatedWithTrue_getValueShouldReturnTrue(){
-        //Arrange
-        boolean status = true;
+    void whenGivenInvalidArgument_constructorThrowsIllegalArgumentException() {
+        // Arrange
+        String status = "";
+        String expected = "Invalid parameter";
+        // Act
+        Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                -> new ActuatorStatusVO(null));
+        String result1 = exception1.getMessage();
 
-        //Act
-        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO(status);
-        boolean result = actuatorStatusVO.getValue();
+        Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                -> new ActuatorStatusVO(status));
+        String result2 = exception2.getMessage();
 
-        //Assert
-        assertTrue(result);
+        // Assert
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
     }
 
     /**
-     * Test case to verify that when an ActuatorStatusVO is instantiated with false as status,
-     * the getValue method should return false.
-     * This test creates an ActuatorStatusVO object with a false value and verifies that the getValue method
-     * returns false as expected.
+     * Tests the getValue method of the ActuatorStatusVO class.
+     * <p>
+     * This test verifies that when a valid argument is provided to the constructor
+     * of ActuatorStatusVO, the getValue method returns the correct encapsulated value.
+     * </p>
      */
-
     @Test
-    void whenActuatorStatusInstantiatedWithFalse_getValueShouldReturnFalse(){
-        //Arrange
-        boolean status = false;
+    void whenGivenValidArgument_getValueReturnsEncapsulatedValue() {
+        // Arrange
+        String expected = "It works!";
+        ActuatorStatusVO status = new ActuatorStatusVO(expected);
 
-        //Act
-        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO(status);
-        boolean result = actuatorStatusVO.getValue();
+        // Act
+        String result = status.getValue();
 
-        //Assert
-        assertFalse(result);
+        // Assert
+        assertEquals(expected, result);
     }
-
-
 }

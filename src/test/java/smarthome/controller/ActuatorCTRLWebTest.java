@@ -17,10 +17,7 @@ import smarthome.domain.actuator.*;
 import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
-import smarthome.domain.vo.actuatorvo.ActuatorNameVO;
-import smarthome.domain.vo.actuatorvo.DecimalSettingsVO;
-import smarthome.domain.vo.actuatorvo.IntegerSettingsVO;
+import smarthome.domain.vo.actuatorvo.*;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.devicevo.DeviceModelVO;
 import smarthome.domain.vo.devicevo.DeviceNameVO;
@@ -1160,8 +1157,10 @@ public class ActuatorCTRLWebTest {
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceId));
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeID);
         DecimalSettingsVO decimalSettingsVO = new DecimalSettingsVO(lowerLimit,upperLimit,precision);
+        ActuatorStatusVO statusVO = new ActuatorStatusVO("This is valid");
 
-        Actuator actuator = new DecimalValueActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,decimalSettingsVO);
+        Actuator actuator = new DecimalValueActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,
+                decimalSettingsVO,statusVO);
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
@@ -1213,8 +1212,10 @@ public class ActuatorCTRLWebTest {
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceId));
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeID);
         IntegerSettingsVO integerSettingsVO = new IntegerSettingsVO(lowerLimit,upperLimit);
+        ActuatorStatusVO statusVO = new ActuatorStatusVO("This is valid");
 
-        Actuator actuator = new IntegerValueActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,integerSettingsVO);
+        Actuator actuator = new IntegerValueActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,
+                integerSettingsVO,statusVO);
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
@@ -1262,9 +1263,9 @@ public class ActuatorCTRLWebTest {
         ActuatorNameVO actuatorNameVO = new ActuatorNameVO(actuatorName);
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceId));
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeID);
+        ActuatorStatusVO statusVO = new ActuatorStatusVO("This is valid");
 
-
-        Actuator actuator = new SwitchActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+        Actuator actuator = new SwitchActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,statusVO);
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
@@ -1311,9 +1312,9 @@ public class ActuatorCTRLWebTest {
         ActuatorNameVO actuatorNameVO = new ActuatorNameVO(actuatorName);
         DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceId));
         ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO(actuatorTypeID);
+        ActuatorStatusVO statusVO = new ActuatorStatusVO("This is valid");
 
-
-        Actuator actuator = new SwitchActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO);
+        Actuator actuator = new SwitchActuator(actuatorIDVO,actuatorNameVO,actuatorTypeIDVO,deviceIDVO,statusVO);
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);

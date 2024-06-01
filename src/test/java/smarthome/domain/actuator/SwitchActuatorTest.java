@@ -23,10 +23,11 @@ class SwitchActuatorTest {
 
     private void assertThrowsIllegalArgumentExceptionWithNullParameter(ActuatorNameVO actuatorName, ActuatorTypeIDVO actuatorTypeID, DeviceIDVO deviceIDVO) {
         //Arrange
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
 
         //Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO));
+        Exception exception = assertThrows(IllegalArgumentException.class, ()
+                -> new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO));
         String result = exception.getMessage();
         assertEquals(expected, result);
     }
@@ -88,66 +89,137 @@ class SwitchActuatorTest {
      */
 
     @Test
-    void whenSwitchLoadAndExecuteCommandReturnsTrue_ShouldReturnTrue(){
+    void whenGivenValidInputs_executeCommandShouldReturnAppropriateString(){
         //Arrange
         int expectedIDDoublesSize = 1;
+
+        String expected = "1";
 
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
 
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
-        when(simHardwareAct.executeCommandSim()).thenReturn(true);
+        when(simHardwareAct.executeIntegerCommandSim(1)).thenReturn(true);
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
             //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            boolean result = actuator.switchLoad(simHardwareAct);
+            String result = actuator.executeCommand(simHardwareAct, expected);
 
             //Assert
-            assertTrue(result);
+            assertEquals(expected, result);
             int actuatorIDDoubles = actuatorIDMockedConstruction.constructed().size();
             assertEquals(actuatorIDDoubles,expectedIDDoublesSize);
         }
     }
-
-    /**
-     * This test verifies that switchLoad() function fails(returns false) when the command execution in SimHardwareAct
-     * also fails (returns false);
-     * It isolates all Actuator's collaborators, and it conditions the behavior of the executeCommandSim method of SimHardwareAct to
-     * return false when invoked.
-     * It then initializes a SwitchActuator object using the mocked objects and executes the switchLoad method on it. After execution, it asserts
-     * that the result is false.
-     * These tests have an additional assertion that verifies the number of instances created for ActuatorIDVO ensuring that the number
-     * of mocked constructions of this class objects match the expected.
-     */
 
 
     @Test
-    void whenSwitchLoadAndExecuteCommandReturnsFalse_ShouldReturnFalse(){
+    void givenFalseSimHardwareReturn_whenExecuteCommandIsCalled_ReturnsAppropriateMessage(){
         //Arrange
         int expectedIDDoublesSize = 1;
+
+        String expected = "Hardware error: Value was not set";
 
         ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
         ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
 
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
-        when(simHardwareAct.executeCommandSim()).thenReturn(false);
+        when(simHardwareAct.executeIntegerCommandSim(0)).thenReturn(false);
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
 
             //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            boolean result = actuator.switchLoad(simHardwareAct);
+            String result = actuator.executeCommand(simHardwareAct,"0");
 
             //Assert
-            assertFalse(result);
+            assertEquals(expected,result);
             int actuatorIDDoubles = actuatorIDMockedConstruction.constructed().size();
             assertEquals(actuatorIDDoubles,expectedIDDoublesSize);
         }
     }
 
+    @Test
+    void givenNullSimHardware_executeCommandReturnsAppropriateString(){
+        //Arrange
+        int expectedIDDoublesSize = 1;
+
+        String expected = "Invalid hardware, could not execute command";
+
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+
+        try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+
+            //Act
+            SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
+            String result = actuator.executeCommand(null,"0");
+
+            //Assert
+            assertEquals(expected,result);
+            int actuatorIDDoubles = actuatorIDMockedConstruction.constructed().size();
+            assertEquals(actuatorIDDoubles,expectedIDDoublesSize);
+        }
+    }
+
+    @Test
+    void givenUnparseableValue_executeCommandReturnsAppropriateString(){
+        //Arrange
+        int expectedIDDoublesSize = 1;
+
+        String expected = "Invalid value, could not execute command";
+
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+
+        try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+
+            //Act
+            SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
+            String result = actuator.executeCommand(simHardwareAct,"I should fail");
+
+            //Assert
+            assertEquals(expected,result);
+            int actuatorIDDoubles = actuatorIDMockedConstruction.constructed().size();
+            assertEquals(actuatorIDDoubles,expectedIDDoublesSize);
+        }
+    }
+
+    @Test
+    void givenParseableButInvalidValues_executeCommandReturnsAppropriateMessage(){
+        //Arrange
+
+        String expected = "Invalid value, could not execute command";
+
+        ActuatorNameVO actuatorName = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO actuatorTypeID = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
+
+        try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+
+            //Act
+            SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
+            String result = actuator.executeCommand(simHardwareAct,"1.1");
+
+            SwitchActuator actuator1 = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
+            String result1 = actuator1.executeCommand(simHardwareAct,"-1");
+
+            SwitchActuator actuator2 = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
+            String result2 = actuator2.executeCommand(simHardwareAct,"3");
+
+            //Assert
+            assertEquals(expected,result);
+            assertEquals(expected,result1);
+            assertEquals(expected,result2);
+        }
+    }
 
 
     /**
@@ -233,5 +305,20 @@ class SwitchActuatorTest {
         DeviceIDVO result = actuator.getDeviceID();
         // Assert
         assertEquals(deviceID,result);
+    }
+
+    @Test
+    void whenGetActuatorStatus_ReturnsDeviceStatusVOWithDefaultValue(){
+        // Arrange
+        ActuatorNameVO name = mock(ActuatorNameVO.class);
+        ActuatorTypeIDVO type = mock(ActuatorTypeIDVO.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        SwitchActuator actuator = new SwitchActuator(name,type,deviceID);
+        String expected = "Default: 1";
+
+        // Act
+        String result = actuator.getActuatorStatus().getValue();
+        // Assert
+        assertEquals(expected,result);
     }
 }
