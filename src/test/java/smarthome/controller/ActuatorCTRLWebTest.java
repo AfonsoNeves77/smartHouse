@@ -14,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import smarthome.domain.actuator.*;
-import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.*;
@@ -44,9 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class ActuatorCTRLWebTest {
+class ActuatorCTRLWebTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -1492,7 +1490,7 @@ public class ActuatorCTRLWebTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/closerollerblind")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -1518,7 +1516,7 @@ public class ActuatorCTRLWebTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/closerollerblind")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
@@ -1536,7 +1534,7 @@ public class ActuatorCTRLWebTest {
     void givenInvalidActuatorId_whenCloseRollerBlind_thenReturnBadRequest() throws Exception {
         String actuatorId = " ";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/closerollerblind")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1557,9 +1555,265 @@ public class ActuatorCTRLWebTest {
 
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/closerollerblind")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that when a non-existent Actuator ID is provided, the execution of the command returns a Bad
+     * Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenNonExistentActuatorId_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        String command = "123";
+
+        // Mock behavior for repository method indicating non-existence of the actuator
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that when a blank command is given, the execution of the command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenBlankCommand_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        SwitchActuator actuator = new SwitchActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO, deviceIDVO,
+                actuatorStatusVO);
+
+        String command = " ";
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that when a null command is given, the execution of the command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenNullCommand_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        SwitchActuator actuator = new SwitchActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO, deviceIDVO,
+                actuatorStatusVO);
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command" + null)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Test case to verify that when an invalid command is given for a Switch Actuator type, the execution of the
+     * command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenInvalidCommandForASwitchActuatorType_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        SwitchActuator actuator = new SwitchActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO, deviceIDVO,
+                actuatorStatusVO);
+
+        String command = "2";
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Test case to verify that when an invalid command is given for a Roller Blind Actuator type, the execution of the
+     * command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenInvalidCommandForARollerBlindActuatorType_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        RollerBlindActuator actuator = new RollerBlindActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO,
+                deviceIDVO, actuatorStatusVO);
+        String command = "-1";
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Test case to verify that when an invalid command is given for an Actuator with an integer value type, the
+     * execution of the command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenInvalidCommandForAnIntegerValueActuatorType_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        IntegerSettingsVO integerSettingsVO = new IntegerSettingsVO("1", "2");
+        IntegerValueActuator actuator = new IntegerValueActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO,
+                deviceIDVO, integerSettingsVO, actuatorStatusVO);
+        String command = "I am a String";
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Test case to verify that when an invalid command is given for an Actuator with a decimal value type, the
+     * execution of the command returns a Bad Request status.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenInvalidCommandForADecimalValueActuatorType_thenExecuteCommandReturnsBadRequest() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        DecimalSettingsVO decimalSettingsVO = new DecimalSettingsVO("1.1", "2.0", "0.5");
+        DecimalValueActuator actuator = new DecimalValueActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO,
+                deviceIDVO, decimalSettingsVO, actuatorStatusVO);
+        String command = "I am a String";
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that when a valid command is given, the execution of the command on the Actuator returns an
+     * updated ActuatorDTO.
+     *
+     * @throws Exception if an error occurs during the test execution
+     */
+    @Test
+    void givenValidCommand_thenExecuteCommandReturnsUpdatedActuatorDTO() throws Exception {
+        // Prepare test data
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        ActuatorTypeIDVO actuatorTypeIDVO = new ActuatorTypeIDVO("SwitchActuator");
+        ActuatorNameVO actuatorNameVO = new ActuatorNameVO("Actuator1");
+        ActuatorStatusVO actuatorStatusVO = new ActuatorStatusVO("default");
+        SwitchActuator actuator = new SwitchActuator(actuatorIDVO, actuatorNameVO, actuatorTypeIDVO,
+                deviceIDVO, actuatorStatusVO);
+
+        String command = "1";
+
+
+
+        // Mock behavior for repository methods
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuatorRepository.save(actuator)).thenReturn(true);
+
+        // Expected links
+        Link expectedSelfLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorById(actuatorId)).withSelfRel();
+        Link expectedRelLink = linkTo(methodOn(ActuatorCTRLWeb.class).executeCommand(actuatorId, "{command}"))
+                .withRel("ExecuteCommand");
+
+        // Perform request and validate response
+        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.actuatorId").value(actuatorId))
+                .andExpect(jsonPath("$.actuatorName").value(actuatorNameVO.getValue()))
+                .andExpect(jsonPath("$.actuatorType").value(actuatorTypeIDVO.getID()))
+                .andExpect(jsonPath("$.deviceID").value(deviceIDVO.getID()))
+                .andExpect(jsonPath("$.status").value(command))
+                .andExpect(jsonPath("$._links.self").exists())
+                .andExpect(jsonPath("$._links.self.href").value(expectedSelfLink.getHref()))
+                .andExpect(jsonPath("$._links.ExecuteCommand.href").value(expectedRelLink.getHref()))
+                .andReturn();
     }
 }

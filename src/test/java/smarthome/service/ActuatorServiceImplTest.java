@@ -3,6 +3,7 @@ package smarthome.service;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import smarthome.domain.actuator.*;
 import smarthome.domain.actuator.externalservices.ActuatorExternalService;
+import smarthome.domain.actuator.externalservices.SimHardwareAct;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatortype.ActuatorTypeIDVO;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.*;
 
 class ActuatorServiceImplTest {
 
+    @MockBean
+    ActuatorExternalService externalService;
     /**
      * The following tests verify that if any of the parameters are null, ActuatorService instantiation should throw an
      * Illegal Argument Exception with the  message "Invalid Parameters".
@@ -560,9 +563,6 @@ class ActuatorServiceImplTest {
      * closeRollerBlind method with the ActuatorIDVO as an argument and assigns the result to a boolean variable.
      * Finally, it asserts that the result is true.
      */
-    @MockBean
-    ActuatorExternalService actuatorExternalService;
-
     @Test
     void whenCloseRollerBlindWithValidActuator_ThenReturnsTrue() {
         //Arrange
@@ -575,7 +575,7 @@ class ActuatorServiceImplTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
         when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
-        when(actuator.executeCommand(this.actuatorExternalService, "0")).thenReturn("0");
+        when(actuator.executeCommand(this.externalService, "0")).thenReturn("0");
         ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
         //Act
         boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
@@ -596,7 +596,7 @@ class ActuatorServiceImplTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
         when(actuator.getActuatorTypeID()).thenReturn(new ActuatorTypeIDVO("RollerBlindActuator"));
-        when(actuator.executeCommand(this.actuatorExternalService, "0")).thenReturn("I failed");
+        when(actuator.executeCommand(this.externalService, "0")).thenReturn("I failed");
         ActuatorService actuatorService = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository, actuatorFactory, actuatorRepository);
         //Act
         boolean result = actuatorService.closeRollerBlind(actuatorIDVO);
@@ -755,5 +755,212 @@ class ActuatorServiceImplTest {
 
         // Assert
         assertEquals(actuators, result);
+    }
+
+    /**
+     * Test method for {@link ActuatorServiceImpl#executeCommand(ActuatorIDVO, String)}.
+     * <p>
+     * This test verifies that when an actuator is not found by ID, the {@code executeCommand} method
+     * throws an {@link IllegalArgumentException} with the expected message.
+     * </p>
+     * <p>
+     * The test follows these steps:
+     * <ul>
+     *   <li>Mocks the necessary dependencies: {@link DeviceRepository}, {@link ActuatorTypeRepository},
+     *   {@link ActuatorFactory}, and {@link ActuatorRepository}.</li>
+     *   <li>Initializes an instance of {@link ActuatorServiceImpl} with the mocked dependencies.</li>
+     *   <li>Mocks an {@link ActuatorIDVO} and a command string.</li>
+     *   <li>Defines the expected exception message.</li>
+     *   <li>Invokes the {@code executeCommand} method of the service with the mocked actuator ID and command.</li>
+     *   <li>Asserts that the thrown exception is an {@link IllegalArgumentException} with the expected message.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    void whenActuatorIsNotFoundByID_executeCommandThrowsIllegalArgument(){
+        // Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        ActuatorServiceImpl service = new ActuatorServiceImpl(deviceRepository,actuatorTypeRepository,
+                actuatorFactory,actuatorRepository);
+
+        ActuatorIDVO actuatorIDVO = mock(ActuatorIDVO.class);
+        String command = "Will not get here";
+
+        String expected = "Actuator not found";
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                service.executeCommand(actuatorIDVO,command));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * Test method for {@link ActuatorServiceImpl#executeCommand(ActuatorIDVO, String)}.
+     * <p>
+     * This test verifies that when the simulated hardware method fails and throws an
+     * {@link IllegalArgumentException}, the {@code executeCommand} method propagates this exception
+     * with the expected message.
+     * </p>
+     * <p>
+     * The test follows these steps:
+     * <ul>
+     *   <li>Mocks the necessary dependencies: {@link DeviceRepository}, {@link ActuatorTypeRepository},
+     *   {@link ActuatorFactory}, and {@link ActuatorRepository}.</li>
+     *   <li>Initializes the actuator ID and mocks the {@link SwitchActuator} instance.</li>
+     *   <li>Sets up the necessary conditions for the {@link ActuatorRepository} and the actuator
+     *   execution.</li>
+     *   <li>Throws an {@link IllegalArgumentException} when the actuator's simulated hardware method
+     *   fails.</li>
+     *   <li>Initializes the {@link ActuatorServiceImpl} with the mocked dependencies.</li>
+     *   <li>Calls the {@code executeCommand} method of the service with the specified actuator ID and command
+     *   and expects an {@link IllegalArgumentException} to be thrown.</li>
+     *   <li>Asserts that the exception message matches the expected message.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    void whenSimHardwareMethodFails_executeCommandPropagatesIllegalArgument(){
+        // Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        SwitchActuator actuator = mock(SwitchActuator.class);
+
+        String command = "1";
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+
+        IllegalArgumentException simException = new IllegalArgumentException("Hardware error: Value was not set");
+
+        when(actuator.executeCommand(this.externalService,command)).thenThrow(simException);
+
+        String expected = "Hardware error: Value was not set";
+
+        ActuatorServiceImpl service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                service.executeCommand(actuatorIDVO,command));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test method for {@link ActuatorServiceImpl#executeCommand(ActuatorIDVO, String)}.
+     * <p>
+     * This test verifies that when an actuator fails to save after executing a command,
+     * the service throws an {@link IllegalArgumentException} with the expected message.
+     * </p>
+     * <p>
+     * The test follows these steps:
+     * <ul>
+     *   <li>Mocks the necessary dependencies: {@link DeviceRepository}, {@link ActuatorTypeRepository},
+     *   {@link ActuatorFactory}, and {@link ActuatorRepository}.</li>
+     *   <li>Initializes the actuator ID and mocks the {@link SwitchActuator} instance.</li>
+     *   <li>Sets up the necessary conditions for the {@link ActuatorRepository} and the actuator
+     *   execution.</li>
+     *   <li>Throws an {@link IllegalArgumentException} when the actuator fails to save.</li>
+     *   <li>Initializes the {@link ActuatorServiceImpl} with the mocked dependencies.</li>
+     *   <li>Calls the {@code executeCommand} method of the service with the specified actuator ID and command
+     *   and expects an {@link IllegalArgumentException} to be thrown.</li>
+     *   <li>Asserts that the exception message matches the expected message.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    void whenUpdatedActuatorFailsToSave_executeCommandThrowsIllegalArgument(){
+        // Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        SwitchActuator actuator = mock(SwitchActuator.class);
+
+        String command = "1";
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuatorRepository.save(actuator)).thenReturn(false);
+        when(actuator.executeCommand(this.externalService,command)).thenReturn("1");
+
+        String expected = "Unable to save";
+
+        ActuatorServiceImpl service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                service.executeCommand(actuatorIDVO,command));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Test method for {@link ActuatorServiceImpl#executeCommand(ActuatorIDVO, String)}.
+     * <p>
+     * This test verifies that when a command is executed successfully and the actuator is saved,
+     * the service returns the correct actuator instance.
+     * </p>
+     * <p>
+     * The test follows these steps:
+     * <ul>
+     *   <li>Mocks the necessary dependencies: {@link DeviceRepository}, {@link ActuatorTypeRepository},
+     *   {@link ActuatorFactory}, and {@link ActuatorRepository}.</li>
+     *   <li>Initializes the actuator ID and mocks the {@link SwitchActuator} instance.</li>
+     *   <li>Sets up the necessary conditions for the {@link ActuatorRepository} and the actuator
+     *   execution.</li>
+     *   <li>Initializes the {@link ActuatorServiceImpl} with the mocked dependencies.</li>
+     *   <li>Calls the {@code executeCommand} method of the service with the specified actuator ID and command.</li>
+     *   <li>Asserts that the result of the command execution is the expected actuator instance.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    void whenExecuteCommandProceedsSuccessfullyAndActuatorIsSaved_thenReturnsActuatorInstance(){
+        // Arrange
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        ActuatorTypeRepository actuatorTypeRepository = mock(ActuatorTypeRepository.class);
+        ActuatorFactory actuatorFactory = mock(ActuatorFactory.class);
+        ActuatorRepository actuatorRepository = mock(ActuatorRepository.class);
+
+        String actuatorId = "f642fa85-4562-b3fc-5717-6afa62c963f6";
+        ActuatorIDVO actuatorIDVO = new ActuatorIDVO(UUID.fromString(actuatorId));
+        SwitchActuator actuator = mock(SwitchActuator.class);
+
+        String command = "1";
+
+        when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(true);
+        when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
+        when(actuatorRepository.save(actuator)).thenReturn(true);
+        when(actuator.executeCommand(this.externalService,command)).thenReturn("1");
+
+        ActuatorServiceImpl service = new ActuatorServiceImpl(deviceRepository, actuatorTypeRepository,
+                actuatorFactory, actuatorRepository);
+
+        // Act
+        Actuator result = service.executeCommand(actuatorIDVO,command);
+
+        // Assert
+        assertEquals(actuator, result);
     }
 }

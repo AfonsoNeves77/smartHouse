@@ -80,16 +80,16 @@ public class IntegerValueActuator implements Actuator {
         try {
             parsedValue = Integer.parseInt(value);
         } catch (NumberFormatException e){
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Unparseable value, could not execute command");
         }
 
         // Validates value is within limits
         if (!isValueWithinLimits(parsedValue)) {
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Invalid value, could not execute command");
         }
 
         if (!simHardwareAct.executeIntegerCommandSim(parsedValue)) {
-            return "Hardware error: Value was not set";
+            throw new IllegalArgumentException("Hardware error: Value was not set");
         }
         this.actuatorStatusVO = new ActuatorStatusVO(value);
         return value;

@@ -106,10 +106,11 @@ class RollerBlindActuatorTest {
 
         String expected = "Invalid hardware, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            RollerBlindActuator actuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             //Act
-            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            String result = rollerBlindActuator.executeCommand(null, "Will not get here");
-            //Assert
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(null,"I will fail"));;
+            String result = exception.getMessage();
             assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
         }
@@ -125,11 +126,13 @@ class RollerBlindActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
         when(simHardwareAct.executeIntegerCommandSim(101)).thenReturn(true);
 
-        String expected = "Invalid value, could not execute command";
+        String expected = "Unparseable value, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            RollerBlindActuator actuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             //Act
-            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            String result = rollerBlindActuator.executeCommand(simHardwareAct, "I will fail");
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"I will fail"));;
+            String result = exception.getMessage();
             //Assert
             assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
@@ -148,9 +151,11 @@ class RollerBlindActuatorTest {
 
         String expected = "Invalid value, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            RollerBlindActuator actuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             //Act
-            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            String result = rollerBlindActuator.executeCommand(simHardwareAct, "101");
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"101"));;
+            String result = exception.getMessage();
             //Assert
             assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
@@ -169,9 +174,11 @@ class RollerBlindActuatorTest {
         when(simHardwareAct.executeIntegerCommandSim(-1)).thenReturn(true);
         String expected = "Invalid value, could not execute command";
         try(MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)){
+            RollerBlindActuator actuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
             //Act
-            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            String result = rollerBlindActuator.executeCommand(simHardwareAct, "-1");
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"-1"));;
+            String result = exception.getMessage();
             //Assert
             assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());
@@ -235,9 +242,11 @@ class RollerBlindActuatorTest {
         String expected = "Hardware error: Value was not set";
 
         try (MockedConstruction<ActuatorIDVO> actuatorIDVOMockedConstruction = mockConstruction(ActuatorIDVO.class)) {
-            // Act
-            RollerBlindActuator rollerBlindActuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
-            String result = rollerBlindActuator.executeCommand(simHardwareAct, "50");
+            RollerBlindActuator actuator = new RollerBlindActuator(actuatorName, actuatorTypeID, deviceIDVO);
+            //Act
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"50"));;
+            String result = exception.getMessage();
             // Assert
             assertEquals(expected,result);
             assertEquals(expectedIdDoubleSize, actuatorIDVOMockedConstruction.constructed().size());

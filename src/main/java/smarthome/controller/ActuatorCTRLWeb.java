@@ -104,6 +104,9 @@ public class ActuatorCTRLWeb {
                 Link selfLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorById(actuatorDTO.getActuatorId())).withSelfRel();
                 actuatorDTO.add(selfLink);
 
+                Link executeCommand = linkTo(methodOn(ActuatorCTRLWeb.class).executeCommand(actuatorId,"{command}")).withRel("ExecuteCommand");
+                actuatorDTO.add(executeCommand);
+
                 return new ResponseEntity<>(actuatorDTO, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -150,7 +153,7 @@ public class ActuatorCTRLWeb {
      * @param actuatorId The unique identifier of the actuator to be closed.
      * @return ResponseEntity containing the appropriate HTTP status code.
      */
-    @PostMapping("/{actuatorId}")
+    @PostMapping("/{actuatorId}/closerollerblind")
     public ResponseEntity<Void> closeRollerBlind(@PathVariable("actuatorId") String actuatorId) {
         try {
             ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorId);
@@ -159,6 +162,39 @@ public class ActuatorCTRLWeb {
             } else {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
             }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Executes a command on the specified actuator.
+     *
+     * @param actuatorId the unique identifier of the actuator
+     * @param command the command value to be executed on the actuator
+     * @return a ResponseEntity containing the ActuatorDTO representing the actuator with updated information, along
+     * with HTTP status OK (200) if the command execution is successful; otherwise, returns HTTP status BAD_REQUEST
+     * (400) if the command execution fails due to an invalid request or actuator not found
+     */
+    // /{actuatorId}/act?command=someCommandValue
+    @PostMapping("/{actuatorId}/act")
+    public ResponseEntity<ActuatorDTO> executeCommand (@PathVariable("actuatorId") String actuatorId,
+                                                       @RequestParam(name="command") String command) {
+        try {
+            ActuatorIDVO actuatorIDVO = ActuatorMapper.createActuatorIDVO(actuatorId);
+            Actuator actuator = this.actuatorService.executeCommand(actuatorIDVO,command);
+            ActuatorDTO actuatorDTO = ActuatorMapper.domainToDTO(actuator);
+
+            Link selfLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorById(actuatorDTO.getActuatorId()))
+                    .withSelfRel();
+            actuatorDTO.add(selfLink);
+
+            Link executeCommand = linkTo(methodOn(ActuatorCTRLWeb.class).executeCommand(actuatorId,"{command}"))
+                    .withRel("ExecuteCommand");
+            actuatorDTO.add(executeCommand);
+
+            return new ResponseEntity<>(actuatorDTO,HttpStatus.OK);
+
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

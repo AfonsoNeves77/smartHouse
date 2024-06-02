@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smarthome.domain.actuator.Actuator;
 import smarthome.domain.actuator.ActuatorFactory;
-import smarthome.domain.actuator.RollerBlindActuator;
 import smarthome.domain.actuator.externalservices.ActuatorExternalService;
 import smarthome.domain.device.Device;
 import smarthome.domain.vo.actuatorvo.ActuatorIDVO;
@@ -94,6 +93,17 @@ public class ActuatorServiceImpl implements ActuatorService {
     }
 
     /**
+     * Setter method for the ActuatorExternalService to provide setter injection of this component, needed for a specific
+     * method in the service.
+     *
+     * @param actuatorExternalService The ActuatorExternalService to be set.
+     */
+    @Autowired
+    public void setActuatorExternalService(ActuatorExternalService actuatorExternalService) {
+        this.actuatorExternalService = actuatorExternalService;
+    }
+
+    /**
      * Closes a roller blind actuator associated with the provided actuator ID.
      *
      * @param actuatorIDVO the ID of the actuator to close.
@@ -119,6 +129,26 @@ public class ActuatorServiceImpl implements ActuatorService {
     }
 
     /**
+     * Executes a command on a specified actuator with the given command.
+     *
+     * @param actuatorIDVO the unique identifier of the actuator
+     * @param command      the command to be executed on the actuator
+     * @return the result of the command execution as a String
+     * @throws IllegalArgumentException if the actuator is not found in the repository
+     */
+    public Actuator executeCommand (ActuatorIDVO actuatorIDVO, String command){
+        if (!actuatorRepository.isPresent(actuatorIDVO)) {
+            throw new IllegalArgumentException("Actuator not found");
+        }
+        Actuator actuator = actuatorRepository.findById(actuatorIDVO);
+        actuator.executeCommand(this.actuatorExternalService,command);
+        if (actuatorRepository.save(actuator)){
+            return actuator;
+        }
+        throw new IllegalArgumentException("Unable to save");
+    }
+
+    /**
      * Retrieves the list of actuators located in the device identified by the provided DeviceIDVO.
      * This method queries the system to fetch all actuators associated with the specified device.
      *
@@ -137,17 +167,6 @@ public class ActuatorServiceImpl implements ActuatorService {
         List<Actuator> actuatorList = new ArrayList<>();
         actuatorIterable.forEach(actuatorList::add);
         return actuatorList;
-    }
-
-    /**
-     * Setter method for the ActuatorExternalService to provide setter injection of this component, needed for a specific
-     * method in the service.
-     *
-     * @param actuatorExternalService The ActuatorExternalService to be set.
-     */
-    @Autowired
-    public void setActuatorExternalService(ActuatorExternalService actuatorExternalService) {
-        this.actuatorExternalService = actuatorExternalService;
     }
 
     /**
