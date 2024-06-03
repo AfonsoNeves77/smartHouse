@@ -17,5 +17,6 @@ public interface ActuatorService {
 
     boolean closeRollerBlind(ActuatorIDVO actuatorIDVO);
 
+    Actuator executeCommand (ActuatorIDVO actuatorIDVO, String command);
     List<Actuator> getListOfActuatorsInADevice(DeviceIDVO deviceIDVO);
 }

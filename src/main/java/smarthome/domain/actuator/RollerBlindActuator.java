@@ -66,7 +66,7 @@ public class RollerBlindActuator implements AggregateRoot, Actuator {
      */
     public String executeCommand(ActuatorExternalService simHardwareAct, String value){
         if (simHardwareAct == null) {
-            return "Invalid hardware, could not execute command";
+            throw new IllegalArgumentException("Invalid hardware, could not execute command");
         }
 
         // Attempts to parse value into double, in order to validate it and use as argument on the ExternalHardware
@@ -75,15 +75,15 @@ public class RollerBlindActuator implements AggregateRoot, Actuator {
         try {
             parsedValue = Integer.parseInt(value);
         } catch (NumberFormatException e){
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Unparseable value, could not execute command");
         }
 
         if (!validateCommand(parsedValue)) {
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Invalid value, could not execute command");
         }
 
         if (!simHardwareAct.executeIntegerCommandSim(parsedValue)){
-            return "Hardware error: Value was not set";
+            throw new IllegalArgumentException("Hardware error: Value was not set");
         }
         this.actuatorStatusVO = new ActuatorStatusVO(value);
         return value;

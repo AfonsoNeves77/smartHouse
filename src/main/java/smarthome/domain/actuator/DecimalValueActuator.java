@@ -92,7 +92,7 @@ public class DecimalValueActuator implements Actuator {
      */
     public String executeCommand(ActuatorExternalService hardware, String value) {
         if(hardware == null)
-            return "Invalid hardware, could not execute command";
+            throw new IllegalArgumentException("Invalid hardware, could not execute command");
 
         // Attempts to parse value into double, in order to validate it and use as argument on ExternalHardware method
         double parsedValue;
@@ -100,11 +100,11 @@ public class DecimalValueActuator implements Actuator {
         try {
             parsedValue = Double.parseDouble(value);
         } catch (NumberFormatException e){
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Unparseable value, could not execute command");
         }
 
         if (!isValueWithinLimits(parsedValue))
-            return "Value out of actuator limits, could not execute command";
+            throw new IllegalArgumentException("Value out of actuator limits, could not execute command");
 
         // If required, input value is rounded up to two decimal places
         double precision = decimalSettings.getValue()[2];
@@ -113,7 +113,7 @@ public class DecimalValueActuator implements Actuator {
         }
 
         if(!hardware.executeDecimalCommand(parsedValue)) {
-            return "Hardware error: Value was not set";
+            throw new IllegalArgumentException("Hardware error: Value was not set");
         }
 
         // This line is required to ensure that if the value is rounded, the correct String is saved

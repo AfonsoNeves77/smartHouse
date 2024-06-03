@@ -261,7 +261,9 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,value));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -280,7 +282,7 @@ class IntegerValueActuatorTest {
         SimHardwareAct simHardwareAct = mock(SimHardwareAct.class);
 
         String value = "I will fail";
-        String expected = "Invalid value, could not execute command";
+        String expected = "Unparseable value, could not execute command";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -289,7 +291,9 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,value));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -415,7 +419,9 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,value));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -530,7 +536,9 @@ class IntegerValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(simHardwareAct, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,value));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);

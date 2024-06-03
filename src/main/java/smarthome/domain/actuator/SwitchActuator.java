@@ -84,13 +84,13 @@ public class SwitchActuator implements Actuator {
      */
     public String executeCommand(ActuatorExternalService simHardwareAct, String value) {
         if (simHardwareAct == null) {
-            return "Invalid hardware, could not execute command";
+            throw new IllegalArgumentException("Invalid hardware, could not execute command");
         }
         if (!isCommandValid(value)){
-            return "Invalid value, could not execute command";
+            throw new IllegalArgumentException("Invalid value, could not execute command");
         }
         if (!simHardwareAct.executeIntegerCommandSim(Integer.parseInt(value))){
-            return "Hardware error: Value was not set";
+            throw new IllegalArgumentException("Hardware error: Value was not set");
         }
         this.actuatorStatusVO = new ActuatorStatusVO(value);
         return value;
@@ -107,7 +107,7 @@ public class SwitchActuator implements Actuator {
         try{
             int value = Integer.parseInt(inputValue);
             return value == 1 || value == 0;
-        } catch (Exception e){
+        } catch (NumberFormatException e){
             return false;
         }
     }

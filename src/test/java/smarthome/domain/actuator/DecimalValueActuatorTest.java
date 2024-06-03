@@ -43,7 +43,9 @@ class DecimalValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(null, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(null,value));
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -75,7 +77,9 @@ class DecimalValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(hardware, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(hardware,value));
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -107,7 +111,9 @@ class DecimalValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(hardware, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(hardware,value));
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -303,7 +309,9 @@ class DecimalValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(hardware, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(hardware,value));
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);
@@ -333,7 +341,7 @@ class DecimalValueActuatorTest {
         when(hardware.executeDecimalCommand(anyDouble())).thenReturn(false);
 
         String value = "I will fail";
-        String expected = "Invalid value, could not execute command";
+        String expected = "Unparseable value, could not execute command";
         int idListExpectedSize = 1;
 
         try (MockedConstruction<ActuatorIDVO> mockedActuatorId = mockConstruction(ActuatorIDVO.class)){
@@ -342,7 +350,9 @@ class DecimalValueActuatorTest {
             List<ActuatorIDVO> idList = mockedActuatorId.constructed();
 
             //Act
-            String result = actuator.executeCommand(hardware, value);
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(hardware,value));
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected, result);

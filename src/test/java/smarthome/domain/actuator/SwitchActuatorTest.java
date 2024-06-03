@@ -131,9 +131,12 @@ class SwitchActuatorTest {
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
 
-            //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result = actuator.executeCommand(simHardwareAct,"0");
+
+            //Act
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"0"));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected,result);
@@ -155,9 +158,12 @@ class SwitchActuatorTest {
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
 
-            //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result = actuator.executeCommand(null,"0");
+
+            //Act
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(null,"0"));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected,result);
@@ -180,9 +186,12 @@ class SwitchActuatorTest {
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
 
-            //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result = actuator.executeCommand(simHardwareAct,"I should fail");
+
+            //Act
+            Exception exception = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"I should fail"));;
+            String result = exception.getMessage();
 
             //Assert
             assertEquals(expected,result);
@@ -204,20 +213,25 @@ class SwitchActuatorTest {
 
         try(MockedConstruction<ActuatorIDVO> actuatorIDMockedConstruction = mockConstruction(ActuatorIDVO.class)){
 
-            //Act
             SwitchActuator actuator = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result = actuator.executeCommand(simHardwareAct,"1.1");
 
-            SwitchActuator actuator1 = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result1 = actuator1.executeCommand(simHardwareAct,"-1");
+            //Act
+            Exception exception1 = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"1.1"));;
+            String result1 = exception1.getMessage();
 
-            SwitchActuator actuator2 = new SwitchActuator(actuatorName,actuatorTypeID,deviceIDVO);
-            String result2 = actuator2.executeCommand(simHardwareAct,"3");
+            Exception exception2 = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"-1"));;
+            String result2 = exception2.getMessage();
+
+            Exception exception3 = assertThrows(IllegalArgumentException.class, ()
+                    -> actuator.executeCommand(simHardwareAct,"3"));;
+            String result3 = exception3.getMessage();
 
             //Assert
-            assertEquals(expected,result);
             assertEquals(expected,result1);
             assertEquals(expected,result2);
+            assertEquals(expected,result3);
         }
     }
 
