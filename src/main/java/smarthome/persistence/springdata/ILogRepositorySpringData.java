@@ -7,19 +7,25 @@ import smarthome.persistence.jpa.datamodel.LogDataModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface ILogRepositorySpringData extends JpaRepository<LogDataModel, String> {
     /**
-     * Finds all logs by device ID and time range.
+     * Finds logs by device ID and optionally within a specified time range.
+     * If 'from' or 'to' parameters are null, the time condition is ignored.
      *
-     * @param deviceID the device ID
-     * @param from     the start time
-     * @param to       the end time
-     * @return a list of logs that match the device ID and time range
+     * @param deviceID the ID of the device
+     * @param from     the start time of the time range (inclusive), or null to ignore this condition
+     * @param to       the end time of the time range (inclusive), or null to ignore this condition
+     * @return a list of LogDataModel objects that match the criteria
      */
 
-    List<LogDataModel> findByDeviceIDAndTimeBetween(String deviceID, LocalDateTime from, LocalDateTime to);
+    @Query("SELECT l FROM LogDataModel l WHERE l.deviceID = :deviceID " +
+            "AND (:from IS NULL OR l.time >= :from) " +
+            "AND (:to IS NULL OR l.time <= :to)")
+    List<LogDataModel> findByDeviceIDAndTimeBetween(
+            @Param("deviceID") String deviceID,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to);
 
     /**
      * This method retrieves all log data from the database that falls within the specified time range and is associated

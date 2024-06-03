@@ -7,7 +7,6 @@ import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
-import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
@@ -22,6 +21,7 @@ public class LogRepositorySpringData implements LogRepository {
     private final ILogRepositorySpringData iLogRepositorySpringData;
     private final LogFactory logFactory;
     private final SensorValueFactory sensorValueFactory;
+    private static final String ERROR_MESSAGE = "Invalid parameters.";
 
     /**
      * Constructor for LogRepositorySpringData.
@@ -88,14 +88,19 @@ public class LogRepositorySpringData implements LogRepository {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
-        if (deviceID == null || from == null || to == null) {
-            throw new IllegalArgumentException("Invalid parameters ");
+    public Iterable<Log> findReadingsByDeviceID(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
+        if (deviceID == null) {
+            throw new IllegalArgumentException("Invalid parameters: deviceID is null");
         }
+
         try {
-            Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), from.getValue(), to.getValue());
+            LocalDateTime fromValue = (from != null) ? from.getValue() : null;
+            LocalDateTime toValue = (to != null) ? to.getValue() : null;
+
+            Iterable<LogDataModel> logDataModelIterable = this.iLogRepositorySpringData.findByDeviceIDAndTimeBetween(deviceID.getID(), fromValue, toValue);
             return LogAssembler.toDomain(this.logFactory, this.sensorValueFactory, logDataModelIterable);
         } catch (DataAccessException e) {
+            // Log the exception if necessary
             return new ArrayList<>();
         }
     }
@@ -148,7 +153,7 @@ public class LogRepositorySpringData implements LogRepository {
 
     public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
 
         try {
@@ -179,7 +184,7 @@ public class LogRepositorySpringData implements LogRepository {
     @Override
     public Iterable<Log> findByDeviceIDAndSensorTypeAndTimeBetween(String deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
         try {
             LocalDateTime startTime = start.getValue();
@@ -207,7 +212,7 @@ public class LogRepositorySpringData implements LogRepository {
      */
     public Iterable<Log> findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(String excludeDeviceID, String sensorType, TimeStampVO start, TimeStampVO end){
         if (excludeDeviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
         try {
             LocalDateTime startTime = start.getValue();

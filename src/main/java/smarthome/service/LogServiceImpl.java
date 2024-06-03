@@ -27,6 +27,10 @@ public class LogServiceImpl implements LogService {
     private final RoomRepository roomRepository;
     private final LogFactory logFactory;
 
+    private static final String ERROR_MESSAGE_PARAMS = "Invalid parameters";
+
+    private static final String ERROR_MESSAGE_TIME = "Invalid time stamps";
+
     /**
      * Constructor for LogServiceImpl.
      * @param logRepository the repository used for data access
@@ -66,7 +70,7 @@ public class LogServiceImpl implements LogService {
      */
     public Optional<Log> addLog(SensorValueObject<?> value, SensorIDVO sensor, DeviceIDVO device, SensorTypeIDVO sensorType){
         if (areParamsNull(value, sensor, device, sensorType)) {
-            throw new IllegalArgumentException("Invalid parameters");
+            throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
         }
         Log log = logFactory.createLog(value, sensor, device, sensorType);
         if (logRepository.save(log)) {
@@ -77,29 +81,54 @@ public class LogServiceImpl implements LogService {
 
 
     /**
-     * Retrieves all logs associated with a specific device within a given time period.
+     * Retrieves all logs associated with a specific device. A time period may be specified.
+     * Validations regarding time period are:
+     * 1. Time periods must be complete. Initial time stamp and final time stamp must (both)
+     * be either null or not null;
+     * 2. Only if both time stamps are not null, each respective date value may be validated;
+     * 3. If time stamps are specified initial date must be before final date;
+     * After these validations findReadings() method is called with a device id and time stamps that in some cases
+     * may be null. The output of this function is then converted to a List of logs and returned to controller
      * @param deviceID the ID of the device
      * @param initialTimeStamp the initial timestamp that represents the beginning of the time period
      * @param finalTimeStamp the final timestamp that represents the end of the time period
      * @return an Iterable of logs that match the given criteria
-     * @throws IllegalArgumentException if any of the parameters are null
+     * @throws IllegalArgumentException if any of the parameters are null, if time frame is incomplete or if the specidied
+     * initial date is after final date.
      */
     @Override
-    public List<Log> findReadingsFromDeviceInATimePeriod (DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
+    public List<Log> findReadingsFromDevice(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp) {
         if (areParamsNull(deviceID)) {
-            throw new IllegalArgumentException("Invalid parameters");
+            throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
         }
 
-        if (areTimeStampsInvalid(initialTimeStamp, finalTimeStamp)) {
-            throw new IllegalArgumentException("Invalid Time Stamps");
+        //Verifying that both time stamps are null or both time stamps are not null
+        if (isOneTimeStampNull(initialTimeStamp,finalTimeStamp)) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_TIME);
+        }
+        /*Ensuring data stamps are validated only if they are not null, avoid null pointer exception,
+        necessary for situations when time stamps are null
+         */
+        if (initialTimeStamp != null && finalTimeStamp != null && areTimeStampsInvalid(initialTimeStamp, finalTimeStamp)) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_TIME);
         }
 
         try {
-            Iterable<Log> iterable = logRepository.findByDeviceIDAndTimeBetween(deviceID, initialTimeStamp, finalTimeStamp);
+            Iterable<Log> iterable = logRepository.findReadingsByDeviceID(deviceID, initialTimeStamp, finalTimeStamp);
             return convertToList(iterable);
         } catch (IllegalArgumentException e) {
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * This validation ensures that both timeStamps are either both null, or both not null
+     * @param initialTimeStamp initial time stamp
+     * @param finalTimeStamp final time stamp
+     * @return true if both time stamps are null and or both sensor are not null. False otherwise.
+     */
+    private boolean isOneTimeStampNull(TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp){
+        return (initialTimeStamp == null) != (finalTimeStamp == null);
     }
 
 
@@ -155,7 +184,7 @@ public class LogServiceImpl implements LogService {
 
         // Checks that params are not null
         if(areParamsNull(outdoorDevice, indoorDevice, initialTimeStamp, finalTimeStamp, deltaMin)){
-            throw new IllegalArgumentException("Invalid Parameters");
+            throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
         }
 
         // Checks that the outdoor deviceID is actually from a room on the exterior (Height =0), otherwise for indoor room
@@ -167,7 +196,7 @@ public class LogServiceImpl implements LogService {
         // Checks if the initial date time and final date time are valid, and that the final date time is not in the future
         // and that the initial date is before the final date.
         if(areTimeStampsInvalid(initialTimeStamp, finalTimeStamp)){
-            throw new IllegalArgumentException("Invalid Time Stamps");
+            throw new IllegalArgumentException(ERROR_MESSAGE_TIME);
         }
 
         // Defines the sensorTypeID for the desired query
@@ -314,12 +343,12 @@ public class LogServiceImpl implements LogService {
      */
     public String getPeakPowerConsumption(TimeStampVO start, TimeStampVO end, DeltaVO delta) {
         if (areParamsNull(start, end, delta)) {
-            throw new IllegalArgumentException("Invalid parameters");
+            throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
         }
         // Checks if the initial date time and final date time are valid, and that the final date time is not in the future
         // and that the initial date is before the final date.
         if(areTimeStampsInvalid(start, end)){
-            throw new IllegalArgumentException("Invalid Time Stamps");
+            throw new IllegalArgumentException(ERROR_MESSAGE_TIME);
         }
 
         // Retrieves the Power Grid Meter deviceID and its sensorTypeID from the system properties

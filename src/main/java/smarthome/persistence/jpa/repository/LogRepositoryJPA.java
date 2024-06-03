@@ -9,7 +9,6 @@ import smarthome.domain.log.LogFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
-import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.assembler.LogAssembler;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.jpa.datamodel.LogDataModel;
@@ -23,7 +22,7 @@ public class LogRepositoryJPA implements LogRepository {
     private final LogFactory logFactory;
     private final SensorValueFactory sensorValueFactory;
     private final EntityManagerFactory entityManagerFactory;
-
+    private static final String ERROR_MESSAGE = "Invalid parameters.";
     /**
      * Constructor for LogRepositoryJPA.
      *
@@ -141,15 +140,19 @@ public class LogRepositoryJPA implements LogRepository {
      * @throws IllegalArgumentException if any of the parameters are null
      */
     @Override
-    public Iterable<Log> findByDeviceIDAndTimeBetween(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
-        if (deviceID == null || from == null || to == null) {
+    public Iterable<Log> findReadingsByDeviceID(DeviceIDVO deviceID, TimeStampVO from, TimeStampVO to) {
+        if (deviceID == null) {
             throw new IllegalArgumentException("DeviceIDVO, from and to cannot be null");
         }
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
-            Query query = em.createQuery("SELECT r FROM LogDataModel r WHERE r.deviceID = :deviceID AND r.time >= :from AND r.time <= :to");
-            query.setParameter("deviceID", deviceID.getID());
-            query.setParameter("from", from.getValue());
-            query.setParameter("to", to.getValue());
+
+            Query query = em.createQuery("SELECT r FROM LogDataModel r WHERE r.deviceID = :deviceID AND " +
+                    "(:from IS NULL OR r.time >= :from) AND (:to IS NULL OR r.time <= :to)");
+
+            query.setParameter("deviceID", deviceID);
+            query.setParameter("from", from);
+            query.setParameter("to", to);
+
             List<LogDataModel> listOfLogs = query.getResultList();
             return LogAssembler.toDomain(logFactory, sensorValueFactory, listOfLogs);
         } catch (RuntimeException e) {
@@ -175,7 +178,7 @@ public class LogRepositoryJPA implements LogRepository {
 
     public Iterable<Log> getDeviceTemperatureLogs(DeviceIDVO deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
 
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
@@ -207,7 +210,7 @@ public class LogRepositoryJPA implements LogRepository {
      */
     public Iterable<Log> findByDeviceIDAndSensorTypeAndTimeBetween(String deviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (deviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
 
         try (EntityManager em = entityManagerFactory.createEntityManager()) {
@@ -239,7 +242,7 @@ public class LogRepositoryJPA implements LogRepository {
      */
     public Iterable<Log> findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(String excludeDeviceID, String sensorType, TimeStampVO start, TimeStampVO end) {
         if (excludeDeviceID == null || sensorType == null || start == null || end == null) {
-            throw new IllegalArgumentException("Invalid parameters.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
 
         try (EntityManager em = entityManagerFactory.createEntityManager()) {

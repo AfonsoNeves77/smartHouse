@@ -54,9 +54,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
-public class DeviceCTRLWebTest {
+class DeviceCTRLWebTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -109,7 +108,7 @@ public class DeviceCTRLWebTest {
         Link expectedAddActuatorLink = linkTo(methodOn(ActuatorCTRLWeb.class).addActuatorToDevice(null)).withRel("addActuator");
         Link expectedListOfActuatorsLink = linkTo(methodOn(ActuatorCTRLWeb.class).getActuatorsByDeviceID(deviceID)).withRel("getActuatorsByDeviceId");
         Link expectedActuatorTypeLink = linkTo(methodOn(ActuatorTypeCTRLWeb.class).getActuatorTypes()).withRel("getActuatorType");
-        Link expectedFindReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadingsInAPeriod(deviceID, null)).withRel("findReadingsInAPeriod");
+        Link expectedFindReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadings(deviceID, null)).withRel("findReadingsInAPeriod");
 
         when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
         when(deviceRepository.findById(deviceIDVO)).thenReturn(device);

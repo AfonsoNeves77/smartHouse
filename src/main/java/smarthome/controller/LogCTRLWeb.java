@@ -6,12 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smarthome.domain.log.Log;
-import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
-import smarthome.domain.vo.sensortype.SensorTypeIDVO;
-import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.LogMapper;
 import smarthome.mapper.dto.LogDTO;
@@ -21,7 +18,6 @@ import smarthome.utils.timeconfig.TimeConfigMapper;
 
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing logs in the Smart Home system.
@@ -50,26 +46,36 @@ public class LogCTRLWeb {
     }
 
     /**
-     * Finds readings for a specific device within a time period.
+     * Finds readings for a specific device. A time period (timeConfigDTO) may be specified, which is optional.
      * <p>
-     * This endpoint retrieves log entries for a specified device ID within a given time period, as defined
-     * by the {@link TimeConfigDTO}. It converts the device ID and timestamps from the DTO to value objects,
+     * This endpoint retrieves log entries for a specified device ID.
+     * If a time period is specified it converts the device ID and timestamps from the DTO to value objects,
      * uses the {@code LogService} to find the logs, and returns the logs as a collection of {@link LogDTO}.
+     * If a time period is not specified only the device ID is converted to value object and passed to log service
      * </p>
-     *
      * @param id the device ID
-     * @param timeConfigDTO the time configuration data transfer object
+     * @param timeConfigDTO the time configuration data transfer object (Optional)
      * @return a {@code ResponseEntity} containing the list of log DTOs and HTTP status
      */
-    @GetMapping(params = {"deviceId"})
-    public ResponseEntity<CollectionModel<LogDTO>> findReadingsInAPeriod(@RequestParam (value="deviceId") String id, @RequestBody TimeConfigDTO timeConfigDTO) {
+
+    @GetMapping("")
+    public ResponseEntity<CollectionModel<LogDTO>> findReadings(
+            @RequestParam(value = "deviceId") String id,
+            @RequestBody(required = false) TimeConfigDTO timeConfigDTO) {
 
         try {
             DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(id);
-            TimeStampVO initialTimeStamp = TimeConfigMapper.createInitialTimeStamp(timeConfigDTO);
-            TimeStampVO finalTimeStamp = TimeConfigMapper.createFinalTimeStamp(timeConfigDTO);
 
-            List<Log> logs = logService.findReadingsFromDeviceInATimePeriod(deviceIDVO, initialTimeStamp, finalTimeStamp);
+            TimeStampVO initialTimeStamp = null;
+            TimeStampVO finalTimeStamp = null;
+
+            //Ensuring that mapping is only done if timeConfigDto is passed to the function
+            if (timeConfigDTO != null) {
+                initialTimeStamp = TimeConfigMapper.createInitialTimeStamp(timeConfigDTO);
+                finalTimeStamp = TimeConfigMapper.createFinalTimeStamp(timeConfigDTO);
+            }
+
+            List<Log> logs = logService.findReadingsFromDevice(deviceIDVO, initialTimeStamp, finalTimeStamp);
             List<LogDTO> logsDTO = LogMapper.domainToDTO(logs);
             // Returns the logs with a status code
             return new ResponseEntity<>(CollectionModel.of(logsDTO), HttpStatus.OK);

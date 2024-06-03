@@ -85,7 +85,7 @@ public class DeviceCTRLWeb {
                 Link actuatorTypeLink = linkTo(methodOn(ActuatorTypeCTRLWeb.class).getActuatorTypes()).withRel("getActuatorType");
                 deviceDTO.add(actuatorTypeLink);
 
-                Link findReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadingsInAPeriod(deviceDTO.getDeviceID(), null)).withRel("findReadingsInAPeriod");
+                Link findReadingsLink = linkTo(methodOn(LogCTRLWeb.class).findReadings(deviceDTO.getDeviceID(), null)).withRel("findReadingsInAPeriod");
                 deviceDTO.add(findReadingsLink);
 
                 return new ResponseEntity<>(deviceDTO, HttpStatus.OK);

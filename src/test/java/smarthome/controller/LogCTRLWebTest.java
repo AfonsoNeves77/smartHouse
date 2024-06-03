@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,8 +27,8 @@ import smarthome.mapper.dto.LogDTO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.utils.timeconfig.TimeConfigDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -46,6 +47,9 @@ class LogCTRLWebTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private LogRepository logRepository;
@@ -93,7 +97,7 @@ class LogCTRLWebTest {
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
 
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceID, initialSearch, finalSearch)).thenReturn(List.of(log1, log2));
+        when(logRepository.findReadingsByDeviceID(deviceID, initialSearch, finalSearch)).thenReturn(List.of(log1, log2));
 
         String timeConfigJson = String.format(
                 "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\"}",
@@ -138,6 +142,177 @@ class LogCTRLWebTest {
                 .andExpect(jsonPath("$._embedded.logDTOList[1].sensorID").value(logDTO2.getSensorID()))
                 .andExpect(jsonPath("$._embedded.logDTOList[1].deviceID").value(logDTO2.getDeviceID()))
                 .andExpect(jsonPath("$._embedded.logDTOList[1].sensorTypeID").value(logDTO2.getSensorTypeID()));
+    }
+
+    /**
+     * Test case to verify that a GET request to the "/logs" endpoint with an existing device ID and no time frame
+     * specified returns all readings for that device, regardless of the date.
+
+     * This test case uses a mock repository to return a predefined list of logs when queried by device ID without
+     * any time constraints. The assertions validate that each returned Log matches the expected log data.
+
+     * Steps:
+     * 1. Arrange: Create the necessary objects, including sensors, device, logs, and timestamps.
+     * 2. Act: Perform a mock GET request to the "/logs" endpoint with the specified device ID.
+     * 3. Assert: Validate that the response contains the expected logs with the correct data.
+     *
+     * @throws Exception if an exception occurs during the mock MVC request operation.
+     */
+
+    @Test
+    void findReadings_WhenExistentDeviceIdAndNoTimeFrame_ShouldReturnAllDeviceReadings() throws Exception {
+        //Arrange
+
+        // Creates necessary objects to create two logs
+        SensorIDVO sensorID1 = new SensorIDVO(UUID.randomUUID());
+        SensorIDVO sensorID2 = new SensorIDVO(UUID.randomUUID());
+
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+
+        SensorTypeIDVO sensorType = new SensorTypeIDVO("TemperatureSensor");
+
+        LogIDVO logID1 = new LogIDVO(UUID.randomUUID());
+        LogIDVO logID2 = new LogIDVO(UUID.randomUUID());
+
+        String timeStampOne = "2024-04-04T12:00:30";
+        String timeStampTwo = "2024-04-04T12:10:00";
+
+        TimeStampVO time1 = new TimeStampVO(LocalDateTime.parse(timeStampOne));
+        TimeStampVO time2 = new TimeStampVO(LocalDateTime.parse(timeStampTwo));
+
+        SensorValueObject<Double> reading1 = new TemperatureValue("23");
+        SensorValueObject<Double> reading2 = new TemperatureValue("25");
+
+        Log log1 = new Log(logID1, time1, reading1, sensorID1, deviceID, sensorType);
+        Log log2 = new Log(logID2, time2, reading2, sensorID2, deviceID, sensorType);
+
+        when(logRepository.findReadingsByDeviceID(deviceID, null, null)).thenReturn(List.of(log1, log2));
+
+
+        //Act & Assert
+        mockMvc.perform(get("/logs")
+                        .param("deviceId", deviceID.getID())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.logDTOList[0].logID").value(log1.getId().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[0].time").value(timeStampOne))
+                .andExpect(jsonPath("$._embedded.logDTOList[0].reading").value(log1.getReading().getValue()))
+                .andExpect(jsonPath("$._embedded.logDTOList[0].sensorID").value(log1.getSensorID().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[0].deviceID").value(log1.getDeviceID().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[0].sensorTypeID").value(log1.getSensorTypeID().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].logID").value(log2.getId().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].time").value(timeStampTwo))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].reading").value(log2.getReading().getValue()))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].sensorID").value(log2.getSensorID().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].deviceID").value(log2.getDeviceID().getID()))
+                .andExpect(jsonPath("$._embedded.logDTOList[1].sensorTypeID").value(log2.getSensorTypeID().getID()));
+    }
+
+    /**
+     * Test case to verify that a GET request to the "/logs" endpoint with an existing device ID
+     * and only an initial time frame specified returns a Bad Request status.
+
+     * This test case creates a TimeConfigDTO with only the initial time frame set, simulating an
+     * incomplete time configuration. The test ensures that the API responds with a 400 Bad Request
+     * status when such a request is made.
+
+     * Steps:
+     * 1. Arrange: Create the necessary device ID and incomplete TimeConfigDTO.
+     * 2. Act: Perform a mock GET request to the "/logs" endpoint with the specified device ID and incomplete time configuration.
+     * 3. Assert: Validate that the response status is 400 Bad Request.
+     *
+     * @throws Exception if an exception occurs during the mock MVC request operation.
+     */
+    @Test
+    void findReadings_WhenOnlyInitialTimeFrame_ShouldReturnBadRequest() throws Exception {
+        //Arrange
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+
+        String time = "12:00:30";
+        String date = "2024-04-04";
+
+        TimeConfigDTO incompleteTimeConfig = TimeConfigDTO.builder()
+                .initialTime(time)
+                .initialDate(date)
+                .build();
+
+        String jsonTimeConfig = objectMapper.writeValueAsString(incompleteTimeConfig);
+
+        //Act & Assert
+        mockMvc.perform(get("/logs")
+                        .param("deviceId", deviceID.getID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonTimeConfig))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that a GET request to the "/logs" endpoint with an existing device ID
+     * and only a final time frame specified returns a Bad Request status.
+
+     * This test case creates a TimeConfigDTO with only the final time frame set, simulating an
+     * incomplete time configuration. The test ensures that the API responds with a 400 Bad Request
+     * status when such a request is made.
+
+     * Steps:
+     * 1. Arrange: Create the necessary device ID and incomplete TimeConfigDTO.
+     * 2. Act: Perform a mock GET request to the "/logs" endpoint with the specified device ID and incomplete time configuration.
+     * 3. Assert: Validate that the response status is 400 Bad Request.
+     *
+     * @throws Exception if an exception occurs during the mock MVC request operation.
+     */
+
+    @Test
+    void findReadings_WhenOnlyFinalTimeFrame_ShouldReturnBadRequest() throws Exception {
+        //Arrange
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+
+        String time = "12:00:30";
+        String date = "2024-04-04";
+
+        TimeConfigDTO incompleteTimeConfig = TimeConfigDTO.builder()
+                .endTime(time)
+                .endDate(date)
+                .build();
+
+        String jsonTimeConfig = objectMapper.writeValueAsString(incompleteTimeConfig);
+
+        //Act & Assert
+        mockMvc.perform(get("/logs")
+                        .param("deviceId", deviceID.getID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonTimeConfig))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Test case to verify that a GET request to the "/logs" endpoint with a non-existent device ID
+     * and no time frame specified returns an empty response indicating no readings.
+
+     * This test case uses a mock repository to return an empty list of logs when queried by a non-existent
+     * device ID without any time constraints. The assertions validate that the response contains no log data.
+
+     * Steps:
+     * 1. Arrange: Create the necessary device ID and configure the mock repository to return an empty list.
+     * 2. Act: Perform a mock GET request to the "/logs" endpoint with the specified non-existent device ID.
+     * 3. Assert: Validate that the response status is OK and the response body is empty.
+     *
+     * @throws Exception if an exception occurs during the mock MVC request operation.
+     */
+
+    @Test
+    void findReadings_WhenNonExistentDeviceIdAndNoTimeFrame_ShouldReturnNoReadings() throws Exception {
+
+        //Arrange
+        DeviceIDVO deviceID = new DeviceIDVO(UUID.randomUUID());
+        when(logRepository.findReadingsByDeviceID(deviceID, null, null)).thenReturn(Collections.emptyList());
+
+        //Act & Assert
+        mockMvc.perform(get("/logs")
+                        .param("deviceId", deviceID.getID())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
 
@@ -285,7 +460,7 @@ class LogCTRLWebTest {
         TimeStampVO initialSearch = new TimeStampVO(initialDate, initialTime);
         TimeStampVO finalSearch = new TimeStampVO(endDate, endTime);
 
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceID, initialSearch, finalSearch)).thenReturn(new ArrayList<>());
+        when(logRepository.findReadingsByDeviceID(deviceID, initialSearch, finalSearch)).thenReturn(new ArrayList<>());
 
         String timeConfigJson = String.format(
                 "{\"initialDate\":\"%s\",\"initialTime\":\"%s\",\"endDate\":\"%s\",\"endTime\":\"%s\"}",

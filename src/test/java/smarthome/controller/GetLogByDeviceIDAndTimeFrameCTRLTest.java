@@ -160,7 +160,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         DeviceDTO deviceDTO = new DeviceDTO(deviceID,deviceName,deviceModel,deviceStatus,roomID);
         String controllerError = "Invalid TimeConfigDTO";
         String timeStampError = "Invalid date/time entries";
-        String dateLogicError = "Invalid Time Stamps";
+        String dateLogicError = "Invalid time stamps";
 
         String iDate = "2024-04-23";
         String iTime = "19:00";
@@ -241,7 +241,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initalTimeStamp, finalTimeStamp))
+        when(logRepository.findReadingsByDeviceID(deviceIDVO, initalTimeStamp, finalTimeStamp))
                 .thenReturn(new ArrayList<>());
 
         GetLogByDeviceIDAndTimeFrameCTRL ctrl = new GetLogByDeviceIDAndTimeFrameCTRL(logService);
@@ -328,7 +328,7 @@ class GetLogByDeviceIDAndTimeFrameCTRLTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceIDVO, initialTimeStamp, finalTimeStamp))
+        when(logRepository.findReadingsByDeviceID(deviceIDVO, initialTimeStamp, finalTimeStamp))
                 .thenReturn(logList);
 
         // Creating ctrl and obtaining the result iterable

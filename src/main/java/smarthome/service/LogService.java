@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public interface LogService {
     Optional<Log> addLog (SensorValueObject<?> value, SensorIDVO sensor, DeviceIDVO device, SensorTypeIDVO sensorType);
-    List<Log> findReadingsFromDeviceInATimePeriod(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp);
+    List<Log> findReadingsFromDevice(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp);
     String getMaxInstantaneousTempDifference(DeviceIDVO outdoorDevice, DeviceIDVO indoorDevice, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp, DeltaVO deltaMin);
     String getPeakPowerConsumption(TimeStampVO start, TimeStampVO end, DeltaVO delta);
 }

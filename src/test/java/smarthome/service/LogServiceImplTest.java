@@ -9,9 +9,6 @@ import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
-import smarthome.domain.vo.devicevo.DeviceModelVO;
-import smarthome.domain.vo.devicevo.DeviceNameVO;
-import smarthome.domain.vo.devicevo.DeviceStatusVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
 import smarthome.domain.vo.roomvo.RoomIDVO;
@@ -27,8 +24,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -223,7 +219,7 @@ class LogServiceImplTest {
     void whenGivenNullParameters_findReadingsThrowsIllegalArgumentException(){
         // Arrange
         String expected = "Invalid parameters";
-        String expectedTimeStamp = "Invalid Time Stamps";
+        String expectedTimeStamp = "Invalid time stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -236,19 +232,19 @@ class LogServiceImplTest {
 
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(null,initialTime,finalTime));
+                -> service.findReadingsFromDevice(null,initialTime,finalTime));
         String result1 = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(deviceID,null, finalTime));
+                -> service.findReadingsFromDevice(deviceID,null, finalTime));
         String result2 = exception2.getMessage();
 
         Exception exception3 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(null,null, null));
+                -> service.findReadingsFromDevice(null,null, null));
         String result3 = exception3.getMessage();
 
         Exception exception4 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime, null));
+                -> service.findReadingsFromDevice(deviceID,initialTime, null));
         String result4 = exception4.getMessage();
 
         // Assert
@@ -265,7 +261,7 @@ class LogServiceImplTest {
     @Test
     void whenGivenInvalidTimeStamps_findReadingsThrowsIllegalArgumentException(){
         // Arrange
-        String expected = "Invalid Time Stamps";
+        String expected = "Invalid time stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -288,11 +284,11 @@ class LogServiceImplTest {
 
         // Act
         Exception exception1 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime));
+                -> service.findReadingsFromDevice(deviceID,initialTime,finalTime));
         String result1 = exception1.getMessage();
 
         Exception exception2 = assertThrows(IllegalArgumentException.class, ()
-                -> service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime));
+                -> service.findReadingsFromDevice(deviceID,initialTime,finalTime));
         String result2 = exception2.getMessage();
 
         // Assert
@@ -324,12 +320,12 @@ class LogServiceImplTest {
         when(initialTime.getValue()).thenReturn(from);
         when(finalTime.getValue()).thenReturn(to);
 
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceID,initialTime,finalTime))
-                .thenThrow(new IllegalArgumentException("Invalid parameters "));
+        when(logRepository.findReadingsByDeviceID(deviceID,initialTime,finalTime))
+                .thenThrow(new IllegalArgumentException("Invalid parameters"));
 
         List<Log> expected = Collections.emptyList();
         // Act
-        List<Log> result = service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime);
+        List<Log> result = service.findReadingsFromDevice(deviceID,initialTime,finalTime);
 
         // Assert
         assertEquals(expected,result);
@@ -365,14 +361,81 @@ class LogServiceImplTest {
         expected.add(log1);
         expected.add(log2);
 
-        when(logRepository.findByDeviceIDAndTimeBetween(deviceID,initialTime,finalTime))
+        when(logRepository.findReadingsByDeviceID(deviceID,initialTime,finalTime))
                 .thenReturn(expected);
 
         // Act
-        List<Log> result = service.findReadingsFromDeviceInATimePeriod(deviceID,initialTime,finalTime);
+        List<Log> result = service.findReadingsFromDevice(deviceID,initialTime,finalTime);
 
         // Assert
         assertEquals(expected,result);
+    }
+
+    /**
+     * Test case to verify the behavior of findReadingsFromDevices() in service
+     * when an existing device is provided with no timestamps. It should return all device readings.
+     * <p>
+     * This test case sets up a mock environment where the log repository returns a list of logs
+     * when queried with an existing device ID and no time constraints. The test then calls the
+     * {@code findReadingsFromDevice} method of {@code LogServiceImpl} and asserts that the returned
+     * list matches the expected list of logs.
+     */
+    @Test
+    void findReadings_WhenExistingDeviceAndNoTimeStamps_ShouldReturnAllDeviceReadings(){
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+
+        Log log1 = mock(Log.class);
+        Log log2 = mock(Log.class);
+        List<Log> expected = new ArrayList<>();
+        expected.add(log1);
+        expected.add(log2);
+
+        when(logRepository.findReadingsByDeviceID(deviceID,null,null))
+                .thenReturn(expected);
+
+        // Act
+        List<Log> result = service.findReadingsFromDevice(deviceID,null,null);
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+
+    /**
+     * Test case to verify the behavior of findReadingsFromDevices() in service
+     * when a non-existing device is provided with no timestamps. It should an empty list.
+     * <p>
+     * This test case sets up a mock environment where the log repository returns an empty list
+     * when queried for logs associated with a given device ID and no time constraints. The test then calls the
+     * {@code findReadingsFromDevice} method of {@code LogServiceImpl} and asserts that the returned
+     * list is empty.
+     */
+
+    @Test
+    void findReadings_WhenNonExistingDeviceAndNoTimeStamps_ShouldReturnEmptyListOfReadings(){
+        // Arrange
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+        DeviceIDVO deviceID = mock(DeviceIDVO.class);
+        LogServiceImpl service = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
+
+        when(logRepository.findReadingsByDeviceID(deviceID,null,null))
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        List<Log> result = service.findReadingsFromDevice(deviceID,null,null);
+
+        // Assert
+        assertTrue(result.isEmpty());
     }
 
 
@@ -391,7 +454,7 @@ class LogServiceImplTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -418,7 +481,7 @@ class LogServiceImplTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -447,7 +510,7 @@ class LogServiceImplTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -484,7 +547,7 @@ class LogServiceImplTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         LogFactory logFactory = mock(LogFactory.class);
         LogServiceImpl logService = new LogServiceImpl(logRepository, deviceRepository, roomRepository, logFactory);
-        String expected = "Invalid Parameters";
+        String expected = "Invalid parameters";
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -996,7 +1059,7 @@ class LogServiceImplTest {
     @Test
     void whenGivenInvalidTimeStamps_GetMaxTemp_throwsIllegalArgumentException(){
         // Arrange
-        String expected = "Invalid Time Stamps";
+        String expected = "Invalid time stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);
@@ -1112,7 +1175,7 @@ class LogServiceImplTest {
     @Test
     void whenGivenInvalidTimeStamps_getPeakPowerConsumptionThrowsIllegalArgumentException(){
         // Arrange
-        String expected = "Invalid Time Stamps";
+        String expected = "Invalid time stamps";
 
         LogRepository logRepository = mock(LogRepository.class);
         DeviceRepository deviceRepository = mock(DeviceRepository.class);

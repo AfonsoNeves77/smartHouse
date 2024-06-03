@@ -42,7 +42,7 @@ public class GetLogByDeviceIDAndTimeFrameCTRL {
         TimeStampVO finalTimeStamp = TimeConfigMapper.createFinalTimeStamp(time);
         DeviceIDVO deviceIDVO = DeviceMapper.createDeviceID(device);
 
-        List<Log> listOfLogs = logService.findReadingsFromDeviceInATimePeriod(deviceIDVO, initialTimeStamp, finalTimeStamp);
+        List<Log> listOfLogs = logService.findReadingsFromDevice(deviceIDVO, initialTimeStamp, finalTimeStamp);
         return LogMapper.domainToDTO(listOfLogs);
     }
 
