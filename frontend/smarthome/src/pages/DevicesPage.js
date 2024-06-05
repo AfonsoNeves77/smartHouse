@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Box from "@mui/material/Box";
-import {Accordion, AccordionDetails, AccordionSummary, alpha} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, alpha } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Typography from "@mui/material/Typography";
+import AddDeviceButton from "../components/AddDeviceButton";
 
 export default function Devices() {
-    const {roomId} = useParams();
+    const { roomId } = useParams();
     const [devices, setDevices] = useState([]);
 
     useEffect(() => {
@@ -22,9 +23,9 @@ export default function Devices() {
             .catch(err => console.log(err))
     }, [roomId]);
 
-    // const handleDeactivateDevice = (deviceId) => {
-    //     navigate(`/devices/${deviceId}`);
-    // };
+    const handleAddDevice = (newDevice) => {
+        setDevices((prevDevices) => [...prevDevices, newDevice]);
+    };
 
     return (
         <Box sx={(theme) => ({
@@ -43,32 +44,35 @@ export default function Devices() {
             margin: 0,
             padding: 0,
         })}>
-            <div>
-                {devices.map((device, index) => (
-                    <Accordion key={index + 1}>
-                        <AccordionSummary
-                            expandIcon={<ArrowDropDownIcon/>}
-                            aria-controls={`panel${index + 1}-content`}
-                            id={`panel${index + 1}-header`}
-                        >
-                            <Typography>{device.deviceName}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-start',
-                                width: '100%'
-                            }}>
-                                <Typography>
-                                    <b>Model:</b> {device.deviceModel}<br/>
-                                    <b>Status:</b> {device.deviceStatus ? "On" : "Off"}<br/>
-                                </Typography>
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                ))}
-            </div>
+            <>
+                <AddDeviceButton roomID={roomId} onDeviceAdded={handleAddDevice} />
+                <div>
+                    {devices.map((device, index) => (
+                        <Accordion key={index + 1}>
+                            <AccordionSummary
+                                expandIcon={<ArrowDropDownIcon />}
+                                aria-controls={`panel${index + 1}-content`}
+                                id={`panel${index + 1}-header`}
+                            >
+                                <Typography>{device.deviceName}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    width: '100%'
+                                }}>
+                                    <Typography>
+                                        <b>Model:</b> {device.deviceModel}<br />
+                                        <b>Status:</b> {device.deviceStatus ? "On" : "Off"}<br />
+                                    </Typography>
+                                </Box>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </div>
+            </>
         </Box>
     );
 }
