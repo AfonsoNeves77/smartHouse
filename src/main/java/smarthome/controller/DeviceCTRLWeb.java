@@ -30,6 +30,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/devices")
+@CrossOrigin(origins = "*")
+
 public class DeviceCTRLWeb {
 
     private final DeviceService deviceService;

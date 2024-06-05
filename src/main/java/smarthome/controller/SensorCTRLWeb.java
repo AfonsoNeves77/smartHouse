@@ -20,6 +20,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/sensors")
+@CrossOrigin(origins = "*")
+
 
 public class SensorCTRLWeb {
     private final SensorService sensorService;

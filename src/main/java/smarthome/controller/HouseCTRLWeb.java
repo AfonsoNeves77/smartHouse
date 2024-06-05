@@ -23,6 +23,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  */
 @RestController
 @RequestMapping(path = "/house")
+@CrossOrigin(origins = "*")
+
 public class HouseCTRLWeb {
 
     private final HouseService houseService;
