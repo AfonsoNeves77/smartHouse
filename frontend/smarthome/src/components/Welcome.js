@@ -5,8 +5,19 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import SunCard from "./SunCard";
 import TempCard from "./TempCard";
+import {useEffect, useState} from "react";
 
 export default function Welcome() {
+
+    const [houseState, setHouseState] = useState(null);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/house')
+            .then(response => response.json())
+            .then(data => setHouseState(data))
+            .catch(err => console.log(err))
+    }, []);
+
     return (
         <Box
             id="welcome"
@@ -58,9 +69,23 @@ export default function Welcome() {
                     mt: 4, // Margin top for spacing from the previous section
                 }}>
 
-                <SunCard/>
+                <div>
+                    {houseState ? (
+                        <SunCard latitude={houseState.latitude}
+                                 longitude={houseState.longitude}/>
+                    ) : (
+                        <span>Loading sunrise/sunset data...</span>
+                    )}
+                </div>
 
-                <TempCard/>
+                <div>
+                    {houseState ? (
+                        <TempCard latitude={houseState.latitude}
+                                  longitude={houseState.longitude}/>
+                    ) : (
+                        <span>Loading sunrise/sunset data...</span>
+                    )}
+                </div>
             </Box>
 
         </Box>

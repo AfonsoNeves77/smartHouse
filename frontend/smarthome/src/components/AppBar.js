@@ -22,7 +22,6 @@ import {AccountCircle} from "@mui/icons-material";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import HomeIcon from '@mui/icons-material/Home';
 import BedRoomParentIcon from '@mui/icons-material/BedroomParent';
-import DevicesIcon from '@mui/icons-material/Devices';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, Link} from "react-router-dom";
 
@@ -51,14 +50,11 @@ export default function Appbar({change}) {
 
     const handleListItemClick = (item) => {
         switch (item) {
-            case 'House':
-                navigate('/house');
+            case 'Home':
+                navigate('/');
                 break;
             case 'Rooms':
                 navigate('/rooms');
-                break;
-            case 'Devices':
-                navigate('/devices');
                 break;
             default:
                 break;
@@ -70,12 +66,12 @@ export default function Appbar({change}) {
             <Toolbar/>
             <Box sx={{overflow: 'auto'}}>
                 <List>
-                    <ListItem onClick={() => handleListItemClick('House')}>
+                    <ListItem onClick={() => handleListItemClick('Home')}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <HomeIcon/>
                             </ListItemIcon>
-                            <ListItemText primary='House'/>
+                            <ListItemText primary='Home'/>
                         </ListItemButton>
                     </ListItem>
                     <ListItem onClick={() => handleListItemClick('Rooms')}>
@@ -84,14 +80,6 @@ export default function Appbar({change}) {
                                 <BedRoomParentIcon/>
                             </ListItemIcon>
                             <ListItemText primary='Rooms'/>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem onClick={() => handleListItemClick('Devices')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <DevicesIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary='Devices'/>
                         </ListItemButton>
                     </ListItem>
                 </List>

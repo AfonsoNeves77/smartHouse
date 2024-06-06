@@ -2,13 +2,18 @@ package smarthome.persistence.springdata;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
+import smarthome.domain.actuator.Actuator;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.mapper.assembler.ActuatorAssembler;
 import smarthome.mapper.assembler.SensorAssembler;
 import smarthome.persistence.SensorRepository;
+import smarthome.persistence.jpa.datamodel.ActuatorDataModel;
 import smarthome.persistence.jpa.datamodel.SensorDataModel;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Repository
@@ -70,5 +75,15 @@ public class SensorRepositorySpringData implements SensorRepository {
             return false;
         }
         return findById(id) != null;
+    }
+
+    @Override
+    public Iterable<Sensor> findByDeviceID(DeviceIDVO deviceID) {
+        try {
+            Iterable<SensorDataModel> sensorDataModelIterable = this.iSensorRepositorySpringData.findByDeviceID(deviceID.getID());
+            return SensorAssembler.toDomain(this.sensorFactory, sensorDataModelIterable);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
     }
 }

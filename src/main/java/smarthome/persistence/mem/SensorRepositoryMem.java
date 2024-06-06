@@ -1,10 +1,12 @@
 package smarthome.persistence.mem;
 
 import smarthome.domain.sensor.Sensor;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.SensorRepository;
 
 import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 public class SensorRepositoryMem implements SensorRepository {
 
@@ -53,5 +55,12 @@ public class SensorRepositoryMem implements SensorRepository {
     @Override
     public boolean isPresent(SensorIDVO id) {
         return sensorMap.containsKey(id);
+    }
+
+    @Override
+    public Iterable<Sensor> findByDeviceID(DeviceIDVO deviceID) {
+        return sensorMap.values().stream()
+                .filter(sensor -> deviceID.equals(sensor.getDeviceID()))
+                .collect(Collectors.toList());
     }
 }
