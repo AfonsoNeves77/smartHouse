@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {Container, Card, CardContent, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
@@ -31,18 +31,16 @@ const StyledContent = styled(CardContent)(({theme}) => ({
     textAlign: 'center',
 }));
 
-const TempCard = () => {
+const TempCard = ({latitude, longitude}) => {
     const [temperature, setTemperature] = useState(''); // State to store the temperature
     const [loading, setLoading] = useState(true); // State to manage loading status
 
     const primaryApiUrl = `${config.apiBaseUrl}/InstantaneousTemperature`; // Primary API URL
     const groupNumber = 4; // Group number for the API request
-    const latitude = 40.00; // Example latitude for the location
-    const longitude = -8.00; // Example longitude for the location
     const fallbackApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=3fd6f0bafafc6b4a19601d364ff909d3`; // Fallback API URL
 
     // fetchPrimaryTemperature: Function to fetch temperature from the primary API
-    const fetchPrimaryTemperature = async (hour) => {
+    const fetchPrimaryTemperature = useCallback(async (hour) => {
         try {
             const response = await axios.get(`${primaryApiUrl}?groupNumber=${groupNumber}&hour=${hour}`); // Make GET request to primary API
             console.log('Primary API response:', response.data); // Log the response
@@ -51,10 +49,10 @@ const TempCard = () => {
             console.log('Primary API request failed:', error.response ? error.response.data : error.message); // Log error if request fails
             return null; // Return null if there's an error
         }
-    };
+    }, [primaryApiUrl]);
 
     // fetchFallbackTemperature: Function to fetch temperature from the fallback API
-    const fetchFallbackTemperature = async () => {
+    const fetchFallbackTemperature = useCallback(async () => {
         try {
             const response = await axios.get(fallbackApiUrl); // Make GET request to fallback API
             console.log('Fallback API response:', response.data); // Log the response
@@ -63,10 +61,10 @@ const TempCard = () => {
             console.log('Fallback API request failed:', error.response ? error.response.data : error.message); // Log error if request fails
             return null; // Return null if there's an error
         }
-    };
+    }, [fallbackApiUrl]);
 
     // registerLocation: Function to register the location with the primary API
-    const registerLocation = async () => {
+    const registerLocation = useCallback(async () => {
         try {
             await axios.post(`${config.apiBaseUrl}/WeatherServiceConfiguration`, {
                 groupNumber,
@@ -77,10 +75,10 @@ const TempCard = () => {
         } catch (error) {
             console.log('Location registration failed:', error.response ? error.response.data : error.message); // Log error if request fails
         }
-    };
+    }, [latitude, longitude]);
 
     // fetchTemperature: Function to fetch the temperature from primary or fallback API
-    const fetchTemperature = async () => {
+    const fetchTemperature = useCallback(async () => {
         try {
             setLoading(true); // Set loading state to true
             console.log('Starting fetchTemperature'); // Log start of fetching process
@@ -109,14 +107,16 @@ const TempCard = () => {
         } finally {
             setLoading(false); // Set loading state to false
         }
-    };
+    }, [fetchFallbackTemperature, fetchPrimaryTemperature, registerLocation]); // Dependency array for useCallback
 
     // useEffect hook to fetch temperature initially and set interval to refetch every 15 minutes
     useEffect(() => {
-        fetchTemperature(); // Fetch temperature on component mount
-        const interval = setInterval(fetchTemperature, 15 * 60 * 1000); // Set interval to fetch temperature every 15 minutes
+        fetchTemperature().catch(error => console.error("Error in fetchTemperature", error)); // Fetch temperature on component mount
+        const interval = setInterval(() => {
+            fetchTemperature().catch(error => console.error("Error in fetchTemperature", error));
+        }, 15 * 60 * 1000); // Set interval to fetch temperature every 15 minutes
         return () => clearInterval(interval); // Clear interval on component unmount
-    }, []); // Empty dependency array means this runs only on mount and unmount
+    }, [fetchTemperature]); // Empty dependency array means this runs only on mount and unmount
 
     return (
         <StyledContainer>
