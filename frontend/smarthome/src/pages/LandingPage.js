@@ -4,9 +4,9 @@ import DateTimeCard from "../components/DateTimeCard";
 
 export default function LandingPage() {
     return (
-        <>
+        <div>
         <Welcome/>
         <DateTimeCard/>
-        </>
+        </div>
     )
 }

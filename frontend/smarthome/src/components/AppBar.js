@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     useTheme, useMediaQuery,
     CssBaseline,
@@ -8,7 +8,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText
+    ListItemText, Card
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -25,7 +25,7 @@ import BedRoomParentIcon from '@mui/icons-material/BedroomParent';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, Link} from "react-router-dom";
 
-const drawerWidth = 200;
+const drawerWidth = 125;
 
 export default function Appbar({change}) {
 
@@ -45,6 +45,7 @@ export default function Appbar({change}) {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     }
+
 
     const navigate = useNavigate();
 
@@ -67,20 +68,58 @@ export default function Appbar({change}) {
             <Box sx={{overflow: 'auto'}}>
                 <List>
                     <ListItem onClick={() => handleListItemClick('Home')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <HomeIcon/>
+                        <Card sx={{
+                            width: '100px',
+                            height: '80px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage:
+                                theme.palette.mode === 'light'
+                                    ? 'linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%)'
+                                    : 'linear-gradient(315deg, #2a2a2a 0%, #1a1a1a 74%)',
+                        }}>
+                            <ListItemButton sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                height: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <ListItemIcon sx={{minWidth: 'auto'}}>
+                                    <HomeIcon fontSize='large'/>
                             </ListItemIcon>
                             <ListItemText primary='Home'/>
                         </ListItemButton>
+                        </Card>
                     </ListItem>
                     <ListItem onClick={() => handleListItemClick('Rooms')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <BedRoomParentIcon/>
+                        <Card sx={{
+                            width: '100px',
+                            height: '80px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage:
+                                theme.palette.mode === 'light'
+                                    ? 'linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%)'
+                                    : 'linear-gradient(315deg, #2a2a2a 0%, #1a1a1a 74%)',
+                        }}>
+                            <ListItemButton sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                height: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <ListItemIcon sx={{minWidth: 'auto'}}>
+                                    <BedRoomParentIcon fontSize='large'/>
                             </ListItemIcon>
                             <ListItemText primary='Rooms'/>
                         </ListItemButton>
+                        </Card>
                     </ListItem>
                 </List>
             </Box>
