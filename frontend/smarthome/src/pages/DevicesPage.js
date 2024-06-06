@@ -10,7 +10,7 @@ export default function Devices() {
     const { roomId } = useParams();
     const [devices, setDevices] = useState([]);
 
-    useEffect(() => {
+    const fetchDevices = () => {
         fetch(`http://localhost:8080/devices?roomID=${roomId}`)
             .then(response => response.json())
             .then(data => {
@@ -20,7 +20,11 @@ export default function Devices() {
                     setDevices([]);
                 }
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err));
+    };
+
+    useEffect(() => {
+        fetchDevices();
     }, [roomId]);
 
     const handleAddDevice = (newDevice) => {
@@ -65,7 +69,7 @@ export default function Devices() {
                                 }}>
                                     <Typography>
                                         <b>Model:</b> {device.deviceModel}<br />
-                                        <b>Status:</b> {device.deviceStatus ? "On" : "Off"}<br />
+                                        <b>Status:</b> {device.deviceStatus === "true" ? "On" : "Off"}<br />
                                     </Typography>
                                 </Box>
                             </AccordionDetails>
