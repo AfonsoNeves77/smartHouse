@@ -16,6 +16,8 @@ import smarthome.persistence.mem.DeviceRepositoryMem;
 import smarthome.persistence.mem.SensorRepositoryMem;
 import smarthome.persistence.mem.SensorTypeRepositoryMem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -545,6 +547,109 @@ class SensorServiceImplTest {
 
         //Assert
         assertEquals(expected, result);
+    }
+
+    /**
+     * Unit test for verifying that SensorServiceImpl's getListOfSensorsInADevice method
+     * throws an IllegalArgumentException when given a null DeviceIDVO.
+     *
+     * <p>This test ensures that the getListOfSensorsInADevice method correctly handles
+     * cases where the provided DeviceIDVO is null.</p>
+     */
+    @Test
+    void whenGivenNullDeviceIDVO_thenThrowsIllegalArgumentException(){
+        // Arrange
+        String expected = "Device ID cannot be null";
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble,
+                sensorRepositoryDouble, sensorFactoryDouble);
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                sensorService.getListOfSensorsInADevice(null));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * Unit test for verifying that SensorServiceImpl's getListOfSensorsInADevice method
+     * throws an IllegalArgumentException when given a DeviceIDVO for a non-existent device.
+     *
+     * <p>This test ensures that the getListOfSensorsInADevice method correctly interacts
+     * with the DeviceRepository to handle cases where the device is not found.</p>
+     */
+    @Test
+    void whenGivenDeviceIDVOForANonExistantDevice_thenThrowsIllegalArgumentException(){
+        // Arrange
+        String expected = "Device not found";
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        when(deviceIDVO.getID()).thenReturn("1fa85f64-5717-4562-b3fc-2c963f66afa6");
+
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepositoryDouble, sensorTypeRepositoryDouble,
+                sensorRepositoryDouble, sensorFactoryDouble);
+        // Act
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                sensorService.getListOfSensorsInADevice(deviceIDVO));
+        String result = exception.getMessage();
+
+        // Assert
+        assertEquals(expected,result);
+    }
+
+    /**
+     * Unit test for verifying that SensorServiceImpl's getListOfSensorsInADevice method
+     * returns a list of sensors when given a valid DeviceIDVO and a matching device is found.
+     *
+     * <p>This test ensures that the getListOfSensorsInADevice method correctly interacts
+     * with the SensorRepository and DeviceRepository to return the expected list of sensors.</p>
+     */
+    @Test
+    void whenGivenValidDeviceIDVOAndMatchIsFound_thenReturnsListOfSensors(){
+        // Arrange
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        when(deviceIDVO.getID()).thenReturn("1fa85f64-5717-4562-b3fc-2c963f66afa6");
+
+        Sensor sensor1 = mock(Sensor.class);
+        SensorNameVO sensorNameVO1 = mock(SensorNameVO.class);
+        when(sensor1.getSensorName()).thenReturn(sensorNameVO1);
+        when(sensorNameVO1.getValue()).thenReturn("sensor1");
+
+        Sensor sensor2 = mock(Sensor.class);
+        SensorNameVO sensorNameVO2 = mock(SensorNameVO.class);
+        when(sensor2.getSensorName()).thenReturn(sensorNameVO2);
+        when(sensorNameVO2.getValue()).thenReturn("sensor2");
+
+        List<Sensor> sensorList = new ArrayList<>();
+        sensorList.add(sensor1);
+        sensorList.add(sensor2);
+
+        SensorRepository sensorRepositoryDouble = mock(SensorRepository.class);
+        DeviceRepository deviceRepositoryDouble = mock(DeviceRepository.class);
+        SensorTypeRepository sensorTypeRepositoryDouble = mock(SensorTypeRepository.class);
+        SensorFactory sensorFactoryDouble = mock(SensorFactory.class);
+        SensorServiceImpl sensorService = new SensorServiceImpl(deviceRepositoryDouble,sensorTypeRepositoryDouble,
+                sensorRepositoryDouble, sensorFactoryDouble);
+
+        when(deviceRepositoryDouble.isPresent(deviceIDVO)).thenReturn(true);
+        when(sensorRepositoryDouble.findByDeviceID(deviceIDVO)).thenReturn(sensorList);
+
+        // Act
+        List<Sensor> resultList = sensorService.getListOfSensorsInADevice(deviceIDVO);
+        Sensor resultSensor1 = resultList.get(0);
+        Sensor resultSensor2 = resultList.get(1);
+
+        // Assert
+        assertEquals(resultList.size(),2);
+        assertEquals(resultSensor1.getSensorName().getValue(), "sensor1");
+        assertEquals(resultSensor2.getSensorName().getValue(), "sensor2");
     }
 }
 

@@ -1,5 +1,6 @@
 package smarthome.controller;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import smarthome.mapper.SensorMapper;
 import smarthome.mapper.dto.SensorDTO;
 import smarthome.service.SensorService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -110,6 +112,31 @@ public class SensorCTRLWeb {
             }
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity<CollectionModel<SensorDTO>> getSensorsByDeviceID(@RequestParam("deviceId") String deviceId) {
+        try {
+            DeviceIDVO deviceIDVO = SensorMapper.createDeviceIDVOFromString(deviceId);
+            List<Sensor> sensorList = this.sensorService.getListOfSensorsInADevice(deviceIDVO);
+            List<SensorDTO> sensorDTOList = SensorMapper.domainToDTO(sensorList);
+            addLink(sensorDTOList);
+
+            CollectionModel<SensorDTO> sensorDTOCollectionModel = CollectionModel.of(sensorDTOList);
+            Link selfLink = linkTo(methodOn(SensorCTRLWeb.class).getSensorsByDeviceID(deviceId)).withSelfRel();
+            sensorDTOCollectionModel.add(selfLink);
+
+            return new ResponseEntity<>(sensorDTOCollectionModel, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void addLink(List<SensorDTO> sensorDTOList) {
+        for (SensorDTO sensorDTO : sensorDTOList) {
+            Link selfLink = linkTo(methodOn(SensorCTRLWeb.class).getSensorByID(sensorDTO.getSensorID())).withSelfRel();
+            sensorDTO.add(selfLink);
         }
     }
 }

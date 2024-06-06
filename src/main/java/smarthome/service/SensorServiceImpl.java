@@ -12,8 +12,9 @@ import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.SensorRepository;
 import smarthome.persistence.SensorTypeRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SensorServiceImpl implements SensorService {
@@ -86,6 +87,20 @@ public class SensorServiceImpl implements SensorService {
         }
         return Optional.empty();
     }
+
+    public List<Sensor> getListOfSensorsInADevice(DeviceIDVO deviceIDVO) {
+        if (deviceIDVO == null) {
+            throw new IllegalArgumentException("Device ID cannot be null");
+        }
+        if (!deviceRepository.isPresent(deviceIDVO)) {
+            throw new IllegalArgumentException("Device not found");
+        }
+        Iterable<Sensor> sensorIterable = this.sensorRepository.findByDeviceID(deviceIDVO);
+        List<Sensor> sensorList = new ArrayList<>();
+        sensorIterable.forEach(sensorList::add);
+        return sensorList;
+    }
+
 
     /**
      * Checks if the Device with the provided DeviceIDVO is active.

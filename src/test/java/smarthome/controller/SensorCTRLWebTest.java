@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import smarthome.domain.device.Device;
+import smarthome.domain.sensor.HumiditySensor;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.TemperatureSensor;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -24,6 +25,9 @@ import smarthome.mapper.dto.SensorDTO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.SensorRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class SensorCTRLWebTest {
+class SensorCTRLWebTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -571,6 +575,140 @@ public class SensorCTRLWebTest {
                         .content(sensorAsJSON))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    @Test
+    void givenNullParam_getSensorsByDeviceIDReturnsBadRequest() throws Exception {
+        //Arrange
+        String deviceID = null;
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    @Test
+    void givenInvalidDeviceId_getSensorsByDeviceIDReturnsBadRequest() throws Exception {
+        //Arrange
+        String deviceID1 = " ";
+        String deviceID2 = "asfw";
+        String deviceID3 = "1234-5242";
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID2)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuators")
+                        .param("deviceId", deviceID3)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    @Test
+    void givenDeviceIDWithNoSensors_whenGetSensorsByDeviceID_thenReturnEmptySensorDTOCollection() throws Exception {
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        Iterable<Sensor> sensors = Collections.emptyList();
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
+        when(sensorRepository.findByDeviceID(deviceIDVO)).thenReturn(sensors);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/sensors")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    void givenNonExistentDeviceID_whenGetSensorsByDeviceID_thenReturnBadRequest() throws Exception {
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(false);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/sensors")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist())
+                .andReturn();
+    }
+
+    @Test
+    void givenDeviceID_whenGetSensorsByDeviceID_thenReturnASensorDTOCollection() throws Exception{
+        //Arrange
+        String deviceID = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.fromString(deviceID));
+
+        String firstSensorName = "Sensor 1";
+        String firstSensorTypeID = "HumiditySensor";
+
+        SensorNameVO firstSensorNameVO = new SensorNameVO(firstSensorName);
+        SensorTypeIDVO firstSensorTypeIDVO = new SensorTypeIDVO(firstSensorTypeID);
+
+        Sensor firstSensor = new HumiditySensor(firstSensorNameVO,deviceIDVO,firstSensorTypeIDVO);
+
+        String secondSensorName = "Sensor 2";
+        String secondSensorTypeID = "TemperatureSensor";
+
+        SensorNameVO secondSensorNameVO = new SensorNameVO(secondSensorName);
+        SensorTypeIDVO secondSensorTypeIDVO = new SensorTypeIDVO(secondSensorTypeID);
+
+        Sensor secondSensor = new TemperatureSensor(secondSensorNameVO,deviceIDVO,secondSensorTypeIDVO);
+
+        List<Sensor> sensors = new ArrayList<>();
+        sensors.add(firstSensor);
+        sensors.add(secondSensor);
+
+        when(deviceRepository.isPresent(deviceIDVO)).thenReturn(true);
+        when(sensorRepository.findByDeviceID(deviceIDVO)).thenReturn(sensors);
+
+        //Act and Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/sensors")
+                        .param("deviceId", deviceID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.sensorDTOList").exists())
+                .andExpect(jsonPath("$._embedded.sensorDTOList[0].sensorName").value(firstSensorName))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[0].sensorTypeID").value(firstSensorTypeID))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[0].deviceID").value(deviceID))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[0]._links.self").exists())
+                .andExpect(jsonPath("$._embedded.sensorDTOList[1].sensorName").value(secondSensorName))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[1].sensorTypeID").value(secondSensorTypeID))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[1].deviceID").value(deviceID))
+                .andExpect(jsonPath("$._embedded.sensorDTOList[1]._links.self").exists())
+                .andExpect(jsonPath("$._links.self").exists())
                 .andReturn();
     }
 }
