@@ -9,7 +9,8 @@ import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.mapper.dto.SensorDTO;
 
 import java.util.UUID;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class SensorMapper {
     private static final String INVALID_DTO_ERROR = "Invalid DTO, Value Object cannot be created";
@@ -44,6 +45,21 @@ public class SensorMapper {
                 .deviceID(sensor.getDeviceID().getID())
                 .sensorTypeID(sensor.getSensorTypeID().getID())
                 .build();
+    }
+
+    /**
+     * Converts a list of sensor domain objects to a list of sensor DTOs.
+     *
+     * @param sensors The list of sensor domain objects to be converted.
+     * @return The list of sensor DTOs.
+     */
+    public static List<SensorDTO> domainToDTO(List<Sensor> sensors) {
+        List<SensorDTO> sensorDTOList = new ArrayList<>();
+        for (Sensor sensor : sensors) {
+            SensorDTO sensorDTO = domainToDTO(sensor);
+            sensorDTOList.add(sensorDTO);
+        }
+        return sensorDTOList;
     }
 
     /**
@@ -111,4 +127,21 @@ public class SensorMapper {
         }
         return true;
     }
+
+    /**
+     * Unit test for verifying that the SensorMapper's createDeviceIDVOFromString method
+     * throws an IllegalArgumentException when given a null argument.
+     *
+     * <p>This test ensures that the createDeviceIDVOFromString method correctly handles
+     * null input by throwing an IllegalArgumentException with the expected error message.</p>
+     */
+    public static DeviceIDVO createDeviceIDVOFromString(String deviceId) {
+        if (deviceId == null) {
+            throw new IllegalArgumentException("DeviceID cannot be null");
+        } else {
+            UUID id = UUID.fromString(deviceId);
+            return new DeviceIDVO(id);
+        }
+    }
+
 }

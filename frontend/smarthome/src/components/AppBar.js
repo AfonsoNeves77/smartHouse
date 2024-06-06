@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     useTheme, useMediaQuery,
     CssBaseline,
@@ -8,7 +8,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText
+    ListItemText, Card
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,11 +22,10 @@ import {AccountCircle} from "@mui/icons-material";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import HomeIcon from '@mui/icons-material/Home';
 import BedRoomParentIcon from '@mui/icons-material/BedroomParent';
-import DevicesIcon from '@mui/icons-material/Devices';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, Link} from "react-router-dom";
 
-const drawerWidth = 200;
+const drawerWidth = 125;
 
 export default function Appbar({change}) {
 
@@ -47,18 +46,16 @@ export default function Appbar({change}) {
         setMobileOpen(!mobileOpen);
     }
 
+
     const navigate = useNavigate();
 
     const handleListItemClick = (item) => {
         switch (item) {
-            case 'House':
-                navigate('/house');
+            case 'Home':
+                navigate('/');
                 break;
             case 'Rooms':
                 navigate('/rooms');
-                break;
-            case 'Devices':
-                navigate('/devices');
                 break;
             default:
                 break;
@@ -70,29 +67,59 @@ export default function Appbar({change}) {
             <Toolbar/>
             <Box sx={{overflow: 'auto'}}>
                 <List>
-                    <ListItem onClick={() => handleListItemClick('House')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <HomeIcon/>
+                    <ListItem onClick={() => handleListItemClick('Home')}>
+                        <Card sx={{
+                            width: '100px',
+                            height: '80px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage:
+                                theme.palette.mode === 'light'
+                                    ? 'linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%)'
+                                    : 'linear-gradient(315deg, #2a2a2a 0%, #1a1a1a 74%)',
+                        }}>
+                            <ListItemButton sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                height: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <ListItemIcon sx={{minWidth: 'auto'}}>
+                                    <HomeIcon fontSize='large'/>
                             </ListItemIcon>
-                            <ListItemText primary='House'/>
+                            <ListItemText primary='Home'/>
                         </ListItemButton>
+                        </Card>
                     </ListItem>
                     <ListItem onClick={() => handleListItemClick('Rooms')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <BedRoomParentIcon/>
+                        <Card sx={{
+                            width: '100px',
+                            height: '80px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundImage:
+                                theme.palette.mode === 'light'
+                                    ? 'linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%)'
+                                    : 'linear-gradient(315deg, #2a2a2a 0%, #1a1a1a 74%)',
+                        }}>
+                            <ListItemButton sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                height: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <ListItemIcon sx={{minWidth: 'auto'}}>
+                                    <BedRoomParentIcon fontSize='large'/>
                             </ListItemIcon>
                             <ListItemText primary='Rooms'/>
                         </ListItemButton>
-                    </ListItem>
-                    <ListItem onClick={() => handleListItemClick('Devices')}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <DevicesIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary='Devices'/>
-                        </ListItemButton>
+                        </Card>
                     </ListItem>
                 </List>
             </Box>

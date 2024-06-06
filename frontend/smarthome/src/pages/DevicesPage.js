@@ -5,6 +5,7 @@ import { Accordion, AccordionDetails, AccordionSummary, alpha } from "@mui/mater
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Typography from "@mui/material/Typography";
 import AddDeviceButton from "../components/AddDeviceButton";
+import DeactivateDeviceButton from "../components/DeactivateDeviceButton";
 
 export default function Devices() {
     const { roomId } = useParams();
