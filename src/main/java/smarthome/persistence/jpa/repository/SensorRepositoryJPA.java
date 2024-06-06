@@ -1,14 +1,15 @@
 package smarthome.persistence.jpa.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
+import smarthome.domain.actuator.Actuator;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
+import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.mapper.assembler.ActuatorAssembler;
 import smarthome.mapper.assembler.SensorAssembler;
 import smarthome.persistence.SensorRepository;
+import smarthome.persistence.jpa.datamodel.ActuatorDataModel;
 import smarthome.persistence.jpa.datamodel.SensorDataModel;
 
 import java.util.Collections;
@@ -161,5 +162,17 @@ public class SensorRepositoryJPA implements SensorRepository {
     private Optional<SensorDataModel> getSensorDataModelFromSensorId(EntityManager entityManager, SensorIDVO sensorIDVO) {
         String sensorID = sensorIDVO.getID();
         return Optional.ofNullable(entityManager.find(SensorDataModel.class, sensorID));
+    }
+
+    @Override
+    public Iterable<Sensor> findByDeviceID(DeviceIDVO deviceID) {
+        try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
+            TypedQuery<SensorDataModel> query = em.createQuery("SELECT a FROM SensorDataModel a WHERE a.deviceID = :deviceID", SensorDataModel.class);
+            query.setParameter("deviceID", deviceID.getID());
+            List<SensorDataModel> list = query.getResultList();
+            return SensorAssembler.toDomain(sensorFactory, list);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
     }
 }
