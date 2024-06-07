@@ -4,6 +4,7 @@ import {styled} from '@mui/material/styles';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 import axios from 'axios';
 import config from './config';
+import {red} from "@mui/material/colors";
 
 const StyledContainer = styled(Container)(({theme}) => ({
     display: 'flex',
@@ -122,8 +123,8 @@ const TempCard = ({latitude, longitude}) => {
         <StyledContainer>
             <StyledCard>
                 <StyledContent>
-                    <DeviceThermostatIcon fontSize="small"/>
-                    <Typography variant="h6">Temperature</Typography>
+                    <DeviceThermostatIcon sx={{fontSize: 50, color: red[500]}}/>
+                    <Typography variant="h7">Temperature</Typography>
                     <Typography variant="body1">
                         {loading ? 'Loading...' : `${temperature} °C`}
                     </Typography>

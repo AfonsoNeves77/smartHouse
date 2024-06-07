@@ -4,6 +4,7 @@ import {styled} from '@mui/material/styles';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import WbTwilightIcon from '@mui/icons-material/WbTwilight';
 import axios from "axios";
+import {yellow} from "@mui/material/colors";
 
 const StyledContainer = styled(Container)(({theme}) => ({
     display: 'flex',
@@ -13,11 +14,10 @@ const StyledContainer = styled(Container)(({theme}) => ({
 }));
 
 const StyledCard = styled(Card)(({theme}) => ({
-    width: '200px',
+    width: '300px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    // background: 'radial-gradient(circle, rgba(128,91,5,1) 0%, rgba(179,118,9,1) 44%, rgba(218,219,22,1) 100%)',
     backgroundImage:
         theme.palette.mode === 'light'
             ? 'linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%)'
@@ -49,16 +49,16 @@ const SunCard = ({latitude, longitude}) => {
         <StyledContainer>
             <StyledCard>
                 <StyledContent>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={6}>
-                            <WbSunnyIcon fontSize="small"/>
-                            <Typography variant="h6">Sunrise</Typography>
-                            <Typography variant="body1">{sunrise || 'Loading...'}</Typography>
+                    <Grid container spacing={4} justifyContent='center'>
+                        <Grid item xs={12} md={6} container direction='column' alignItems='center'>
+                            <WbSunnyIcon sx={{color: "#f0d43a", fontSize: 50}}/>
+                            <Typography variant="h7">Sunrise</Typography>
+                            <Typography variant="body1" noWrap>{sunrise || 'Loading...'}</Typography>
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                            <WbTwilightIcon fontSize="small"/>
-                            <Typography variant="h6">Sunset</Typography>
-                            <Typography variant="body1">{sunset || 'Loading...'}</Typography>
+                        <Grid item xs={12} md={6} container direction='column' alignItems='center'>
+                            <WbTwilightIcon sx={{color: yellow[800], fontSize: 50}}/>
+                            <Typography variant="h7">Sunset</Typography>
+                            <Typography variant="body1" noWrap>{sunset || 'Loading...'}</Typography>
                         </Grid>
                     </Grid>
                 </StyledContent>
