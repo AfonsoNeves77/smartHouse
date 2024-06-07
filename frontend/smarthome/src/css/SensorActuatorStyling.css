@@ -1,36 +1,73 @@
-.list {
+.container {
+    padding: 20px;
+}
+
+.header-row {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    margin-top: 2rem;
-    border: 1px solid black;
-    border-radius: 4px;
-    overflow: hidden;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Reduced margin to close the gap */
+    background-color: #e0e0e0; /* Slightly darker gray */
+    padding: 10px;
+    border: 1px solid #ddd; /* Add border to the new row */
+}
+
+.title {
+    margin: 0;
+    font-size: 1.2em; /* Slightly larger text */
+    padding-left: 10px; /* Added padding to the left */
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.header, .row {
+    display: flex;
+    width: 100%;
 }
 
 .header {
-    display: flex;
-    background: #f0f0f0;
-    font-weight: bold;
-    padding: 1rem;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid #ddd;
 }
 
 .row {
-    display: flex;
-    padding: 1rem;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #ddd;
 }
 
-.row:last-child {
-    border-bottom: none;
-}
-
-.name,
-.type,
-.status,
-.sensor-name,
-.sensor-type,
-.last-reading {
+.column {
+    padding: 10px;
+    border-left: 1px solid #ddd;
+    text-align: center;
     flex: 1;
+}
+
+.header .column {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.row .column {
+    background-color: #fff;
+}
+
+.row .column:first-child {
+    border-left: none;
+}
+
+.add-button {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #e0e0e0;
 }
