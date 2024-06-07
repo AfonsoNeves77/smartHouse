@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {
     useTheme, useMediaQuery,
     CssBaseline,
@@ -8,7 +8,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText, Card
+    ListItemText, Card, Dialog, DialogTitle, DialogContentText, DialogContent, DialogActions
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -24,15 +24,18 @@ import HomeIcon from '@mui/icons-material/Home';
 import BedRoomParentIcon from '@mui/icons-material/BedroomParent';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, Link} from "react-router-dom";
+import TextField from "@mui/material/TextField";
 
 const drawerWidth = 125;
 
-export default function Appbar({change}) {
+export default function Appbar({change, setUserName}) {
 
     const [userLogin, setUserLogin] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [openDialog, setOpenDialog] = useState(false);
+    const [signedIn, setSignedIn] = useState(false);
 
     const handleUserClick = (event) => {
         setUserLogin(event.currentTarget);
@@ -40,11 +43,30 @@ export default function Appbar({change}) {
 
     const handleUserClose = () => {
         setUserLogin(null);
+        setOpenDialog(false)
     }
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     }
+
+    const handleSignInClick = () => {
+        if (signedIn) {
+            setUserName(''); // Clear user's name when signing out
+            setSignedIn(false);
+        } else {
+            setUserLogin(null);
+            setOpenDialog(true);
+        }
+    }
+
+    const handleNameSubmit = (event) => {
+        event.preventDefault();
+        const name = event.target.elements.name.value;
+        setUserName(name);
+        setSignedIn(true);
+        setOpenDialog(false);
+    };
 
 
     const navigate = useNavigate();
@@ -163,8 +185,9 @@ export default function Appbar({change}) {
                           open={Boolean(userLogin)}
                           onClose={handleUserClose}
                     >
-                        <MenuItem onClick={handleUserClose}>Sign In</MenuItem>
-                        <MenuItem onClick={handleUserClose}>Sign Up</MenuItem>
+                        <MenuItem onClick={handleSignInClick}>
+                            {signedIn ? 'Sign Out' : 'Sign In'}
+                        </MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>
@@ -197,6 +220,29 @@ export default function Appbar({change}) {
                     {drawer}
                 </Drawer>
             </Box>
+            <Dialog open={openDialog} onClose={handleUserClose}>
+                <DialogTitle>Sign In</DialogTitle>
+                <form onSubmit={handleNameSubmit}>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please enter your name
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Name"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUserClose}>Cancel</Button>
+                        <Button type="submit">Submit</Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
         </Box>
     );
 }

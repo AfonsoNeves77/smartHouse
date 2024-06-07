@@ -7,7 +7,7 @@ import SunCard from "./SunCard";
 import TempCard from "./TempCard";
 import {useEffect, useState} from "react";
 
-export default function Welcome() {
+export default function Welcome({userName}) {
 
     const [houseState, setHouseState] = useState(null);
 
@@ -50,7 +50,7 @@ export default function Welcome() {
                         fontSize: 'clamp(3.5rem, 10vw, 4rem)',
                     }}
                 >
-                    Welcome Home!
+                    Welcome Home{userName ? `, ${userName}` : ''}!
                 </Typography>
                 <Typography
                     textAlign="center"
