@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import Box from "@mui/material/Box";
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, alpha, Button} from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { alpha } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import AddDeviceButton from "../components/AddDeviceButton";
+import DeactivateDeviceButton from "../components/DeactivateDeviceButton";
 
-export default function DevicesPage() {
+export default function Devices() {
     const { roomId } = useParams();
     const [devices, setDevices] = useState([]);
     const navigate = useNavigate();
 
-    useEffect(() => {
+    const fetchDevices = () => {
         fetch(`http://localhost:8080/devices?roomID=${roomId}`)
             .then(response => response.json())
             .then(data => {
@@ -21,9 +23,17 @@ export default function DevicesPage() {
                 }
             })
             .catch(err => console.log(err));
+    };
+
+    useEffect(() => {
+        fetchDevices();
     }, [roomId]);
 
-    const handleShowFunctionalities = (roomId, deviceId) => {
+    const handleAddDevice = (newDevice) => {
+        setDevices((prevDevices) => [...prevDevices, newDevice]);
+    }
+
+    const handleFunctionalityView = (deviceId) => {
         navigate(`/rooms/${roomId}/devices/${deviceId}`);
     };
 
@@ -44,40 +54,43 @@ export default function DevicesPage() {
             margin: 0,
             padding: 0,
         })}>
-            <div>
-                {devices.map((device, index) => (
-                    <Accordion key={index + 1}>
-                        <AccordionSummary
-                            expandIcon={<ArrowDropDownIcon />}
-                            aria-controls={`panel${index + 1}-content`}
-                            id={`panel${index + 1}-header`}
-                        >
-                            <Typography>{device.deviceName}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-start',
-                                width: '100%'
-                            }}>
-                                <Typography>
-                                    <b>Model:</b> {device.deviceModel}<br />
-                                    <b>Status:</b> {device.deviceStatus ? "On" : "Off"}<br />
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleShowFunctionalities(roomId, device.deviceID)}
-                                    sx={{ height: '25%' }}
-                                >
-                                    View Functionalities
-                                </Button>
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                ))}
-            </div>
+            <>
+                <AddDeviceButton roomID={roomId} onDeviceAdded={handleAddDevice} />
+                <div>
+                    {devices.map((device, index) => (
+                        <Accordion key={index + 1}>
+                            <AccordionSummary
+                                expandIcon={<ArrowDropDownIcon />}
+                                aria-controls={`panel${index + 1}-content`}
+                                id={`panel${index + 1}-header`}
+                            >
+                                <Typography>{device.deviceName}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    width: '100%'
+                                }}>
+                                    <Typography>
+                                        <b>Model:</b> {device.deviceModel}<br />
+                                        <b>Status:</b> {device.deviceStatus === "true" ? "On" : "Off"}<br />
+                                    </Typography>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => handleFunctionalityView(device.deviceID)}
+                                        sx={{height: '25%'}}
+                                    >
+                                        View Functionalities
+                                    </Button>
+                                </Box>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </div>
+            </>
         </Box>
     );
 }

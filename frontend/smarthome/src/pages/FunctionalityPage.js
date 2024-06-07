@@ -42,12 +42,17 @@ const useDeviceData = (deviceId) => {
 
     }, [deviceId]);
 
-    return { actuators, sensors, setSensors };
+    return { actuators, sensors, setActuators, setSensors };
 };
 
 const FunctionalityPage = () => {
     const { deviceId } = useParams();
-    const { actuators, sensors, setSensors } = useDeviceData(deviceId);
+    const { actuators, sensors, setActuators, setSensors } = useDeviceData(deviceId);
+
+    // Function to update actuators
+    const onAddActuator = (newActuator) => {
+        setActuators(prevActuators => [...prevActuators, newActuator]);
+    };
 
     return (
         <>
@@ -56,8 +61,8 @@ const FunctionalityPage = () => {
                     <Box className="functionality-box">
                         <Typography variant="h4" className="functionality-box-title" gutterBottom>Device Functionalities</Typography>
 
-                        <ActuatorsComponent actuators={actuators} />
-                        <SensorsComponent sensors={sensors} />
+                        <ActuatorsComponent deviceID={deviceId} actuators={actuators} onAddActuator={onAddActuator} />
+                        <SensorsComponent deviceID={deviceId} sensors={sensors} />
                         <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors} />
                     </Box>
                 </Box>
