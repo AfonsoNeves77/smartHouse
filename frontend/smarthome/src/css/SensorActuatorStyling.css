@@ -1,0 +1,36 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+    border: 1px solid black;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    background: #f0f0f0;
+    font-weight: bold;
+    padding: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.row {
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.name,
+.type,
+.status,
+.sensor-name,
+.sensor-type,
+.last-reading {
+    flex: 1;
+}
