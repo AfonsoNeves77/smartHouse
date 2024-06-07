@@ -1,0 +1,22 @@
+.functionality-page-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 64px; /* Adjust as needed based on your app bar height */
+}
+
+.functionality-content {
+    max-width: 800px; /* Adjust as needed based on your content width */
+    width: 100%;
+    padding: 20px;
+}
+
+.functionality-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.functionality-box-title {
+    margin-bottom: 20px;
+}
