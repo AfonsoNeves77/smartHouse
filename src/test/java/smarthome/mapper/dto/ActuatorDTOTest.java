@@ -26,7 +26,7 @@ class ActuatorDTOTest {
         //Assert
         assertNull(actuatorDTO.getActuatorId());
         assertNull(actuatorDTO.getActuatorName());
-        assertNull(actuatorDTO.getActuatorType());
+        assertNull(actuatorDTO.getActuatorTypeID());
         assertNull(actuatorDTO.getDeviceID());
         assertNull(actuatorDTO.getLowerLimit());
         assertNull(actuatorDTO.getUpperLimit());
@@ -47,13 +47,13 @@ class ActuatorDTOTest {
         //Act
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 
         //Assert
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
     }
 
@@ -74,7 +74,7 @@ class ActuatorDTOTest {
 
         //Assert
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
     }
 
@@ -95,14 +95,14 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorId(actuatorId)
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
     }
 
@@ -123,14 +123,14 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorId(actuatorId)
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
     }
 
@@ -154,7 +154,7 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorId(actuatorId)
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)
@@ -164,7 +164,7 @@ class ActuatorDTOTest {
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
@@ -193,7 +193,7 @@ class ActuatorDTOTest {
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
@@ -220,7 +220,7 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                                             .actuatorId(actuatorId)
                                             .actuatorName(expectedActuatorName)
-                                            .actuatorType(actuatorType)
+                                            .actuatorTypeID(actuatorType)
                                             .deviceID(deviceID)
                                             .lowerLimit(lowerLimit)
                                             .upperLimit(upperLimit)
@@ -231,7 +231,7 @@ class ActuatorDTOTest {
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
@@ -262,7 +262,7 @@ class ActuatorDTOTest {
         //Assert
         assertEquals(actuatorId, actuatorDTO.getActuatorId());
         assertEquals(expectedActuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit, actuatorDTO.getLowerLimit());
         assertEquals(upperLimit, actuatorDTO.getUpperLimit());
@@ -287,7 +287,7 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO1 = ActuatorDTO.builder()
                 .actuatorId(actuatorId)
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)
@@ -297,7 +297,7 @@ class ActuatorDTOTest {
         ActuatorDTO actuatorDTO2 = ActuatorDTO.builder()
                 .actuatorId(actuatorId)
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)

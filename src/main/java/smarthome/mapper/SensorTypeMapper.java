@@ -33,7 +33,7 @@ public class SensorTypeMapper {
         if(sensorTypeDTO == null){
             throw new IllegalArgumentException("SensorTypeDTO cannot be null.");
         }
-        return new SensorTypeIDVO(sensorTypeDTO.getSensorType());
+        return new SensorTypeIDVO(sensorTypeDTO.getSensorTypeID());
     }
 
 

@@ -13,36 +13,36 @@ const useDeviceData = (deviceId) => {
     const [actuators, setActuators] = useState([]);
     const [sensors, setSensors] = useState([]);
 
-    const fetchDeviceData = async () => {
-        try {
-            const actuatorResponse = await fetch(`http://localhost:8080/actuators?deviceId=${deviceId}`);
-            const sensorResponse = await fetch(`http://localhost:8080/sensors?deviceId=${deviceId}`);
-
-            const actuatorData = await actuatorResponse.json();
-            const sensorData = await sensorResponse.json();
-
-            if (actuatorData._embedded && actuatorData._embedded.actuatorDTOList) {
-                setActuators(actuatorData._embedded.actuatorDTOList);
-            } else {
-                setActuators([]);
-            }
-
-            if (sensorData._embedded && sensorData._embedded.sensorDTOList) {
-                setSensors(sensorData._embedded.sensorDTOList);
-            } else {
-                setSensors([]);
-            }
-        } catch (error) {
-            console.error('Error fetching device data:', error);
-        }
-    };
-
     useEffect(() => {
+        const fetchDeviceData = async () => {
+            try {
+                const actuatorResponse = await fetch(`http://localhost:8080/actuators?deviceId=${deviceId}`);
+                const sensorResponse = await fetch(`http://localhost:8080/sensors?deviceId=${deviceId}`);
+
+                const actuatorData = await actuatorResponse.json();
+                const sensorData = await sensorResponse.json();
+
+                if (actuatorData._embedded && actuatorData._embedded.actuatorDTOList) {
+                    setActuators(actuatorData._embedded.actuatorDTOList);
+                } else {
+                    setActuators([]);
+                }
+
+                if (sensorData._embedded && sensorData._embedded.sensorDTOList) {
+                    setSensors(sensorData._embedded.sensorDTOList);
+                } else {
+                    setSensors([]);
+                }
+            } catch (error) {
+                console.error('Error fetching device data:', error);
+            }
+        };
+
         fetchDeviceData();
+
     }, [deviceId]);
 
-    // Return the state and the fetch function
-    return { actuators, setActuators, sensors, setSensors, fetchDeviceData };
+    return { actuators, sensors, setActuators, setSensors };
 };
 
 const FunctionalityPage = () => {
@@ -75,11 +75,15 @@ const FunctionalityPage = () => {
         }
     };
 
-    // Function to handle adding a new actuator
+    // Function to update actuators
     const onAddActuator = (newActuator) => {
         setActuators(prevActuators => [...prevActuators, newActuator]);
     };
 
+    // Function to update Sensors
+    const onAddSensor = (newSensor) => {
+        setSensors(prevSensors => [...prevSensors, newSensor]);
+    };
     return (
         <>
             <Box className="functionality-page-container">
@@ -97,7 +101,7 @@ const FunctionalityPage = () => {
                             onUpdate={updateActuatorsState}
                             handleSliderUpdate={handleSliderUpdate}
                         />
-                        <SensorsComponent sensors={sensors} />
+                        <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor}/>
                         <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors} />
                     </Box>
                 </Box>

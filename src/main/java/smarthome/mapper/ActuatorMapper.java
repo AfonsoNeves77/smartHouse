@@ -75,7 +75,7 @@ public class ActuatorMapper {
         if (actuatorDTO == null) {
             throw new IllegalArgumentException(ERRORMESSAGE);
         } else {
-            return new ActuatorTypeIDVO(actuatorDTO.getActuatorType());
+            return new ActuatorTypeIDVO(actuatorDTO.getActuatorTypeID());
         }
     }
 
@@ -129,7 +129,7 @@ public class ActuatorMapper {
         return ActuatorDTO.builder()
                 .actuatorId(actuator.getId().getID())
                 .actuatorName(actuator.getActuatorName().getValue())
-                .actuatorType(actuator.getActuatorTypeID().getID())
+                .actuatorTypeID(actuator.getActuatorTypeID().getID())
                 .deviceID(actuator.getDeviceID().getID())
                 .lowerLimit(actuator.getLowerLimit())
                 .upperLimit(actuator.getUpperLimit())

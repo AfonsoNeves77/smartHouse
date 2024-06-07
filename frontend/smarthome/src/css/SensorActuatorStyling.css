@@ -6,16 +6,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px; /* Reduced margin to close the gap */
-    background-color: #e0e0e0; /* Slightly darker gray */
+    margin-bottom: 10px;
+    background-color: #e0e0e0;
     padding: 10px;
-    border: 1px solid #ddd; /* Add border to the new row */
+    border: 1px solid #ddd;
 }
 
 .title {
     margin: 0;
-    font-size: 1.2em; /* Slightly larger text */
-    padding-left: 10px; /* Added padding to the left */
+    font-size: 1.2em;
+    padding-left: 10px;
 }
 
 .button-container {
@@ -31,10 +31,12 @@
 .header, .row {
     display: flex;
     width: 100%;
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
 .header {
     border-bottom: 2px solid #ddd;
+    background-color: #f0f0f0;
 }
 
 .row {
@@ -46,11 +48,11 @@
     border-left: 1px solid #ddd;
     text-align: center;
     flex: 1;
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
 .header .column {
     font-weight: bold;
-    background-color: #f0f0f0;
 }
 
 .row .column {
