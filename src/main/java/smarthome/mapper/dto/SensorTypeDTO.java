@@ -12,6 +12,6 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 public class SensorTypeDTO extends RepresentationModel<SensorTypeDTO> {
 
-    private String sensorType;
+    private String sensorTypeID;
     private String unit;
 }

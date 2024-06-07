@@ -66,9 +66,9 @@ public class SensorTypeCTRLWebTest {
         });
 
         assertEquals(2, sensorTypeDTOs.size());
-        assertEquals("1", sensorTypeDTOs.get(0).getSensorType());
+        assertEquals("1", sensorTypeDTOs.get(0).getSensorTypeID());
         assertEquals("Celsius", sensorTypeDTOs.get(0).getUnit());
-        assertEquals("2", sensorTypeDTOs.get(1).getSensorType());
+        assertEquals("2", sensorTypeDTOs.get(1).getSensorTypeID());
         assertEquals("Percentage", sensorTypeDTOs.get(1).getUnit());
     }
 }

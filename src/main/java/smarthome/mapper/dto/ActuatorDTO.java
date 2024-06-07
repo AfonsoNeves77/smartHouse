@@ -17,7 +17,7 @@ public class ActuatorDTO extends RepresentationModel<ActuatorDTO>{
 
     private String actuatorId;
     private String actuatorName;
-    private String actuatorType;
+    private String actuatorTypeID;
     private String deviceID;
     private String lowerLimit;
     private String upperLimit;

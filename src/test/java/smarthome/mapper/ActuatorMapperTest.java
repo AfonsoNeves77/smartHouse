@@ -92,7 +92,7 @@ class ActuatorMapperTest {
         String deviceID = null;
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 
@@ -119,7 +119,7 @@ class ActuatorMapperTest {
         String deviceID = UUID.randomUUID().toString();
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 //        Act
@@ -140,7 +140,7 @@ class ActuatorMapperTest {
         String deviceID = "frt3-567p-32za";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 //        Act
@@ -181,7 +181,7 @@ class ActuatorMapperTest {
         String deviceID = "123e4567-e89b-12d3-a456-111111111111";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 //        Act
@@ -222,7 +222,7 @@ class ActuatorMapperTest {
         String upperLimit = "30";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)
@@ -252,7 +252,7 @@ class ActuatorMapperTest {
         String precision = "0.1";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(lowerLimit)
                 .upperLimit(upperLimit)
@@ -279,7 +279,7 @@ class ActuatorMapperTest {
         String deviceID = "frt3-567p-32za";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .build();
 //        Act
@@ -303,7 +303,7 @@ class ActuatorMapperTest {
         String invalidPrecision = "invalid";
         ActuatorDTO actuatorDTO = ActuatorDTO.builder()
                 .actuatorName(expectedActuatorName)
-                .actuatorType(actuatorType)
+                .actuatorTypeID(actuatorType)
                 .deviceID(deviceID)
                 .lowerLimit(invalidLowerLimit)
                 .upperLimit(invalidUpperLimit)
@@ -359,7 +359,7 @@ class ActuatorMapperTest {
         String actuatorType = "Thermostat";
         int expectedListSize = 1;
         ActuatorDTO actuatorDTODouble = mock(ActuatorDTO.class);
-        when(actuatorDTODouble.getActuatorType()).thenReturn(actuatorType);
+        when(actuatorDTODouble.getActuatorTypeID()).thenReturn(actuatorType);
 
         try (MockedConstruction<ActuatorTypeIDVO> mockedActuatorTypeIDVO = mockConstruction(ActuatorTypeIDVO.class, (mock, context)
                 -> when(mock.getID()).thenReturn("Thermostat"))) {
@@ -531,7 +531,7 @@ class ActuatorMapperTest {
         //Assert
         assertEquals(actuatorID, actuatorDTO.getActuatorId());
         assertEquals(actuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
     }
 
@@ -589,7 +589,7 @@ class ActuatorMapperTest {
         //Assert
         assertEquals(actuatorID, actuatorDTO.getActuatorId());
         assertEquals(actuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit.toString(), actuatorDTO.getLowerLimit());
         assertEquals(upperLimit.toString(), actuatorDTO.getUpperLimit());
@@ -651,7 +651,7 @@ class ActuatorMapperTest {
         //Assert
         assertEquals(actuatorID, actuatorDTO.getActuatorId());
         assertEquals(actuatorName, actuatorDTO.getActuatorName());
-        assertEquals(actuatorType, actuatorDTO.getActuatorType());
+        assertEquals(actuatorType, actuatorDTO.getActuatorTypeID());
         assertEquals(deviceID, actuatorDTO.getDeviceID());
         assertEquals(lowerLimit.toString(), actuatorDTO.getLowerLimit());
         assertEquals(upperLimit.toString(), actuatorDTO.getUpperLimit());
@@ -782,7 +782,7 @@ class ActuatorMapperTest {
         //Assert
         assertEquals(expectedListSize, result.size());
         assertEquals(actuatorNameVODouble.getValue(), result.get(0).getActuatorName());
-        assertEquals(actuatorTypeIDVODouble.getID(), result.get(0).getActuatorType());
+        assertEquals(actuatorTypeIDVODouble.getID(), result.get(0).getActuatorTypeID());
         assertEquals(deviceIDVODouble2.getID(), result.get(1).getDeviceID());
     }
 

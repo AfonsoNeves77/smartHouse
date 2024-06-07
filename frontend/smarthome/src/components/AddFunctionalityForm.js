@@ -4,14 +4,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import FunctionalityTypeDropdown from "./FunctionalityTypeDropdown";
 
 const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose }) => {
     const [formData, setFormData] = useState({});
 
     const handleInputChange = (fieldName, value) => {
-        if (fieldName === "deviceID") {
-            return; // Ignore deviceID changes
-        }
 
         setFormData(prevState => ({
             ...prevState,
@@ -30,21 +28,22 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData), // Include deviceID here
+                body: JSON.stringify(formData),
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorMessage = await response.text();
+                throw new Error(`Network response was not ok: ${errorMessage}`);
             }
 
             const data = await response.json();
             onFunctionalityAdded(data); // Trigger rerender in the parent component
-            setFormData({});
             onClose();
         } catch (error) {
-            console.error(`Error adding ${type}:`, error);
+            console.error(`Error adding ${type}:`, error.message);
         }
     };
+
 
     return (
         <Paper elevation={3} sx={{ p: 2, mt: 3, mb: 3 }}>
@@ -62,12 +61,13 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
                     onChange={(e) => handleInputChange(`${type}Name`, e.target.value)}
                     fullWidth
                 />
-                <TextField
-                    label={`${type === 'sensor' ? 'Sensor' : 'Actuator'} Type`}
-                    value={formData[`${type}Type`] || ''}
-                    onChange={(e) => handleInputChange(`${type}Type`, e.target.value)}
-                    fullWidth
+
+                <FunctionalityTypeDropdown
+                    value={formData[`${type === 'sensor' ? 'sensorTypeID' : 'actuatorTypeID'}`] || ''}
+                    onChange={(value) => handleInputChange(`${type === 'sensor' ? 'sensorTypeID' : 'actuatorTypeID'}`, value)}
+                    type={type} // Pass the type prop to the ActuatorTypeDropdown
                 />
+
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
                     <Button
                         variant="contained"
@@ -102,4 +102,3 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
 };
 
 export default AddFunctionalityForm;
-

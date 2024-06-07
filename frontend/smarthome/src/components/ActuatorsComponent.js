@@ -53,10 +53,10 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
                     {actuators.map((actuator, index) => (
                         <Box key={index} className="row">
                             <Box className="column name">{actuator.actuatorName}</Box>
-                            <Box className="column type">{actuator.actuatorType}</Box>
+                            <Box className="column type">{actuator.actuatorTypeID}</Box>
                             <Box className="column status">{actuator.status}</Box>
                             <Box className="column actions">
-                                {actuator.actuatorType === "RollerBlindActuator" ? (
+                                {actuator.actuatorTypeID === "RollerBlindActuator" ? (
                                     <StatusSlider
                                         initialStatus={actuator.status}
                                         actuatorId={actuator.actuatorId}
