@@ -1,6 +1,7 @@
 package smarthome.domain.sensor.externalservices;
 
 import org.shredzone.commons.suncalc.SunTimes;
+import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
+@Component
 public class SunTimeCalculator implements SunTimeServices {
 
     /**

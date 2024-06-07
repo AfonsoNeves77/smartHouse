@@ -9,8 +9,10 @@ import smarthome.domain.log.Log;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.LogMapper;
+import smarthome.mapper.SensorMapper;
 import smarthome.mapper.dto.LogDTO;
 import smarthome.service.LogService;
 import smarthome.utils.timeconfig.TimeConfigDTO;
@@ -142,6 +144,31 @@ public class LogCTRLWeb {
             return new ResponseEntity<>(peakPowerConsumption, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             // Returns an error message, plus a status code
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Handles a POST request to retrieve sun readings based on the given parameters.
+     *
+     * @param date      the date for which the sun reading is requested, in the format "YYYY-MM-DD"
+     * @param latitude  the latitude coordinate of the location
+     * @param longitude the longitude coordinate of the location
+     * @param sensorId  the unique identifier of the sensor
+     * @return a ResponseEntity containing the sun reading as a String if the request is successful, or a BAD_REQUEST status if an error occurs
+     */
+    @PostMapping()
+    public ResponseEntity<String> getSunReading (@RequestParam (value="date") String date,
+                                                 @RequestParam (value="latitude") String latitude,
+                                                 @RequestParam (value="longitude") String longitude,
+                                                 @RequestParam (value="sensorId") String sensorId){
+
+        try{
+            String gpsCoordinates = latitude + " : " + longitude;
+            SensorIDVO sensorIDVO = SensorMapper.createSensorIDVO(sensorId);
+            String reading = this.logService.getSunReading(date,gpsCoordinates,sensorIDVO);
+            return new ResponseEntity<>(reading, HttpStatus.OK);
+        } catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -130,7 +130,6 @@ public class SensorServiceImpl implements SensorService {
         return sensorTypeRepository.isPresent(sensorTypeIDVO);
     }
 
-
     /**
      * Receives object parameters and verifies they are null
      *

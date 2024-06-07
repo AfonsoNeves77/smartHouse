@@ -12,7 +12,7 @@ import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public class SunriseSensor implements Sensor {
+public class SunriseSensor implements SunSensor {
 
     private final SensorIDVO sensorID;
     private SensorNameVO sensorName;

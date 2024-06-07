@@ -8,10 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.SunsetSensor;
+import smarthome.domain.sensor.SwitchSensor;
+import smarthome.domain.sensor.externalservices.SunTimeCalculator;
 import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -23,10 +28,12 @@ import smarthome.domain.vo.logvo.TimeStampVO;
 import smarthome.domain.vo.roomvo.*;
 import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
+import smarthome.domain.vo.sensorvo.SensorNameVO;
 import smarthome.mapper.dto.LogDTO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.persistence.SensorRepository;
 import smarthome.utils.timeconfig.TimeConfigDTO;
 
 import java.time.LocalDateTime;
@@ -34,6 +41,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -59,6 +67,9 @@ class LogCTRLWebTest {
 
     @MockBean
     private RoomRepository roomRepository;
+
+    @MockBean
+    private SensorRepository sensorRepository;
 
 
     /**
@@ -1278,5 +1289,190 @@ class LogCTRLWebTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+    }
+
+    /**
+     * Tests that the getSunReading method returns HTTP status BAD_REQUEST when given invalid SensorIDVO values.
+     *
+     * @throws Exception if an error occurs during the test
+     */
+    @Test
+    void whenGivenInvalidSensorIDVO_getSunReadingReturnsBadRequest() throws Exception {
+        // Arrange
+        String date = "2024-05-10";
+        String latitude = "45";
+        String longitude = "45";
+
+        String sensorId1 = " ";
+        String sensorId2 = "";
+        String sensorId3 = "1241212";
+        String sensorId4 = null;
+
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId2)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId3)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId4)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Tests that the getSunReading method returns HTTP status BAD_REQUEST when the SensorIDVO does not match any sensor.
+     *
+     * @throws Exception if an error occurs during the test
+     */
+    @Test
+    void whenSensorIDVODoesNotMatchASensor_getSunReadingReturnsBadRequest() throws Exception {
+        // Arrange
+        String date = "2024-05-10";
+        String latitude = "45";
+        String longitude = "45";
+
+        SensorIDVO sensorIDVO = new SensorIDVO(UUID.randomUUID());
+        String sensorId = sensorIDVO.getID();
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Tests that the getSunReading method returns HTTP status BAD_REQUEST when the chosen sensor is not a Sun sensor.
+     *
+     * @throws Exception if an error occurs during the test
+     */
+    @Test
+    void whenSensorChosenIsNotSunSensor_getSunReadingReturnsBadRequest() throws Exception {
+        // Arrange
+        String date = "2024-05-10";
+        String latitude = "45";
+        String longitude = "45";
+
+        SensorNameVO sensorNameVO = new SensorNameVO("sensor1");
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO("SwitchSensor");
+        SwitchSensor sensor = new SwitchSensor(sensorNameVO,deviceIDVO,sensorTypeIDVO);
+        SensorIDVO sensorIDVO = sensor.getId();
+        String sensorId = sensor.getId().getID();
+
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Tests that the getSunReading method returns HTTP status BAD_REQUEST when the log repository is unable to save the reading.
+     *
+     * @throws Exception if an error occurs during the test
+     */
+    @Test
+    void whenLogRepositoryIsUnableToSaveReading_getSunReadingReturnsBadRequest() throws Exception {
+        // Arrange
+        String date = "2024-05-10";
+        String latitude = "45";
+        String longitude = "45";
+
+        SensorNameVO sensorNameVO = new SensorNameVO("sensor1");
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO("SwitchSensor");
+        SunsetSensor sensor = new SunsetSensor(sensorNameVO,deviceIDVO,sensorTypeIDVO);
+        SensorIDVO sensorIDVO = (SensorIDVO) sensor.getId();
+        String sensorId = sensor.getId().getID();
+
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(logRepository.save(any())).thenReturn(false);
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Tests that the getSunReading method returns HTTP status OK and the expected sun reading as a String
+     * when given correct parameters.
+     *
+     * @throws Exception if an error occurs during the test
+     */
+    @Test
+    void whenGivenCorrectParameters_getSunReadingReturnsOkAndReadingAsString() throws Exception {
+        // Arrange
+        String date = "2024-05-10";
+        String latitude = "45";
+        String longitude = "45";
+
+        SensorNameVO sensorNameVO = new SensorNameVO("sensor1");
+        DeviceIDVO deviceIDVO = new DeviceIDVO(UUID.randomUUID());
+        SensorTypeIDVO sensorTypeIDVO = new SensorTypeIDVO("SunsetSensor");
+        SunsetSensor sensor = new SunsetSensor(sensorNameVO,deviceIDVO,sensorTypeIDVO);
+        SensorIDVO sensorIDVO = (SensorIDVO) sensor.getId();
+        String sensorId = sensor.getId().getID();
+
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(logRepository.save(any())).thenReturn(true);
+
+        //Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/logs")
+                        .param("date", date)
+                        .param("latitude", latitude)
+                        .param("longitude", longitude)
+                        .param("sensorId", sensorId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("2024-05-10T16:17:03Z[UTC]"));
     }
 }

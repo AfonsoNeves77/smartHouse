@@ -1,13 +1,18 @@
 package smarthome.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
+import smarthome.domain.log.LogFactoryImpl;
 import smarthome.domain.room.Room;
-import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
-import smarthome.domain.sensor.sensorvalues.SensorValueObject;
-import smarthome.domain.sensor.sensorvalues.TemperatureValue;
+import smarthome.domain.sensor.SunsetSensor;
+import smarthome.domain.sensor.SwitchSensor;
+import smarthome.domain.sensor.externalservices.SunTimeCalculator;
+import smarthome.domain.sensor.sensorvalues.*;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.LogIDVO;
 import smarthome.domain.vo.roomvo.RoomDimensionsVO;
@@ -19,8 +24,10 @@ import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.persistence.SensorRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -28,7 +35,23 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 class LogServiceImplTest {
+
+
+    @MockBean
+    SensorValueFactory sensorValueFactory;
+    @MockBean
+    SensorRepository sensorRepository;
+    @MockBean
+    SunTimeCalculator sunTimeCalculator;
+    @MockBean
+    LogFactoryImpl logFactory;
+    @MockBean
+    LogRepository logRepository;
+
+    @Autowired
+    LogServiceImpl logService;
     /**
      * Test to verify that IllegalArgumentException is thrown when given null parameters.
      */
@@ -1623,6 +1646,254 @@ class LogServiceImplTest {
 
         // Assert
         assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Verifies that when any of the parameters (date, gpsLocation, or sensorIDVO) are null,
+     * the getSunReading method throws an IllegalArgumentException with the message "Invalid parameters".
+     */
+    @Test
+    void whenGivenNullParams_getSunReadingThrowsIllegalArgumentException() {
+        // Arrange
+        // Mocking necessary objects
+        LogRepository logRepository = mock(LogRepository.class);
+        DeviceRepository deviceRepository = mock(DeviceRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        LogFactory logFactory = mock(LogFactory.class);
+        LogServiceImpl logService = new LogServiceImpl(logRepository,deviceRepository,roomRepository,logFactory);
+
+        String date = "Will not reach";
+        String gpsLocation = "Will not reach";
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+
+        String expected = "Invalid parameters";
+
+        // Act and Assert
+        // Testing for null date
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(null, gpsLocation, sensorIDVO));
+        String result1 = exception1.getMessage();
+
+        // Testing for null gpsLocation
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, null, sensorIDVO));
+        String result2 = exception2.getMessage();
+
+        // Testing for null sensorIDVO
+        Exception exception3 = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, null));
+        String result3 = exception3.getMessage();
+
+        // Assert
+        assertEquals(expected,result1);
+        assertEquals(expected,result2);
+        assertEquals(expected,result3);
+    }
+
+
+    /**
+     * Verifies that when the provided SensorIDVO is not found, the getSunReading method
+     * throws an IllegalArgumentException with the message "Could not find Sensor".
+     */
+    @Test
+    void whenProvidedSensorIDVOIsNotFound_getSunReadingThrowsIllegalArgumentException() {
+        // Arrange
+        // Mocking necessary objects
+        String date = "Will not reach";
+        String gpsLocation = "Will not reach";
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(false);
+
+        // Expected result
+        String expected = "Could not find Sensor";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    /**
+     * Verifies that the getSunReading method throws an IllegalArgumentException
+     * when the SensorIDVO is related to a non-SunSensor type, causing a ClassCastException.
+     */
+    @Test
+    void whenSensorIDVOIsRelatedToANonSunSensor_getSunReadingThrowsIllegalArgumentExceptionDueToCastException() {
+        // Arrange
+        // Mocking necessary objects
+        SwitchSensor sensor = mock(SwitchSensor.class);
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+
+        // Expected result
+        String expected = "Unable to get sensor reading";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+
+    /**
+     * Verifies that the getSunReading method throws an IllegalArgumentException
+     * when the sensor's getReading method returns null.
+     */
+    @Test
+    void whenSensorGetReadingReturnsNull_getSunReadingThrowsIllegalArgumentExceptionDueToNullPointException() {
+        // Arrange
+        // Mocking necessary objects
+        SunsetSensor sensor = mock(SunsetSensor.class);
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(null);
+
+        // Expected result
+        String expected = "Unable to save reading";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+
+    /**
+     * Verifies that the getSunReading method throws an IllegalArgumentException
+     * when the LogRepository is unable to save the reading.
+     */
+    @Test
+    void whenLogRepositoryIsUnableToSaveReading_getSunReadingThrowsIllegalArgumentException() {
+        // Arrange
+        // Mocking necessary objects
+        SunsetSensor sensor = mock(SunsetSensor.class);
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
+        Log log = mock(Log.class);
+        SunTimeValue reading = mock(SunTimeValue.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
+        when(sensor.getId()).thenReturn(sensorIDVO);
+        when(sensor.getDeviceID()).thenReturn(deviceIDVO);
+        when(sensor.getSensorTypeID()).thenReturn(sensorTypeIDVO);
+        when(logFactory.createLog(reading, sensorIDVO, deviceIDVO, sensorTypeIDVO)).thenReturn(log);
+        when(logRepository.save(log)).thenReturn(false);
+
+        // Expected result
+        String expected = "Unable to save reading";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+
+    /**
+     * Verifies that the getSunReading method throws an IllegalArgumentException
+     * when the LogFactory is unable to produce a log.
+     */
+    @Test
+    void whenLogFactoryIsUnableToProduceLog_getSunReadingThrowsIllegalArgumentException() {
+        // Arrange
+        // Mocking necessary objects
+        SunsetSensor sensor = mock(SunsetSensor.class);
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
+        IllegalArgumentException exception = mock(IllegalArgumentException.class);
+        SunTimeValue reading = mock(SunTimeValue.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
+        when(sensor.getId()).thenReturn(sensorIDVO);
+        when(sensor.getDeviceID()).thenReturn(deviceIDVO);
+        when(sensor.getSensorTypeID()).thenReturn(sensorTypeIDVO);
+        when(logFactory.createLog(reading, sensorIDVO, deviceIDVO, sensorTypeIDVO)).thenThrow(exception);
+
+        // Expected result
+        String expected = "Unable to save reading";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+
+    /**
+     * Verifies that the getSunReading method returns the reading value as a string
+     * when successfully obtaining the reading and saving the log.
+     */
+    @Test
+    void whenSuccessfullyObtainingReadingAndSavingLog_getSunReadingReturnsReadingAsString() {
+        // Arrange
+        // Mocking necessary objects
+        SunsetSensor sensor = mock(SunsetSensor.class);
+        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
+        Log log = mock(Log.class);
+        SunTimeValue reading = mock(SunTimeValue.class);
+        ZonedDateTime value = mock(ZonedDateTime.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
+        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
+        when(sensor.getId()).thenReturn(sensorIDVO);
+        when(sensor.getDeviceID()).thenReturn(deviceIDVO);
+        when(sensor.getSensorTypeID()).thenReturn(sensorTypeIDVO);
+        when(logFactory.createLog(reading, sensorIDVO, deviceIDVO, sensorTypeIDVO)).thenReturn(log);
+        when(logRepository.save(log)).thenReturn(true);
+        when(reading.getValue()).thenReturn(value);
+        when(value.toString()).thenReturn("It works");
+
+        // Expected result
+        String expected = "It works";
+
+        // Act
+        String result = logService.getSunReading(date, gpsLocation, sensorIDVO);
+
+        // Assert
+        assertEquals(expected, result);
     }
 
 }

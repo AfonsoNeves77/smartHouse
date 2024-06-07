@@ -1,10 +1,16 @@
 package smarthome.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smarthome.domain.device.Device;
 import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.Sensor;
+import smarthome.domain.sensor.SunSensor;
+import smarthome.domain.sensor.externalservices.SunTimeCalculator;
+
+import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -15,6 +21,7 @@ import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.DeviceRepository;
 import smarthome.persistence.LogRepository;
 import smarthome.persistence.RoomRepository;
+import smarthome.persistence.SensorRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,6 +33,10 @@ public class LogServiceImpl implements LogService {
     private final DeviceRepository deviceRepository;
     private final RoomRepository roomRepository;
     private final LogFactory logFactory;
+    // The following are autowired via setter method. Ideally they should be on the constructor
+    private SensorValueFactory sensorValueFactory;
+    private SensorRepository sensorRepository;
+    private SunTimeCalculator sunTimeCalculator;
 
     private static final String ERROR_MESSAGE_PARAMS = "Invalid parameters";
 
@@ -207,6 +218,53 @@ public class LogServiceImpl implements LogService {
         Iterable<Log> indoorDeviceLog = logRepository.getDeviceTemperatureLogs(indoorDevice, sensorTypeID, initialTimeStamp, finalTimeStamp);
 
         return retrieveMaxTempDiffInAnInstant(outdoorDeviceLog, indoorDeviceLog, deltaMin);
+    }
+
+
+    /**
+     * Retrieves the sun reading for the given date and GPS location using the specified sensor ID.
+     *
+     * @param date         The date for which the sun reading is requested.
+     * @param gpsLocation  The GPS location for which the sun reading is requested.
+     * @param sensorIDVO   The ID of the sensor used to retrieve the sun reading.
+     * @return A string representation of the sun reading value.
+     * @throws IllegalArgumentException if any of the parameters are null,
+     *                                  or if the sensor associated with the provided ID is not found,
+     *                                  or if there's an error retrieving or saving the sun reading.
+     */
+    public String getSunReading(String date, String gpsLocation, SensorIDVO sensorIDVO) {
+        // Check if any of the parameters are null
+        if (areParamsNull(date, gpsLocation, sensorIDVO)) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
+        }
+
+        // Check if the sensor associated with the provided ID exists
+        if (!this.sensorRepository.isPresent(sensorIDVO)) {
+            throw new IllegalArgumentException("Could not find Sensor");
+        }
+
+        /* The following try block could be avoided if the classes threw Illegal Arguments, due to time constraints
+         * it will be handled like this, but the process could be handled more elegantly if both findByID and getReading
+         * returned IllegalArguments or Optionals on error.
+         */
+        try {
+            // Retrieve the sun sensor associated with the provided ID
+            SunSensor sensor = (SunSensor) this.sensorRepository.findById(sensorIDVO);
+
+            // Retrieve the sun reading for the given date and GPS location
+            SensorValueObject<?> reading = sensor.getReading(date, gpsLocation, this.sunTimeCalculator, sensorValueFactory);
+
+            // Save the sun reading
+            if (!saveReading(sensor, reading)) {
+                throw new IllegalArgumentException("Unable to save reading");
+            }
+
+            // Return the string representation of the sun reading value
+            return reading.getValue().toString();
+
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Unable to get sensor reading");
+        }
     }
 
 
@@ -429,6 +487,33 @@ public class LogServiceImpl implements LogService {
             }
         }
         return biggestReadingLog;
+    }
+
+    private boolean saveReading (Sensor sensor, SensorValueObject<?> reading){
+        try {
+            SensorIDVO sensorIDVO = (SensorIDVO) sensor.getId();
+            DeviceIDVO deviceIDVO = sensor.getDeviceID();
+            SensorTypeIDVO sensorTypeIDVO = sensor.getSensorTypeID();
+            Log log = this.logFactory.createLog(reading,sensorIDVO,deviceIDVO,sensorTypeIDVO);
+            return this.logRepository.save(log);
+        } catch (IllegalArgumentException | ClassCastException | NullPointerException e){
+            return false;
+        }
+    }
+
+    @Autowired
+    public void setSensorValueFactory(SensorValueFactory sensorValueFactory) {
+        this.sensorValueFactory = sensorValueFactory;
+    }
+
+    @Autowired
+    public void setSensorRepository(SensorRepository sensorRepository) {
+        this.sensorRepository = sensorRepository;
+    }
+
+    @Autowired
+    public void setSunTimeCalculator(SunTimeCalculator sunTimeCalculator) {
+        this.sunTimeCalculator = sunTimeCalculator;
     }
 
 }
