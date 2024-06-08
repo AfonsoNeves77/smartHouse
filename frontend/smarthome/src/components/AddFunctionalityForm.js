@@ -4,12 +4,16 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import FunctionalityTypeDropdown from "./FunctionalityTypeDropdown";
 import DecimalInput from "./DecimalInput";
+import { validateInputs } from './FunctionalityInputValidation';
 
 const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose }) => {
     const [formData, setFormData] = useState({});
     const [selectedActuatorType, setSelectedActuatorType] = useState('');
+    const [errors, setErrors] = useState({});
 
     const handleInputChange = (fieldName, value) => {
         setFormData(prevState => ({
@@ -17,10 +21,23 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
             [fieldName]: value,
             deviceID, // Include deviceID here
         }));
+        if (errors[fieldName]) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [fieldName]: false,
+                [`${fieldName}Error`]: '',
+            }));
+        }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const newErrors = validateInputs(formData, type, selectedActuatorType);
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
 
         try {
             console.log(formData);
@@ -60,66 +77,109 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
                 onSubmit={handleSubmit}
                 sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-                <TextField
-                    label={`${type === 'sensor' ? 'Sensor' : 'Actuator'} Name`}
-                    value={formData[`${type}Name`] || ''}
-                    onChange={(e) => handleInputChange(`${type}Name`, e.target.value)}
-                    fullWidth
-                />
+                <FormControl error={errors[`${type}Name`]} variant="outlined" fullWidth>
+                    <TextField
+                        label={`${type === 'sensor' ? 'Sensor' : 'Actuator'} Name`}
+                        value={formData[`${type}Name`] || ''}
+                        onChange={(e) => handleInputChange(`${type}Name`, e.target.value)}
+                        fullWidth
+                        error={errors[`${type}Name`]}
+                    />
+                    {errors[`${type}Name`] && (
+                        <FormHelperText sx={{ color: 'red' }}>{errors[`${type}NameError`]}</FormHelperText>
+                    )}
+                </FormControl>
 
                 {type === 'actuator' && (
                     <>
-                        <FunctionalityTypeDropdown
-                            value={formData['actuatorTypeID'] || ''}
-                            onChange={handleActuatorTypeChange}
-                            type={type} // Pass the type prop to the ActuatorTypeDropdown
-                        />
+                        <FormControl error={errors['actuatorTypeID']} variant="outlined" fullWidth>
+                            <FunctionalityTypeDropdown
+                                value={formData['actuatorTypeID'] || ''}
+                                onChange={handleActuatorTypeChange}
+                                type={type} // Pass the type prop to the ActuatorTypeDropdown
+                            />
+                            {errors['actuatorTypeID'] && (
+                                <FormHelperText sx={{ color: 'red' }}>{errors['actuatorTypeIDError']}</FormHelperText>
+                            )}
+                        </FormControl>
 
                         {selectedActuatorType === 'DecimalValueActuator' && (
                             <>
-                                <DecimalInput
-                                    label="Upper Limit"
-                                    value={formData.upperLimit || ''}
-                                    onChange={(value) => handleInputChange('upperLimit', value)}
-                                />
-                                <DecimalInput
-                                    label="Lower Limit"
-                                    value={formData.lowerLimit || ''}
-                                    onChange={(value) => handleInputChange('lowerLimit', value)}
-                                />
-                                <DecimalInput
-                                    label="Precision"
-                                    value={formData.precision || ''}
-                                    onChange={(value) => handleInputChange('precision', value)}
-                                />
+                                <FormControl error={errors.precision} variant="outlined" fullWidth>
+                                    <DecimalInput
+                                        label="Precision"
+                                        value={formData.precision || ''}
+                                        onChange={(value) => handleInputChange('precision', value)}
+                                    />
+                                    {errors.precision && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.precisionError}</FormHelperText>
+                                    )}
+                                </FormControl>
+                                <FormControl error={errors.lowerLimit} variant="outlined" fullWidth>
+                                    <DecimalInput
+                                        label="Lower Limit"
+                                        value={formData.lowerLimit || ''}
+                                        onChange={(value) => handleInputChange('lowerLimit', value)}
+                                    />
+                                    {errors.lowerLimit && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.lowerLimitError}</FormHelperText>
+                                    )}
+                                </FormControl>
+                                <FormControl error={errors.upperLimit} variant="outlined" fullWidth>
+                                    <DecimalInput
+                                        label="Upper Limit"
+                                        value={formData.upperLimit || ''}
+                                        onChange={(value) => handleInputChange('upperLimit', value)}
+                                    />
+                                    {errors.upperLimit && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.upperLimitError}</FormHelperText>
+                                    )}
+                                </FormControl>
                             </>
                         )}
 
                         {selectedActuatorType === 'IntegerValueActuator' && (
                             <>
-                                <TextField
-                                    label="Upper Limit"
-                                    value={formData.upperLimit || ''}
-                                    onChange={(e) => handleInputChange('upperLimit', e.target.value)}
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Lower Limit"
-                                    value={formData.lowerLimit || ''}
-                                    onChange={(e) => handleInputChange('lowerLimit', e.target.value)}
-                                    fullWidth
-                                />
+                                <FormControl error={errors.lowerLimit} variant="outlined" fullWidth>
+                                    <TextField
+                                        label="Lower Limit"
+                                        value={formData.lowerLimit || ''}
+                                        onChange={(e) => handleInputChange('lowerLimit', e.target.value)}
+                                        fullWidth
+                                        error={errors.lowerLimit}
+                                    />
+                                    {errors.lowerLimit && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.lowerLimitError}</FormHelperText>
+                                    )}
+                                </FormControl>
+                                <FormControl error={errors.upperLimit} variant="outlined" fullWidth>
+                                    <TextField
+                                        label="Upper Limit"
+                                        value={formData.upperLimit || ''}
+                                        onChange={(e) => handleInputChange('upperLimit', e.target.value)}
+                                        fullWidth
+                                        error={errors.upperLimit}
+                                    />
+                                    {errors.upperLimit && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.upperLimitError}</FormHelperText>
+                                    )}
+                                </FormControl>
                             </>
                         )}
                     </>
                 )}
 
                 {type === 'sensor' && (
-                    <FunctionalityTypeDropdown
-                        value={formData['sensorTypeID'] || ''}
-                        onChange={(value) => handleInputChange('sensorTypeID', value)}
-                        type={type} // Pass the type prop to the SensorTypeDropdown
-                    />
+                    <FormControl error={errors['sensorTypeID']} variant="outlined" fullWidth>
+                        <FunctionalityTypeDropdown
+                            value={formData['sensorTypeID'] || ''}
+                            onChange={(value) => handleInputChange('sensorTypeID', value)}
+                            type={type} // Pass the type prop to the SensorTypeDropdown
+                        />
+                        {errors['sensorTypeID'] && (
+                            <FormHelperText sx={{ color: 'red' }}>{errors['sensorTypeIDError']}</FormHelperText>
+                        )}
+                    </FormControl>
                 )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>

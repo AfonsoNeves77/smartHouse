@@ -45,7 +45,8 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
             </Box>
             {actuators.length === 0 ? (
                 <Typography variant="subtitle1" style={{ textAlign: 'center', marginTop: '20px' }}>
-                    No installed Actuators, to install please press the Add button
+                    No installed Actuators, to install please&nbsp;
+                    <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>press</span>&nbsp;the <b>Add</b> button
                 </Typography>
             ) : (
                 <Box className="list">
