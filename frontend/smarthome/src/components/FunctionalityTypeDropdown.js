@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 
+const formatType = (type) => {
+    // Add a space before each capital letter, except for the first character
+    return type.replace(/([A-Z])/g, ' $1').trim();
+};
+
 const FunctionalityTypeDropdown = ({ value, onChange, type }) => {
     const [sensorTypes, setSensorTypes] = useState([]);
     const [actuatorTypes, setActuatorTypes] = useState([]);
@@ -56,10 +61,9 @@ const FunctionalityTypeDropdown = ({ value, onChange, type }) => {
             onChange={(e) => onChange(e.target.value)}
             fullWidth
         >
-            {types.map((type, index) => (
-                <MenuItem key={type[idField] + index} value={type[idField]}>
-
-                    {type[idField]}
+            {types.map((typeItem, index) => (
+                <MenuItem key={typeItem[idField] + index} value={typeItem[idField]}>
+                    {formatType(typeItem[idField])}
                 </MenuItem>
             ))}
         </TextField>

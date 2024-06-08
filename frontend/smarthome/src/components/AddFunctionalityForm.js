@@ -5,12 +5,13 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import FunctionalityTypeDropdown from "./FunctionalityTypeDropdown";
+import DecimalInput from "./DecimalInput";
 
 const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose }) => {
     const [formData, setFormData] = useState({});
+    const [selectedActuatorType, setSelectedActuatorType] = useState('');
 
     const handleInputChange = (fieldName, value) => {
-
         setFormData(prevState => ({
             ...prevState,
             [fieldName]: value,
@@ -22,7 +23,7 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
         event.preventDefault();
 
         try {
-            console.log(formData)
+            console.log(formData);
             const response = await fetch(`http://localhost:8080/${type}s`, {
                 method: 'POST',
                 headers: {
@@ -44,6 +45,10 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
         }
     };
 
+    const handleActuatorTypeChange = (value) => {
+        setSelectedActuatorType(value);
+        handleInputChange('actuatorTypeID', value);
+    };
 
     return (
         <Paper elevation={3} sx={{ p: 2, mt: 3, mb: 3 }}>
@@ -62,11 +67,60 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
                     fullWidth
                 />
 
-                <FunctionalityTypeDropdown
-                    value={formData[`${type === 'sensor' ? 'sensorTypeID' : 'actuatorTypeID'}`] || ''}
-                    onChange={(value) => handleInputChange(`${type === 'sensor' ? 'sensorTypeID' : 'actuatorTypeID'}`, value)}
-                    type={type} // Pass the type prop to the ActuatorTypeDropdown
-                />
+                {type === 'actuator' && (
+                    <>
+                        <FunctionalityTypeDropdown
+                            value={formData['actuatorTypeID'] || ''}
+                            onChange={handleActuatorTypeChange}
+                            type={type} // Pass the type prop to the ActuatorTypeDropdown
+                        />
+
+                        {selectedActuatorType === 'DecimalValueActuator' && (
+                            <>
+                                <DecimalInput
+                                    label="Upper Limit"
+                                    value={formData.upperLimit || ''}
+                                    onChange={(value) => handleInputChange('upperLimit', value)}
+                                />
+                                <DecimalInput
+                                    label="Lower Limit"
+                                    value={formData.lowerLimit || ''}
+                                    onChange={(value) => handleInputChange('lowerLimit', value)}
+                                />
+                                <DecimalInput
+                                    label="Precision"
+                                    value={formData.precision || ''}
+                                    onChange={(value) => handleInputChange('precision', value)}
+                                />
+                            </>
+                        )}
+
+                        {selectedActuatorType === 'IntegerValueActuator' && (
+                            <>
+                                <TextField
+                                    label="Upper Limit"
+                                    value={formData.upperLimit || ''}
+                                    onChange={(e) => handleInputChange('upperLimit', e.target.value)}
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="Lower Limit"
+                                    value={formData.lowerLimit || ''}
+                                    onChange={(e) => handleInputChange('lowerLimit', e.target.value)}
+                                    fullWidth
+                                />
+                            </>
+                        )}
+                    </>
+                )}
+
+                {type === 'sensor' && (
+                    <FunctionalityTypeDropdown
+                        value={formData['sensorTypeID'] || ''}
+                        onChange={(value) => handleInputChange('sensorTypeID', value)}
+                        type={type} // Pass the type prop to the SensorTypeDropdown
+                    />
+                )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
                     <Button

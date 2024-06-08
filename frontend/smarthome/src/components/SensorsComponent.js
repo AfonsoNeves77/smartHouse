@@ -5,6 +5,11 @@ import '../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from "./AddFunctionalityButton";
 import Button from "@mui/material/Button";
 
+const formatType = (type) => {
+    // Add a space before each capital letter, except for the first character
+    return type.replace(/([A-Z])/g, ' $1').trim();
+};
+
 const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
     return (
         <Box className="container">
@@ -30,7 +35,7 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
                     {sensors.map((sensor, index) => (
                         <Box key={index} className="row">
                             <Box className="column name">{sensor.sensorName}</Box>
-                            <Box className="column type">{sensor.sensorTypeID}</Box>
+                            <Box className="column type">{formatType(sensor.sensorTypeID)}</Box>
                             <Box className="column status">-</Box> {/* Consistent column name with header */}
                             <Box className="column actions">
                                 <Button

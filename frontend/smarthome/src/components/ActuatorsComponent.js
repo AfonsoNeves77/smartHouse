@@ -6,6 +6,11 @@ import StatusSlider from './StatusSlider';
 import '../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from './AddFunctionalityButton';
 
+const formatActuatorType = (type) => {
+    // Add a space before each capital letter, except for the first character
+    return type.replace(/([A-Z])/g, ' $1').trim();
+};
+
 const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) => {
     const handleSliderUpdate = async (actuatorId, newStatus) => {
         try {
@@ -53,7 +58,7 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
                     {actuators.map((actuator, index) => (
                         <Box key={index} className="row">
                             <Box className="column name">{actuator.actuatorName}</Box>
-                            <Box className="column type">{actuator.actuatorTypeID}</Box>
+                            <Box className="column type">{formatActuatorType(actuator.actuatorTypeID)}</Box>
                             <Box className="column status">{actuator.status}</Box>
                             <Box className="column actions">
                                 {actuator.actuatorTypeID === "RollerBlindActuator" ? (
