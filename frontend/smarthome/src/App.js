@@ -6,6 +6,7 @@ import MainRoute from './routes/MainRoute';
 function App() {
 
     const [darkMode, setDarkMode] = useState(false);
+    const [userName, setUserName] = useState('');
 
     const theme = createTheme({
         palette: {
@@ -16,7 +17,7 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <MainRoute darkMode={darkMode} setDarkMode={setDarkMode}/>
+            <MainRoute darkMode={darkMode} setDarkMode={setDarkMode} userName={userName} setUserName={setUserName}/>
         </ThemeProvider>
     );
 }
