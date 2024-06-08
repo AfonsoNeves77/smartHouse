@@ -66,25 +66,28 @@ export default function Devices() {
                             >
                                 <Typography>{device.deviceName}</Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
-                                <Box sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'flex-start',
-                                    width: '100%'
-                                }}>
+                            <AccordionDetails sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Box sx={{ marginRight: 'auto', paddingRight: 10 }}>
                                     <Typography>
                                         <b>Model:</b> {device.deviceModel}<br />
                                         <b>Status:</b> {device.deviceStatus === "true" ? "On" : "Off"}<br />
                                     </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                     <Button
                                         variant="contained"
                                         color="primary"
                                         onClick={() => handleFunctionalityView(device.deviceID)}
-                                        sx={{height: '25%'}}
+                                        sx={{ mb: 1 }}
                                     >
                                         View Functionalities
                                     </Button>
+                                    <DeactivateDeviceButton
+                                        deviceId={device.deviceID}
+                                        deviceStatus={device.deviceStatus}
+                                        fetchDevices={fetchDevices}
+                                        sx={{ mt: 1 }}
+                                    />
                                 </Box>
                             </AccordionDetails>
                         </Accordion>

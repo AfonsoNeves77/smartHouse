@@ -28,7 +28,7 @@ const DeactivateDeviceButton = ({ deviceId, deviceStatus, fetchDevices }) => {
     }
 
     return (
-        <Button variant="contained" color="primary" onClick={handleDeactivate}>
+        <Button variant="contained" sx={{ bgcolor: 'grey','&:hover': { bgcolor: 'darkred' } }} onClick={handleDeactivate}>
             Deactivate
         </Button>
     );
