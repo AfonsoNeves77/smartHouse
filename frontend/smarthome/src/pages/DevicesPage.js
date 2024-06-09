@@ -6,6 +6,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Typography from "@mui/material/Typography";
 import AddDeviceButton from "../components/AddDeviceButton";
 import DeactivateDeviceButton from "../components/DeactivateDeviceButton";
+import GetReadingsButton from "../components/GetReadingsButton"; // Import GetReadingsButton
 
 export default function Devices() {
     const { roomId } = useParams();
@@ -82,6 +83,7 @@ export default function Devices() {
                                     >
                                         View Functionalities
                                     </Button>
+                                    <GetReadingsButton deviceID={device.deviceID} /> {/* Add GetReadingsButton here */}
                                     <DeactivateDeviceButton
                                         deviceId={device.deviceID}
                                         deviceStatus={device.deviceStatus}
