@@ -36,6 +36,7 @@ export default function Welcome({userName}) {
                 justifyContent: 'center',
                 margin: 0,
                 padding: 0,
+                paddingTop: '64px',
             })}
         >
 

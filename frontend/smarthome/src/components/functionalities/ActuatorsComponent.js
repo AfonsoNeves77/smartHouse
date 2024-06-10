@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import StatusSlider from './StatusSlider';
 import '../../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from './AddFunctionalityButton';
+import {useTheme} from "@mui/material";
+import clsx from "clsx";
 
 const formatActuatorType = (type) => {
     // Add a space before each capital letter, except for the first character
@@ -12,6 +14,7 @@ const formatActuatorType = (type) => {
 };
 
 const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) => {
+    const theme = useTheme();
     const handleSliderUpdate = async (actuatorId, newStatus) => {
         try {
             const response = await fetch(`http://localhost:8080/actuators/${actuatorId}`, {
@@ -37,7 +40,7 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
 
     return (
         <Box className="container">
-            <Box className="header-row">
+            <Box className={clsx("header-row", {"dark-theme": theme.palette.mode === 'dark'})}>
                 <Typography variant="h5" className="title"><b>Actuators</b></Typography>
                 <Box className="button-container">
                     <AddFunctionalityButton deviceID={deviceID} type="actuator" onFunctionalityAdded={onAddActuator} />
@@ -50,14 +53,14 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
                 </Typography>
             ) : (
                 <Box className="list">
-                    <Box className="header">
+                    <Box className={clsx("header", {"dark-theme": theme.palette.mode === 'dark'})}>
                         <Box className="column name">Name</Box>
                         <Box className="column type">Type</Box>
                         <Box className="column status">Status</Box>
                         <Box className="column actions">Actions</Box>
                     </Box>
                     {actuators.map((actuator, index) => (
-                        <Box key={index} className="row">
+                        <Box key={index} className={clsx("row", {"dark-theme": theme.palette.mode === 'dark'})}>
                             <Box className="column name">{actuator.actuatorName}</Box>
                             <Box className="column type">{formatActuatorType(actuator.actuatorTypeID)}</Box>
                             <Box className="column status">{actuator.status}</Box>

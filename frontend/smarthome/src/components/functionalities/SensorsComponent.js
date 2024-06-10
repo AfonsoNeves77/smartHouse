@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import '../../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from "./AddFunctionalityButton";
 import Button from "@mui/material/Button";
+import {useTheme} from "@mui/material";
+import clsx from "clsx";
 
 const formatType = (type) => {
     // Add a space before each capital letter, except for the first character
@@ -11,9 +13,10 @@ const formatType = (type) => {
 };
 
 const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
+    const theme = useTheme();
     return (
         <Box className="container">
-            <Box className="header-row">
+            <Box className={clsx("header-row", {"dark-theme": theme.palette.mode === 'dark'})}>
                 <Typography variant="h5" className="title"><b>Sensors</b></Typography>
                 <Box className="button-container">
                     <AddFunctionalityButton deviceID={deviceID} type="sensor" onFunctionalityAdded={onAddSensor} />
@@ -27,14 +30,14 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
                 </Typography>
             ) : (
                 <Box className="list">
-                    <Box className="header">
+                    <Box className={clsx("header", {"dark-theme": theme.palette.mode === 'dark'})}>
                         <Box className="column name">Name</Box>
                         <Box className="column type">Type</Box>
                         <Box className="column status">Reading</Box>
                         <Box className="column actions">Actions</Box>
                     </Box>
                     {sensors.map((sensor, index) => (
-                        <Box key={index} className="row">
+                        <Box key={index} className={clsx("row", {"dark-theme": theme.palette.mode === 'dark'})}>
                             <Box className="column name">{sensor.sensorName}</Box>
                             <Box className="column type">{formatType(sensor.sensorTypeID)}</Box>
                             <Box className="column status">-</Box> {/* Consistent column name with header */}

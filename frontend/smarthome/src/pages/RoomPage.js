@@ -29,9 +29,10 @@ export default function Room() {
         <Box sx={(theme) => ({
             width: '100%',
             minHeight: '100vh',
-            background: theme.palette.mode === 'light'
-                ? 'linear-gradient(180deg, #F4F6F8, #FFF)'
-                : `linear-gradient(180deg, #02294F, ${alpha('#090E10', 0.0)})`,
+            backgroundImage:
+                theme.palette.mode === 'light'
+                    ? 'linear-gradient(180deg, #CEE5FD, #FFF)'
+                    : `linear-gradient(180deg, #02294F, ${alpha('#090E10', 0.0)})`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

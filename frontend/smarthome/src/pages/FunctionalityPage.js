@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography";
 import ActuatorsComponent from '../components/functionalities/ActuatorsComponent';
 import SensorsComponent from '../components/functionalities/SensorsComponent';
 import SensorReadings from '../components/functionalities/SensorReadings';
-import GoBackButton from '../components/GoBackButton'; // Import GoBackButton component
+import GoBackButton from '../components/GoBackButton';
+import {alpha} from "@mui/material"; // Import GoBackButton component
 
 const drawerWidth = 125;
 // Custom hook to fetch actuators and sensors data
@@ -86,15 +87,19 @@ const FunctionalityPage = () => {
     };
 
     return (
-        <Box sx={{
+        <Box sx={(theme) => ({
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: `${drawerWidth}px`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             padding: '20px',
-            paddingTop: '64px'
-        }}>
+            paddingTop: '64px',
+            backgroundImage:
+                theme.palette.mode === 'light'
+                    ? 'linear-gradient(180deg, #CEE5FD, #FFF)'
+                    : `linear-gradient(180deg, #02294F, ${alpha('#090E10', 0.0)})`,
+        })}>
             <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px'}}>
                 <GoBackButton/>
             </Box>
