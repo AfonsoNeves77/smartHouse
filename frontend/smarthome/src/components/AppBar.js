@@ -219,15 +219,15 @@ export default function Appbar({ change, setUserName }) {
                     {drawer}
                 </Drawer>
             </Box>
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    p: 3,
-                    mt: 8, // Add margin-top to ensure content doesn't go under the AppBar
-                    width: { sm: `calc(100% - ${drawerWidth}px)` }
-                }}
-            >
+            {/*<Box*/}
+            {/*    component="main"*/}
+            {/*    sx={{*/}
+            {/*        flexGrow: 1,*/}
+            {/*        p: 3,*/}
+            {/*        mt: 8, // Add margin-top to ensure content doesn't go under the AppBar*/}
+            {/*        width: { sm: `calc(100% - ${drawerWidth}px)` }*/}
+            {/*    }}*/}
+            {/*>*/}
                 <Dialog open={openDialog} onClose={handleUserClose}>
                     <DialogTitle>Sign In</DialogTitle>
                     <form onSubmit={handleNameSubmit}>
@@ -252,7 +252,7 @@ export default function Appbar({ change, setUserName }) {
                     </form>
                 </Dialog>
                 {/* Your main content goes here */}
-            </Box>
+            {/*</Box>*/}
         </Box>
     );
 }

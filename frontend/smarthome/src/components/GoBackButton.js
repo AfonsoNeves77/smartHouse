@@ -13,7 +13,7 @@ const GoBackButton = () => {
     }
 
     return (
-        <Box sx={{ '& > :not(style)': { m: 1 } }}>
+        <Box sx={{'& > :not(style)': {m: 1}}}>
             <Tooltip title="Go Back" arrow>
                 <Fab
                     size="medium"

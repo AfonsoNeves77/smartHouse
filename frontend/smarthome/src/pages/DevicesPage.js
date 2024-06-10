@@ -42,6 +42,7 @@ export default function DevicesPage() {
             alignItems: 'center',
             margin: 0,
             padding: '20px',
+            paddingTop: '64px'
         })}>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                 <GoBackButton />

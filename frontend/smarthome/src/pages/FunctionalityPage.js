@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ActuatorsComponent from '../components/functionalities/ActuatorsComponent';
@@ -7,6 +7,7 @@ import SensorsComponent from '../components/functionalities/SensorsComponent';
 import SensorReadings from '../components/functionalities/SensorReadings';
 import GoBackButton from '../components/GoBackButton'; // Import GoBackButton component
 
+const drawerWidth = 125;
 // Custom hook to fetch actuators and sensors data
 const useDeviceData = (deviceId) => {
     const [actuators, setActuators] = useState([]);
@@ -41,12 +42,12 @@ const useDeviceData = (deviceId) => {
 
     }, [deviceId]);
 
-    return { actuators, sensors, setActuators, setSensors };
+    return {actuators, sensors, setActuators, setSensors};
 };
 
 const FunctionalityPage = () => {
-    const { deviceId } = useParams();
-    const { actuators, setActuators, sensors, setSensors, fetchDeviceData } = useDeviceData(deviceId);
+    const {deviceId} = useParams();
+    const {actuators, setActuators, sensors, setSensors, fetchDeviceData} = useDeviceData(deviceId);
 
     // Function to update actuators state
     const updateActuatorsState = (updatedActuators) => {
@@ -62,7 +63,7 @@ const FunctionalityPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify({status: newStatus}),
             });
             if (!response.ok) {
                 throw new Error('Failed to update status');
@@ -85,14 +86,22 @@ const FunctionalityPage = () => {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-                <GoBackButton />
+        <Box sx={{
+            width: `calc(100% - ${drawerWidth}px)`,
+            marginLeft: `${drawerWidth}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '20px',
+            paddingTop: '64px'
+        }}>
+            <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px'}}>
+                <GoBackButton/>
             </Box>
-            <Box className="functionality-page-container" sx={{ width: '100%' }}>
-                <Box className="functionality-content" sx={{ width: '100%' }}>
-                    <Box className="functionality-box" sx={{ width: '100%' }}>
-                        <Typography variant="h4" className="functionality-box-title" gutterBottom>Device Functionalities</Typography>
+            <Box className="functionality-page-container" sx={{width: '100%'}}>
+                <Box className="functionality-content" sx={{width: '100%'}}>
+                    <Box className="functionality-box" sx={{width: '100%'}}>
+                        <Typography variant="h4" className="functionality-box-title">Device Functionalities</Typography>
                         <ActuatorsComponent
                             deviceID={deviceId}
                             actuators={actuators}
@@ -100,8 +109,8 @@ const FunctionalityPage = () => {
                             onUpdate={updateActuatorsState}
                             handleSliderUpdate={handleSliderUpdate}
                         />
-                        <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor} />
-                        <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors} />
+                        <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor}/>
+                        <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors}/>
                     </Box>
                 </Box>
             </Box>

@@ -11,13 +11,13 @@ const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonC
             border: '1px solid #ccc',
             borderRadius: '15px',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            width: '400px',
-            height: '500px',
+            width: '100%',
+            height: '100%',
         }}>
             <CardMedia
                 component="img"
-                height="auto"
-                width="auto"
+                height="200"
+                width="300"
                 image={deviceImage}
                 alt="Device"
                 style={{ objectFit: 'cover', borderRadius: '15px 15px 0 0' }}
@@ -32,14 +32,15 @@ const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonC
                         Status: {deviceStatus ? 'On' : 'Off'}
                     </Typography>
                 </Box>
-                <Box className="button-container" sx={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                    <Box sx={{ display: 'flex', gap: '8px' }}>
-                        <Button variant="contained" color="primary" onClick={() => onButtonClick(deviceID)} sx={{ whiteSpace: 'pre-line' }}>
+                <Box className="button-container" sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'}}>
+                    <Box sx={{display: 'grid', gap: '8px'}}>
+                        <Button variant="contained" color="primary" onClick={() => onButtonClick(deviceID)}
+                                sx={{whiteSpace: 'pre-line', fontSize: '12px'}}>
                             View Functionalities
                         </Button>
                         <GetReadingsButton deviceID={deviceID} />
                     </Box>
-                    <Box sx={{ display: 'flex', gap: '8px' }}>
+                    <Box sx={{display: 'grid', gap: '8px'}}>
                         <EditButton />
                         <DeactivateDeviceButton deviceId={deviceID} deviceStatus={deviceStatus} fetchDevices={fetchDevices} />
                     </Box>
