@@ -3,7 +3,7 @@ import React, { useState } from 'react'; // Import React and useState hook from 
 import Slider from '@mui/material/Slider'; // Import Slider component from Material-UI library
 import Button from '@mui/material/Button'; // Import Button component from Material-UI library
 
-import '../css/StatusSlider.css'; // Import CSS file for styling
+import '../../css/StatusSlider.css'; // Import CSS file for styling
 
 // Function to validate a number and provide a default value if it's not a valid number
 const isValidNumber = (value) => {

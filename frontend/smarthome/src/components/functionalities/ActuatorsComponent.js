@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import StatusSlider from './StatusSlider';
-import '../css/SensorActuatorStyling.css';
+import '../../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from './AddFunctionalityButton';
 
 const formatActuatorType = (type) => {

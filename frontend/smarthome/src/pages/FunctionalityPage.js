@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import ActuatorsComponent from '../components/ActuatorsComponent';
-import SensorsComponent from '../components/SensorsComponent';
-import SensorReadings from '../components/SensorReadings';
+import ActuatorsComponent from '../components/functionalities/ActuatorsComponent';
+import SensorsComponent from '../components/functionalities/SensorsComponent';
+import SensorReadings from '../components/functionalities/SensorReadings';
 import GoBackButton from '../components/GoBackButton'; // Import GoBackButton component
-import '../css/FunctionalityPage.css';
 
 // Custom hook to fetch actuators and sensors data
 const useDeviceData = (deviceId) => {
@@ -84,16 +83,16 @@ const FunctionalityPage = () => {
     const onAddSensor = (newSensor) => {
         setSensors(prevSensors => [...prevSensors, newSensor]);
     };
+
     return (
-        <>
-            <Box className="functionality-page-container">
-                <Box className="functionality-content"> {/* Updated class name */}
-                    <Box className="functionality-box">
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+                <GoBackButton />
+            </Box>
+            <Box className="functionality-page-container" sx={{ width: '100%' }}>
+                <Box className="functionality-content" sx={{ width: '100%' }}>
+                    <Box className="functionality-box" sx={{ width: '100%' }}>
                         <Typography variant="h4" className="functionality-box-title" gutterBottom>Device Functionalities</Typography>
-                        {/* Add GoBackButton component */}
-                        <Box className="go-back-button" style={{ textAlign: 'right' }}>
-                            <GoBackButton />
-                        </Box>
                         <ActuatorsComponent
                             deviceID={deviceId}
                             actuators={actuators}
@@ -101,7 +100,7 @@ const FunctionalityPage = () => {
                             onUpdate={updateActuatorsState}
                             handleSliderUpdate={handleSliderUpdate}
                         />
-                        <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor}/>
+                        <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor} />
                         <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors} />
                     </Box>
                 </Box>
@@ -109,7 +108,7 @@ const FunctionalityPage = () => {
             <div className="set-error-messages">
                 {/* Place set/error messages here */}
             </div>
-        </>
+        </Box>
     );
 }
 

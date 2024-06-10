@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import '../css/SensorActuatorStyling.css';
+import '../../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from "./AddFunctionalityButton";
 import Button from "@mui/material/Button";
 

@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Accordion, AccordionDetails, AccordionSummary, Button, alpha} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import Box from "@mui/material/Box";
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { alpha, Box } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import RoomCardContainer from '../components/rooms/RoomCardContainer';
+import GoBackButton from '../components/GoBackButton'; // Import GoBackButton
 
 export default function Room() {
-
     const [rooms, setRooms] = useState([]);
     const navigate = useNavigate();
 
@@ -31,56 +29,19 @@ export default function Room() {
         <Box sx={(theme) => ({
             width: '100%',
             minHeight: '100vh',
-            backgroundImage:
-                theme.palette.mode === 'light'
-                    ? 'linear-gradient(180deg, #CEE5FD, #FFF)'
-                    : `linear-gradient(180deg, #02294F, ${alpha('#090E10', 0.0)})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
+            background: theme.palette.mode === 'light'
+                ? 'linear-gradient(180deg, #F4F6F8, #FFF)'
+                : `linear-gradient(180deg, #02294F, ${alpha('#090E10', 0.0)})`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
             margin: 0,
-            padding: 0,
+            padding: '20px',
         })}>
-            <div>
-                {rooms.map((room, index) => (
-                    <Accordion key={index + 1}>
-                        <AccordionSummary
-                            expandIcon={<ArrowDropDownIcon/>}
-                            aria-controls={`panel${index + 1}-content`}
-                            id={`panel${index + 1}-header`}
-                        >
-                            <Typography>{room.roomName}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-start',
-                                width: '100%'
-                            }}>
-
-                                <Typography>
-                                    <b>Floor:</b> {room.floor}<br/>
-                                    <b>Height:</b> {room.roomHeight} meters<br/>
-                                    <b>Length:</b> {room.roomLength} meters<br/>
-                                    <b>Width:</b> {room.roomWidth} meters<br/>
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleViewDevices(room.id)}
-                                    sx={{height: '25%'}}
-                                >
-                                    View Devices
-                                </Button>
-                            </Box>
-                        </AccordionDetails>
-                    </Accordion>
-                ))}
-            </div>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+                <GoBackButton />
+            </Box>
+            <RoomCardContainer rooms={rooms} onButtonClick={handleViewDevices} />
         </Box>
     );
 }

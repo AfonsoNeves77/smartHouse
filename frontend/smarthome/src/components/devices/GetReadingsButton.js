@@ -90,7 +90,7 @@ class GetReadingsButton extends React.Component {
 
         if (response.ok) {
             const data = await response.json();
-            const logs = data._embedded.logDTOList;
+            const logs = data._embedded ? data._embedded.logDTOList : [];
 
             for (let log of logs) {
                 const sensorType = this.state.sensorTypes.find(st => st.sensorTypeID === log.sensorTypeID);
@@ -106,6 +106,7 @@ class GetReadingsButton extends React.Component {
             console.error('Failed to fetch logs');
         }
     };
+
 
     handleClose = () => {
         this.setState({ open: false });
