@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { Link } from "react-router-dom";
 import {alpha} from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import SunCard from "./SunCard";
 import TempCard from "./TempCard";
 import {useEffect, useState} from "react";
@@ -60,6 +62,27 @@ export default function Welcome({userName}) {
                 >
                     Start tailoring your home to be as smart, efficient and secure as you need it to be.
                 </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <Link to="/rooms" style={{ textDecoration: 'none' }}>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#1976d2', // Color matching the top bar
+                                color: '#FFF',
+                                padding: '12px 24px', // Increased padding to make the button 50% bigger
+                                fontSize: '1.25rem', // Increased font size to match the bigger button
+                                fontWeight: 'bold', // Make the text bold
+                                borderRadius: '4px',
+                                textTransform: 'none', // Keeping text as-is
+                                '&:hover': {
+                                    backgroundColor: '#1565c0' // Darker shade on hover
+                                }
+                            }}
+                        >
+                            GO TO ROOMS
+                        </Button>
+                    </Link>
+                </Box>
             </Stack>
 
             <Box

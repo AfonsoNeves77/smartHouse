@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { alpha, Box } from "@mui/material";
 import { useNavigate, useParams } from 'react-router-dom';
 import DeviceCardContainer from '../components/devices/DeviceCardContainer';
@@ -9,7 +9,7 @@ export default function DevicesPage() {
     const navigate = useNavigate();
     const { roomId } = useParams();
 
-    const fetchDevices = () => {
+    const fetchDevices = useCallback(() => {
         fetch(`http://localhost:8080/devices?roomID=${roomId}`)
             .then(response => response.json())
             .then(data => {
@@ -20,11 +20,11 @@ export default function DevicesPage() {
                 }
             })
             .catch(err => console.log(err))
-    };
+    }, [roomId]);
 
     useEffect(() => {
         fetchDevices();
-    }, [roomId]);
+    }, [fetchDevices]);
 
     const handleViewDeviceDetails = (deviceId) => {
         navigate(`/rooms/${roomId}/devices/${deviceId}`);
