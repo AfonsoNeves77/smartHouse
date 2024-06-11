@@ -14,6 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import { styled } from '@mui/system';
+import withWidth from "@mui/material/Hidden/withWidth";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
@@ -136,6 +137,8 @@ class GetReadingsButton extends React.Component {
         const { logs, open, page, rowsPerPage } = this.state;
         const paginatedLogs = logs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
+        const isSmallScreen = this.props.width === 'xs' || this.props.width === 'sm';
+
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={this.fetchLogs}>
@@ -174,6 +177,7 @@ class GetReadingsButton extends React.Component {
                         </Typography>
                         <StyledTableContainer component={Paper} sx={{ flexGrow: 1 }}>
                             <Table stickyHeader>
+                                {!isSmallScreen && (
                                 <TableHead>
                                     <TableRow>
                                         <TableCell align="center" sx={{ fontWeight: 'bold', color: 'black', fontSize: '1rem' }}>Time</TableCell>
@@ -181,6 +185,7 @@ class GetReadingsButton extends React.Component {
                                         <TableCell align="center" sx={{ fontWeight: 'bold', color: 'black', fontSize: '1rem' }}>Sensor Type</TableCell>
                                     </TableRow>
                                 </TableHead>
+                                )}
                                 <TableBody>
                                     {paginatedLogs.length > 0 ? (
                                         paginatedLogs.map((log) => (
@@ -220,4 +225,4 @@ class GetReadingsButton extends React.Component {
     }
 }
 
-export default GetReadingsButton;
+export default withWidth()(GetReadingsButton);

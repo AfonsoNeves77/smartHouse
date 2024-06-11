@@ -53,6 +53,10 @@ const DateAndTimeCard = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+    if (isSmallScreen) {
+        return null;
+    }
+
     return (
         <Grid item xs={12} sm={6} md={4} lg={3}>
             <DateTimeContainer>

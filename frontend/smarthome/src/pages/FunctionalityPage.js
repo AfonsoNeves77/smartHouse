@@ -6,7 +6,7 @@ import ActuatorsComponent from '../components/functionalities/ActuatorsComponent
 import SensorsComponent from '../components/functionalities/SensorsComponent';
 import SensorReadings from '../components/functionalities/SensorReadings';
 import GoBackButton from '../components/GoBackButton';
-import {alpha} from "@mui/material"; // Import GoBackButton component
+import {alpha, useMediaQuery, useTheme} from "@mui/material"; // Import GoBackButton component
 
 const drawerWidth = 125;
 // Custom hook to fetch actuators and sensors data
@@ -86,10 +86,14 @@ const FunctionalityPage = () => {
         setSensors(prevSensors => [...prevSensors, newSensor]);
     };
 
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <Box sx={(theme) => ({
-            width: `calc(100% - ${drawerWidth}px)`,
-            marginLeft: `${drawerWidth}px`,
+            width: isSmallScreen ? '100%' : `calc(100% - ${drawerWidth}px)`,
+            marginLeft: isSmallScreen ? '0px' : `${drawerWidth}px`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
