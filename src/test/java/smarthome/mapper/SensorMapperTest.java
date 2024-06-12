@@ -258,7 +258,7 @@ class SensorMapperTest {
         String expected = "Invalid DTO, Value Object cannot be created";
 
         //Act
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> SensorMapper.createSensorTypeIDVO(null));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> SensorMapper.createSensorNameVO(null));
         String result = exception.getMessage();
 
         //Assert
@@ -493,5 +493,57 @@ class SensorMapperTest {
         // Assert
         assertEquals(value1,result.getID());
     }
+
+    /**
+     * Verifies that the createSensorTypeIDVO method throws an IllegalArgumentException
+     * when the provided sensor ID string is null.
+     */
+    @Test
+    void whenSensorIDIsNull_createSensorTypeIDVOThrowsIllegalArgumentException() {
+        // Arrange
+        String sensorID = null;
+        String expectedMessage = "Invalid sensor ID";
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                SensorMapper.createSensorTypeIDVO(sensorID));
+        String result = exception.getMessage();
+        assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Verifies that the createSensorTypeIDVO method throws an IllegalArgumentException
+     * when the provided sensor ID string is empty.
+     */
+    @Test
+    void whenSensorIDIsEmpty_createSensorTypeIDVOThrowsIllegalArgumentException() {
+        // Arrange
+        String sensorID = " ";
+        String expectedMessage = "Invalid sensor ID";
+
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                SensorMapper.createSensorTypeIDVO(sensorID));
+        String result = exception.getMessage();
+        assertEquals(expectedMessage, result);
+    }
+
+    /**
+     * Verifies that the createSensorTypeIDVO method correctly creates a SensorTypeIDVO
+     * when provided with a valid sensor ID string.
+     */
+    @Test
+    void whenSensorIDIsValid_createSensorTypeIDVOCreatesSensorTypeIDVO() {
+        // Arrange
+        String sensorID = "TemperatureSensor";
+        SensorTypeIDVO expected = new SensorTypeIDVO(sensorID);
+
+        // Act
+        SensorTypeIDVO result = SensorMapper.createSensorTypeIDVO(sensorID);
+
+        // Assert
+        assertEquals(expected.getID(), result.getID());
+    }
+
 
 }

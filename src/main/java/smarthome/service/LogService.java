@@ -19,5 +19,5 @@ public interface LogService {
     List<Log> findReadingsFromDevice(DeviceIDVO deviceID, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp);
     String getMaxInstantaneousTempDifference(DeviceIDVO outdoorDevice, DeviceIDVO indoorDevice, TimeStampVO initialTimeStamp, TimeStampVO finalTimeStamp, DeltaVO deltaMin);
     String getPeakPowerConsumption(TimeStampVO start, TimeStampVO end, DeltaVO delta);
-    String getSunReading(String date, String gpsLocation, SensorIDVO sensorIDVO);
+    String getSunReading(String date, String gpsLocation, SensorTypeIDVO sensorIDVO);
 }

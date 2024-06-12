@@ -115,6 +115,23 @@ public class SensorMapper {
 
 
     /**
+     * This method is responsible for creating a SensorTypeIDVO from a sensor type ID string.
+     * It first checks if the provided sensor type ID string is not null nor empty, throwing an IllegalArgumentException if it is.
+     * Then, it creates a SensorTypeIDVO with the given string.
+     *
+     * @param sensorID the string representing the ID of the sensor.
+     * @return a SensorTypeIDVO with the same ID as the provided sensor ID string.
+     * @throws IllegalArgumentException if the provided sensor ID string is null or empty.
+     */
+    public static SensorTypeIDVO createSensorTypeIDVO(String sensorID) {
+        if (sensorID == null || sensorID.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid sensor ID");
+        }
+        return new SensorTypeIDVO(sensorID);
+    }
+
+
+    /**
      * Checks if a device ID is a valid UUID.
      * @param deviceID the device ID to check.
      * @return true if the device ID is a valid UUID, false otherwise.

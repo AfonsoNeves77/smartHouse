@@ -5,6 +5,7 @@ import smarthome.domain.actuator.Actuator;
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.sensor.SensorFactory;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.assembler.ActuatorAssembler;
 import smarthome.mapper.assembler.SensorAssembler;
@@ -169,6 +170,28 @@ public class SensorRepositoryJPA implements SensorRepository {
         try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
             TypedQuery<SensorDataModel> query = em.createQuery("SELECT a FROM SensorDataModel a WHERE a.deviceID = :deviceID", SensorDataModel.class);
             query.setParameter("deviceID", deviceID.getID());
+            List<SensorDataModel> list = query.getResultList();
+            return SensorAssembler.toDomain(sensorFactory, list);
+        } catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Finds all Sensor objects in the database that match the provided sensor type ID.
+     * This method creates a query to select all SensorDataModel entries that have the specified sensor type ID.
+     * The results are then converted to domain Sensor objects using the SensorAssembler.
+     * If an exception occurs, an empty list is returned.
+     *
+     * @param sensorTypeID The SensorTypeIDVO representing the type of sensor to search for.
+     * @return An Iterable of Sensor objects that match the specified sensor type ID.
+     *         If no matching sensors are found or if an exception occurs, an empty list is returned.
+     */
+    @Override
+    public Iterable<Sensor> findBySensorTypeId(SensorTypeIDVO sensorTypeID) {
+        try (EntityManager em = this.entityManagerFactory.createEntityManager()) {
+            TypedQuery<SensorDataModel> query = em.createQuery("SELECT a FROM SensorDataModel a WHERE a.sensorTypeID = :sensorTypeID", SensorDataModel.class);
+            query.setParameter("sensorTypeID", sensorTypeID.getID());
             List<SensorDataModel> list = query.getResultList();
             return SensorAssembler.toDomain(sensorFactory, list);
         } catch (RuntimeException e) {

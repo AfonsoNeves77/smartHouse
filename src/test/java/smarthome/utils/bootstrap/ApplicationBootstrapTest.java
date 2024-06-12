@@ -57,7 +57,7 @@ class ApplicationBootstrapTest {
         verify(houseRepository, times(1)).save(any(House.class));
         verify(roomRepository, times(3)).save(any(Room.class));
         verify(deviceRepository, times(5)).save(any(Device.class));
-        verify(sensorRepository, times(4)).save(any(Sensor.class));
+        verify(sensorRepository, times(6)).save(any(Sensor.class));
         verify(actuatorRepository, times(1)).save(any(Actuator.class));
         verify(logRepository, times(16)).save(any(Log.class));
     }

@@ -9,6 +9,8 @@ import smarthome.domain.log.Log;
 import smarthome.domain.log.LogFactory;
 import smarthome.domain.log.LogFactoryImpl;
 import smarthome.domain.room.Room;
+import smarthome.domain.sensor.Sensor;
+import smarthome.domain.sensor.SunSensor;
 import smarthome.domain.sensor.SunsetSensor;
 import smarthome.domain.sensor.SwitchSensor;
 import smarthome.domain.sensor.externalservices.SunTimeCalculator;
@@ -1649,7 +1651,7 @@ class LogServiceImplTest {
     }
 
     /**
-     * Verifies that when any of the parameters (date, gpsLocation, or sensorIDVO) are null,
+     * Verifies that when any of the parameters (date, gpsLocation, or sensorTypeIDVO) are null,
      * the getSunReading method throws an IllegalArgumentException with the message "Invalid parameters".
      */
     @Test
@@ -1664,19 +1666,18 @@ class LogServiceImplTest {
 
         String date = "Will not reach";
         String gpsLocation = "Will not reach";
-        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
-
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
         String expected = "Invalid parameters";
 
         // Act and Assert
         // Testing for null date
         Exception exception1 = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(null, gpsLocation, sensorIDVO));
+                logService.getSunReading(null, gpsLocation, sensorTypeIDVO));
         String result1 = exception1.getMessage();
 
         // Testing for null gpsLocation
         Exception exception2 = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, null, sensorIDVO));
+                logService.getSunReading(date, null, sensorTypeIDVO));
         String result2 = exception2.getMessage();
 
         // Testing for null sensorIDVO
@@ -1692,24 +1693,24 @@ class LogServiceImplTest {
 
 
     /**
-     * Verifies that when the provided SensorIDVO is not found, the getSunReading method
+     * Verifies that when the provided SensorTypeIDVO is not one of the two possible, the getSunReading method
      * throws an IllegalArgumentException with the message "Could not find Sensor".
      */
     @Test
-    void whenProvidedSensorIDVOIsNotFound_getSunReadingThrowsIllegalArgumentException() {
+    void whenProvidedSensorTypeIDVOIsNotOneOfTheTwoPermitted_getSunReadingThrowsIllegalArgumentException() {
         // Arrange
         // Mocking necessary objects
         String date = "Will not reach";
         String gpsLocation = "Will not reach";
-        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(false);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
+        when(sensorTypeIDVO.getID()).thenReturn("SwitchSensor");
 
         // Expected result
         String expected = "Could not find Sensor";
 
         // Act
         Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, gpsLocation, sensorIDVO));
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
         String result = thrownException.getMessage();
 
         // Assert
@@ -1718,27 +1719,26 @@ class LogServiceImplTest {
 
     /**
      * Verifies that the getSunReading method throws an IllegalArgumentException
-     * when the SensorIDVO is related to a non-SunSensor type, causing a ClassCastException.
+     * when the SensorTypeIDVO is related to no sensor, causing a ClassCastException.
      */
     @Test
-    void whenSensorIDVOIsRelatedToANonSunSensor_getSunReadingThrowsIllegalArgumentExceptionDueToCastException() {
+    void whenNoSensorExistsThatIsOfTheSpecifiedSensorTypeIDVO_getSunReadingThrowsIllegalArgumentExceptionDueToCastException() {
         // Arrange
         // Mocking necessary objects
-        SwitchSensor sensor = mock(SwitchSensor.class);
-        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
         String date = "Irrelevant";
         String gpsLocation = "Irrelevant";
 
         // Setting up mock behavior
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
-        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensorTypeIDVO.getID()).thenReturn("SunriseSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.emptyList());
 
         // Expected result
-        String expected = "Unable to get sensor reading";
+        String expected = "No Sun Sensors (either Sunrise or Sunset) were found in the system";
 
         // Act
         Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, gpsLocation, sensorIDVO));
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
         String result = thrownException.getMessage();
 
         // Assert
@@ -1755,13 +1755,13 @@ class LogServiceImplTest {
         // Arrange
         // Mocking necessary objects
         SunsetSensor sensor = mock(SunsetSensor.class);
-        SensorIDVO sensorIDVO = mock(SensorIDVO.class);
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
         String date = "Irrelevant";
         String gpsLocation = "Irrelevant";
 
         // Setting up mock behavior
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
-        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensorTypeIDVO.getID()).thenReturn("SunriseSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.singletonList(sensor));
         when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(null);
 
         // Expected result
@@ -1769,7 +1769,7 @@ class LogServiceImplTest {
 
         // Act
         Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, gpsLocation, sensorIDVO));
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
         String result = thrownException.getMessage();
 
         // Assert
@@ -1795,8 +1795,8 @@ class LogServiceImplTest {
         String gpsLocation = "Irrelevant";
 
         // Setting up mock behavior
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
-        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensorTypeIDVO.getID()).thenReturn("SunsetSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.singletonList(sensor));
         when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
         when(sensor.getId()).thenReturn(sensorIDVO);
         when(sensor.getDeviceID()).thenReturn(deviceIDVO);
@@ -1809,7 +1809,7 @@ class LogServiceImplTest {
 
         // Act
         Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, gpsLocation, sensorIDVO));
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
         String result = thrownException.getMessage();
 
         // Assert
@@ -1835,8 +1835,8 @@ class LogServiceImplTest {
         String gpsLocation = "Irrelevant";
 
         // Setting up mock behavior
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
-        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensorTypeIDVO.getID()).thenReturn("SunsetSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.singletonList(sensor));
         when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
         when(sensor.getId()).thenReturn(sensorIDVO);
         when(sensor.getDeviceID()).thenReturn(deviceIDVO);
@@ -1848,13 +1848,41 @@ class LogServiceImplTest {
 
         // Act
         Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
-                logService.getSunReading(date, gpsLocation, sensorIDVO));
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
         String result = thrownException.getMessage();
 
         // Assert
         assertEquals(expected, result);
     }
 
+    /**
+     * Verifies that the getSunReading method throws an IllegalArgumentException
+     * when a ClassCastException is thrown while casting the sensor.
+     */
+    @Test
+    void whenSensorCannotBeCastToSunSensor_getSunReadingThrowsIllegalArgumentExceptionDueToClassCastException() {
+        // Arrange
+        // Mocking necessary objects
+        Sensor sensor = mock(Sensor.class); // This is not a SunSensor, so it will cause a ClassCastException
+        SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
+        String date = "Irrelevant";
+        String gpsLocation = "Irrelevant";
+
+        // Setting up mock behavior
+        when(sensorTypeIDVO.getID()).thenReturn("SunriseSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.singletonList(sensor));
+
+        // Expected result
+        String expected = "Unable to get sensor reading";
+
+        // Act
+        Exception thrownException = assertThrows(IllegalArgumentException.class, () ->
+                logService.getSunReading(date, gpsLocation, sensorTypeIDVO));
+        String result = thrownException.getMessage();
+
+        // Assert
+        assertEquals(expected, result);
+    }
 
     /**
      * Verifies that the getSunReading method returns the reading value as a string
@@ -1864,7 +1892,7 @@ class LogServiceImplTest {
     void whenSuccessfullyObtainingReadingAndSavingLog_getSunReadingReturnsReadingAsString() {
         // Arrange
         // Mocking necessary objects
-        SunsetSensor sensor = mock(SunsetSensor.class);
+        SunSensor sensor = mock(SunSensor.class);
         SensorIDVO sensorIDVO = mock(SensorIDVO.class);
         DeviceIDVO deviceIDVO = mock(DeviceIDVO.class);
         SensorTypeIDVO sensorTypeIDVO = mock(SensorTypeIDVO.class);
@@ -1875,8 +1903,8 @@ class LogServiceImplTest {
         String gpsLocation = "Irrelevant";
 
         // Setting up mock behavior
-        when(sensorRepository.isPresent(sensorIDVO)).thenReturn(true);
-        when(sensorRepository.findById(sensorIDVO)).thenReturn(sensor);
+        when(sensorTypeIDVO.getID()).thenReturn("SunsetSensor");
+        when(sensorRepository.findBySensorTypeId(sensorTypeIDVO)).thenReturn(Collections.singletonList(sensor));
         when(sensor.getReading(date, gpsLocation, this.sunTimeCalculator, this.sensorValueFactory)).thenReturn(reading);
         when(sensor.getId()).thenReturn(sensorIDVO);
         when(sensor.getDeviceID()).thenReturn(deviceIDVO);
@@ -1890,7 +1918,7 @@ class LogServiceImplTest {
         String expected = "It works";
 
         // Act
-        String result = logService.getSunReading(date, gpsLocation, sensorIDVO);
+        String result = logService.getSunReading(date, gpsLocation, sensorTypeIDVO);
 
         // Assert
         assertEquals(expected, result);
