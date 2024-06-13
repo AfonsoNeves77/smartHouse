@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography, Box, Button } from "@mui/material";
 import roomImage1 from '../../images/roomImages/room1.png';
 import roomImage2 from '../../images/roomImages/room2.png';
@@ -21,8 +21,14 @@ const getRandomImage = () => {
 };
 
 const RoomCard = ({ roomName, roomHeight, roomLength, roomWidth, onButtonClick }) => {
-    // Get a random image for this room
-    const placeholderImage = getRandomImage();
+    // State to store the random image for the room
+    const [placeholderImage, setPlaceholderImage] = useState('');
+
+    // Set the image when the component mounts
+    useEffect(() => {
+        setPlaceholderImage(getRandomImage());
+    }, []);
+
     const [isHovered, setIsHovered] = useState(false);
 
     return (
