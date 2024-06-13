@@ -67,7 +67,7 @@ const ActuatorsComponent = ({ deviceID, actuators = [], onAddActuator, onUpdate,
                             <Box className="column type">{formatActuatorType(actuator.actuatorTypeID)}</Box>
                             <Box className="column status">{actuator.status}</Box>
                             <Box className="column actions">
-                                {actuator.actuatorTypeID === "RollerBlindActuator" ? (
+                                {(actuator.actuatorTypeID === "RollerBlindActuator" && deviceStatus !== "false")? (
                                     <StatusSlider
                                         initialStatus={actuator.status}
                                         actuatorId={actuator.actuatorId}
@@ -79,7 +79,7 @@ const ActuatorsComponent = ({ deviceID, actuators = [], onAddActuator, onUpdate,
                                         style={{ backgroundColor: 'transparent', color: 'black' }} // Set background to transparent and text to black
                                         disabled
                                     >
-                                        Future Release
+                                        {deviceStatus === "false" ? 'Inactive Device' : 'Future Release'}
                                     </Button>
                                 )}
                             </Box>

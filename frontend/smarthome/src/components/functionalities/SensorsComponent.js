@@ -127,7 +127,7 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
                                     style={{ backgroundColor: 'transparent', color: 'black' }}
                                     disabled
                                 >
-                                    Future Release
+                                    {deviceStatus === "false" ? 'Inactive Device' : 'Future Release'}
                                 </Button>
                             </Box>
                         </Box>
