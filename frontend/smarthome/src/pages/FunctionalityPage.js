@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ActuatorsComponent from '../components/functionalities/ActuatorsComponent';
 import SensorsComponent from '../components/functionalities/SensorsComponent';
 import GoBackButton from '../components/GoBackButton';
-import {alpha, useMediaQuery, useTheme} from "@mui/material"; // Import GoBackButton component
+import { alpha, useMediaQuery, useTheme } from "@mui/material";
 
 const drawerWidth = 125;
+
 // Custom hook to fetch actuators and sensors data
 const useDeviceData = (deviceId) => {
     const [actuators, setActuators] = useState([]);
@@ -42,37 +43,16 @@ const useDeviceData = (deviceId) => {
 
     }, [deviceId]);
 
-    return {actuators, sensors, setActuators, setSensors};
+    return { actuators, sensors, setActuators, setSensors };
 };
 
 const FunctionalityPage = () => {
-    const {deviceId} = useParams();
-    const {actuators, setActuators, sensors, setSensors, fetchDeviceData} = useDeviceData(deviceId);
+    const { deviceId } = useParams();
+    const { actuators, setActuators, sensors, setSensors } = useDeviceData(deviceId);
 
     // Function to update actuators state
     const updateActuatorsState = (updatedActuators) => {
         setActuators(updatedActuators);
-    };
-
-    // Function to handle slider update
-    const handleSliderUpdate = async (actuatorId, newStatus) => {
-        try {
-            // Make an API call to update the status
-            const response = await fetch(`http://localhost:8080/actuators/${actuatorId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({status: newStatus}),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to update status');
-            }
-            // Refetch the device data to update the UI
-            fetchDeviceData();
-        } catch (error) {
-            console.error('Error updating status:', error);
-        }
     };
 
     // Function to update actuators
@@ -84,7 +64,6 @@ const FunctionalityPage = () => {
     const onAddSensor = (newSensor) => {
         setSensors(prevSensors => [...prevSensors, newSensor]);
     };
-
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -115,10 +94,17 @@ const FunctionalityPage = () => {
                             actuators={actuators}
                             onAddActuator={onAddActuator}
                             onUpdate={updateActuatorsState}
-                            handleSliderUpdate={handleSliderUpdate}
+                            handleSliderUpdate={(actuatorId, newStatus) => {
+                                const updatedActuators = actuators.map(actuator => {
+                                    if (actuator.actuatorId === actuatorId) {
+                                        return { ...actuator, status: newStatus };
+                                    }
+                                    return actuator;
+                                });
+                                updateActuatorsState(updatedActuators);
+                            }}
                         />
                         <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor}/>
-
                     </Box>
                 </Box>
             </Box>

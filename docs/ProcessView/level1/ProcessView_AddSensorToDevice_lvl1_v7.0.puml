@@ -6,12 +6,12 @@ autonumber
 actor "Power User/\nAdministrator" as A
 participant "**<<system (C4)>>**\nSmartHome" as SH
 
-A -> SH : I want to add a sensor to a device
+A -> SH : I want to add a sensor to this device
 activate A
 activate SH
-SH --> A : Request sensor data and device ID
+SH --> A : Request sensor data
 deactivate SH
-A -> SH : Provides sensor data and device ID
+A -> SH : Provides sensor data
 activate SH
 SH --> A : The sensor was added
 deactivate SH

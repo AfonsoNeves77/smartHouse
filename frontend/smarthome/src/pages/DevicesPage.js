@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DeviceCardContainer from '../components/devices/DeviceCardContainer';
 import GoBackButton from '../components/GoBackButton';
 import DeviceHeader from "../components/devices/DeviceHeader";
-
+import AddDeviceButton from '../components/devices/AddDeviceButton'; // Adjust the import path as necessary
 
 export default function DevicesPage() {
     const [devices, setDevices] = useState([]);
@@ -58,6 +58,7 @@ export default function DevicesPage() {
         })}>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                 <GoBackButton />
+                <AddDeviceButton roomID={roomId} onDeviceAdded={fetchDevices} />
             </Box>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: '10%' }}>
                 <DeviceHeader roomName={roomName}/>

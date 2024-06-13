@@ -62,7 +62,7 @@ const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonC
                     </Typography>
                     <Typography variant="body1" color="text.secondary" style={{ marginBottom: '8px' }}>
                         Model: {deviceModel}<br />
-                        Status: {deviceStatus ? 'On' : 'Off'}
+                        Status: {deviceStatus === "true" ? 'On' : 'Off'}
                     </Typography>
                 </Box>
                 <Box className="button-container" sx={{

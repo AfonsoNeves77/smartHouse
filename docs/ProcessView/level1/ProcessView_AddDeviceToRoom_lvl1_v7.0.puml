@@ -6,12 +6,12 @@ autonumber
 actor "Power User/\nAdministrator" as PU
 participant "**<<system (C4)>>**\nSmartHome" as SH
 
-PU -> SH : I want to add a new device to a room
+PU -> SH : I want to add a new device to this room
 activate PU
 activate SH
-SH --> PU : Request device data and room ID
+SH --> PU : Request device data
 deactivate SH
-PU -> SH : Provide device data and room ID
+PU -> SH : Provide device data
 activate SH
 SH --> PU : The device was added
 deactivate SH
