@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Box, Button, CardMedia } from "@mui/material";
 import EditButton from '../EditButton';
 import GetReadingsButton from './GetReadingsButton';
@@ -23,8 +23,14 @@ const getRandomImage = () => {
 };
 
 const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonClick, fetchDevices }) => {
-    // Get a random image for this device
-    const deviceImage = getRandomImage();
+    // State to store the random image for the device
+    const [deviceImage, setDeviceImage] = useState('');
+
+    // Set the image when the component mounts
+    useEffect(() => {
+        setDeviceImage(getRandomImage());
+    }, []);
+
     const [isHovered, setIsHovered] = useState(false);
 
     return (
