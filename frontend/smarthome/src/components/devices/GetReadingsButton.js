@@ -138,8 +138,8 @@ class GetReadingsButton extends React.Component {
 
         return (
             <div>
-                <Button variant="contained" color="primary" onClick={this.fetchLogs}>
-                    Get Readings
+                <Button sx={{ width: '100%' }} variant="contained" color="primary" onClick={this.fetchLogs}>
+                    Activity Log
                 </Button>
                 <Modal
                     open={open}
@@ -154,7 +154,7 @@ class GetReadingsButton extends React.Component {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: '90%',
+                        width: '100%',
                         maxWidth: '600px',
                         maxHeight: '90%',
                         bgcolor: 'background.paper',

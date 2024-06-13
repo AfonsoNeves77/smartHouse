@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import StatusSlider from './StatusSlider';
-import '../../css/SensorActuatorStyling.css';
+import StatusSlider from './StatusSlider'; // Make sure to adjust this import if necessary
+import '../../css/SensorActuatorStyling.css'; // Adjust the CSS import path as needed
 import AddFunctionalityButton from './AddFunctionalityButton';
-import {useTheme} from "@mui/material";
+import { useTheme } from "@mui/material";
 import clsx from "clsx";
 
 const formatActuatorType = (type) => {
@@ -15,13 +15,36 @@ const formatActuatorType = (type) => {
 
 const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) => {
     const theme = useTheme();
+    const [deviceStatus, setDeviceStatus] = useState('');
+
+    // Fetch device status effect
+    useEffect(() => {
+        const fetchDeviceStatus = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/devices/${deviceID}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch device status');
+                }
+                const data = await response.json();
+                setDeviceStatus(data.deviceStatus); // Assuming the API returns the status field
+            } catch (error) {
+                console.error('Error fetching device status:', error);
+                setDeviceStatus('false'); // Default to inactive if status fetch fails
+            }
+        };
+
+        fetchDeviceStatus();
+    }, [deviceID]);
+
+    // Handle slider update for actuators
     const handleSliderUpdate = async (actuatorId, newStatus) => {
         try {
             const response = await fetch(`http://localhost:8080/actuators/${actuatorId}`, {
-                method: 'GET',
+                method: 'PUT', // Adjust HTTP method based on your API requirements
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ status: newStatus }),
             });
             if (!response.ok) {
                 throw new Error('Failed to update status');
@@ -43,7 +66,7 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
             <Box className={clsx("header-row", {"dark-theme": theme.palette.mode === 'dark'})}>
                 <Typography variant="h5" className="title"><b>Actuators</b></Typography>
                 <Box className="button-container">
-                    <AddFunctionalityButton deviceID={deviceID} type="actuator" onFunctionalityAdded={onAddActuator} />
+                    <AddFunctionalityButton deviceID={deviceID} type="actuator" onFunctionalityAdded={onAddActuator} deviceStatus={deviceStatus} />
                 </Box>
             </Box>
             {actuators.length === 0 ? (

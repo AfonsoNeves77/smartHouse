@@ -32,17 +32,21 @@ const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonC
                         Status: {deviceStatus ? 'On' : 'Off'}
                     </Typography>
                 </Box>
-                <Box className="button-container" sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px'}}>
-                    <Box sx={{display: 'grid', gap: '8px'}}>
+                <Box className="button-container" sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr', // Equal-width columns
+                    gap: '16px',
+                }}>
+                    <Box sx={{ display: 'grid', gap: '8px' }}>
                         <Button variant="contained" color="primary" onClick={() => onButtonClick(deviceID)}
-                                sx={{whiteSpace: 'pre-line', fontSize: '12px'}}>
+                                sx={{ width: '100%', whiteSpace: 'pre-line', fontSize: '12px' }}>
                             View Functionalities
                         </Button>
-                        <GetReadingsButton deviceID={deviceID} />
+                        <GetReadingsButton deviceID={deviceID} sx={{ width: '100%', height: '90px', fontSize: '10px' }} />
                     </Box>
-                    <Box sx={{display: 'grid', gap: '8px'}}>
-                        <EditButton />
-                        <DeactivateDeviceButton deviceId={deviceID} deviceStatus={deviceStatus} fetchDevices={fetchDevices} />
+                    <Box sx={{ display: 'grid', gap: '8px' }}>
+                        <EditButton sx={{ width: '100%' }} />
+                        <DeactivateDeviceButton deviceId={deviceID} deviceStatus={deviceStatus} fetchDevices={fetchDevices} sx={{ width: '100%' }} /> {/* Adjust width if necessary */}
                     </Box>
                 </Box>
             </CardContent>

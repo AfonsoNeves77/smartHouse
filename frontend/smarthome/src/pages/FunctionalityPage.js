@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ActuatorsComponent from '../components/functionalities/ActuatorsComponent';
 import SensorsComponent from '../components/functionalities/SensorsComponent';
-import SensorReadings from '../components/functionalities/SensorReadings';
 import GoBackButton from '../components/GoBackButton';
 import {alpha} from "@mui/material"; // Import GoBackButton component
 
@@ -115,13 +114,10 @@ const FunctionalityPage = () => {
                             handleSliderUpdate={handleSliderUpdate}
                         />
                         <SensorsComponent deviceID={deviceId} sensors={sensors} onAddSensor={onAddSensor}/>
-                        <SensorReadings deviceId={deviceId} sensors={sensors} setSensors={setSensors}/>
+
                     </Box>
                 </Box>
             </Box>
-            <div className="set-error-messages">
-                {/* Place set/error messages here */}
-            </div>
         </Box>
     );
 }
