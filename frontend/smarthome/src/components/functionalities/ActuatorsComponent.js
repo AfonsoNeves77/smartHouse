@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import StatusSlider from './StatusSlider'; // Make sure to adjust this import if necessary
-import '../../css/SensorActuatorStyling.css'; // Adjust the CSS import path as needed
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button'; // Ensure Button is imported correctly from MUI
+import StatusSlider from './StatusSlider';
+import '../../css/SensorActuatorStyling.css';
 import AddFunctionalityButton from './AddFunctionalityButton';
-import { useTheme } from "@mui/material";
-import clsx from "clsx";
+import { useTheme } from '@mui/material';
+import clsx from 'clsx';
 
 const formatActuatorType = (type) => {
-    // Add a space before each capital letter, except for the first character
     return type.replace(/([A-Z])/g, ' $1').trim();
 };
 
-const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) => {
+const ActuatorsComponent = ({ deviceID, actuators = [], onAddActuator, onUpdate, handleSliderUpdate }) => {
     const theme = useTheme();
-    const [deviceStatus, setDeviceStatus] = useState('');
+    const [deviceStatus, setDeviceStatus] = React.useState('');
 
-    // Fetch device status effect
-    useEffect(() => {
+    React.useEffect(() => {
         const fetchDeviceStatus = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/devices/${deviceID}`);
@@ -36,34 +34,15 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
         fetchDeviceStatus();
     }, [deviceID]);
 
-    // Handle slider update for actuators
-    const handleSliderUpdate = async (actuatorId, newStatus) => {
-        try {
-            const response = await fetch(`http://localhost:8080/actuators/${actuatorId}`, {
-                method: 'PUT', // Adjust HTTP method based on your API requirements
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: newStatus }),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to update status');
-            }
-            const updatedActuators = actuators.map(actuator => {
-                if (actuator.actuatorId === actuatorId) {
-                    return { ...actuator, status: newStatus };
-                }
-                return actuator;
-            });
-            onUpdate(updatedActuators);
-        } catch (error) {
-            console.error('Error updating status:', error);
+    const handleSliderUpdateInternal = (actuatorId, newStatus) => {
+        if (handleSliderUpdate) {
+            handleSliderUpdate(actuatorId, newStatus);
         }
     };
 
     return (
         <Box className="container">
-            <Box className={clsx("header-row", {"dark-theme": theme.palette.mode === 'dark'})}>
+            <Box className={clsx("header-row", { "dark-theme": theme.palette.mode === 'dark' })}>
                 <Typography variant="h5" className="title"><b>Actuators</b></Typography>
                 <Box className="button-container">
                     <AddFunctionalityButton deviceID={deviceID} type="actuator" onFunctionalityAdded={onAddActuator} deviceStatus={deviceStatus} />
@@ -76,14 +55,14 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
                 </Typography>
             ) : (
                 <Box className="list">
-                    <Box className={clsx("header", {"dark-theme": theme.palette.mode === 'dark'})}>
+                    <Box className={clsx("header", { "dark-theme": theme.palette.mode === 'dark' })}>
                         <Box className="column name">Name</Box>
                         <Box className="column type">Type</Box>
                         <Box className="column status">Status</Box>
                         <Box className="column actions">Actions</Box>
                     </Box>
                     {actuators.map((actuator, index) => (
-                        <Box key={index} className={clsx("row", {"dark-theme": theme.palette.mode === 'dark'})}>
+                        <Box key={index} className={clsx("row", { "dark-theme": theme.palette.mode === 'dark' })}>
                             <Box className="column name">{actuator.actuatorName}</Box>
                             <Box className="column type">{formatActuatorType(actuator.actuatorTypeID)}</Box>
                             <Box className="column status">{actuator.status}</Box>
@@ -92,7 +71,7 @@ const ActuatorsComponent = ({ deviceID, actuators, onAddActuator, onUpdate }) =>
                                     <StatusSlider
                                         initialStatus={actuator.status}
                                         actuatorId={actuator.actuatorId}
-                                        onUpdate={(newStatus) => handleSliderUpdate(actuator.actuatorId, newStatus)}
+                                        onUpdate={(newStatus) => handleSliderUpdateInternal(actuator.actuatorId, newStatus)}
                                     />
                                 ) : (
                                     <Button
