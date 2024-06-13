@@ -1577,7 +1577,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.isPresent(actuatorIDVO)).thenReturn(false);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1607,7 +1607,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1635,7 +1635,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command" + null)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command" + null)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1667,7 +1667,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1698,7 +1698,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1730,7 +1730,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1762,7 +1762,7 @@ class ActuatorCTRLWebTest {
         when(actuatorRepository.findById(actuatorIDVO)).thenReturn(actuator);
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -1801,7 +1801,7 @@ class ActuatorCTRLWebTest {
                 .withRel("ExecuteCommand");
 
         // Perform request and validate response
-        mockMvc.perform(MockMvcRequestBuilders.post("/actuators/" + actuatorId + "/act?command=" + command)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/actuators/" + actuatorId + "/act?command=" + command)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

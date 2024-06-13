@@ -2,10 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { alpha, Box } from "@mui/material";
 import { useNavigate, useParams } from 'react-router-dom';
 import DeviceCardContainer from '../components/devices/DeviceCardContainer';
-import GoBackButton from '../components/GoBackButton'; // Import GoBackButton
+import GoBackButton from '../components/GoBackButton';
+import DeviceHeader from "../components/devices/DeviceHeader";
+
 
 export default function DevicesPage() {
     const [devices, setDevices] = useState([]);
+    const [roomName, setRoomName] = useState('');
     const navigate = useNavigate();
     const { roomId } = useParams();
 
@@ -23,8 +26,16 @@ export default function DevicesPage() {
     }, [roomId]);
 
     useEffect(() => {
+        // Fetch room details
+        fetch(`http://localhost:8080/rooms/${roomId}`)
+            .then(response => response.json())
+            .then(data => {
+                setRoomName(data.roomName);
+            })
+            .catch(err => console.log(err));
+
         fetchDevices();
-    }, [fetchDevices]);
+    }, [fetchDevices, roomId]);
 
     const handleViewDeviceDetails = (deviceId) => {
         navigate(`/rooms/${roomId}/devices/${deviceId}`);
@@ -47,6 +58,9 @@ export default function DevicesPage() {
         })}>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                 <GoBackButton />
+            </Box>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: '10%' }}>
+                <DeviceHeader roomName={roomName}/>
             </Box>
             <DeviceCardContainer devices={devices} onViewDetails={handleViewDeviceDetails} fetchDevices={fetchDevices} />
         </Box>

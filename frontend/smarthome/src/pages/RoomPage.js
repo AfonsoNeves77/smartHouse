@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { alpha, Box } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import RoomCardContainer from '../components/rooms/RoomCardContainer';
-import GoBackButton from '../components/GoBackButton'; // Import GoBackButton
+import GoBackButton from '../components/GoBackButton';
+import RoomHeader from "../components/rooms/RoomHeader";
+
 
 export default function Room() {
     const [rooms, setRooms] = useState([]);
@@ -42,6 +44,9 @@ export default function Room() {
         })}>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                 <GoBackButton />
+            </Box>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: '10%' }}>
+                <RoomHeader />
             </Box>
             <RoomCardContainer rooms={rooms} onButtonClick={handleViewDevices} />
         </Box>
