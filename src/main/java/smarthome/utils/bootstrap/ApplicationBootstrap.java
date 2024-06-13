@@ -9,6 +9,8 @@ import smarthome.domain.house.House;
 import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.EnergyConsumptionSensor;
+import smarthome.domain.sensor.SunriseSensor;
+import smarthome.domain.sensor.SunsetSensor;
 import smarthome.domain.sensor.TemperatureSensor;
 import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
@@ -162,10 +164,22 @@ public class ApplicationBootstrap implements CommandLineRunner {
                 new DeviceIDVO(UUID.fromString(powerSourceID)),
                 new SensorTypeIDVO("EnergyConsumptionSensor"));
 
+        SunriseSensor sunriseSensor = new SunriseSensor(
+                new SensorNameVO("Outdoor SunRise Sensor"),
+                new DeviceIDVO(UUID.fromString(outdoorDevId)),
+                new SensorTypeIDVO("SunriseSensor"));
+
+        SunsetSensor sunsetSensor = new SunsetSensor(
+                new SensorNameVO("Outdoor SunSet Sensor"),
+                new DeviceIDVO(UUID.fromString(outdoorDevId)),
+                new SensorTypeIDVO("SunsetSensor"));
+
         sensorRepository.save(outTempSensor);
         sensorRepository.save(inTempSensor);
         sensorRepository.save(gridPowerMeterEnergyConsumptionSensor);
         sensorRepository.save(powerSourceEnergyConsumptionSensor);
+        sensorRepository.save(sunriseSensor);
+        sensorRepository.save(sunsetSensor);
 
         System.setProperty("Grid Power Meter sensor", gridPowerMeterEnergyConsumptionSensor.getId().getID());
         System.setProperty("Grid Power Meter sensor type", gridPowerMeterEnergyConsumptionSensor.getSensorTypeID().getID());

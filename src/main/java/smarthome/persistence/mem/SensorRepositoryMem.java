@@ -2,6 +2,7 @@ package smarthome.persistence.mem;
 
 import smarthome.domain.sensor.Sensor;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.persistence.SensorRepository;
 
@@ -61,6 +62,22 @@ public class SensorRepositoryMem implements SensorRepository {
     public Iterable<Sensor> findByDeviceID(DeviceIDVO deviceID) {
         return sensorMap.values().stream()
                 .filter(sensor -> deviceID.equals(sensor.getDeviceID()))
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * Finds all Sensor objects in the repository that match the provided sensor type ID.
+     * This method filters the values in the sensorMap to find sensors with the specified sensor type ID.
+     * The results are collected into a list and returned.
+     *
+     * @param id The SensorTypeIDVO representing the type of sensor to search for.
+     * @return An Iterable of Sensor objects that match the specified sensor type ID.
+     */
+    @Override
+    public Iterable<Sensor> findBySensorTypeId(SensorTypeIDVO id) {
+        return sensorMap.values().stream()
+                .filter(sensor -> id.equals(sensor.getSensorTypeID()))
                 .collect(Collectors.toList());
     }
 }

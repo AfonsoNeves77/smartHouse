@@ -226,44 +226,73 @@ public class LogServiceImpl implements LogService {
      *
      * @param date         The date for which the sun reading is requested.
      * @param gpsLocation  The GPS location for which the sun reading is requested.
-     * @param sensorIDVO   The ID of the sensor used to retrieve the sun reading.
-     * @return A string representation of the sun reading value.
+     * @param sensorTypeIDVO   The ID of the sensor Type used to retrieve the sun reading.
+     * @return      A string representation of the sun reading value.
      * @throws IllegalArgumentException if any of the parameters are null,
-     *                                  or if the sensor associated with the provided ID is not found,
-     *                                  or if there's an error retrieving or saving the sun reading.
+     * or if the sensor associated with the provided ID is not found, or if there's an error retrieving or
+     * saving the sun reading.
      */
-    public String getSunReading(String date, String gpsLocation, SensorIDVO sensorIDVO) {
+    public String getSunReading(String date, String gpsLocation, SensorTypeIDVO sensorTypeIDVO) {
         // Check if any of the parameters are null
-        if (areParamsNull(date, gpsLocation, sensorIDVO)) {
+        if (areParamsNull(date, gpsLocation, sensorTypeIDVO)) {
             throw new IllegalArgumentException(ERROR_MESSAGE_PARAMS);
         }
 
-        // Check if the sensor associated with the provided ID exists
-        if (!this.sensorRepository.isPresent(sensorIDVO)) {
+        // Check if the provided sensor type is not either a Sunrise Sensor or a Sunset Sensor
+        if (!sensorTypeIDVO.getID().equalsIgnoreCase("SunriseSensor") && !sensorTypeIDVO.getID().equalsIgnoreCase("SunsetSensor")) {
             throw new IllegalArgumentException("Could not find Sensor");
         }
 
-        /* The following try block could be avoided if the classes threw Illegal Arguments, due to time constraints
-         * it will be handled like this, but the process could be handled more elegantly if both findByID and getReading
-         * returned IllegalArguments or Optionals on error.
-         */
+
         try {
-            // Retrieve the sun sensor associated with the provided ID
-            SunSensor sensor = (SunSensor) this.sensorRepository.findById(sensorIDVO);
+            // Retrieves a list with all the sun sensors associated with the provided sensor type ID
+            Iterable<Sensor> sensorIterable = this.sensorRepository.findBySensorTypeId(sensorTypeIDVO);
 
-            // Retrieve the sun reading for the given date and GPS location
-            SensorValueObject<?> reading = sensor.getReading(date, gpsLocation, this.sunTimeCalculator, sensorValueFactory);
-
-            // Save the sun reading
-            if (!saveReading(sensor, reading)) {
-                throw new IllegalArgumentException("Unable to save reading");
+            // Checks if the Iterable has any values
+            if(!sensorIterable.iterator().hasNext()) {
+                throw new IllegalArgumentException("No Sun Sensors (either Sunrise or Sunset) were found in the system");
             }
 
-            // Return the string representation of the sun reading value
-            return reading.getValue().toString();
+                // Retrieves the first sensor from the list, since any one of them can provide the reading
+                SunSensor sensor = (SunSensor) sensorIterable.iterator().next();
+
+                // Retrieve the sun reading for the given date and GPS location
+                SensorValueObject<?> reading = sensor.getReading(date, gpsLocation, this.sunTimeCalculator, sensorValueFactory);
+
+                // Save the sun reading in Logs
+                if (!saveReading(sensor, reading)) {
+                    throw new IllegalArgumentException("Unable to save reading");
+                }
+
+                // Return the string representation of the sun reading value
+                return reading.getValue().toString();
 
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Unable to get sensor reading");
+        }
+    }
+
+    /**
+     * Saves the given sensor reading by creating a log entry and persisting it.
+     *
+     * @param sensor  The sensor for which the reading is being saved.
+     * @param reading The reading to be saved.
+     * @return true if the reading was successfully saved, false otherwise.
+     */
+    private boolean saveReading (Sensor sensor, SensorValueObject<?> reading){
+        try {
+            // Extract necessary IDs from the sensor
+            SensorIDVO sensorIDVO = (SensorIDVO) sensor.getId();
+            DeviceIDVO deviceIDVO = sensor.getDeviceID();
+            SensorTypeIDVO sensorTypeIDVO = sensor.getSensorTypeID();
+
+            // Create a log entry with the reading and sensor details
+            Log log = this.logFactory.createLog(reading,sensorIDVO,deviceIDVO,sensorTypeIDVO);
+
+            // Attempt to save the log entry to the repository
+            return this.logRepository.save(log);
+        } catch (IllegalArgumentException | ClassCastException | NullPointerException e){
+            return false;
         }
     }
 
@@ -489,17 +518,6 @@ public class LogServiceImpl implements LogService {
         return biggestReadingLog;
     }
 
-    private boolean saveReading (Sensor sensor, SensorValueObject<?> reading){
-        try {
-            SensorIDVO sensorIDVO = (SensorIDVO) sensor.getId();
-            DeviceIDVO deviceIDVO = sensor.getDeviceID();
-            SensorTypeIDVO sensorTypeIDVO = sensor.getSensorTypeID();
-            Log log = this.logFactory.createLog(reading,sensorIDVO,deviceIDVO,sensorTypeIDVO);
-            return this.logRepository.save(log);
-        } catch (IllegalArgumentException | ClassCastException | NullPointerException e){
-            return false;
-        }
-    }
 
     @Autowired
     public void setSensorValueFactory(SensorValueFactory sensorValueFactory) {

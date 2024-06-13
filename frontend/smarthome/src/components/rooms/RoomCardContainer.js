@@ -1,15 +1,19 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import {Grid, useMediaQuery, useTheme} from '@mui/material';
 import RoomCard from './RoomCard';
 import Box from "@mui/material/Box";
 
 const drawerWidth = 125;
 
 const RoomCardContainer = ({ rooms, onButtonClick }) => {
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <Box sx={{
-            width: `calc(100% - ${drawerWidth}px)`,
-            marginLeft: `${drawerWidth}px`,
+            width: isSmallScreen ? '100%' : `calc(100% - ${drawerWidth}px)`,
+            marginLeft: isSmallScreen ? '0px' : `${drawerWidth}px`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

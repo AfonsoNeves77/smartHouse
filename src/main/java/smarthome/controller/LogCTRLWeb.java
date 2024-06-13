@@ -9,6 +9,7 @@ import smarthome.domain.log.Log;
 import smarthome.domain.vo.DeltaVO;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
 import smarthome.domain.vo.logvo.TimeStampVO;
+import smarthome.domain.vo.sensortype.SensorTypeIDVO;
 import smarthome.domain.vo.sensorvo.SensorIDVO;
 import smarthome.mapper.DeviceMapper;
 import smarthome.mapper.LogMapper;
@@ -154,18 +155,18 @@ public class LogCTRLWeb {
      * @param date      the date for which the sun reading is requested, in the format "YYYY-MM-DD"
      * @param latitude  the latitude coordinate of the location
      * @param longitude the longitude coordinate of the location
-     * @param sensorId  the unique identifier of the sensor
+     * @param sensorTypeId  the unique identifier of the sensor type
      * @return a ResponseEntity containing the sun reading as a String if the request is successful, or a BAD_REQUEST status if an error occurs
      */
-    @PostMapping()
+    @PostMapping("/get-sun-reading")
     public ResponseEntity<String> getSunReading (@RequestParam (value="date") String date,
                                                  @RequestParam (value="latitude") String latitude,
                                                  @RequestParam (value="longitude") String longitude,
-                                                 @RequestParam (value="sensorId") String sensorId){
+                                                 @RequestParam (value="sensorTypeId") String sensorTypeId){
 
         try{
-            String gpsCoordinates = latitude + " : " + longitude;
-            SensorIDVO sensorIDVO = SensorMapper.createSensorIDVO(sensorId);
+            String gpsCoordinates = latitude + ":" + longitude;
+            SensorTypeIDVO sensorIDVO = SensorMapper.createSensorTypeIDVO(sensorTypeId);
             String reading = this.logService.getSunReading(date,gpsCoordinates,sensorIDVO);
             return new ResponseEntity<>(reading, HttpStatus.OK);
         } catch (IllegalArgumentException e){
