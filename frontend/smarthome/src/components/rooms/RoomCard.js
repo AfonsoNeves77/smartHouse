@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Card, CardContent, CardMedia, Typography, Box, Button } from "@mui/material";
 import roomImage1 from '../../images/roomImages/room1.png';
 import roomImage2 from '../../images/roomImages/room2.png';
@@ -23,9 +23,16 @@ const getRandomImage = () => {
 const RoomCard = ({ roomName, roomHeight, roomLength, roomWidth, onButtonClick }) => {
     // Get a random image for this room
     const placeholderImage = getRandomImage();
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <Card className="card" style={{ border: '1px solid #ccc', borderRadius: '15px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+        <Card className="card" style={{
+            border: '1px solid #ccc',
+            borderRadius: '15px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            transition: 'transform 0.3s ease',
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+        }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Box className="image-container">
                 <CardMedia
                     component="img"

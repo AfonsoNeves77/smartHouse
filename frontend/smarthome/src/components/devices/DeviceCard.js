@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Card, CardContent, Typography, Box, Button, CardMedia } from "@mui/material";
 import EditButton from '../EditButton';
 import GetReadingsButton from './GetReadingsButton';
@@ -25,6 +25,7 @@ const getRandomImage = () => {
 const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonClick, fetchDevices }) => {
     // Get a random image for this device
     const deviceImage = getRandomImage();
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Card className="card" style={{
@@ -33,7 +34,9 @@ const DeviceCard = ({ deviceID, deviceName, deviceModel, deviceStatus, onButtonC
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             width: '100%',
             height: '100%',
-        }}>
+            transition: 'transform 0.3s ease',
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+        }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <CardMedia
                 component="img"
                 image={deviceImage}
