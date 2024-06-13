@@ -7,12 +7,12 @@ actor "Power User/\nAdministrator" as A
 participant "**<<system (C4)>>**\nSmartHome" as AH
 
 
-A -> AH : I want to add a new actuator to a device
+A -> AH : I want to add a new actuator to this device
 activate A
 activate AH
-AH --> A : Request actuator data and device ID
+AH --> A : Request actuator data
 deactivate AH
-A -> AH : Provide actuator data and device ID
+A -> AH : Provide actuator data
 activate AH
 AH --> A : The actuator was added
 deactivate AH

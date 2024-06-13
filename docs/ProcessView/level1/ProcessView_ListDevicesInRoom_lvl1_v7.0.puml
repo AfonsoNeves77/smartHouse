@@ -11,12 +11,8 @@ actor "Room Owner" as RO
 participant "**<<system (C4)>>**\nSmartHome" as SH
 
 
-RO -> SH: I want to get a list of all devices in a room
+RO -> SH: I want to get a list of all devices in this room
 activate RO
-activate SH
-SH -> RO: Request room ID
-deactivate SH
-RO -> SH: Provide room ID
 activate SH
 SH --> RO: Provide a list of all devices in the room
 deactivate SH
