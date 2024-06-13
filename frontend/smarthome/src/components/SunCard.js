@@ -14,7 +14,7 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
-    width: '300px',
+    width: '210px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
