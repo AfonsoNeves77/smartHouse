@@ -34,7 +34,7 @@ const RoomCard = ({ roomName, roomHeight, roomLength, roomWidth, onButtonClick }
                 </Box>
                 {/* Buttons at the bottom-right */}
                 <Box className="button-container">
-                    <Button variant="contained" color="primary" onClick={onButtonClick} sx={{ marginRight: '8px' }}>
+                    <Button variant="contained" color="primary" onClick={onButtonClick} sx={{ marginRight: '8px' }} roomName={roomName}>
                         View Devices
                     </Button>
                     <EditButton /> {/* Replace the "Edit" button with the new component */}
