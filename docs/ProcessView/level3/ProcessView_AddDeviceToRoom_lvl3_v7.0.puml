@@ -7,16 +7,19 @@
     }
 </style>
 
-'Doubts: Should communication between components be verbose?
 title Use Case - Add Device to Room\nProcess View Level 3 - Backend Interaction \n Main Success Scenario
 autonumber
 
-participant "**<<component (C4)>>**\nServer" as SERVER
-participant "**<<component (C4)>>**\nDatabase" as DB
+!pragma teoz true
 
-[o-> SERVER : Add a new device, with this\n information, to this room
+box "<<container (C4)>>\n     :Backend" #LightGrey
+  participant "**<<component (C4)>>**\n:Server" as SERVER
+  participant "**<<component (C4)>>**\n:Database" as DB
+end box
+
+
+[o-> SERVER : POST /devices (device information)
 activate SERVER
-
 SERVER -> DB: Verify if room exists
 activate DB
 DB --> SERVER: Send validation
@@ -28,8 +31,7 @@ SERVER -> DB : Save device
 activate DB
 DB --> SERVER : Send validation
 deactivate DB
+[o<-- SERVER : new device data + HTTP Status
 
-[o<-- SERVER : Successful Operation.\nRetrieve device information
-deactivate SERVER
 
 @enduml

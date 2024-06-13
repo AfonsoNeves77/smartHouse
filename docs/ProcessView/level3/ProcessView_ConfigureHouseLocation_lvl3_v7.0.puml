@@ -8,13 +8,16 @@
 </style>
 
 title Use Case - Configure the Location of the House \nProcess View Level 3 - Backend Interaction \n Main Success Scenario
-
 autonumber
 
-participant "**<<component (C4)>>**\nServer" as SERVER
-participant "**<<component (C4)>>**\nDatabase" as DB
+!pragma teoz true
 
-[o-> SERVER : Configure the house with this location
+box "<<container (C4)>>\n     :Backend" #LightGrey
+  participant "**<<component (C4)>>**\n:Server" as SERVER
+  participant "**<<component (C4)>>**\n:Database" as DB
+end box
+
+[o-> SERVER : PATCH /house (location information)
 activate SERVER
 
 SERVER -> DB: Get persisted house
@@ -29,7 +32,7 @@ activate DB
 DB --> SERVER : Send validation
 deactivate DB
 
-[o<-- SERVER : Successful Operation.\nRetrieve updated house information
+[o<-- SERVER : new house data + HTTP Status
 deactivate SERVER
 
 @enduml

@@ -10,15 +10,17 @@
 title Use Case - List All Device Measurements \nProcess View Level 3 - Backend Interaction \n Main Success Scenario
 autonumber
 
-participant "**<<component (C4)>>**\nServer" as SERVER
-participant "**<<component (C4)>>**\nDatabase" as DB
+!pragma teoz true
 
-[o-> SERVER : **List all measurements of this device** \nin this time period (optional)
+box "<<container (C4)>>\n     :Backend" #LightGrey
+  participant "**<<component (C4)>>**\n:Server" as SERVER
+  participant "**<<component (C4)>>**\n:Database" as DB
+end box
+
+[o-> SERVER : GET /logs (device information and **optional** time period)
 activate SERVER
 alt time period specified
 SERVER -> SERVER : Verify if time period is valid
-activate SERVER
-deactivate SERVER
 |||
 SERVER -> DB: Get all of this device logs in this time period
 
@@ -29,7 +31,7 @@ activate DB
 DB --> SERVER: Retrieve device logs list
 deactivate DB
 
-[o<-- SERVER : Successful Operation.\nRetrieve device logs information
+[o<-- SERVER : logs data + HTTP Status
 deactivate SERVER
 
 
