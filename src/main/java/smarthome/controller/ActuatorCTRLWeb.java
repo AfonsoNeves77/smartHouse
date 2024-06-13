@@ -178,7 +178,7 @@ public class ActuatorCTRLWeb {
      * (400) if the command execution fails due to an invalid request or actuator not found
      */
     // /{actuatorId}/act?command=someCommandValue
-    @PostMapping("/{actuatorId}/act")
+    @PatchMapping("/{actuatorId}/act")
     public ResponseEntity<ActuatorDTO> executeCommand (@PathVariable("actuatorId") String actuatorId,
                                                        @RequestParam(name="command") String command) {
         try {
