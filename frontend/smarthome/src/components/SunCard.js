@@ -47,7 +47,7 @@ const SunCard = ({ latitude, longitude }) => {
         const fetchSunData = async (sensorTypeId) => {
             const date = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
             try {
-                const res = await axios.post(`http://localhost:8080/logs/get-sun-reading`, null, {
+                const res = await axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/logs/get-sun-reading`, null, {
                     params: {
                         date: date,
                         latitude: latitude,

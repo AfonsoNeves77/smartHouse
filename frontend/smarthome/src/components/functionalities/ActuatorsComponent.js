@@ -19,7 +19,7 @@ const ActuatorsComponent = ({ deviceID, actuators = [], onAddActuator, onUpdate,
     React.useEffect(() => {
         const fetchDeviceStatus = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/devices/${deviceID}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices/${deviceID}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch device status');
                 }

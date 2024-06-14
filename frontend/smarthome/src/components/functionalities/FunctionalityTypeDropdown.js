@@ -19,7 +19,7 @@ const FunctionalityTypeDropdown = ({ value, onChange, type }) => {
     }, [type]);
 
     const fetchSensorTypes = () => {
-        fetch(`http://localhost:8080/sensortypes`)
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/sensortypes`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -35,7 +35,7 @@ const FunctionalityTypeDropdown = ({ value, onChange, type }) => {
     };
 
     const fetchActuatorTypes = () => {
-        fetch(`http://localhost:8080/actuatortypes`)
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/actuatortypes`)
             .then(response => response.json())
             .then(data => {
                 console.log(data);

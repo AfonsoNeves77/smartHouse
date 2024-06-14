@@ -13,7 +13,7 @@ export default function DevicesPage() {
     const { roomId } = useParams();
 
     const fetchDevices = useCallback(() => {
-        fetch(`http://localhost:8080/devices?roomID=${roomId}`)
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices?roomID=${roomId}`)
             .then(response => response.json())
             .then(data => {
                 if (data._embedded && data._embedded.deviceDTOList) {
@@ -27,7 +27,7 @@ export default function DevicesPage() {
 
     useEffect(() => {
         // Fetch room details
-        fetch(`http://localhost:8080/rooms/${roomId}`)
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/rooms/${roomId}`)
             .then(response => response.json())
             .then(data => {
                 setRoomName(data.roomName);

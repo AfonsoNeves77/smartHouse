@@ -41,7 +41,7 @@ const AddFunctionalityForm = ({ deviceID, type, onFunctionalityAdded, onClose })
 
         try {
             console.log(formData);
-            const response = await fetch(`http://localhost:8080/${type}s`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/${type}s`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

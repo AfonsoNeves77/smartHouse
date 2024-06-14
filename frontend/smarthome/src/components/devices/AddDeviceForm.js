@@ -43,7 +43,7 @@ const AddDeviceForm = ({ roomID, onDeviceAdded, onClose }) => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/devices', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

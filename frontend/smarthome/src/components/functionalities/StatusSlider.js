@@ -25,10 +25,10 @@ const StatusSlider = ({ initialStatus, onUpdate, actuatorId }) => {
         setUnsavedChanges(false);
 
         // Log the request details
-        console.log(`Sending request to http://localhost:8080/actuators/${actuatorId}/act with command: ${newStatus}`);
+        console.log(`Sending request to ${process.env.REACT_APP_BACKEND_API_URL}/smarthome/actuators/${actuatorId}/act with command: ${newStatus}`);
 
         // Make a POST request to update the status
-        fetch(`http://localhost:8080/actuators/${actuatorId}/act?command=${newStatus}`, {
+        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/actuators/${actuatorId}/act?command=${newStatus}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'

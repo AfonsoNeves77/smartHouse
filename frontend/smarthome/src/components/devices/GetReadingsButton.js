@@ -61,7 +61,7 @@ class GetReadingsButton extends React.Component {
     }
 
     fetchSensorTypes = async () => {
-        const response = await fetch('http://localhost:8080/sensortypes', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/sensortypes`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ class GetReadingsButton extends React.Component {
 
         await this.fetchSensorTypes();
 
-        const response = await fetch(`http://localhost:8080/logs?deviceId=${deviceId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/logs?deviceId=${deviceId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

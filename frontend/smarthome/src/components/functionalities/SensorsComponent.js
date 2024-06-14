@@ -20,7 +20,7 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
     useEffect(() => {
         const fetchLogs = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/logs?deviceId=${deviceID}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/logs?deviceId=${deviceID}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch logs');
                 }
@@ -42,7 +42,7 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
     useEffect(() => {
         const fetchSensorTypes = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/sensortypes`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/sensortypes`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch sensor types');
                 }
@@ -68,7 +68,7 @@ const SensorsComponent = ({ deviceID, sensors, onAddSensor }) => {
     useEffect(() => {
         const fetchDeviceStatus = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/devices/${deviceID}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices/${deviceID}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch device status');
                 }
