@@ -54,7 +54,7 @@ class ActuatorAssemblerTest {
         assertEquals(dataModel.getDeviceID(), actuator.getDeviceID().getID());
         assertEquals(dataModel.getLowerLimit(), actuator.getLowerLimit());
         assertEquals(dataModel.getUpperLimit(), actuator.getUpperLimit());
-        assertEquals(dataModel.getPrecision(), actuator.getPrecision());
+        assertEquals(dataModel.getPrecision_value(), actuator.getPrecision());
     }
 
     /**
@@ -86,7 +86,7 @@ class ActuatorAssemblerTest {
         assertEquals(dataModel.getDeviceID(), actuator.getDeviceID().getID());
         assertEquals(dataModel.getLowerLimit(), actuator.getLowerLimit());
         assertEquals(dataModel.getUpperLimit(), actuator.getUpperLimit());
-        assertEquals(dataModel.getPrecision(), actuator.getPrecision());
+        assertEquals(dataModel.getPrecision_value(), actuator.getPrecision());
     }
 
     /**
@@ -117,7 +117,7 @@ class ActuatorAssemblerTest {
         assertEquals(dataModel.getDeviceID(), actuator.getDeviceID().getID());
         assertEquals(dataModel.getLowerLimit(), actuator.getLowerLimit());
         assertEquals(dataModel.getUpperLimit(), actuator.getUpperLimit());
-        assertEquals(dataModel.getPrecision(), actuator.getPrecision());
+        assertEquals(dataModel.getPrecision_value(), actuator.getPrecision());
     }
 
     /**
@@ -148,7 +148,7 @@ class ActuatorAssemblerTest {
         assertEquals(dataModel.getDeviceID(), actuator.getDeviceID().getID());
         assertEquals(dataModel.getLowerLimit(), actuator.getLowerLimit());
         assertEquals(dataModel.getUpperLimit(), actuator.getUpperLimit());
-        assertEquals(dataModel.getPrecision(), actuator.getPrecision());
+        assertEquals(dataModel.getPrecision_value(), actuator.getPrecision());
     }
 
     /**
@@ -226,6 +226,6 @@ class ActuatorAssemblerTest {
         assertEquals(dataModels.get(3).getDeviceID(), result.get(3).getDeviceID().getID());
         assertEquals(dataModels.get(0).getLowerLimit(), result.get(0).getLowerLimit());
         assertEquals(dataModels.get(0).getUpperLimit(), result.get(0).getUpperLimit());
-        assertEquals(dataModels.get(1).getPrecision(), result.get(1).getPrecision());
+        assertEquals(dataModels.get(1).getPrecision_value(), result.get(1).getPrecision());
     }
 }

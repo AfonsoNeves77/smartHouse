@@ -38,8 +38,8 @@ public class ActuatorDataModel {
     @Column(name = "upper_limit")
     private String upperLimit;
     @Getter
-    @Column(name = "precision")
-    private String precision;
+    @Column(name = "precision_value")
+    private String precision_value;
     @Getter
     @Column(name = "status")
     private String status;
@@ -63,7 +63,7 @@ public class ActuatorDataModel {
         this.deviceID = actuator.getDeviceID().getID();
         this.lowerLimit = actuator.getLowerLimit();
         this.upperLimit = actuator.getUpperLimit();
-        this.precision = actuator.getPrecision();
+        this.precision_value = actuator.getPrecision();
         this.status = actuator.getActuatorStatus().getValue();
     }
 }

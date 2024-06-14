@@ -29,7 +29,7 @@ public class ActuatorAssembler {
         DeviceIDVO deviceID = new DeviceIDVO(deviceUUID);
         String lowerLimit = actuatorDataModel.getLowerLimit();
         String upperLimit = actuatorDataModel.getUpperLimit();
-        String precision = actuatorDataModel.getPrecision();
+        String precision = actuatorDataModel.getPrecision_value();
         ActuatorStatusVO status = new ActuatorStatusVO(actuatorDataModel.getStatus());
         Settings settings = null;
         if (precision == null && lowerLimit != null && upperLimit != null) {

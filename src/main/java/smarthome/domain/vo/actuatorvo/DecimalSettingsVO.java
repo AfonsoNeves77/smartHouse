@@ -4,24 +4,24 @@ package smarthome.domain.vo.actuatorvo;
 public class DecimalSettingsVO implements Settings {
     private final double lowerLimit;
     private final double upperLimit;
-    private final double precision;
+    private final double precision_value;
 
     /**
      * Constructor for DecimalConfigurationVO.
      * @param lowerLimit Set lower limit as String
      * @param upperLimit Set upper limit as String
-     * @param precision Set precision as String
+     * @param precision_value Set precision as String
      * @throws IllegalArgumentException If parameter validation fails (null settings or invalid values).
      */
-    public DecimalSettingsVO(String lowerLimit, String upperLimit, String precision) {
+    public DecimalSettingsVO(String lowerLimit, String upperLimit, String precision_value) {
         try {
             double lowerValue = Double.parseDouble(lowerLimit);
             double upperValue = Double.parseDouble(upperLimit);
-            double precisionValue = Double.parseDouble(precision);
+            double precisionValue = Double.parseDouble(precision_value);
             if(validSettings(lowerValue, upperValue, precisionValue)) {
                 this.lowerLimit = lowerValue;
                 this.upperLimit = upperValue;
-                this.precision = precisionValue;
+                this.precision_value = precisionValue;
             } else {
                 throw new IllegalArgumentException("Invalid actuator settings");
             }
@@ -79,6 +79,6 @@ public class DecimalSettingsVO implements Settings {
      */
     @Override
     public Double[] getValue() {
-        return new Double[]{lowerLimit, upperLimit, precision};
+        return new Double[]{lowerLimit, upperLimit, precision_value};
     }
 }
