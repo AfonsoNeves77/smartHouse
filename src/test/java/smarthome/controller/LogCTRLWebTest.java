@@ -14,9 +14,7 @@ import smarthome.domain.log.Log;
 import smarthome.domain.room.Room;
 import smarthome.domain.sensor.SunsetSensor;
 import smarthome.domain.sensor.SwitchSensor;
-import smarthome.domain.sensor.externalservices.SunTimeCalculator;
 import smarthome.domain.sensor.sensorvalues.EnergyConsumptionValue;
-import smarthome.domain.sensor.sensorvalues.SensorValueFactory;
 import smarthome.domain.sensor.sensorvalues.SensorValueObject;
 import smarthome.domain.sensor.sensorvalues.TemperatureValue;
 import smarthome.domain.vo.devicevo.DeviceIDVO;
@@ -39,7 +37,10 @@ import smarthome.utils.timeconfig.TimeConfigDTO;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -1134,8 +1135,7 @@ class LogCTRLWebTest {
 
         when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(Collections.emptyList());
 
-        String expected = "The Peak Power Consumption from the Grid within the selected Period was " + powerGridLog1.getReading().getValue() +
-                " Wh which happened at " + powerGridLog1.getTime().getValue() + " (No Power Source Device Logs were found within the selected period)";
+        String expected = "There are no records available from the Grid Power Meter for the given period";
 
 
         //Act & Assert
@@ -1208,7 +1208,7 @@ class LogCTRLWebTest {
 
         when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerSourceLogs);
 
-        String expected = "Readings were found within the provided time span, but with no instant matches within the delta provided";
+        String expected = "There are no records available from the Grid Power Meter for the given period";
 
         //Act & Assert
         mockMvc.perform(get("/logs/peak-power-consumption")
@@ -1279,7 +1279,7 @@ class LogCTRLWebTest {
 
         when(logRepository.findByNegativeReadingAndNotDeviceIDAndSensorTypeAndTimeBetween(deviceID, sensorTypeID, initialSearch, finalSearch)).thenReturn(listOfPowerSourceLogs);
 
-        String expected = "The Peak Power Consumption of the House within the selected Period was of 26 Wh which happened at " + powerGridTime1.getValue();
+        String expected = "There are no records available from the Grid Power Meter for the given period";
 
         //Act & Assert
         mockMvc.perform(get("/logs/peak-power-consumption")
