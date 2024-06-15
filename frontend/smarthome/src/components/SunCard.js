@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Grid, Card, CardContent, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import WbTwilightIcon from '@mui/icons-material/WbTwilight';
 import axios from 'axios';
+import config from './config';
 import { yellow } from '@mui/material/colors';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -28,9 +29,15 @@ const StyledContent = styled(CardContent)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const formatTime = (timeString) => {
+const formatTime = (time) => {
+    const hours = Math.floor(time);
+    const minutes = Math.round((time - hours) * 60);
+    return `${hours}h${minutes < 10 ? '0' : ''}${minutes}m`;
+};
+
+const formatTimeString = (timeString) => {
     try {
-        const timePart = timeString.split('T')[1]; // Extract time part
+        const timePart = timeString.split('T')[1];
         const [hours, minutes] = timePart.split(':');
         return `${hours}h${minutes}m`;
     } catch (error) {
@@ -42,36 +49,85 @@ const formatTime = (timeString) => {
 const SunCard = ({ latitude, longitude }) => {
     const [sunrise, setSunrise] = useState('Loading...');
     const [sunset, setSunset] = useState('Loading...');
+    const primaryApiUrl = `${config.apiBaseUrl}/SunriseOrSunsetTime`;
+    const groupNumber = 4;
+
+    const fetchPrimarySunTime = useCallback(async (option, remainingTime) => {
+        const source = axios.CancelToken.source();
+        const timeout = setTimeout(() => {
+            source.cancel(`Request timeout after ${remainingTime} ms`);
+        }, remainingTime);
+
+        try {
+            const response = await axios.get(`${primaryApiUrl}?groupNumber=${groupNumber}&latitude=${latitude}&longitude=${longitude}&option=${option}`, {
+                cancelToken: source.token,
+            });
+            clearTimeout(timeout);
+            return response.data.measurement;
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                console.log('Primary API request cancelled:', error.message);
+            } else {
+                console.log('Primary API request failed:', error.response ? error.response.data : error.message);
+            }
+            return null;
+        }
+    }, [primaryApiUrl, latitude, longitude]);
+
+    const fetchSunDataFromBackend = useCallback(async (sensorTypeId) => {
+        const date = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/logs/get-sun-reading`, null, {
+                params: {
+                    date: date,
+                    latitude: latitude,
+                    longitude: longitude,
+                    sensorTypeId: sensorTypeId
+                }
+            });
+            console.log(`Response for ${sensorTypeId}: `, res.data);
+            return res.data;
+        } catch (error) {
+            console.error(`Error fetching the ${sensorTypeId} data: `, error);
+            return 'Error';
+        }
+    }, [latitude, longitude]);
+
+    const fetchSunTimes = useCallback(async () => {
+        try {
+            console.log('Starting fetchSunTimes');
+
+            const totalTimeout = 3000;
+            const start = Date.now();
+
+            let sunriseTime = await fetchPrimarySunTime('sunrise', totalTimeout);
+            const elapsedForSunrise = Date.now() - start;
+            const remainingTimeForSunset = totalTimeout - elapsedForSunrise;
+
+            if (sunriseTime !== null && sunriseTime !== 'NaN') {
+                setSunrise(formatTime(sunriseTime));
+            } else {
+                const sunriseData = await fetchSunDataFromBackend('SunriseSensor');
+                setSunrise(formatTimeString(sunriseData));
+            }
+
+            let sunsetTime = await fetchPrimarySunTime('sunset', remainingTimeForSunset);
+            if (sunsetTime !== null && sunsetTime !== 'NaN') {
+                setSunset(formatTime(sunsetTime));
+            } else {
+                const sunsetData = await fetchSunDataFromBackend('SunsetSensor');
+                setSunset(formatTimeString(sunsetData));
+            }
+        } catch (error) {
+            console.error("Error fetching the sun time data: ", error);
+            setSunrise('N/A');
+            setSunset('N/A');
+        }
+    }, [fetchPrimarySunTime, fetchSunDataFromBackend]);
 
     useEffect(() => {
-        const fetchSunData = async (sensorTypeId) => {
-            const date = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-            try {
-                const res = await axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/logs/get-sun-reading`, null, {
-                    params: {
-                        date: date,
-                        latitude: latitude,
-                        longitude: longitude,
-                        sensorTypeId: sensorTypeId
-                    }
-                });
-                console.log(`Response for ${sensorTypeId}: `, res.data);
-                return res.data;
-            } catch (error) {
-                console.error(`Error fetching the ${sensorTypeId} data: `, error);
-                return 'Error';
-            }
-        };
-
-        const getSunTimes = async () => {
-            const sunriseData = await fetchSunData('SunriseSensor');
-            const sunsetData = await fetchSunData('SunsetSensor');
-            setSunrise(formatTime(sunriseData));
-            setSunset(formatTime(sunsetData));
-        };
-
-        getSunTimes();
-    }, [latitude, longitude]);
+        fetchSunTimes().catch(error => console.error("Error in fetchSunTimes", error));
+    }, [fetchSunTimes]);
 
     return (
         <StyledContainer>
