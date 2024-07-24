@@ -42,7 +42,7 @@ component "BackEnd Server" <<component>> as F{
     interface "Controller REST API" as ControllerAPI
     interface "DataModel API" as DataModelAPI
     interface "Persistence API" as PersistenceAPI
-    interface "Smart Device Gateway API" as SmartDeviceGatewayAPI
+    interface "Smart Device Gateway API" as SmartDeviceDriverAPI
     interface "Domain API" as DomainAPI
     interface "Application Service API" as ApplicationServiceAPI
     interface "DTO API" as DTOAPI
@@ -88,16 +88,16 @@ ApplicationServiceAPI -down- "Application Service"
 ' Connecting Domain model to its API
 "Domain Model" -up--- DomainAPI
 
-"Smart Device Gateway" -up- SmartDeviceGatewayAPI
+"Smart Device Gateway" -up-( SmartDeviceDriverAPI
 "Smart Device Gateway" -- "Gateway API"
 "Smart Device Gateway" --( DomainAPI
 
-"Smart Device Driver" --( SmartDeviceGatewayAPI
+"Smart Device Driver" -- SmartDeviceDriverAPI
 "Smart Device Driver" -- OuterPortSmartDeviceAPI
 
 'Interfaces and Implementations
-"Repository" --|> "Domain Model"
-"Smart Device Gateway" --|> "Domain Model"
+"Repository" ..|> "Domain Model"
+"Smart Device Gateway" ..|> "Domain Model"
 
 note right of F: We have incorporated the \nconcept of an external device \ndriver and gateway into our design. \nAlthough not implemented directly, \nwe have developed a class named \n"SimHardware" to simulate this \nfunctionality. The inclusion of the \ndevice driver and gateways is \nintended to illustrate the \nproposed process.
 

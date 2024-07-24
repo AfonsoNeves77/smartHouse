@@ -17,8 +17,8 @@ const useDeviceData = (deviceId) => {
     useEffect(() => {
         const fetchDeviceData = async () => {
             try {
-                const actuatorResponse = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/actuators?deviceId=${deviceId}`);
-                const sensorResponse = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/sensors?deviceId=${deviceId}`);
+                const actuatorResponse = await fetch(`${process.env.REACT_APP_API_URL}/smarthome/actuators?deviceId=${deviceId}`);
+                const sensorResponse = await fetch(`${process.env.REACT_APP_API_URL}/smarthome/sensors?deviceId=${deviceId}`);
 
                 const actuatorData = await actuatorResponse.json();
                 const sensorData = await sensorResponse.json();

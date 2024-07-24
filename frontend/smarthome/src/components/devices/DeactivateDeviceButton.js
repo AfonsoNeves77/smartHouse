@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 const DeactivateDeviceButton = ({ deviceId, deviceStatus, fetchDevices }) => {
     const handleDeactivate = () => {
         console.log(`Deactivate device ${deviceId}`);
-        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices/${deviceId}`, {
+        fetch('/api/smarthome/devices/${deviceId}', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

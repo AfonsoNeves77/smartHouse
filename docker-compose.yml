@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mariadb:
+    build:
+      context: ./db
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: SmartHome
+      MYSQL_USER: smarthome
+      MYSQL_PASSWORD: smarthome
+    ports:
+      - "3306:3306"
+    networks:
+      - my-project-network
+    volumes:
+      - mdbdata:/var/lib/mysql
+
+  springboot:
+    build:
+      context: ./be
+    container_name: springboot
+    depends_on:
+      - mariadb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/SmartHome
+      SPRING_DATASOURCE_USERNAME: smarthome
+      SPRING_DATASOURCE_PASSWORD: smarthome
+    networks:
+      - my-project-network
+
+  frontend:
+    build: ./fe
+    ports:
+      - "80:80"
+    depends_on:
+      - springboot
+    networks:
+      - my-project-network
+
+networks:
+  my-project-network:
+    driver: bridge
+
+volumes:
+  mdbdata:

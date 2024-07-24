@@ -13,7 +13,7 @@ export default function DevicesPage() {
     const { roomId } = useParams();
 
     const fetchDevices = useCallback(() => {
-        fetch(`${process.env.REACT_APP_BACKEND_API_URL}/smarthome/devices?roomID=${roomId}`)
+        fetch(`${process.env.REACT_APP_API_URL}/smarthome/devices?roomID=${roomId}`)
             .then(response => response.json())
             .then(data => {
                 if (data._embedded && data._embedded.deviceDTOList) {

@@ -8,7 +8,7 @@
     <artifactId>switch2023project_g4</artifactId>
     <name>switch-2023 switch-2023-g4</name>
     <version>1.0-SNAPSHOT</version>
-    <!-- <packaging>war</packaging> -->
+    <packaging>war</packaging>
 
     <properties>
         <!-- Java Version Configuration -->
@@ -16,7 +16,6 @@
 
         <!-- Maven Version Configuration -->
         <maven-compiler-plugin>3.13.0</maven-compiler-plugin>
-
 
         <!-- Project Encoding Configuration -->
         <project.sourceEncoding>UTF-8</project.sourceEncoding>
@@ -150,6 +149,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>3.2.4</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

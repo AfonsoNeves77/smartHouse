@@ -14,7 +14,6 @@ import java.util.Optional;
  * Implementation of the HouseRepository interface using Spring Data JPA.
  * This class interacts with the database to perform CRUD operations on house entities.
  */
-
 @Repository
 public class HouseRepositorySpringData implements HouseRepository {
 
